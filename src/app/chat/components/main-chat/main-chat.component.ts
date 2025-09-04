@@ -25,13 +25,13 @@ export class MainChatComponent implements OnInit {
     this.authService.currentUser$.subscribe(user => {
       this.user = user;
       if (!user) {
-        this.router.navigate(['/login']);
+        this.router.navigate(['/auth/login']);
       }
     });
   }
 
   logout(): void {
     this.authService.logout();
-    this.router.navigate(['/login']);
+    this.router.navigate(['/auth/login']);
   }
 }
