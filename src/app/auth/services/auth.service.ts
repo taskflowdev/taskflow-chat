@@ -3,6 +3,7 @@ import { isPlatformBrowser } from '@angular/common';
 import { BehaviorSubject, Observable, catchError, map, of, tap } from 'rxjs';
 import { AuthService as ApiAuthService } from '../../api/api/auth.service';
 import { LoginDto, RegisterDto, UserDto } from '../../api/model/models';
+import { LocalStorageService } from './local-storage.service';
 
 export interface AuthUser {
   id: string;
@@ -24,6 +25,7 @@ export class AuthService {
 
   constructor(
     private apiAuthService: ApiAuthService,
+    private localStorageService: LocalStorageService,
     @Inject(PLATFORM_ID) private platformId: Object
   ) {
     // Check if user is logged in on service initialization (only in browser)
@@ -39,10 +41,10 @@ export class AuthService {
           // Store tokens and user data
           const tokenData = response.data;
           if (tokenData.accessToken) {
-            localStorage.setItem(this.TOKEN_KEY, tokenData.accessToken);
+            this.localStorageService.setItem(this.TOKEN_KEY, tokenData.accessToken);
           }
           if (tokenData.refreshToken) {
-            localStorage.setItem(this.REFRESH_TOKEN_KEY, tokenData.refreshToken);
+            this.localStorageService.setItem(this.REFRESH_TOKEN_KEY, tokenData.refreshToken);
           }
           
           // Get user profile after successful login
@@ -70,10 +72,10 @@ export class AuthService {
           // Store tokens after successful registration
           const tokenData = response.data;
           if (tokenData.accessToken) {
-            localStorage.setItem(this.TOKEN_KEY, tokenData.accessToken);
+            this.localStorageService.setItem(this.TOKEN_KEY, tokenData.accessToken);
           }
           if (tokenData.refreshToken) {
-            localStorage.setItem(this.REFRESH_TOKEN_KEY, tokenData.refreshToken);
+            this.localStorageService.setItem(this.REFRESH_TOKEN_KEY, tokenData.refreshToken);
           }
           
           // Get user profile after successful registration
@@ -98,9 +100,9 @@ export class AuthService {
     if (!isPlatformBrowser(this.platformId)) return;
     
     // Clear stored data
-    localStorage.removeItem(this.TOKEN_KEY);
-    localStorage.removeItem(this.REFRESH_TOKEN_KEY);
-    localStorage.removeItem(this.USER_KEY);
+    this.localStorageService.removeItem(this.TOKEN_KEY);
+    this.localStorageService.removeItem(this.REFRESH_TOKEN_KEY);
+    this.localStorageService.removeItem(this.USER_KEY);
     
     // Update current user
     this.currentUserSubject.next(null);
@@ -108,12 +110,12 @@ export class AuthService {
 
   getToken(): string | null {
     if (!isPlatformBrowser(this.platformId)) return null;
-    return localStorage.getItem(this.TOKEN_KEY);
+    return this.localStorageService.getItem(this.TOKEN_KEY);
   }
 
   getRefreshToken(): string | null {
     if (!isPlatformBrowser(this.platformId)) return null;
-    return localStorage.getItem(this.REFRESH_TOKEN_KEY);
+    return this.localStorageService.getItem(this.REFRESH_TOKEN_KEY);
   }
 
   isAuthenticated(): boolean {
@@ -140,7 +142,7 @@ export class AuthService {
           };
           
           // Store user data
-          localStorage.setItem(this.USER_KEY, JSON.stringify(user));
+          this.localStorageService.setItem(this.USER_KEY, JSON.stringify(user));
           this.currentUserSubject.next(user);
           
           return user;
@@ -157,13 +159,13 @@ export class AuthService {
   private getUserFromStorage(): AuthUser | null {
     if (!isPlatformBrowser(this.platformId)) return null;
     
-    const userData = localStorage.getItem(this.USER_KEY);
+    const userData = this.localStorageService.getItem(this.USER_KEY);
     if (userData) {
       try {
         return JSON.parse(userData) as AuthUser;
       } catch (error) {
         console.error('Error parsing stored user data:', error);
-        localStorage.removeItem(this.USER_KEY);
+        this.localStorageService.removeItem(this.USER_KEY);
       }
     }
     return null;
@@ -188,10 +190,10 @@ export class AuthService {
         if (response.success && response.data && isPlatformBrowser(this.platformId)) {
           const tokenData = response.data;
           if (tokenData.accessToken) {
-            localStorage.setItem(this.TOKEN_KEY, tokenData.accessToken);
+            this.localStorageService.setItem(this.TOKEN_KEY, tokenData.accessToken);
           }
           if (tokenData.refreshToken) {
-            localStorage.setItem(this.REFRESH_TOKEN_KEY, tokenData.refreshToken);
+            this.localStorageService.setItem(this.REFRESH_TOKEN_KEY, tokenData.refreshToken);
           }
         }
       }),
