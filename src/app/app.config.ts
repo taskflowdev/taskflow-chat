@@ -9,11 +9,11 @@ import { AuthInterceptor } from './auth/interceptors/auth.interceptor';
 
 export const appConfig: ApplicationConfig = {
   providers: [
-    provideZoneChangeDetection({ eventCoalescing: true }), 
-    provideRouter(routes), 
+    provideZoneChangeDetection({ eventCoalescing: true }),
+    provideRouter(routes),
     provideClientHydration(withEventReplay()),
     provideHttpClient(withInterceptorsFromDi()),
-    { provide: BASE_PATH, useValue: 'http://localhost:5000' }, // Configure your API base URL here
+    { provide: BASE_PATH, useValue: 'https://localhost:44347' }, // Configure your API base URL here
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true }
   ]
 };
