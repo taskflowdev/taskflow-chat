@@ -41,7 +41,7 @@ export class SignupComponent implements OnInit {
   passwordMatchValidator(form: FormGroup) {
     const password = form.get('password');
     const confirmPassword = form.get('confirmPassword');
-    
+
     if (password && confirmPassword && password.value !== confirmPassword.value) {
       confirmPassword.setErrors({ passwordMismatch: true });
     } else if (confirmPassword?.errors?.['passwordMismatch']) {
@@ -89,7 +89,7 @@ export class SignupComponent implements OnInit {
       Object.keys(this.signupForm.controls).forEach(key => {
         this.signupForm.get(key)?.markAsTouched();
       });
-      
+
       // Show validation error in toast
       this.toastService.showError('Please fill in all required fields correctly');
       return;

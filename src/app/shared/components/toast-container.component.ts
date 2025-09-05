@@ -11,7 +11,7 @@ import { Subscription } from 'rxjs';
     <div class="toast-container position-fixed bottom-0 end-0 p-3" style="z-index: 9999;">
       <div
         *ngFor="let toast of toasts; trackBy: trackByToastId"
-        class="toast show"
+        class="toast show bg-black text-white"
         [ngClass]="getToastClass(toast.type)"
         role="alert">
         <div class="toast-header">
@@ -19,7 +19,7 @@ import { Subscription } from 'rxjs';
           <strong class="me-auto">{{ toast.title || getDefaultTitle(toast.type) }}</strong>
           <button
             type="button"
-            class="btn-close"
+            class="btn-close btn-close-white"
             (click)="removeToast(toast.id)"
             aria-label="Close"></button>
         </div>
@@ -33,6 +33,7 @@ import { Subscription } from 'rxjs';
     .toast {
       min-width: 300px;
       margin-bottom: 0.5rem;
+      border: 0.2px solid rgba(255, 255, 255, 0.2);
     }
 
     .toast-success {
@@ -105,28 +106,28 @@ export class ToastContainerComponent implements OnInit, OnDestroy {
       case 'success':
         return 'bi bi-check-circle-fill';
       case 'error':
-        return 'bi bi-x-circle-fill';
+        return 'bi bi-emoji-frown-fill';
       case 'warning':
-        return 'bi bi-exclamation-triangle-fill';
+        return 'bi bi-exclamation-circle-fill';
       case 'info':
-        return 'bi bi-info-circle-fill';
+        return 'bi bi-lightbulb-fill';
       default:
-        return 'bi bi-info-circle-fill';
+        return 'bi bi-bell-fill';
     }
   }
 
   getDefaultTitle(type: string): string {
     switch (type) {
       case 'success':
-        return 'Success';
+        return 'All Done!';
       case 'error':
-        return 'Error';
+        return 'Oops, Error!';
       case 'warning':
-        return 'Warning';
+        return 'Heads Up!';
       case 'info':
-        return 'Info';
+        return 'For Your Information';
       default:
-        return 'Notification';
+        return 'Notice';
     }
   }
 }
