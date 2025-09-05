@@ -6,14 +6,15 @@
   border-bottom: 1px solid #444444;
   cursor: pointer;
   transition: all 0.2s ease;
-  background: transparent;
+  background: transparent !important; // Force transparent background
+  color: white !important; // Ensure white text
   
   &:hover {
-    background: #222222;
+    background: #222222 !important;
   }
   
   &.active {
-    background: #333333;
+    background: #333333 !important;
     border-left: 3px solid white;
   }
   
@@ -50,7 +51,7 @@
     margin-bottom: 0.25rem;
     
     .chat-name {
-      color: white;
+      color: white !important;
       font-weight: 500;
       font-size: 0.9rem;
       white-space: nowrap;
@@ -73,7 +74,7 @@
     align-items: center;
     
     .last-message {
-      color: #9ca3af;
+      color: #9ca3af !important;
       font-size: 0.8rem;
       white-space: nowrap;
       overflow: hidden;
