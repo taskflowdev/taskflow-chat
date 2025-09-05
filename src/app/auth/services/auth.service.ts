@@ -119,6 +119,11 @@ export class AuthService {
   }
 
   isAuthenticated(): boolean {
+    // During SSR, we cannot determine authentication status reliably
+    if (!isPlatformBrowser(this.platformId)) {
+      return false;
+    }
+    
     const token = this.getToken();
     if (!token) return false;
 
@@ -200,6 +205,32 @@ export class AuthService {
       map(response => response.success || false),
       catchError(error => {
         console.error('Token refresh error:', error);
+        this.logout(); // Clear invalid tokens
+        return of(false);
+      })
+    );
+  }
+
+  verifyAuthentication(): Observable<boolean> {
+    if (!isPlatformBrowser(this.platformId)) {
+      return of(false);
+    }
+
+    const token = this.getToken();
+    if (!token) {
+      return of(false);
+    }
+
+    // If we already have user data, consider authenticated
+    if (this.getCurrentUser()) {
+      return of(true);
+    }
+
+    // Verify with the server by calling /api/auth/me
+    return this.getUserProfile().pipe(
+      map(user => !!user),
+      catchError(error => {
+        console.error('Authentication verification failed:', error);
         this.logout(); // Clear invalid tokens
         return of(false);
       })

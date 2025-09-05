@@ -1,5 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component, OnInit, Inject, PLATFORM_ID } from '@angular/core';
+import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { Router } from '@angular/router';
 import { AuthService, AuthUser } from '../../../auth/services/auth.service';
 
@@ -15,19 +15,22 @@ export class MainChatComponent implements OnInit {
 
   constructor(
     private authService: AuthService,
-    private router: Router
+    private router: Router,
+    @Inject(PLATFORM_ID) private platformId: Object
   ) {}
 
   ngOnInit() {
     this.user = this.authService.getCurrentUser();
     
-    // Subscribe to user changes
-    this.authService.currentUser$.subscribe(user => {
-      this.user = user;
-      if (!user) {
-        this.router.navigate(['/auth/login']);
-      }
-    });
+    // Subscribe to user changes only in browser environment
+    if (isPlatformBrowser(this.platformId)) {
+      this.authService.currentUser$.subscribe(user => {
+        this.user = user;
+        if (!user) {
+          this.router.navigate(['/auth/login']);
+        }
+      });
+    }
   }
 
   logout(): void {
