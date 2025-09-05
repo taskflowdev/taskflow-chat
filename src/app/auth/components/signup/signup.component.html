@@ -1,11 +1,12 @@
 <div class="auth-container">
-  <!-- Brand Logo -->
-  <div class="brand-logo">
-    <div class="logo-icon">
-      <i class="bi bi-chat-quote"></i>
+  <a routerLink="/">
+    <div class="brand-logo">
+      <div class="logo-icon">
+        <i class="bi bi-chat-quote"></i>
+      </div>
+      <!-- <span class="brand-name">TaskFlow Chat</span> -->
     </div>
-    <!-- <span class="brand-name">TaskFlow Chat</span> -->
-  </div>
+  </a>
 
   <div class="auth-content">
 
@@ -55,8 +56,7 @@
         </div>
 
         <!-- Sign Up Button -->
-        <button type="submit" class="btn btn-signup" [disabled]="isLoading">
-          <span *ngIf="isLoading" class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+        <button type="submit" class="btn btn-signup fw-bold" [disabled]="isLoading || signupForm.invalid">
           {{ isLoading ? 'Creating Account...' : 'Create Account' }}
         </button>
       </form>

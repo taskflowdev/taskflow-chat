@@ -6,14 +6,14 @@ import { AuthService } from '../../services/auth.service';
 import { ToastService } from '../../../shared/services/toast.service';
 
 @Component({
-  selector: 'app-login',
+  selector: 'app-signin',
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule, RouterModule],
-  templateUrl: './login.component.html',
-  styleUrl: './login.component.scss'
+  templateUrl: './signin.component.html',
+  styleUrl: './signin.component.scss'
 })
-export class LoginComponent implements OnInit {
-  loginForm: FormGroup;
+export class SigninComponent implements OnInit {
+  signinForm: FormGroup;
   isLoading = false;
 
   constructor(
@@ -22,7 +22,7 @@ export class LoginComponent implements OnInit {
     private router: Router,
     private toastService: ToastService
   ) {
-    this.loginForm = this.fb.group({
+    this.signinForm = this.fb.group({
       userName: ['', [Validators.required, Validators.minLength(3)]],
       password: ['', [Validators.required, Validators.minLength(6)]],
       rememberMe: [false]
@@ -37,7 +37,7 @@ export class LoginComponent implements OnInit {
   }
 
   getFieldError(fieldName: string): string | null {
-    const field = this.loginForm.get(fieldName);
+    const field = this.signinForm.get(fieldName);
     if (field && field.touched && field.errors) {
       if (field.errors['required']) {
         return `${this.getFieldLabel(fieldName)} is required`;
@@ -58,10 +58,10 @@ export class LoginComponent implements OnInit {
   }
 
   onSubmit(): void {
-    if (this.loginForm.invalid) {
+    if (this.signinForm.invalid) {
       // Mark all fields as touched to show validation errors
-      Object.keys(this.loginForm.controls).forEach(key => {
-        this.loginForm.get(key)?.markAsTouched();
+      Object.keys(this.signinForm.controls).forEach(key => {
+        this.signinForm.get(key)?.markAsTouched();
       });
 
       // Show validation error in toast
@@ -71,7 +71,7 @@ export class LoginComponent implements OnInit {
 
     this.isLoading = true;
 
-    const { userName, password } = this.loginForm.value;
+    const { userName, password } = this.signinForm.value;
 
     this.authService.login({ userName, password }).subscribe({
       next: (result) => {

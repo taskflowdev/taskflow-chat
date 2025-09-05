@@ -1,23 +1,25 @@
 <div class="auth-container">
   <!-- Brand Logo -->
-  <div class="brand-logo">
-    <div class="logo-icon">
-      <i class="bi bi-chat-quote"></i>
+  <a routerLink="/">
+    <div class="brand-logo">
+      <div class="logo-icon">
+        <i class="bi bi-chat-quote"></i>
+      </div>
+      <!-- <span class="brand-name">TaskFlow Chat</span> -->
     </div>
-    <!-- <span class="brand-name">TaskFlow Chat</span> -->
-  </div>
+  </a>
 
   <div class="auth-content">
 
     <div class="auth-form">
       <!-- Header -->
       <div class="auth-header">
-        <h1 class="main-title">Login to your account</h1>
-        <p class="subtitle">Enter your username below to login to your account</p>
+        <h1 class="main-title">Signin to your account</h1>
+        <p class="subtitle">Enter your username below to signin to your account</p>
       </div>
 
       <!-- Login Form -->
-      <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" novalidate class="login-form">
+      <form [formGroup]="signinForm" (ngSubmit)="onSubmit()" novalidate class="login-form">
         <!-- Email Field -->
         <div class="form-group">
           <label for="email" class="form-label">Username</label>
@@ -36,9 +38,8 @@
         </div>
 
         <!-- Login Button -->
-        <button type="submit" class="btn btn-login" [disabled]="isLoading">
-          <span *ngIf="isLoading" class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
-          {{ isLoading ? 'Signing in...' : 'Login' }}
+        <button type="submit" class="btn btn-login fw-bold" [disabled]="isLoading || signinForm.invalid">
+          {{ isLoading ? 'Please wait...' : 'Continue' }}
         </button>
 
       </form>
