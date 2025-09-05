@@ -1,96 +1,288 @@
-/* You can add global styles to this file, and also import other style files */
+/* Global neon green/black futuristic theme */
 
-// Custom CSS variables for green and black theme
+// Custom CSS variables for neon green and black theme
 :root {
-  --primary-green: #22c55e;
-  --dark-green: #16a34a;
-  --light-green: #4ade80;
-  --accent-green: #15803d;
-  --primary-black: #0f172a;
-  --secondary-black: #1e293b;
-  --tertiary-black: #334155;
-  --light-gray: #f8fafc;
-  --medium-gray: #e2e8f0;
-  --dark-gray: #64748b;
+  --neon-green: #00ff41;
+  --neon-green-bright: #39ff6b;
+  --neon-green-dark: #00cc34;
+  --neon-green-shadow: rgba(0, 255, 65, 0.5);
+  --neon-green-glow: rgba(0, 255, 65, 0.3);
+  --pure-black: #000000;
+  --deep-black: #0a0a0a;
+  --dark-black: #111111;
+  --darker-black: #1a1a1a;
+  --gray-900: #1a1a1a;
+  --gray-800: #2a2a2a;
+  --gray-700: #3a3a3a;
+  --neon-text-shadow: 0 0 10px var(--neon-green-glow);
 }
 
-// Global styles for the app
-body {
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  background: var(--light-gray);
+// Global body and html styles
+html, body {
   margin: 0;
   padding: 0;
-  color: var(--primary-black);
+  height: 100%;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  background: var(--pure-black);
+  color: var(--neon-green);
+  overflow-x: hidden;
 }
 
-// Auth form styles
-.auth-container {
+// Auth split-screen container
+.auth-split-container {
   min-height: 100vh;
+  display: flex;
+  background: var(--pure-black);
+  position: relative;
+  overflow: hidden;
+}
+
+// Left side - Form area
+.auth-form-side {
+  flex: 1;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 20px;
-  background: linear-gradient(135deg, var(--primary-black) 0%, var(--secondary-black) 50%, var(--primary-green) 100%);
+  padding: 2rem;
+  background: var(--pure-black);
+  position: relative;
+  z-index: 2;
+  
+  @media (max-width: 768px) {
+    flex: none;
+    width: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 10;
+    background: rgba(0, 0, 0, 0.95);
+    backdrop-filter: blur(10px);
+  }
 }
 
+// Right side - Branding area
+.auth-brand-side {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--pure-black);
+  position: relative;
+  overflow: hidden;
+  border-left: 1px solid var(--neon-green);
+  box-shadow: -10px 0 30px var(--neon-green-glow);
+  
+  // Neon pattern background
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: 
+      radial-gradient(circle at 20% 20%, var(--neon-green-glow) 0%, transparent 50%),
+      radial-gradient(circle at 80% 80%, var(--neon-green-glow) 0%, transparent 50%),
+      radial-gradient(circle at 40% 60%, var(--neon-green-glow) 0%, transparent 50%);
+    animation: pulse-pattern 4s ease-in-out infinite;
+    z-index: 1;
+  }
+  
+  // Icon pattern overlay
+  &::after {
+    content: '\F27E'; // bi-chat-quote unicode
+    font-family: 'Bootstrap Icons';
+    position: absolute;
+    font-size: 2rem;
+    color: rgba(0, 255, 65, 0.1);
+    background-image: 
+      repeating-linear-gradient(45deg, transparent, transparent 40px, rgba(0, 255, 65, 0.05) 40px, rgba(0, 255, 65, 0.05) 80px);
+    background-size: 100px 100px;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 1;
+  }
+  
+  @media (max-width: 768px) {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 1;
+  }
+}
+
+@keyframes pulse-pattern {
+  0%, 100% {
+    opacity: 0.3;
+  }
+  50% {
+    opacity: 0.6;
+  }
+}
+
+// Main brand logo
+.auth-brand-content {
+  position: relative;
+  z-index: 3;
+  text-align: center;
+}
+
+.auth-brand-icon {
+  font-size: 8rem;
+  color: var(--neon-green);
+  text-shadow: 
+    0 0 20px var(--neon-green-glow),
+    0 0 40px var(--neon-green-glow),
+    0 0 60px var(--neon-green-glow);
+  animation: glow-pulse 3s ease-in-out infinite alternate;
+  
+  @media (max-width: 768px) {
+    font-size: 6rem;
+  }
+}
+
+@keyframes glow-pulse {
+  from {
+    text-shadow: 
+      0 0 20px var(--neon-green-glow),
+      0 0 40px var(--neon-green-glow),
+      0 0 60px var(--neon-green-glow);
+  }
+  to {
+    text-shadow: 
+      0 0 30px var(--neon-green-glow),
+      0 0 60px var(--neon-green-glow),
+      0 0 80px var(--neon-green-glow);
+  }
+}
+
+// Auth form card styles
 .auth-card {
-  background: white;
+  background: var(--pure-black);
+  border: 2px solid var(--neon-green);
   border-radius: 16px;
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
-  padding: 2.5rem;
+  box-shadow: 
+    0 0 30px var(--neon-green-glow),
+    inset 0 0 30px rgba(0, 255, 65, 0.1);
+  padding: 3rem;
   width: 100%;
   max-width: 420px;
-  backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(20px);
+  position: relative;
+  
+  &::before {
+    content: '';
+    position: absolute;
+    top: -2px;
+    left: -2px;
+    right: -2px;
+    bottom: -2px;
+    background: linear-gradient(45deg, var(--neon-green), transparent, var(--neon-green));
+    border-radius: 16px;
+    z-index: -1;
+    animation: border-glow 2s linear infinite;
+  }
+  
+  @media (max-width: 576px) {
+    padding: 2rem;
+    margin: 1rem;
+    border-radius: 12px;
+    max-width: calc(100vw - 2rem);
+  }
+}
+
+@keyframes border-glow {
+  0% { opacity: 0.5; }
+  50% { opacity: 1; }
+  100% { opacity: 0.5; }
 }
 
 .auth-header {
   text-align: center;
-  margin-bottom: 2rem;
+  margin-bottom: 2.5rem;
+  
+  h2 {
+    color: var(--neon-green);
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+    font-size: 2rem;
+    text-shadow: var(--neon-text-shadow);
+    text-transform: uppercase;
+    letter-spacing: 2px;
+  }
+  
+  p {
+    color: rgba(0, 255, 65, 0.7);
+    font-size: 0.9rem;
+    font-weight: 300;
+  }
 }
 
-.auth-header h2 {
-  color: var(--primary-black);
-  font-weight: 700;
-  margin-bottom: 0.5rem;
-  font-size: 1.75rem;
-}
-
-.auth-header p {
-  color: var(--dark-gray);
-  font-size: 0.9rem;
-}
-
-// Form input groups with floating labels
+// Form input groups with neon styling
 .form-floating {
   position: relative;
-  margin-bottom: 1rem;
+  margin-bottom: 1.5rem;
+  
+  > .form-control {
+    height: calc(3.5rem + 2px);
+    padding: 1rem 0.75rem;
+    border: 2px solid rgba(0, 255, 65, 0.3);
+    border-radius: 8px;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    background: transparent;
+    color: var(--neon-green);
+    
+    &::placeholder {
+      color: rgba(0, 255, 65, 0.5);
+    }
+    
+    &:focus {
+      border-color: var(--neon-green);
+      box-shadow: 
+        0 0 20px var(--neon-green-glow),
+        inset 0 0 20px rgba(0, 255, 65, 0.1);
+      background: rgba(0, 255, 65, 0.05);
+      outline: none;
+      
+      & + label {
+        color: var(--neon-green);
+        text-shadow: var(--neon-text-shadow);
+      }
+    }
+    
+    &.is-invalid {
+      border-color: #ff0040;
+      box-shadow: 0 0 20px rgba(255, 0, 64, 0.5);
+    }
+  }
+  
+  > label {
+    padding: 1rem 0.75rem;
+    color: rgba(0, 255, 65, 0.7);
+    font-size: 0.9rem;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    
+    i {
+      color: var(--neon-green);
+      text-shadow: var(--neon-text-shadow);
+    }
+  }
 }
 
-.form-floating > .form-control {
-  height: calc(3.5rem + 2px);
-  padding: 1rem 0.75rem;
-  border: 2px solid var(--medium-gray);
-  border-radius: 12px;
-  font-size: 1rem;
-  transition: all 0.3s ease;
-  background: var(--light-gray);
+// Invalid feedback styling
+.invalid-feedback {
+  color: #ff0040;
+  font-size: 0.875rem;
+  text-shadow: 0 0 5px rgba(255, 0, 64, 0.5);
 }
 
-.form-floating > .form-control:focus {
-  border-color: var(--primary-green);
-  box-shadow: 0 0 0 0.2rem rgba(34, 197, 94, 0.25);
-  background: white;
-}
-
-.form-floating > label {
-  padding: 1rem 0.75rem;
-  color: var(--dark-gray);
-  font-size: 0.9rem;
-  font-weight: 500;
-}
-
-// Password toggle button
+// Password toggle button with neon styling
 .password-toggle {
   position: absolute;
   right: 12px;
@@ -98,153 +290,272 @@ body {
   transform: translateY(-50%);
   background: none;
   border: none;
-  color: var(--dark-gray);
+  color: rgba(0, 255, 65, 0.7);
   cursor: pointer;
   z-index: 10;
-  padding: 4px;
+  padding: 8px;
   border-radius: 4px;
-  transition: all 0.2s ease;
+  transition: all 0.3s ease;
+  
+  &:hover {
+    color: var(--neon-green);
+    text-shadow: var(--neon-text-shadow);
+    background: rgba(0, 255, 65, 0.1);
+  }
+  
+  i {
+    font-size: 1.1rem;
+  }
 }
 
-.password-toggle:hover {
-  color: var(--primary-green);
-  background: rgba(34, 197, 94, 0.1);
-}
-
-// Primary button styling
+// Primary button styling with neon glow
 .btn-primary {
-  background: linear-gradient(135deg, var(--primary-green) 0%, var(--dark-green) 100%);
-  border: none;
-  border-radius: 12px;
+  background: var(--neon-green);
+  border: 2px solid var(--neon-green);
+  border-radius: 8px;
   padding: 14px 24px;
   font-weight: 600;
   font-size: 1rem;
+  color: var(--pure-black);
+  text-transform: uppercase;
+  letter-spacing: 1px;
   transition: all 0.3s ease;
-  text-transform: none;
+  position: relative;
+  overflow: hidden;
+  
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transition: left 0.5s ease;
+  }
+  
+  &:hover {
+    background: var(--pure-black);
+    color: var(--neon-green);
+    box-shadow: 
+      0 0 30px var(--neon-green-glow),
+      inset 0 0 30px rgba(0, 255, 65, 0.1);
+    transform: translateY(-2px);
+    
+    &::before {
+      left: 100%;
+    }
+  }
+  
+  &:focus {
+    box-shadow: 
+      0 0 40px var(--neon-green-glow),
+      0 0 0 0.2rem rgba(0, 255, 65, 0.5);
+    outline: none;
+  }
+  
+  &:disabled {
+    background: var(--gray-800);
+    color: rgba(0, 255, 65, 0.5);
+    border-color: var(--gray-800);
+    transform: none;
+    box-shadow: none;
+    cursor: not-allowed;
+  }
 }
 
-.btn-primary:hover {
-  background: linear-gradient(135deg, var(--dark-green) 0%, var(--accent-green) 100%);
-  transform: translateY(-1px);
-  box-shadow: 0 8px 25px rgba(34, 197, 94, 0.3);
+// Social login buttons
+.btn-social {
+  border: 2px solid rgba(0, 255, 65, 0.3);
+  background: transparent;
+  color: var(--neon-green);
+  border-radius: 8px;
+  padding: 12px 20px;
+  transition: all 0.3s ease;
+  
+  &:hover {
+    border-color: var(--neon-green);
+    background: rgba(0, 255, 65, 0.1);
+    box-shadow: 0 0 20px var(--neon-green-glow);
+    color: var(--neon-green);
+  }
 }
 
-.btn-primary:focus {
-  box-shadow: 0 0 0 0.2rem rgba(34, 197, 94, 0.5);
-}
-
-.btn-primary:disabled {
-  background: var(--medium-gray);
-  color: var(--dark-gray);
-  transform: none;
-  box-shadow: none;
-}
-
-// Link styling
+// Link styling with neon effect
 .auth-link {
-  color: var(--primary-green);
+  color: var(--neon-green);
   text-decoration: none;
   font-weight: 600;
-  transition: color 0.3s ease;
+  transition: all 0.3s ease;
+  position: relative;
+  
+  &::after {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background: var(--neon-green);
+    box-shadow: 0 0 5px var(--neon-green-glow);
+    transition: width 0.3s ease;
+  }
+  
+  &:hover {
+    color: var(--neon-green-bright);
+    text-shadow: var(--neon-text-shadow);
+    text-decoration: none;
+    
+    &::after {
+      width: 100%;
+    }
+  }
 }
 
-.auth-link:hover {
-  color: var(--dark-green);
-  text-decoration: underline;
+// Form check styles (remember me, etc.)
+.form-check-input {
+  background-color: transparent;
+  border: 2px solid rgba(0, 255, 65, 0.3);
+  border-radius: 4px;
+  
+  &:checked {
+    background-color: var(--neon-green);
+    border-color: var(--neon-green);
+    box-shadow: 0 0 10px var(--neon-green-glow);
+  }
+  
+  &:focus {
+    border-color: var(--neon-green);
+    outline: 0;
+    box-shadow: 0 0 20px var(--neon-green-glow);
+  }
 }
 
-// Loading spinner
+.form-check-label {
+  color: rgba(0, 255, 65, 0.8);
+  font-size: 0.9rem;
+}
+
+// Loading spinner with neon effect
+.spinner-border {
+  color: var(--neon-green);
+  animation: spinner-border .75s linear infinite, neon-pulse 2s ease-in-out infinite alternate;
+}
+
+@keyframes neon-pulse {
+  from {
+    filter: drop-shadow(0 0 5px var(--neon-green));
+  }
+  to {
+    filter: drop-shadow(0 0 10px var(--neon-green));
+  }
+}
+
 .spinner-border-sm {
   width: 1rem;
   height: 1rem;
 }
 
-// Error alerts
-.alert-danger {
-  border-radius: 12px;
-  border: none;
-  background: #fef2f2;
-  color: #dc2626;
-  font-size: 0.9rem;
-  border-left: 4px solid #dc2626;
+// Divider styling
+hr {
+  border-top: 1px solid rgba(0, 255, 65, 0.3);
 }
 
-// Success alerts
-.alert-success {
-  border-radius: 12px;
-  border: none;
-  background: #f0fdf4;
-  color: var(--accent-green);
-  font-size: 0.9rem;
-  border-left: 4px solid var(--primary-green);
+.text-muted {
+  color: rgba(0, 255, 65, 0.6) !important;
 }
 
-// Chat container styles
+// Mobile toggle button for form overlay
+.mobile-form-toggle {
+  position: fixed;
+  top: 20px;
+  left: 20px;
+  z-index: 15;
+  display: none;
+  background: var(--pure-black);
+  border: 2px solid var(--neon-green);
+  color: var(--neon-green);
+  border-radius: 8px;
+  padding: 10px;
+  box-shadow: 0 0 20px var(--neon-green-glow);
+  
+  @media (max-width: 768px) {
+    display: block;
+  }
+  
+  &:hover {
+    background: rgba(0, 255, 65, 0.1);
+  }
+}
+
+// Success/Error toast positioning
+.toast-container {
+  position: fixed;
+  bottom: 20px;
+  left: 20px;
+  z-index: 1055;
+}
+
+// Responsive adjustments
+@media (max-width: 768px) {
+  .auth-split-container {
+    position: relative;
+  }
+  
+  .auth-form-side {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    z-index: 10;
+    background: rgba(0, 0, 0, 0.95);
+    backdrop-filter: blur(10px);
+    
+    &.hidden {
+      transform: translateX(-100%);
+      transition: transform 0.3s ease;
+    }
+  }
+}
+
+// Chat container styles (updated for consistency)
 .chat-container {
   height: 100vh;
   display: flex;
   flex-direction: column;
-  background: var(--light-gray);
+  background: var(--pure-black);
 }
 
 .chat-header {
-  background: linear-gradient(135deg, var(--primary-black) 0%, var(--secondary-black) 100%);
-  color: white;
+  background: var(--pure-black);
+  color: var(--neon-green);
   padding: 1.25rem 1.5rem;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  border-bottom: 1px solid var(--neon-green);
+  box-shadow: 0 2px 10px var(--neon-green-glow);
 }
 
 .chat-content {
   flex: 1;
   padding: 2rem;
   overflow-y: auto;
-  background: linear-gradient(135deg, var(--light-gray) 0%, #ffffff 100%);
+  background: var(--deep-black);
 }
 
-// Responsive design
-@media (max-width: 576px) {
-  .auth-card {
-    padding: 1.5rem;
-    margin: 10px;
-    border-radius: 12px;
-  }
-  
-  .auth-container {
-    padding: 10px;
-  }
-  
-  .chat-header {
-    padding: 1rem;
-  }
-  
-  .chat-content {
-    padding: 1rem;
-  }
-}
-
-// Additional component styles for better UI
+// Additional component consistency
 .card {
   border-radius: 16px;
-  border: none;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  border: 2px solid var(--neon-green);
+  background: var(--pure-black);
+  box-shadow: 0 0 20px var(--neon-green-glow);
 }
 
 .card-body {
   padding: 1.5rem;
-}
-
-.form-check-input:checked {
-  background-color: var(--primary-green);
-  border-color: var(--primary-green);
-}
-
-.form-check-input:focus {
-  border-color: var(--primary-green);
-  outline: 0;
-  box-shadow: 0 0 0 0.2rem rgba(34, 197, 94, 0.25);
+  color: var(--neon-green);
 }
 
 // Dropdown improvements
@@ -254,29 +565,26 @@ body {
 
 .dropdown-menu {
   border-radius: 12px;
-  border: none;
-  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+  border: 2px solid var(--neon-green);
+  background: var(--pure-black);
+  box-shadow: 0 0 30px var(--neon-green-glow);
   padding: 0.5rem 0;
 }
 
 .dropdown-item {
   padding: 0.5rem 1rem;
   transition: all 0.2s ease;
-}
-
-.dropdown-item:hover {
-  background-color: rgba(34, 197, 94, 0.1);
-  color: var(--primary-green);
-}
-
-// Loading spinner color
-.spinner-border {
-  color: var(--primary-green);
+  color: var(--neon-green);
+  
+  &:hover {
+    background-color: rgba(0, 255, 65, 0.1);
+    color: var(--neon-green-bright);
+  }
 }
 
 // Text colors
 .text-success {
-  color: var(--primary-green) !important;
+  color: var(--neon-green) !important;
 }
 
 // Icon styling
