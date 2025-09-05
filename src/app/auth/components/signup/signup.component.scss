@@ -1,4 +1,4 @@
-// Component-specific neon animations
+// Component-specific food theme animations
 .auth-split-container {
   animation: fadeIn 0.8s ease-in;
 }
@@ -75,13 +75,13 @@
   }
   
   &::-webkit-scrollbar-track {
-    background: rgba(0, 255, 65, 0.1);
+    background: rgba(154, 205, 50, 0.1);
     border-radius: 3px;
   }
   
   &::-webkit-scrollbar-thumb {
-    background: var(--neon-green);
+    background: var(--food-green);
     border-radius: 3px;
-    box-shadow: 0 0 5px var(--neon-green-glow);
+    box-shadow: 0 0 5px var(--food-green-glow);
   }
 }
