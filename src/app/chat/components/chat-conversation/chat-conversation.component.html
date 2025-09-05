@@ -1,0 +1,57 @@
+<div class="chat-conversation" *ngIf="conversation; else noConversation">
+  <!-- Conversation Header -->
+  <div class="conversation-header">
+    <div class="conversation-info">
+      <h4 class="conversation-title">{{ conversation.groupName }}</h4>
+      <p class="conversation-subtitle" *ngIf="conversation.memberCount">
+        {{ conversation.memberCount }} member{{ conversation.memberCount !== 1 ? 's' : '' }}
+      </p>
+    </div>
+    
+    <div class="conversation-actions">
+      <button class="btn action-btn" title="More options">
+        <i class="bi bi-three-dots-vertical"></i>
+      </button>
+    </div>
+  </div>
+
+  <!-- Messages Container -->
+  <div class="messages-container" #messagesContainer>
+    <div class="messages-list">
+      <app-chat-message
+        *ngFor="let message of conversation.messages; trackBy: trackByMessageId"
+        [message]="message">
+      </app-chat-message>
+    </div>
+  </div>
+
+  <!-- Message Input -->
+  <div class="message-input-container">
+    <div class="input-wrapper">
+      <textarea
+        [(ngModel)]="newMessage"
+        (keydown)="onKeyDown($event)"
+        placeholder="Type a message..."
+        class="message-input"
+        rows="1">
+      </textarea>
+      <button 
+        class="btn send-btn" 
+        (click)="onSendMessage()"
+        [disabled]="!newMessage.trim()"
+        title="Send message">
+        <i class="bi bi-send-fill"></i>
+      </button>
+    </div>
+  </div>
+</div>
+
+<ng-template #noConversation>
+  <div class="no-conversation">
+    <div class="welcome-content">
+      <i class="bi bi-chat-quote welcome-icon"></i>
+      <h3 class="welcome-title">Welcome to TaskFlow Chat</h3>
+      <p class="welcome-subtitle">Select a conversation from the sidebar to start chatting</p>
+    </div>
+  </div>
+</ng-template>

@@ -1,0 +1,169 @@
+// Chat item component styles - black and white theme
+.chat-item {
+  display: flex;
+  align-items: center;
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid #444444;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  background: transparent;
+  
+  &:hover {
+    background: #222222;
+  }
+  
+  &.active {
+    background: #333333;
+    border-left: 3px solid white;
+  }
+  
+  &:last-child {
+    border-bottom: none;
+  }
+}
+
+.chat-avatar {
+  width: 40px;
+  height: 40px;
+  background: #444444;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 0.75rem;
+  flex-shrink: 0;
+  
+  i {
+    color: #9ca3af;
+    font-size: 1.2rem;
+  }
+}
+
+.chat-content {
+  flex: 1;
+  min-width: 0; // Allow text truncation
+  
+  .chat-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.25rem;
+    
+    .chat-name {
+      color: white;
+      font-weight: 500;
+      font-size: 0.9rem;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 150px;
+    }
+    
+    .chat-time {
+      color: #9ca3af;
+      font-size: 0.75rem;
+      white-space: nowrap;
+      margin-left: 0.5rem;
+    }
+  }
+  
+  .chat-preview {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    
+    .last-message {
+      color: #9ca3af;
+      font-size: 0.8rem;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 180px;
+    }
+    
+    .unread-count {
+      background: white;
+      color: black;
+      font-size: 0.7rem;
+      font-weight: 600;
+      padding: 0.15rem 0.4rem;
+      border-radius: 10px;
+      min-width: 20px;
+      text-align: center;
+      margin-left: 0.5rem;
+      flex-shrink: 0;
+    }
+  }
+}
+
+// Active state styles
+.chat-item.active {
+  .chat-content {
+    .chat-header .chat-name {
+      color: white;
+      font-weight: 600;
+    }
+    
+    .chat-preview .last-message {
+      color: #e5e5e5;
+    }
+  }
+}
+
+// Responsive design
+@media (max-width: 768px) {
+  .chat-item {
+    padding: 0.6rem 0.75rem;
+    
+    .chat-avatar {
+      width: 36px;
+      height: 36px;
+      margin-right: 0.6rem;
+      
+      i {
+        font-size: 1.1rem;
+      }
+    }
+    
+    .chat-content {
+      .chat-header {
+        .chat-name {
+          font-size: 0.85rem;
+          max-width: 120px;
+        }
+        
+        .chat-time {
+          font-size: 0.7rem;
+        }
+      }
+      
+      .chat-preview {
+        .last-message {
+          font-size: 0.75rem;
+          max-width: 140px;
+        }
+        
+        .unread-count {
+          font-size: 0.65rem;
+          padding: 0.1rem 0.3rem;
+        }
+      }
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .chat-item {
+    padding: 0.5rem;
+    
+    .chat-content {
+      .chat-header .chat-name {
+        max-width: 100px;
+      }
+      
+      .chat-preview .last-message {
+        max-width: 100px;
+      }
+    }
+  }
+}
