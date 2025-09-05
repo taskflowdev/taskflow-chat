@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angula
 import { Router, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { AuthService } from '../../services/auth.service';
+import { ToastService } from '../../../shared/services/toast.service';
 
 @Component({
   selector: 'app-login',
@@ -14,13 +15,13 @@ import { AuthService } from '../../services/auth.service';
 export class LoginComponent implements OnInit {
   loginForm: FormGroup;
   isLoading = false;
-  errorMessage: string | null = null;
   showPassword = false;
 
   constructor(
     private fb: FormBuilder,
     private authService: AuthService,
-    private router: Router
+    private router: Router,
+    private toastService: ToastService
   ) {
     this.loginForm = this.fb.group({
       userName: ['', [Validators.required, Validators.minLength(3)]],
@@ -67,11 +68,13 @@ export class LoginComponent implements OnInit {
       Object.keys(this.loginForm.controls).forEach(key => {
         this.loginForm.get(key)?.markAsTouched();
       });
+      
+      // Show validation error in toast
+      this.toastService.showError('Please fill in all required fields correctly');
       return;
     }
 
     this.isLoading = true;
-    this.errorMessage = null;
 
     const { userName, password } = this.loginForm.value;
 
@@ -79,15 +82,16 @@ export class LoginComponent implements OnInit {
       next: (result) => {
         this.isLoading = false;
         if (result.success) {
-          // Successful login, redirect to chat
+          // Successful login, show success toast and redirect to chat
+          this.toastService.showSuccess('Login successful! Welcome back.');
           this.router.navigate(['/chat']);
         } else {
-          this.errorMessage = result.error || 'Login failed';
+          this.toastService.showError(result.error || 'Login failed');
         }
       },
       error: (error) => {
         this.isLoading = false;
-        this.errorMessage = 'An unexpected error occurred. Please try again.';
+        this.toastService.showError('An unexpected error occurred. Please try again.');
         console.error('Login error:', error);
       }
     });

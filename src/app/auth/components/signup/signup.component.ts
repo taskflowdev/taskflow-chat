@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angula
 import { Router, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { AuthService } from '../../services/auth.service';
+import { ToastService } from '../../../shared/services/toast.service';
 
 @Component({
   selector: 'app-signup',
@@ -14,14 +15,14 @@ import { AuthService } from '../../services/auth.service';
 export class SignupComponent implements OnInit {
   signupForm: FormGroup;
   isLoading = false;
-  errorMessage: string | null = null;
   showPassword = false;
   showConfirmPassword = false;
 
   constructor(
     private fb: FormBuilder,
     private authService: AuthService,
-    private router: Router
+    private router: Router,
+    private toastService: ToastService
   ) {
     this.signupForm = this.fb.group({
       fullName: ['', [Validators.required, Validators.minLength(2)]],
@@ -98,11 +99,13 @@ export class SignupComponent implements OnInit {
       Object.keys(this.signupForm.controls).forEach(key => {
         this.signupForm.get(key)?.markAsTouched();
       });
+      
+      // Show validation error in toast
+      this.toastService.showError('Please fill in all required fields correctly');
       return;
     }
 
     this.isLoading = true;
-    this.errorMessage = null;
 
     const { fullName, userName, email, password } = this.signupForm.value;
 
@@ -110,15 +113,16 @@ export class SignupComponent implements OnInit {
       next: (result) => {
         this.isLoading = false;
         if (result.success) {
-          // Successful registration, redirect to chat
+          // Successful registration, show success toast and redirect to chat
+          this.toastService.showSuccess('Account created successfully! Welcome to ChatFlow.');
           this.router.navigate(['/chat']);
         } else {
-          this.errorMessage = result.error || 'Registration failed';
+          this.toastService.showError(result.error || 'Registration failed');
         }
       },
       error: (error) => {
         this.isLoading = false;
-        this.errorMessage = 'An unexpected error occurred. Please try again.';
+        this.toastService.showError('An unexpected error occurred. Please try again.');
         console.error('Registration error:', error);
       }
     });

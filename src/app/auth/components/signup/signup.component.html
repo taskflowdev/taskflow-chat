@@ -1,153 +1,188 @@
 <div class="auth-container">
-  <div class="auth-card">
-    <div class="auth-header">
-      <div class="mb-3">
-        <i class="bi bi-chat-dots-fill" style="font-size: 3rem; color: var(--primary-green);"></i>
+  <div class="auth-content">
+    <!-- Left side - Signup Form -->
+    <div class="auth-form-side">
+      <div class="auth-header">
+        <h1 class="greeting">ChatFlow</h1>
+        <h2 class="welcome">Join Us!</h2>
+        <h3 class="sub-welcome">Create Account</h3>
       </div>
-      <h2>Join TaskFlow Chat</h2>
-      <p>Create your account to get started</p>
+
+      <!-- Signup Form -->
+      <form [formGroup]="signupForm" (ngSubmit)="onSubmit()" novalidate>
+        <!-- Full Name Field -->
+        <div class="form-group mb-3">
+          <input 
+            type="text" 
+            class="form-control"
+            [class.is-invalid]="getFieldError('fullName')"
+            id="fullName"
+            formControlName="fullName"
+            placeholder="Enter your full name"
+            autocomplete="name">
+          <label for="fullName">Enter your full name</label>
+        </div>
+
+        <!-- Username Field -->
+        <div class="form-group mb-3">
+          <input 
+            type="text" 
+            class="form-control"
+            [class.is-invalid]="getFieldError('userName')"
+            id="userName"
+            formControlName="userName"
+            placeholder="Choose a username"
+            autocomplete="username">
+          <label for="userName">Choose a username</label>
+        </div>
+
+        <!-- Email Field -->
+        <div class="form-group mb-3">
+          <input 
+            type="email" 
+            class="form-control"
+            [class.is-invalid]="getFieldError('email')"
+            id="email"
+            formControlName="email"
+            placeholder="Enter your email"
+            autocomplete="email">
+          <label for="email">Enter your email</label>
+        </div>
+
+        <!-- Password Field -->
+        <div class="form-group mb-3 position-relative">
+          <input 
+            [type]="showPassword ? 'text' : 'password'"
+            class="form-control pe-5"
+            [class.is-invalid]="getFieldError('password')"
+            id="password"
+            formControlName="password"
+            placeholder="Create password"
+            autocomplete="new-password">
+          <label for="password">Create password</label>
+          <button
+            type="button"
+            class="password-toggle"
+            (click)="togglePasswordVisibility('password')"
+            tabindex="-1">
+            <i [class]="showPassword ? 'bi bi-eye-slash' : 'bi bi-eye'"></i>
+          </button>
+        </div>
+
+        <!-- Confirm Password Field -->
+        <div class="form-group mb-4 position-relative">
+          <input 
+            [type]="showConfirmPassword ? 'text' : 'password'"
+            class="form-control pe-5"
+            [class.is-invalid]="getFieldError('confirmPassword')"
+            id="confirmPassword"
+            formControlName="confirmPassword"
+            placeholder="Confirm password"
+            autocomplete="new-password">
+          <label for="confirmPassword">Confirm password</label>
+          <button
+            type="button"
+            class="password-toggle"
+            (click)="togglePasswordVisibility('confirmPassword')"
+            tabindex="-1">
+            <i [class]="showConfirmPassword ? 'bi bi-eye-slash' : 'bi bi-eye'"></i>
+          </button>
+        </div>
+
+        <!-- Sign Up Button -->
+        <button 
+          type="submit" 
+          class="btn btn-primary w-100 mb-4"
+          [disabled]="isLoading">
+          <span *ngIf="isLoading" class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+          {{ isLoading ? 'Creating Account...' : 'Create Account' }}
+        </button>
+
+        <!-- Login Link -->
+        <div class="text-center">
+          <span class="signup-text">Already have an account?</span>
+          <a routerLink="/auth/login" class="signup-link">Sign In</a>
+        </div>
+      </form>
     </div>
 
-    <!-- Error Alert -->
-    <div *ngIf="errorMessage" class="alert alert-danger d-flex align-items-center mb-3" role="alert">
-      <i class="bi bi-exclamation-triangle-fill me-2"></i>
-      {{ errorMessage }}
+    <!-- Right side - Decorative Icons -->
+    <div class="auth-icons-side">
+      <!-- Chat Icons Pattern -->
+      <div class="icons-grid">
+        <div class="icon-item">
+          <i class="bi bi-chat-dots"></i>
+        </div>
+        <div class="icon-item">
+          <i class="bi bi-chat-heart"></i>
+        </div>
+        <div class="icon-item">
+          <i class="bi bi-chat-square-text"></i>
+        </div>
+        <div class="icon-item">
+          <i class="bi bi-chat-left-dots"></i>
+        </div>
+        <div class="icon-item">
+          <i class="bi bi-chat-quote"></i>
+        </div>
+        <div class="icon-item">
+          <i class="bi bi-chat-right-text"></i>
+        </div>
+        <div class="icon-item">
+          <i class="bi bi-chat-left-text"></i>
+        </div>
+        <div class="icon-item">
+          <i class="bi bi-chat-square-dots"></i>
+        </div>
+        <div class="icon-item">
+          <i class="bi bi-chat-right-dots"></i>
+        </div>
+        <div class="icon-item">
+          <i class="bi bi-chat-left-heart"></i>
+        </div>
+        <div class="icon-item">
+          <i class="bi bi-chat-text"></i>
+        </div>
+        <div class="icon-item">
+          <i class="bi bi-chat-square-heart"></i>
+        </div>
+        <div class="icon-item">
+          <i class="bi bi-chat-dots-fill"></i>
+        </div>
+        <div class="icon-item">
+          <i class="bi bi-chat-heart-fill"></i>
+        </div>
+        <div class="icon-item">
+          <i class="bi bi-chat-square-text-fill"></i>
+        </div>
+        <div class="icon-item">
+          <i class="bi bi-chat-left-dots-fill"></i>
+        </div>
+        <div class="icon-item">
+          <i class="bi bi-chat-quote-fill"></i>
+        </div>
+        <div class="icon-item">
+          <i class="bi bi-chat-right-text-fill"></i>
+        </div>
+        <div class="icon-item">
+          <i class="bi bi-chat-left-text-fill"></i>
+        </div>
+        <div class="icon-item">
+          <i class="bi bi-chat-square-dots-fill"></i>
+        </div>
+        <div class="icon-item">
+          <i class="bi bi-chat-right-dots-fill"></i>
+        </div>
+        <div class="icon-item">
+          <i class="bi bi-chat-left-heart-fill"></i>
+        </div>
+        <div class="icon-item">
+          <i class="bi bi-chat-text-fill"></i>
+        </div>
+        <div class="icon-item">
+          <i class="bi bi-chat-square-heart-fill"></i>
+        </div>
+      </div>
     </div>
-
-    <!-- Signup Form -->
-    <form [formGroup]="signupForm" (ngSubmit)="onSubmit()" novalidate>
-      <!-- Full Name Field -->
-      <div class="form-floating mb-3">
-        <input 
-          type="text" 
-          class="form-control"
-          [class.is-invalid]="getFieldError('fullName')"
-          id="fullName"
-          formControlName="fullName"
-          placeholder="Full Name"
-          autocomplete="name">
-        <label for="fullName">
-          <i class="bi bi-person-fill me-2"></i>Full Name
-        </label>
-        <div *ngIf="getFieldError('fullName')" class="invalid-feedback">
-          {{ getFieldError('fullName') }}
-        </div>
-      </div>
-
-      <!-- Username Field -->
-      <div class="form-floating mb-3">
-        <input 
-          type="text" 
-          class="form-control"
-          [class.is-invalid]="getFieldError('userName')"
-          id="userName"
-          formControlName="userName"
-          placeholder="Username"
-          autocomplete="username">
-        <label for="userName">
-          <i class="bi bi-person me-2"></i>Username
-        </label>
-        <div *ngIf="getFieldError('userName')" class="invalid-feedback">
-          {{ getFieldError('userName') }}
-        </div>
-      </div>
-
-      <!-- Email Field -->
-      <div class="form-floating mb-3">
-        <input 
-          type="email" 
-          class="form-control"
-          [class.is-invalid]="getFieldError('email')"
-          id="email"
-          formControlName="email"
-          placeholder="Email"
-          autocomplete="email">
-        <label for="email">
-          <i class="bi bi-envelope me-2"></i>Email
-        </label>
-        <div *ngIf="getFieldError('email')" class="invalid-feedback">
-          {{ getFieldError('email') }}
-        </div>
-      </div>
-
-      <!-- Password Field -->
-      <div class="form-floating mb-3 position-relative">
-        <input 
-          [type]="showPassword ? 'text' : 'password'"
-          class="form-control pe-5"
-          [class.is-invalid]="getFieldError('password')"
-          id="password"
-          formControlName="password"
-          placeholder="Password"
-          autocomplete="new-password">
-        <label for="password">
-          <i class="bi bi-lock me-2"></i>Password
-        </label>
-        <button
-          type="button"
-          class="password-toggle"
-          (click)="togglePasswordVisibility('password')"
-          tabindex="-1">
-          <i [class]="showPassword ? 'bi bi-eye-slash' : 'bi bi-eye'"></i>
-        </button>
-        <div *ngIf="getFieldError('password')" class="invalid-feedback">
-          {{ getFieldError('password') }}
-        </div>
-      </div>
-
-      <!-- Confirm Password Field -->
-      <div class="form-floating mb-4 position-relative">
-        <input 
-          [type]="showConfirmPassword ? 'text' : 'password'"
-          class="form-control pe-5"
-          [class.is-invalid]="getFieldError('confirmPassword')"
-          id="confirmPassword"
-          formControlName="confirmPassword"
-          placeholder="Confirm Password"
-          autocomplete="new-password">
-        <label for="confirmPassword">
-          <i class="bi bi-lock-fill me-2"></i>Confirm Password
-        </label>
-        <button
-          type="button"
-          class="password-toggle"
-          (click)="togglePasswordVisibility('confirmPassword')"
-          tabindex="-1">
-          <i [class]="showConfirmPassword ? 'bi bi-eye-slash' : 'bi bi-eye'"></i>
-        </button>
-        <div *ngIf="getFieldError('confirmPassword')" class="invalid-feedback">
-          {{ getFieldError('confirmPassword') }}
-        </div>
-      </div>
-
-      <!-- Sign Up Button -->
-      <button 
-        type="submit" 
-        class="btn btn-primary w-100 mb-3"
-        [disabled]="isLoading">
-        <span *ngIf="isLoading" class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
-        <i *ngIf="!isLoading" class="bi bi-person-plus me-2"></i>
-        {{ isLoading ? 'Creating Account...' : 'Create Account' }}
-      </button>
-
-      <!-- Divider -->
-      <div class="text-center mb-3">
-        <div class="d-flex align-items-center">
-          <div class="flex-grow-1">
-            <hr class="my-0">
-          </div>
-          <span class="px-3 text-muted small">or</span>
-          <div class="flex-grow-1">
-            <hr class="my-0">
-          </div>
-        </div>
-      </div>
-
-      <!-- Login Link -->
-      <div class="text-center">
-        <span class="text-muted">Already have an account? </span>
-        <a routerLink="/auth/login" class="auth-link">Sign In</a>
-      </div>
-    </form>
   </div>
 </div>
