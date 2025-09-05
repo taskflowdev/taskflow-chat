@@ -19,7 +19,7 @@ export class AuthService {
   private readonly TOKEN_KEY = 'taskflow_chat_token';
   private readonly REFRESH_TOKEN_KEY = 'taskflow_chat_refresh_token';
   private readonly USER_KEY = 'taskflow_chat_user';
-  
+
   private currentUserSubject = new BehaviorSubject<AuthUser | null>(this.getUserFromStorage());
   public currentUser$ = this.currentUserSubject.asObservable();
 
@@ -46,7 +46,7 @@ export class AuthService {
           if (tokenData.refreshToken) {
             this.localStorageService.setItem(this.REFRESH_TOKEN_KEY, tokenData.refreshToken);
           }
-          
+
           // Get user profile after successful login
           this.getUserProfile().subscribe();
         }
@@ -77,7 +77,7 @@ export class AuthService {
           if (tokenData.refreshToken) {
             this.localStorageService.setItem(this.REFRESH_TOKEN_KEY, tokenData.refreshToken);
           }
-          
+
           // Get user profile after successful registration
           this.getUserProfile().subscribe();
         }
@@ -98,12 +98,12 @@ export class AuthService {
 
   logout(): void {
     if (!isPlatformBrowser(this.platformId)) return;
-    
+
     // Clear stored data
     this.localStorageService.removeItem(this.TOKEN_KEY);
     this.localStorageService.removeItem(this.REFRESH_TOKEN_KEY);
     this.localStorageService.removeItem(this.USER_KEY);
-    
+
     // Update current user
     this.currentUserSubject.next(null);
   }
@@ -121,7 +121,7 @@ export class AuthService {
   isAuthenticated(): boolean {
     const token = this.getToken();
     if (!token) return false;
-    
+
     // TODO: Check token expiration
     return true;
   }
@@ -140,11 +140,11 @@ export class AuthService {
             email: response.data.email || '',
             fullName: response.data.fullName || ''
           };
-          
+
           // Store user data
           this.localStorageService.setItem(this.USER_KEY, JSON.stringify(user));
           this.currentUserSubject.next(user);
-          
+
           return user;
         }
         return null;
@@ -158,7 +158,7 @@ export class AuthService {
 
   private getUserFromStorage(): AuthUser | null {
     if (!isPlatformBrowser(this.platformId)) return null;
-    
+
     const userData = this.localStorageService.getItem(this.USER_KEY);
     if (userData) {
       try {
@@ -173,7 +173,7 @@ export class AuthService {
 
   private checkAuthStatus(): void {
     if (!isPlatformBrowser(this.platformId)) return;
-    
+
     const token = this.getToken();
     if (token && !this.getCurrentUser()) {
       // Have token but no user data, try to fetch user profile

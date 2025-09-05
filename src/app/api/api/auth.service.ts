@@ -17,11 +17,7 @@ import { CustomHttpParameterCodec }                          from '../encoder';
 import { Observable }                                        from 'rxjs';
 
 // @ts-ignore
-import { ApiResponse } from '../model/apiResponse';
-// @ts-ignore
 import { LoginDto } from '../model/loginDto';
-// @ts-ignore
-import { ObjectApiResponse } from '../model/objectApiResponse';
 // @ts-ignore
 import { RefreshTokenDto } from '../model/refreshTokenDto';
 // @ts-ignore
@@ -52,9 +48,9 @@ export class AuthService extends BaseService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public apiAuthLoginPost(loginDto?: LoginDto, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<ObjectApiResponse>;
-    public apiAuthLoginPost(loginDto?: LoginDto, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<ObjectApiResponse>>;
-    public apiAuthLoginPost(loginDto?: LoginDto, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<ObjectApiResponse>>;
+    public apiAuthLoginPost(loginDto?: LoginDto, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<TokenDtoApiResponse>;
+    public apiAuthLoginPost(loginDto?: LoginDto, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<TokenDtoApiResponse>>;
+    public apiAuthLoginPost(loginDto?: LoginDto, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<TokenDtoApiResponse>>;
     public apiAuthLoginPost(loginDto?: LoginDto, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
 
         let localVarHeaders = this.defaultHeaders;
@@ -98,7 +94,7 @@ export class AuthService extends BaseService {
 
         let localVarPath = `/api/auth/login`;
         const { basePath, withCredentials } = this.configuration;
-        return this.httpClient.request<ObjectApiResponse>('post', `${basePath}${localVarPath}`,
+        return this.httpClient.request<TokenDtoApiResponse>('post', `${basePath}${localVarPath}`,
             {
                 context: localVarHttpContext,
                 body: loginDto,
@@ -234,9 +230,9 @@ export class AuthService extends BaseService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public apiAuthRegisterPost(registerDto?: RegisterDto, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<ObjectApiResponse>;
-    public apiAuthRegisterPost(registerDto?: RegisterDto, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<ObjectApiResponse>>;
-    public apiAuthRegisterPost(registerDto?: RegisterDto, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<ObjectApiResponse>>;
+    public apiAuthRegisterPost(registerDto?: RegisterDto, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<TokenDtoApiResponse>;
+    public apiAuthRegisterPost(registerDto?: RegisterDto, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<TokenDtoApiResponse>>;
+    public apiAuthRegisterPost(registerDto?: RegisterDto, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<TokenDtoApiResponse>>;
     public apiAuthRegisterPost(registerDto?: RegisterDto, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
 
         let localVarHeaders = this.defaultHeaders;
@@ -280,7 +276,7 @@ export class AuthService extends BaseService {
 
         let localVarPath = `/api/auth/register`;
         const { basePath, withCredentials } = this.configuration;
-        return this.httpClient.request<ObjectApiResponse>('post', `${basePath}${localVarPath}`,
+        return this.httpClient.request<TokenDtoApiResponse>('post', `${basePath}${localVarPath}`,
             {
                 context: localVarHttpContext,
                 body: registerDto,
