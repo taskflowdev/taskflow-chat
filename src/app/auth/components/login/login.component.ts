@@ -63,7 +63,7 @@ export class LoginComponent implements OnInit {
       Object.keys(this.loginForm.controls).forEach(key => {
         this.loginForm.get(key)?.markAsTouched();
       });
-      
+
       // Show validation error in toast
       this.toastService.showError('Please fill in all required fields correctly');
       return;
@@ -77,8 +77,6 @@ export class LoginComponent implements OnInit {
       next: (result) => {
         this.isLoading = false;
         if (result.success) {
-          // Successful login, show success toast and redirect to chat
-          this.toastService.showSuccess('Login successful! Welcome back.');
           this.router.navigate(['/chat']);
         } else {
           this.toastService.showError(result.error || 'Login failed');

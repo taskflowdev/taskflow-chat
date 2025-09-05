@@ -1,12 +1,13 @@
 <div class="auth-container">
-  <div class="auth-content">
-    <!-- Brand Logo -->
-    <div class="brand-logo">
-      <div class="logo-icon">
-        <i class="bi bi-building"></i>
-      </div>
-      <span class="brand-name">Acme Inc.</span>
+  <!-- Brand Logo -->
+  <div class="brand-logo">
+    <div class="logo-icon">
+      <i class="bi bi-chat-quote"></i>
     </div>
+    <!-- <span class="brand-name">TaskFlow Chat</span> -->
+  </div>
+
+  <div class="auth-content">
 
     <div class="auth-form">
       <!-- Header -->
@@ -20,87 +21,44 @@
         <!-- Full Name Field -->
         <div class="form-group">
           <label for="fullName" class="form-label">Full Name</label>
-          <input 
-            type="text" 
-            class="form-control"
-            [class.is-invalid]="getFieldError('fullName')"
-            id="fullName"
-            formControlName="fullName"
-            placeholder="John Doe"
-            autocomplete="name">
+          <input type="text" class="form-control" [class.is-invalid]="getFieldError('fullName')" id="fullName"
+            formControlName="fullName" placeholder="John Doe" autocomplete="name">
         </div>
 
         <!-- Username Field -->
         <div class="form-group">
           <label for="userName" class="form-label">Username</label>
-          <input 
-            type="text" 
-            class="form-control"
-            [class.is-invalid]="getFieldError('userName')"
-            id="userName"
-            formControlName="userName"
-            placeholder="johndoe"
-            autocomplete="username">
+          <input type="text" class="form-control" [class.is-invalid]="getFieldError('userName')" id="userName"
+            formControlName="userName" placeholder="johndoe" autocomplete="username">
         </div>
 
         <!-- Email Field -->
         <div class="form-group">
           <label for="email" class="form-label">Email</label>
-          <input 
-            type="email" 
-            class="form-control"
-            [class.is-invalid]="getFieldError('email')"
-            id="email"
-            formControlName="email"
-            placeholder="m@example.com"
-            autocomplete="email">
+          <input type="email" class="form-control" [class.is-invalid]="getFieldError('email')" id="email"
+            formControlName="email" placeholder="m@example.com" autocomplete="email">
         </div>
 
         <!-- Password Field -->
         <div class="form-group">
           <label for="password" class="form-label">Password</label>
-          <input 
-            type="password"
-            class="form-control"
-            [class.is-invalid]="getFieldError('password')"
-            id="password"
-            formControlName="password"
-            placeholder="Password"
-            autocomplete="new-password">
+          <input type="password" class="form-control" [class.is-invalid]="getFieldError('password')" id="password"
+            formControlName="password" placeholder="Password" autocomplete="new-password">
         </div>
 
         <!-- Confirm Password Field -->
         <div class="form-group">
           <label for="confirmPassword" class="form-label">Confirm Password</label>
-          <input 
-            type="password"
-            class="form-control"
-            [class.is-invalid]="getFieldError('confirmPassword')"
-            id="confirmPassword"
-            formControlName="confirmPassword"
-            placeholder="Confirm Password"
+          <input type="password" class="form-control" [class.is-invalid]="getFieldError('confirmPassword')"
+            id="confirmPassword" formControlName="confirmPassword" placeholder="Confirm Password"
             autocomplete="new-password">
         </div>
 
         <!-- Sign Up Button -->
-        <button 
-          type="submit" 
-          class="btn btn-signup"
-          [disabled]="isLoading">
+        <button type="submit" class="btn btn-signup" [disabled]="isLoading">
           <span *ngIf="isLoading" class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
           {{ isLoading ? 'Creating Account...' : 'Create Account' }}
         </button>
-
-        <!-- Social Login -->
-        <div class="social-login">
-          <div class="divider">
-            <span>Or continue with</span>
-          </div>
-          <button type="button" class="btn btn-github">
-            <i class="bi bi-github"></i>
-            Sign up with GitHub
-          </button>
-        </div>
       </form>
 
       <!-- Sign In Link -->

@@ -1,70 +1,46 @@
 <div class="auth-container">
-  <div class="auth-content">
-    <!-- Brand Logo -->
-    <div class="brand-logo">
-      <div class="logo-icon">
-        <i class="bi bi-building"></i>
-      </div>
-      <span class="brand-name">Acme Inc.</span>
+  <!-- Brand Logo -->
+  <div class="brand-logo">
+    <div class="logo-icon">
+      <i class="bi bi-chat-quote"></i>
     </div>
+    <!-- <span class="brand-name">TaskFlow Chat</span> -->
+  </div>
+
+  <div class="auth-content">
 
     <div class="auth-form">
       <!-- Header -->
       <div class="auth-header">
         <h1 class="main-title">Login to your account</h1>
-        <p class="subtitle">Enter your email below to login to your account</p>
+        <p class="subtitle">Enter your username below to login to your account</p>
       </div>
 
       <!-- Login Form -->
       <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" novalidate class="login-form">
         <!-- Email Field -->
         <div class="form-group">
-          <label for="email" class="form-label">Email</label>
-          <input 
-            type="email" 
-            class="form-control"
-            [class.is-invalid]="getFieldError('userName')"
-            id="email"
-            formControlName="userName"
-            placeholder="m@example.com"
-            autocomplete="username">
+          <label for="email" class="form-label">Username</label>
+          <input type="email" class="form-control" [class.is-invalid]="getFieldError('userName')" id="email"
+            formControlName="userName" placeholder="jhondoe" autocomplete="username">
         </div>
 
         <!-- Password Field -->
         <div class="form-group">
           <label for="password" class="form-label">Password</label>
-          <input 
-            type="password"
-            class="form-control"
-            [class.is-invalid]="getFieldError('password')"
-            id="password"
-            formControlName="password"
-            placeholder="Password"
-            autocomplete="current-password">
+          <input type="password" class="form-control" [class.is-invalid]="getFieldError('password')" id="password"
+            formControlName="password" placeholder="Password" autocomplete="current-password">
           <div class="forgot-password">
             <a href="#" class="forgot-link">Forgot your password?</a>
           </div>
         </div>
 
         <!-- Login Button -->
-        <button 
-          type="submit" 
-          class="btn btn-login"
-          [disabled]="isLoading">
+        <button type="submit" class="btn btn-login" [disabled]="isLoading">
           <span *ngIf="isLoading" class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
           {{ isLoading ? 'Signing in...' : 'Login' }}
         </button>
 
-        <!-- Social Login -->
-        <div class="social-login">
-          <div class="divider">
-            <span>Or continue with</span>
-          </div>
-          <button type="button" class="btn btn-github">
-            <i class="bi bi-github"></i>
-            Login with GitHub
-          </button>
-        </div>
       </form>
 
       <!-- Sign Up Link -->
