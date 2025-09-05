@@ -1,21 +1,22 @@
 <div class="auth-container">
   <div class="auth-content">
-    <!-- Left side - Signup Form -->
-    <div class="auth-form-side">
-      <div class="brand-logo">
-        <div class="logo-icon">
-          <i class="bi bi-chat-dots-fill"></i>
-        </div>
-        <span class="brand-name">ChatFlow</span>
+    <!-- Brand Logo -->
+    <div class="brand-logo">
+      <div class="logo-icon">
+        <i class="bi bi-building"></i>
       </div>
+      <span class="brand-name">Acme Inc.</span>
+    </div>
 
+    <div class="auth-form">
+      <!-- Header -->
       <div class="auth-header">
-        <h1 class="journey-text">Start your journey</h1>
-        <h2 class="main-title">Sign Up to ChatFlow</h2>
+        <h1 class="main-title">Create an account</h1>
+        <p class="subtitle">Enter your information below to create your account</p>
       </div>
 
       <!-- Signup Form -->
-      <form [formGroup]="signupForm" (ngSubmit)="onSubmit()" novalidate>
+      <form [formGroup]="signupForm" (ngSubmit)="onSubmit()" novalidate class="signup-form">
         <!-- Full Name Field -->
         <div class="form-group">
           <label for="fullName" class="form-label">Full Name</label>
@@ -51,82 +52,61 @@
             [class.is-invalid]="getFieldError('email')"
             id="email"
             formControlName="email"
-            placeholder="example@email.com"
+            placeholder="m@example.com"
             autocomplete="email">
         </div>
 
         <!-- Password Field -->
         <div class="form-group">
           <label for="password" class="form-label">Password</label>
-          <div class="password-input-wrapper">
-            <input 
-              [type]="showPassword ? 'text' : 'password'"
-              class="form-control"
-              [class.is-invalid]="getFieldError('password')"
-              id="password"
-              formControlName="password"
-              placeholder="••••••••"
-              autocomplete="new-password">
-            <button
-              type="button"
-              class="password-toggle"
-              (click)="togglePasswordVisibility('password')"
-              tabindex="-1">
-              <i [class]="showPassword ? 'bi bi-eye-slash' : 'bi bi-eye'"></i>
-            </button>
-          </div>
+          <input 
+            type="password"
+            class="form-control"
+            [class.is-invalid]="getFieldError('password')"
+            id="password"
+            formControlName="password"
+            placeholder="Password"
+            autocomplete="new-password">
         </div>
 
         <!-- Confirm Password Field -->
         <div class="form-group">
           <label for="confirmPassword" class="form-label">Confirm Password</label>
-          <div class="password-input-wrapper">
-            <input 
-              [type]="showConfirmPassword ? 'text' : 'password'"
-              class="form-control"
-              [class.is-invalid]="getFieldError('confirmPassword')"
-              id="confirmPassword"
-              formControlName="confirmPassword"
-              placeholder="••••••••"
-              autocomplete="new-password">
-            <button
-              type="button"
-              class="password-toggle"
-              (click)="togglePasswordVisibility('confirmPassword')"
-              tabindex="-1">
-              <i [class]="showConfirmPassword ? 'bi bi-eye-slash' : 'bi bi-eye'"></i>
-            </button>
-          </div>
+          <input 
+            type="password"
+            class="form-control"
+            [class.is-invalid]="getFieldError('confirmPassword')"
+            id="confirmPassword"
+            formControlName="confirmPassword"
+            placeholder="Confirm Password"
+            autocomplete="new-password">
         </div>
 
         <!-- Sign Up Button -->
         <button 
           type="submit" 
-          class="btn btn-signin"
+          class="btn btn-signup"
           [disabled]="isLoading">
           <span *ngIf="isLoading" class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
-          {{ isLoading ? 'Creating Account...' : 'Sign Up' }}
+          {{ isLoading ? 'Creating Account...' : 'Create Account' }}
         </button>
+
+        <!-- Social Login -->
+        <div class="social-login">
+          <div class="divider">
+            <span>Or continue with</span>
+          </div>
+          <button type="button" class="btn btn-github">
+            <i class="bi bi-github"></i>
+            Sign up with GitHub
+          </button>
+        </div>
       </form>
 
       <!-- Sign In Link -->
-      <div class="signup-link-container">
-        <span class="signup-text">Have an account? </span>
-        <a routerLink="/auth/login" class="signup-link">Sign In</a>
-      </div>
-    </div>
-
-    <!-- Right side - Gradient Background -->
-    <div class="auth-gradient-side">
-      <div class="gradient-overlay">
-        <div class="gradient-bg"></div>
-        <div class="floating-elements">
-          <div class="bubble bubble-1"></div>
-          <div class="bubble bubble-2"></div>
-          <div class="bubble bubble-3"></div>
-          <div class="bubble bubble-4"></div>
-          <div class="bubble bubble-5"></div>
-        </div>
+      <div class="signin-link-container">
+        <span class="signin-text">Already have an account? </span>
+        <a routerLink="/auth/login" class="signin-link">Sign in</a>
       </div>
     </div>
   </div>

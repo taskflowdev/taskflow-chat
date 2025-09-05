@@ -15,8 +15,6 @@ import { ToastService } from '../../../shared/services/toast.service';
 export class SignupComponent implements OnInit {
   signupForm: FormGroup;
   isLoading = false;
-  showPassword = false;
-  showConfirmPassword = false;
 
   constructor(
     private fb: FormBuilder,
@@ -53,14 +51,6 @@ export class SignupComponent implements OnInit {
       }
     }
     return null;
-  }
-
-  togglePasswordVisibility(field: 'password' | 'confirmPassword'): void {
-    if (field === 'password') {
-      this.showPassword = !this.showPassword;
-    } else {
-      this.showConfirmPassword = !this.showConfirmPassword;
-    }
   }
 
   getFieldError(fieldName: string): string | null {

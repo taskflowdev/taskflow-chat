@@ -15,7 +15,6 @@ import { ToastService } from '../../../shared/services/toast.service';
 export class LoginComponent implements OnInit {
   loginForm: FormGroup;
   isLoading = false;
-  showPassword = false;
 
   constructor(
     private fb: FormBuilder,
@@ -35,10 +34,6 @@ export class LoginComponent implements OnInit {
     if (this.authService.isAuthenticated()) {
       this.router.navigate(['/chat']);
     }
-  }
-
-  togglePasswordVisibility(): void {
-    this.showPassword = !this.showPassword;
   }
 
   getFieldError(fieldName: string): string | null {
