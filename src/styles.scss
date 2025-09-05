@@ -1,11 +1,26 @@
 /* You can add global styles to this file, and also import other style files */
 
+// Custom CSS variables for green and black theme
+:root {
+  --primary-green: #22c55e;
+  --dark-green: #16a34a;
+  --light-green: #4ade80;
+  --accent-green: #15803d;
+  --primary-black: #0f172a;
+  --secondary-black: #1e293b;
+  --tertiary-black: #334155;
+  --light-gray: #f8fafc;
+  --medium-gray: #e2e8f0;
+  --dark-gray: #64748b;
+}
+
 // Global styles for the app
 body {
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  background: #f0f2f5;
+  background: var(--light-gray);
   margin: 0;
   padding: 0;
+  color: var(--primary-black);
 }
 
 // Auth form styles
@@ -15,16 +30,18 @@ body {
   align-items: center;
   justify-content: center;
   padding: 20px;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, var(--primary-black) 0%, var(--secondary-black) 50%, var(--primary-green) 100%);
 }
 
 .auth-card {
   background: white;
-  border-radius: 12px;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-  padding: 2rem;
+  border-radius: 16px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+  padding: 2.5rem;
   width: 100%;
-  max-width: 400px;
+  max-width: 420px;
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .auth-header {
@@ -33,13 +50,14 @@ body {
 }
 
 .auth-header h2 {
-  color: #1a1a1a;
-  font-weight: 600;
+  color: var(--primary-black);
+  font-weight: 700;
   margin-bottom: 0.5rem;
+  font-size: 1.75rem;
 }
 
 .auth-header p {
-  color: #666;
+  color: var(--dark-gray);
   font-size: 0.9rem;
 }
 
@@ -52,21 +70,24 @@ body {
 .form-floating > .form-control {
   height: calc(3.5rem + 2px);
   padding: 1rem 0.75rem;
-  border: 2px solid #e1e5e9;
-  border-radius: 8px;
+  border: 2px solid var(--medium-gray);
+  border-radius: 12px;
   font-size: 1rem;
   transition: all 0.3s ease;
+  background: var(--light-gray);
 }
 
 .form-floating > .form-control:focus {
-  border-color: #667eea;
-  box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
+  border-color: var(--primary-green);
+  box-shadow: 0 0 0 0.2rem rgba(34, 197, 94, 0.25);
+  background: white;
 }
 
 .form-floating > label {
   padding: 1rem 0.75rem;
-  color: #666;
+  color: var(--dark-gray);
   font-size: 0.9rem;
+  font-weight: 500;
 }
 
 // Password toggle button
@@ -77,45 +98,58 @@ body {
   transform: translateY(-50%);
   background: none;
   border: none;
-  color: #666;
+  color: var(--dark-gray);
   cursor: pointer;
   z-index: 10;
+  padding: 4px;
+  border-radius: 4px;
+  transition: all 0.2s ease;
 }
 
 .password-toggle:hover {
-  color: #333;
+  color: var(--primary-green);
+  background: rgba(34, 197, 94, 0.1);
 }
 
 // Primary button styling
 .btn-primary {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, var(--primary-green) 0%, var(--dark-green) 100%);
   border: none;
-  border-radius: 8px;
-  padding: 12px;
+  border-radius: 12px;
+  padding: 14px 24px;
   font-weight: 600;
   font-size: 1rem;
   transition: all 0.3s ease;
+  text-transform: none;
 }
 
 .btn-primary:hover {
+  background: linear-gradient(135deg, var(--dark-green) 0%, var(--accent-green) 100%);
   transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+  box-shadow: 0 8px 25px rgba(34, 197, 94, 0.3);
 }
 
 .btn-primary:focus {
-  box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.5);
+  box-shadow: 0 0 0 0.2rem rgba(34, 197, 94, 0.5);
+}
+
+.btn-primary:disabled {
+  background: var(--medium-gray);
+  color: var(--dark-gray);
+  transform: none;
+  box-shadow: none;
 }
 
 // Link styling
 .auth-link {
-  color: #667eea;
+  color: var(--primary-green);
   text-decoration: none;
-  font-weight: 500;
+  font-weight: 600;
   transition: color 0.3s ease;
 }
 
 .auth-link:hover {
-  color: #764ba2;
+  color: var(--dark-green);
   text-decoration: underline;
 }
 
@@ -127,11 +161,22 @@ body {
 
 // Error alerts
 .alert-danger {
-  border-radius: 8px;
+  border-radius: 12px;
   border: none;
-  background: #ffeaea;
-  color: #d63031;
+  background: #fef2f2;
+  color: #dc2626;
   font-size: 0.9rem;
+  border-left: 4px solid #dc2626;
+}
+
+// Success alerts
+.alert-success {
+  border-radius: 12px;
+  border: none;
+  background: #f0fdf4;
+  color: var(--accent-green);
+  font-size: 0.9rem;
+  border-left: 4px solid var(--primary-green);
 }
 
 // Chat container styles
@@ -139,22 +184,24 @@ body {
   height: 100vh;
   display: flex;
   flex-direction: column;
-  background: #f0f2f5;
+  background: var(--light-gray);
 }
 
 .chat-header {
-  background: #25d366;
+  background: linear-gradient(135deg, var(--primary-black) 0%, var(--secondary-black) 100%);
   color: white;
-  padding: 1rem 1.5rem;
+  padding: 1.25rem 1.5rem;
   display: flex;
   align-items: center;
   justify-content: space-between;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
 }
 
 .chat-content {
   flex: 1;
   padding: 2rem;
   overflow-y: auto;
+  background: linear-gradient(135deg, var(--light-gray) 0%, #ffffff 100%);
 }
 
 // Responsive design
@@ -162,9 +209,77 @@ body {
   .auth-card {
     padding: 1.5rem;
     margin: 10px;
+    border-radius: 12px;
   }
   
   .auth-container {
     padding: 10px;
   }
+  
+  .chat-header {
+    padding: 1rem;
+  }
+  
+  .chat-content {
+    padding: 1rem;
+  }
+}
+
+// Additional component styles for better UI
+.card {
+  border-radius: 16px;
+  border: none;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+}
+
+.card-body {
+  padding: 1.5rem;
+}
+
+.form-check-input:checked {
+  background-color: var(--primary-green);
+  border-color: var(--primary-green);
+}
+
+.form-check-input:focus {
+  border-color: var(--primary-green);
+  outline: 0;
+  box-shadow: 0 0 0 0.2rem rgba(34, 197, 94, 0.25);
+}
+
+// Dropdown improvements
+.dropdown-toggle::after {
+  margin-left: 0.5rem;
+}
+
+.dropdown-menu {
+  border-radius: 12px;
+  border: none;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+  padding: 0.5rem 0;
+}
+
+.dropdown-item {
+  padding: 0.5rem 1rem;
+  transition: all 0.2s ease;
+}
+
+.dropdown-item:hover {
+  background-color: rgba(34, 197, 94, 0.1);
+  color: var(--primary-green);
+}
+
+// Loading spinner color
+.spinner-border {
+  color: var(--primary-green);
+}
+
+// Text colors
+.text-success {
+  color: var(--primary-green) !important;
+}
+
+// Icon styling
+i.bi {
+  line-height: 1;
 }
