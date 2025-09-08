@@ -7,6 +7,7 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
+import { MessageDto } from './messageDto';
 
 
 export interface GroupDto { 
@@ -18,5 +19,6 @@ export interface GroupDto {
     createdBy?: string | null;
     isPublic?: boolean;
     memberCount?: number;
+    lastMessage?: MessageDto;
 }
 
