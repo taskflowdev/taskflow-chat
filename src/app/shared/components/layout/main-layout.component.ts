@@ -12,12 +12,12 @@ import { FooterComponent } from '../footer/footer.component';
     <div class="app-layout">
       <!-- Global Navigation Bar -->
       <app-navbar></app-navbar>
-      
+
       <!-- Main Content Area -->
       <main class="main-content">
         <router-outlet></router-outlet>
       </main>
-      
+
       <!-- Global Footer -->
       <app-footer></app-footer>
     </div>
@@ -25,5 +25,5 @@ import { FooterComponent } from '../footer/footer.component';
   styleUrls: ['./main-layout.component.scss']
 })
 export class MainLayoutComponent {
-  
+
 }

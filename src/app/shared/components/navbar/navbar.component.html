@@ -2,44 +2,31 @@
   <div class="navbar-content">
     <!-- Left: Logo -->
     <div class="logo-section">
-      <a href="https://taskflowapi.vercel.app/" class="logo-link">
-        <img src="/public/taskflow-light.png" alt="TaskFlow Logo" class="logo-img" />
-        <span class="logo-text">TaskFlow</span>
+      <a routerLink="/" class="logo-link">
+        <!-- <img src="/public/taskflow-light.png" alt="TaskFlow Logo" class="logo-img" /> -->
+        <i class="bi bi-chat-quote logo-icon"></i>
+        <!-- <span class="logo-text">TaskFlow</span> -->
       </a>
     </div>
 
     <!-- Center: Navigation Menu -->
     <div class="nav-menu">
       <nav class="nav-links">
-        <a 
-          routerLink="/chat" 
-          class="nav-link"
-          [class.active]="isActiveRoute('/chat')"
-          title="Chat">
+        <a routerLink="/chat" class="nav-link" [class.active]="isActiveRoute('/chat')" title="Chat">
           <i class="bi bi-chat-quote"></i>
           <span class="nav-text">Chat</span>
         </a>
-        <!-- Future navigation items can be added here -->
-        <!-- 
-        <a 
-          routerLink="/dashboard" 
-          class="nav-link"
-          [class.active]="isActiveRoute('/dashboard')"
-          title="Dashboard">
-          <i class="bi bi-grid"></i>
-          <span class="nav-text">Dashboard</span>
+        <a routerLink="/dashboard" class="nav-link" [class.active]="isActiveRoute('/dashboard')" title="Dashboard">
+          <i class="bi bi-gear"></i>
+          <span class="nav-text">Settings</span>
         </a>
-        -->
       </nav>
     </div>
 
     <!-- Right: User Dropdown -->
     <div class="user-section" *ngIf="user">
       <div class="dropdown">
-        <button 
-          class="btn user-dropdown-btn dropdown-toggle border-0" 
-          type="button" 
-          data-bs-toggle="dropdown"
+        <button class="btn user-dropdown-btn dropdown-toggle border-0" type="button" data-bs-toggle="dropdown"
           aria-expanded="false">
           {{ user.fullName }}
         </button>
