@@ -1,0 +1,27 @@
+<div 
+  class="chat-item"
+  [class.active]="isActive"
+  (click)="onChatClick()">
+  
+  <div class="chat-avatar">
+    <i class="bi bi-people-fill"></i>
+  </div>
+  
+  <div class="chat-content">
+    <div class="chat-header">
+      <span class="chat-name">{{ chat.name || 'Unknown Group' }}</span>
+      <span class="chat-time" *ngIf="chat.lastMessageTime">
+        {{ getTimeDisplay(chat.lastMessageTime) }}
+      </span>
+    </div>
+    
+    <div class="chat-preview">
+      <span class="last-message">
+        {{ chat.lastMessage || 'No messages yet' }}
+      </span>
+      <span class="unread-count" *ngIf="chat.unreadCount && chat.unreadCount > 0">
+        {{ chat.unreadCount }}
+      </span>
+    </div>
+  </div>
+</div>

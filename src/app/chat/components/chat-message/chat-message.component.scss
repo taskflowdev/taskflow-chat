@@ -1,0 +1,198 @@
+// Chat message component styles - black and white theme
+.message-wrapper {
+  display: flex;
+  margin-bottom: 0.75rem;
+  padding: 0 1rem;
+  
+  .message-bubble {
+    max-width: 70%;
+    background: #333333;
+    border: 1px solid #444444;
+    border-radius: 12px;
+    padding: 0.75rem;
+    position: relative;
+    word-wrap: break-word;
+    
+    .message-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.25rem;
+      
+      .sender-name {
+        font-weight: 500;
+        font-size: 0.8rem;
+        color: white;
+      }
+      
+      .message-time {
+        font-size: 0.7rem;
+        color: #9ca3af;
+        margin-left: 0.5rem;
+      }
+    }
+    
+    .message-content {
+      color: white;
+      font-size: 0.9rem;
+      line-height: 1.4;
+      white-space: pre-wrap;
+    }
+    
+    .message-footer {
+      display: flex;
+      justify-content: flex-end;
+      margin-top: 0.25rem;
+      
+      .message-time {
+        font-size: 0.7rem;
+        color: #9ca3af;
+      }
+    }
+  }
+  
+  // Default message (from others) - left aligned
+  &:not(.own-message) {
+    justify-content: flex-start;
+    
+    .message-bubble {
+      background: #333333;
+      border: 1px solid #444444;
+      
+      &::before {
+        content: "";
+        position: absolute;
+        left: -8px;
+        top: 12px;
+        width: 0;
+        height: 0;
+        border-top: 8px solid transparent;
+        border-bottom: 8px solid transparent;
+        border-right: 8px solid #444444;
+      }
+      
+      &::after {
+        content: "";
+        position: absolute;
+        left: -7px;
+        top: 12px;
+        width: 0;
+        height: 0;
+        border-top: 8px solid transparent;
+        border-bottom: 8px solid transparent;
+        border-right: 8px solid #333333;
+      }
+    }
+  }
+  
+  // Own message - right aligned
+  &.own-message {
+    justify-content: flex-end;
+    
+    .message-bubble {
+      background: white;
+      color: black;
+      border: 1px solid #e5e5e5;
+      
+      .message-content {
+        color: black;
+      }
+      
+      .message-footer .message-time {
+        color: #666666;
+      }
+      
+      &::before {
+        content: "";
+        position: absolute;
+        right: -8px;
+        top: 12px;
+        width: 0;
+        height: 0;
+        border-top: 8px solid transparent;
+        border-bottom: 8px solid transparent;
+        border-left: 8px solid #e5e5e5;
+      }
+      
+      &::after {
+        content: "";
+        position: absolute;
+        right: -7px;
+        top: 12px;
+        width: 0;
+        height: 0;
+        border-top: 8px solid transparent;
+        border-bottom: 8px solid transparent;
+        border-left: 8px solid white;
+      }
+    }
+  }
+}
+
+// Consecutive messages from same sender
+.message-wrapper + .message-wrapper:not(.own-message) {
+  .message-bubble .message-header {
+    display: none;
+  }
+}
+
+// Date separator (can be added later)
+.date-separator {
+  text-align: center;
+  margin: 1rem 0;
+  
+  span {
+    background: #222222;
+    color: #9ca3af;
+    padding: 0.25rem 0.75rem;
+    border-radius: 12px;
+    font-size: 0.7rem;
+    border: 1px solid #444444;
+  }
+}
+
+// Responsive design
+@media (max-width: 768px) {
+  .message-wrapper {
+    padding: 0 0.75rem;
+    margin-bottom: 0.6rem;
+    
+    .message-bubble {
+      max-width: 85%;
+      padding: 0.6rem;
+      
+      .message-content {
+        font-size: 0.85rem;
+      }
+      
+      .message-header {
+        .sender-name {
+          font-size: 0.75rem;
+        }
+        
+        .message-time {
+          font-size: 0.65rem;
+        }
+      }
+      
+      .message-footer .message-time {
+        font-size: 0.65rem;
+      }
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .message-wrapper {
+    padding: 0 0.5rem;
+    
+    .message-bubble {
+      max-width: 90%;
+      padding: 0.5rem;
+      
+      .message-content {
+        font-size: 0.8rem;
+      }
+    }
+  }
+}

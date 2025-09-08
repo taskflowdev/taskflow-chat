@@ -1,79 +1,18 @@
-<div class="chat-container">
-  <!-- Chat Header -->
-  <div class="chat-header bg-black">
-    <div class="d-flex align-items-center">
-      <i class="bi bi-chat-quote me-3" style="font-size: 1.5rem;"></i>
-    </div>
+<div class="main-chat-container">
+  <!-- Chat Content Area without Header -->
+  <div class="chat-content-area">
+    <!-- Left Sidebar with Chat List -->
+    <app-chat-sidebar
+      [chats]="chats"
+      [selectedChatId]="selectedChatId"
+      (chatSelect)="onChatSelect($event)">
+    </app-chat-sidebar>
 
-    <div class="dropdown">
-      <button class="btn btn-success btn-sm dropdown-toggle border-0" type="button" data-bs-toggle="dropdown"
-        aria-expanded="false" style="background: var(--primary-green);">
-        <i class="bi bi-person-circle me-1"></i>
-        {{ user?.userName }}
-      </button>
-      <ul class="dropdown-menu dropdown-menu-end">
-        <li><a class="dropdown-item" href="#"><i class="bi bi-person me-2"></i>Profile</a></li>
-        <li><a class="dropdown-item" href="#"><i class="bi bi-gear me-2"></i>Settings</a></li>
-        <li>
-          <hr class="dropdown-divider">
-        </li>
-        <li><button class="dropdown-item" (click)="logout()"><i class="bi bi-box-arrow-right me-2"></i>Logout</button>
-        </li>
-      </ul>
-    </div>
-  </div>
-
-  <!-- Chat Content -->
-  <div class="chat-content">
-    <div class="row justify-content-center">
-      <div class="col-md-8">
-        <div class="text-center">
-          <!-- Welcome Message -->
-          <div class="mb-5">
-            <i class="bi bi-chat-heart" style="font-size: 4rem; color: var(--primary-green);"></i>
-            <h2 class="mt-3 mb-2">Welcome to TaskFlow Chat!</h2>
-            <p class="text-muted">You have successfully logged in. The chat functionality will be implemented here.</p>
-          </div>
-
-          <!-- User Info Card -->
-          <div class="card shadow-sm mb-4" *ngIf="user">
-            <div class="card-body">
-              <h5 class="card-title">
-                <i class="bi bi-person-check-fill text-success me-2"></i>
-                Authentication Successful
-              </h5>
-              <div class="row text-start">
-                <div class="col-sm-6 mb-2">
-                  <strong>Full Name:</strong> {{ user.fullName || 'Not provided' }}
-                </div>
-                <div class="col-sm-6 mb-2">
-                  <strong>Username:</strong> {{ user.userName }}
-                </div>
-                <div class="col-sm-6 mb-2">
-                  <strong>Email:</strong> {{ user.email }}
-                </div>
-                <div class="col-sm-6 mb-2">
-                  <strong>User ID:</strong> {{ user.id }}
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- Feature Placeholder -->
-          <div class="card shadow-sm">
-            <div class="card-body">
-              <h5 class="card-title">
-                <i class="bi bi-tools me-2"></i>
-                Coming Soon
-              </h5>
-              <p class="card-text text-muted">
-                Chat functionality, message history, group management, and real-time messaging will be implemented here
-                using the existing API services.
-              </p>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
+    <!-- Right Panel with Conversation -->
+    <app-chat-conversation
+      [conversation]="currentConversation"
+      [currentUserId]="user?.id || null"
+      (sendMessage)="onSendMessage($event)">
+    </app-chat-conversation>
   </div>
 </div>
