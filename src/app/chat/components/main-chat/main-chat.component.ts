@@ -2,7 +2,6 @@ import { Component, OnInit, Inject, PLATFORM_ID } from '@angular/core';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { Router } from '@angular/router';
 import { AuthService, AuthUser } from '../../../auth/services/auth.service';
-import { ChatHeaderComponent } from '../chat-header/chat-header.component';
 import { ChatSidebarComponent } from '../chat-sidebar/chat-sidebar.component';
 import { ChatConversationComponent, ConversationData } from '../chat-conversation/chat-conversation.component';
 import { ChatItemData } from '../chat-item/chat-item.component';
@@ -13,7 +12,6 @@ import { ChatMessageData } from '../chat-message/chat-message.component';
   standalone: true,
   imports: [
     CommonModule,
-    ChatHeaderComponent,
     ChatSidebarComponent,
     ChatConversationComponent
   ],
@@ -162,10 +160,5 @@ export class MainChatComponent implements OnInit {
     }
 
     // TODO: Send message via API
-  }
-
-  onLogout(): void {
-    this.authService.logout();
-    this.router.navigate(['/auth/login']);
   }
 }
