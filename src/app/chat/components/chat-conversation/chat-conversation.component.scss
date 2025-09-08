@@ -2,10 +2,9 @@
 .chat-conversation {
   display: flex;
   flex-direction: column;
-  height: 100vh;
+  flex: 1;
   background: black;
-  margin-left: 400px; // Space for sidebar
-  padding-top: 60px; // Space for header
+  overflow: hidden;
 }
 
 .conversation-header {
@@ -15,6 +14,7 @@
   padding: 1rem 1.5rem;
   border-bottom: 1px solid #444444;
   background: black;
+  flex-shrink: 0; // Header doesn't shrink
 
   .conversation-info {
     .conversation-title {
@@ -55,6 +55,7 @@
 .messages-container {
   flex: 1;
   overflow-y: auto;
+  overflow-x: hidden;
   padding: 1rem 0;
 
   // Custom scrollbar
@@ -87,6 +88,7 @@
   padding: 1rem 1.5rem;
   border-top: 1px solid #444444;
   background: black;
+  flex-shrink: 0; // Input area doesn't shrink
 
   .input-wrapper {
     display: flex;
@@ -154,9 +156,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  height: 100vh;
-  margin-left: 400px; // because sidebar takes space
-  padding-top: 60px;
+  flex: 1;
   background: #000;
 
   .placeholder-content {
@@ -196,18 +196,10 @@
 
 // Responsive design
 @media (max-width: 1024px) {
-  .chat-conversation,
-  .no-conversation {
-    margin-left: 280px;
-  }
+  // No changes needed - flexbox handles this
 }
 
 @media (max-width: 768px) {
-  .chat-conversation,
-  .no-conversation {
-    margin-left: 0;
-  }
-
   .conversation-header {
     padding: 0.75rem 1rem;
 
@@ -249,18 +241,18 @@
     }
   }
 
-  .no-conversation .welcome-content {
+  .no-conversation .placeholder-content {
     padding: 1.5rem;
 
-    .welcome-icon {
+    .placeholder-icon {
       font-size: 3rem;
     }
 
-    .welcome-title {
+    .placeholder-title {
       font-size: 1.25rem;
     }
 
-    .welcome-subtitle {
+    .placeholder-subtitle {
       font-size: 0.9rem;
     }
   }
@@ -291,20 +283,20 @@
     }
   }
 
-  .no-conversation .welcome-content {
+  .no-conversation .placeholder-content {
     padding: 1rem;
 
-    .welcome-icon {
+    .placeholder-icon {
       font-size: 2.5rem;
       margin-bottom: 1rem;
     }
 
-    .welcome-title {
+    .placeholder-title {
       font-size: 1.1rem;
       margin-bottom: 0.5rem;
     }
 
-    .welcome-subtitle {
+    .placeholder-subtitle {
       font-size: 0.85rem;
     }
   }
