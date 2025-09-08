@@ -1,16 +1,16 @@
 <div class="message-wrapper" [class.own-message]="message.isOwn">
   <div class="message-bubble">
     <div class="message-header" *ngIf="!message.isOwn">
-      <span class="sender-name">{{ message.senderName || 'Unknown User' }}</span>
-      <span class="message-time">{{ getTimeDisplay(message.createdAt) }}</span>
+      <span class="sender-name">{{ displayName }}</span>
+      <span class="message-time">{{ displayTime }}</span>
     </div>
     
     <div class="message-content">
-      {{ message.content }}
+      {{ messageContent }}
     </div>
     
     <div class="message-footer" *ngIf="message.isOwn">
-      <span class="message-time">{{ getTimeDisplay(message.createdAt) }}</span>
+      <span class="message-time">{{ displayTime }}</span>
     </div>
   </div>
 </div>

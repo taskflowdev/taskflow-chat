@@ -26,11 +26,26 @@
   <!-- Message Input -->
   <div class="message-input-container">
     <div class="input-wrapper">
-      <textarea [(ngModel)]="newMessage" (keydown)="onKeyDown($event)" placeholder="Type a message..."
-        class="message-input" rows="1">
+      <textarea 
+        [(ngModel)]="newMessage" 
+        (keydown)="onKeyDown($event)" 
+        placeholder="Type a message..."
+        class="message-input" 
+        rows="1"
+        [disabled]="isSending">
       </textarea>
-      <button class="btn send-btn" (click)="onSendMessage()" [disabled]="!newMessage.trim()" title="Send message">
-        <i class="bi bi-send-fill"></i>
+      <button 
+        class="btn send-btn" 
+        (click)="onSendMessage()" 
+        [disabled]="!newMessage.trim() || isSending" 
+        title="Send message">
+        <app-loading-spinner 
+          *ngIf="isSending" 
+          size="sm" 
+          color="#ffffff" 
+          [inline]="true">
+        </app-loading-spinner>
+        <i *ngIf="!isSending" class="bi bi-send-fill"></i>
       </button>
     </div>
   </div>

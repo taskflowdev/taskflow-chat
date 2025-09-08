@@ -2,17 +2,67 @@
   <!-- Chat Content Area without Header -->
   <div class="chat-content-area">
     <!-- Left Sidebar with Chat List -->
-    <app-chat-sidebar
-      [chats]="chats"
-      [selectedChatId]="selectedChatId"
-      (chatSelect)="onChatSelect($event)">
-    </app-chat-sidebar>
+    <div class="chat-sidebar-container">
+      <!-- Loading State for Chat List -->
+      <div *ngIf="isLoadingChats" class="chat-loading-state">
+        <app-chat-skeleton type="chat-list" [count]="6"></app-chat-skeleton>
+      </div>
+      
+      <!-- Error State for Chat List -->
+      <div *ngIf="chatsError && !isLoadingChats" class="chat-error-state">
+        <div class="error-message">
+          <i class="bi bi-exclamation-triangle"></i>
+          <p>{{ chatsError }}</p>
+          <button class="btn btn-primary btn-sm" (click)="onRetryLoadChats()">
+            <i class="bi bi-arrow-clockwise"></i> Retry
+          </button>
+        </div>
+      </div>
+
+      <!-- Chat Sidebar with Real Data -->
+      <app-chat-sidebar
+        *ngIf="!isLoadingChats && !chatsError"
+        [chats]="chats"
+        [selectedChatId]="selectedChatId"
+        (chatSelect)="onChatSelect($event)">
+      </app-chat-sidebar>
+    </div>
 
     <!-- Right Panel with Conversation -->
-    <app-chat-conversation
-      [conversation]="currentConversation"
-      [currentUserId]="user?.id || null"
-      (sendMessage)="onSendMessage($event)">
-    </app-chat-conversation>
+    <div class="conversation-container">
+      <!-- Welcome State (No Chat Selected) -->
+      <div *ngIf="!selectedChatId && !isLoadingChats" class="welcome-state">
+        <div class="welcome-content">
+          <i class="bi bi-chat-dots"></i>
+          <h3>Welcome to TaskFlow Chat</h3>
+          <p>Select a conversation to start chatting</p>
+        </div>
+      </div>
+
+      <!-- Conversation Loading State -->
+      <div *ngIf="selectedChatId && isLoadingConversation" class="conversation-loading-state">
+        <app-chat-skeleton type="message-list" [count]="8"></app-chat-skeleton>
+      </div>
+
+      <!-- Conversation with Real Data -->
+      <app-chat-conversation
+        *ngIf="selectedChatId && !isLoadingConversation && currentConversation"
+        [conversation]="currentConversation"
+        [currentUserId]="user?.id || null"
+        [isSending]="isSendingMessage"
+        (sendMessage)="onSendMessage($event)">
+      </app-chat-conversation>
+
+      <!-- Conversation Error State -->
+      <div *ngIf="selectedChatId && conversationError" class="conversation-error-state">
+        <div class="error-message">
+          <i class="bi bi-exclamation-triangle"></i>
+          <p>{{ conversationError }}</p>
+          <button class="btn btn-primary btn-sm" (click)="loadConversation(selectedChatId!)">
+            <i class="bi bi-arrow-clockwise"></i> Retry
+          </button>
+        </div>
+      </div>
+    </div>
   </div>
 </div>

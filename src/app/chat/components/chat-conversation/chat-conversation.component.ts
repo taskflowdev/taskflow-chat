@@ -1,24 +1,20 @@
 import { Component, Input, Output, EventEmitter, ViewChild, ElementRef, AfterViewChecked } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { ChatMessageComponent, ChatMessageData } from '../chat-message/chat-message.component';
-
-export interface ConversationData {
-  groupId: string;
-  groupName: string;
-  messages: ChatMessageData[];
-  memberCount?: number;
-}
+import { ChatMessageComponent } from '../chat-message/chat-message.component';
+import { LoadingSpinnerComponent } from '../../../shared/components/loading-spinner/loading-spinner.component';
+import { ConversationData, EnhancedMessageDto } from '../../../api/message-proxy.service';
 
 @Component({
   selector: 'app-chat-conversation',
-  imports: [CommonModule, FormsModule, ChatMessageComponent],
+  imports: [CommonModule, FormsModule, ChatMessageComponent, LoadingSpinnerComponent],
   templateUrl: './chat-conversation.component.html',
   styleUrl: './chat-conversation.component.scss'
 })
 export class ChatConversationComponent implements AfterViewChecked {
   @Input() conversation: ConversationData | null = null;
   @Input() currentUserId: string | null = null;
+  @Input() isSending: boolean = false;
   @Output() sendMessage = new EventEmitter<string>();
   
   @ViewChild('messagesContainer') messagesContainer!: ElementRef;
@@ -34,7 +30,7 @@ export class ChatConversationComponent implements AfterViewChecked {
   }
 
   onSendMessage(): void {
-    if (this.newMessage.trim() && this.conversation) {
+    if (this.newMessage.trim() && this.conversation && !this.isSending) {
       this.sendMessage.emit(this.newMessage.trim());
       this.newMessage = '';
       this.shouldScrollToBottom = true;
@@ -55,7 +51,7 @@ export class ChatConversationComponent implements AfterViewChecked {
     }
   }
 
-  trackByMessageId(index: number, message: ChatMessageData): string {
-    return message.messageId;
+  trackByMessageId(index: number, message: EnhancedMessageDto): string {
+    return message.messageId || index.toString();
   }
 }
