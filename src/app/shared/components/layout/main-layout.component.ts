@@ -7,7 +7,7 @@ import { FooterComponent } from '../footer/footer.component';
 @Component({
   selector: 'app-main-layout',
   standalone: true,
-  imports: [CommonModule, RouterOutlet, NavbarComponent, FooterComponent],
+  imports: [CommonModule, RouterOutlet, NavbarComponent],
   template: `
     <div class="app-layout">
       <!-- Global Navigation Bar -->
@@ -19,7 +19,7 @@ import { FooterComponent } from '../footer/footer.component';
       </main>
 
       <!-- Global Footer -->
-      <app-footer></app-footer>
+      <!-- <app-footer></app-footer> -->
     </div>
   `,
   styleUrls: ['./main-layout.component.scss']
