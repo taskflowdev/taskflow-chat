@@ -5,24 +5,21 @@
       <i class="bi bi-plus-lg"></i>
     </button>
   </div>
-  
+
   <div class="sidebar-content">
     <div class="chats-list" *ngIf="chats.length > 0; else noChats">
-      <app-chat-item
-        *ngFor="let chat of chats; trackBy: trackByGroupId"
-        [chat]="chat"
-        [isActive]="isActivechat(chat.groupId)"
-        (chatSelect)="onChatSelect($event)">
+      <app-chat-item *ngFor="let chat of chats; trackBy: trackByGroupId" [chat]="chat"
+        [isActive]="isActivechat(chat.groupId)" (chatSelect)="onChatSelect($event)">
       </app-chat-item>
     </div>
-    
+
     <ng-template #noChats>
       <div class="no-chats">
-        <i class="bi bi-chat-dots empty-icon"></i>
+        <i class="bi bi-chat-text empty-icon"></i>
         <p class="empty-text">No conversations yet</p>
         <button class="btn start-chat-btn">
-          <i class="bi bi-plus-circle me-2"></i>
-          Start a conversation
+          <i class="bi bi-plus-circle-fill me-1"></i>
+          New Group
         </button>
       </div>
     </ng-template>

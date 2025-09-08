@@ -111,11 +111,11 @@ export class MainChatComponent implements OnInit {
     private authService: AuthService,
     private router: Router,
     @Inject(PLATFORM_ID) private platformId: Object
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.user = this.authService.getCurrentUser();
-    
+
     // Subscribe to user changes only in browser environment
     if (isPlatformBrowser(this.platformId)) {
       this.authService.currentUser$.subscribe(user => {
@@ -130,7 +130,7 @@ export class MainChatComponent implements OnInit {
   onChatSelect(groupId: string): void {
     this.selectedChatId = groupId;
     this.currentConversation = this.conversations[groupId] || null;
-    
+
     // Mark chat as read (update unread count)
     const chat = this.chats.find(c => c.groupId === groupId);
     if (chat) {

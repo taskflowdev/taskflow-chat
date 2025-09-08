@@ -7,7 +7,7 @@ import { AuthService, AuthUser } from '../../../auth/services/auth.service';
   selector: 'app-chat-header',
   imports: [CommonModule],
   templateUrl: './chat-header.component.html',
-  styleUrl: './chat-header.component.scss'
+  styleUrls: ['./chat-header.component.scss']
 })
 export class ChatHeaderComponent {
   @Input() user: AuthUser | null = null;
@@ -16,7 +16,7 @@ export class ChatHeaderComponent {
   constructor(
     private authService: AuthService,
     private router: Router
-  ) {}
+  ) { }
 
   onLogout(): void {
     this.logoutClick.emit();
