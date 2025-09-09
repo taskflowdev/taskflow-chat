@@ -162,12 +162,15 @@
 @media (max-width: 768px) {
   .chat-sidebar {
     width: 100%;
-    position: absolute;
-    transform: translateX(-100%);
-    transition: transform 0.3s ease;
+    position: relative; // Change from absolute to relative
+    top: 0;
+    transform: none;
+    transition: none;
+    height: auto;
+    min-height: calc(100vh - 60px);
 
     &.mobile-open {
-      transform: translateX(0);
+      transform: none;
     }
   }
 

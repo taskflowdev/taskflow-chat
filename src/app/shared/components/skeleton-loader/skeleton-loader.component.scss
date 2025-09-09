@@ -59,6 +59,21 @@
   }
 }
 
+.skeleton-chat-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem 1.5rem;
+
+  .skeleton-header-info {
+    flex: 1;
+  }
+
+  .skeleton-header-actions {
+    flex-shrink: 0;
+  }
+}
+
 @keyframes skeleton-loading {
   0% {
     background-position: -200% 0;

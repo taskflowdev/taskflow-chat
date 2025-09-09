@@ -28,6 +28,10 @@ export class MainChatComponent implements OnInit {
   loading: boolean = true;
   loadingMessages: boolean = false;
 
+  // Mobile responsiveness state
+  isMobileView: boolean = false;
+  showSidebar: boolean = true; // On mobile, false when conversation is open
+
 
 
   constructor(
@@ -39,6 +43,12 @@ export class MainChatComponent implements OnInit {
 
   ngOnInit() {
     this.user = this.authService.getCurrentUser();
+    
+    // Check if mobile view initially
+    if (isPlatformBrowser(this.platformId)) {
+      this.checkMobileView();
+      window.addEventListener('resize', () => this.checkMobileView());
+    }
 
     // Subscribe to user changes only in browser environment
     if (isPlatformBrowser(this.platformId)) {
@@ -54,6 +64,20 @@ export class MainChatComponent implements OnInit {
       // Load initial data if user is already authenticated
       if (this.user) {
         this.loadUserGroups();
+      }
+    }
+  }
+
+  /**
+   * Check if current viewport is mobile
+   */
+  private checkMobileView(): void {
+    if (isPlatformBrowser(this.platformId)) {
+      this.isMobileView = window.innerWidth <= 768;
+      
+      // Reset sidebar visibility when switching from mobile to desktop
+      if (!this.isMobileView) {
+        this.showSidebar = true;
       }
     }
   }
@@ -92,10 +116,26 @@ export class MainChatComponent implements OnInit {
     this.selectedChatId = groupId;
     this.loadGroupMessages(groupId);
 
+    // On mobile, hide sidebar when a chat is selected
+    if (this.isMobileView) {
+      this.showSidebar = false;
+    }
+
     // Mark chat as read (update unread count)
     const chat = this.chats.find(c => c.groupId === groupId);
     if (chat) {
       chat.unreadCount = 0;
+    }
+  }
+
+  /**
+   * Go back to chat list (mobile only)
+   */
+  onBackToChats(): void {
+    if (this.isMobileView) {
+      this.showSidebar = true;
+      this.selectedChatId = null;
+      this.currentConversation = null;
     }
   }
 

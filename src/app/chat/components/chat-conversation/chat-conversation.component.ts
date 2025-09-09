@@ -21,7 +21,9 @@ export class ChatConversationComponent implements AfterViewChecked {
   @Input() conversation: ConversationData | null = null;
   @Input() currentUserId: string | null = null;
   @Input() loading: boolean = false;
+  @Input() showBackButton: boolean = false; // For mobile back navigation
   @Output() sendMessage = new EventEmitter<string>();
+  @Output() backToChats = new EventEmitter<void>(); // Mobile back navigation
   
   @ViewChild('messagesContainer') messagesContainer!: ElementRef;
   
@@ -59,5 +61,12 @@ export class ChatConversationComponent implements AfterViewChecked {
 
   trackByMessageId(index: number, message: ChatMessageData): string {
     return message.messageId;
+  }
+
+  /**
+   * Handle back button click for mobile navigation
+   */
+  onBackClick(): void {
+    this.backToChats.emit();
   }
 }

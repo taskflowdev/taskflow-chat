@@ -1,6 +1,11 @@
 <div class="chat-conversation" *ngIf="conversation || loading; else noConversationSelected">
   <!-- Conversation Header -->
   <div class="conversation-header" *ngIf="conversation && !loading">
+    <!-- Mobile Back Button -->
+    <button *ngIf="showBackButton" class="back-button" (click)="onBackClick()" title="Back to chats">
+      <i class="bi bi-arrow-left"></i>
+    </button>
+    
     <div class="conversation-info">
       <h4 class="conversation-title">{{ conversation.groupName }}</h4>
       <p class="conversation-subtitle" *ngIf="conversation.memberCount">
@@ -17,13 +22,12 @@
 
   <!-- Header Skeleton -->
   <div class="conversation-header" *ngIf="loading">
-    <div class="conversation-info">
-      <app-skeleton-loader type="text" width="150px" height="1.2rem" style="margin-bottom: 0.25rem;"></app-skeleton-loader>
-      <app-skeleton-loader type="text" width="80px" height="0.875rem"></app-skeleton-loader>
+    <!-- Mobile Back Button Skeleton -->
+    <div *ngIf="showBackButton" class="back-button-skeleton">
+      <app-skeleton-loader type="circle" width="36px" height="36px"></app-skeleton-loader>
     </div>
-    <div class="conversation-actions">
-      <app-skeleton-loader type="circle" width="32px" height="32px"></app-skeleton-loader>
-    </div>
+    
+    <app-skeleton-loader type="chat-header"></app-skeleton-loader>
   </div>
 
   <!-- Messages Container -->
@@ -43,13 +47,22 @@
     </div>
   </div>
 
-  <!-- Message Input -->
-  <div class="message-input-container" *ngIf="!loading">
+  <!-- Message Input - Always visible -->
+  <div class="message-input-container">
     <div class="input-wrapper">
-      <textarea [(ngModel)]="newMessage" (keydown)="onKeyDown($event)" placeholder="Type a message..."
-        class="message-input" rows="1">
+      <textarea 
+        [(ngModel)]="newMessage" 
+        (keydown)="onKeyDown($event)" 
+        placeholder="Type a message..."
+        class="message-input" 
+        rows="1"
+        [disabled]="loading">
       </textarea>
-      <button class="btn send-btn" (click)="onSendMessage()" [disabled]="!newMessage.trim()" title="Send message">
+      <button 
+        class="btn send-btn" 
+        (click)="onSendMessage()" 
+        [disabled]="!newMessage.trim() || loading" 
+        title="Send message">
         <i class="bi bi-send-fill"></i>
       </button>
     </div>

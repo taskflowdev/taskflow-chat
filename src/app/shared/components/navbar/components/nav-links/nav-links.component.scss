@@ -1,0 +1,84 @@
+// Nav links component styles - reusable navigation component
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+
+  .nav-link {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    color: rgba(255, 255, 255, 0.8);
+    text-decoration: none;
+    border-radius: 6px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    position: relative;
+
+    &:hover {
+      color: white;
+      background: rgba(255, 255, 255, 0.1);
+    }
+
+    &.active {
+      color: white;
+      background: rgba(255, 255, 255, 0.15);
+
+      &::after {
+        content: '';
+        position: absolute;
+        bottom: -8px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 4px;
+        height: 4px;
+        border-radius: 50%;
+        background: white;
+      }
+    }
+
+    i {
+      font-size: 1.1rem;
+    }
+
+    .nav-text {
+      font-size: 0.85rem;
+    }
+  }
+}
+
+// Responsive behavior
+@media (max-width: 768px) {
+  .nav-links {
+    gap: 1rem;
+
+    .nav-link {
+      padding: 0.4rem 0.75rem;
+      font-size: 0.8rem;
+
+      i {
+        font-size: 1rem;
+      }
+
+      .nav-text {
+        display: none; // Hide text on mobile, keep icons only
+      }
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .nav-links {
+    gap: 0.5rem;
+
+    .nav-link {
+      padding: 0.3rem 0.5rem;
+
+      i {
+        font-size: 0.9rem;
+      }
+    }
+  }
+}

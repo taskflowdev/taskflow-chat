@@ -10,8 +10,9 @@
     <!-- Loading State -->
     <div *ngIf="loading" class="chats-list">
       <app-skeleton-loader 
-        *ngFor="let item of [1,2,3,4,5]"
-        type="chat-item">
+        *ngFor="let item of skeletonItems; trackBy: trackBySkeletonIndex"
+        type="chat-item"
+        [fadeOpacity]="item.opacity">
       </app-skeleton-loader>
     </div>
 
