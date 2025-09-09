@@ -107,22 +107,35 @@ export class MainChatComponent implements OnInit {
     this.currentConversation = null;
 
     // Load group details and messages in parallel
-    Promise.all([
-      this.groupServiceProxy.getGroupDetails(groupId).toPromise(),
-      this.groupServiceProxy.getGroupMessages(groupId).toPromise()
-    ]).then(([groupDetails, messages]) => {
-      if (groupDetails && messages) {
-        this.currentConversation = {
-          groupId: groupDetails.groupId || '',
-          groupName: groupDetails.name || 'Unnamed Group',
-          memberCount: groupDetails.memberCount || 0,
-          messages: messages.map(msg => this.mapMessageToChatMessage(msg))
-        };
+    const groupDetails$ = this.groupServiceProxy.getGroupDetails(groupId);
+    const messages$ = this.groupServiceProxy.getGroupMessages(groupId);
+
+    groupDetails$.subscribe({
+      next: (groupDetails) => {
+        if (groupDetails) {
+          messages$.subscribe({
+            next: (messages) => {
+              this.currentConversation = {
+                groupId: groupDetails.groupId || '',
+                groupName: groupDetails.name || 'Unnamed Group',
+                memberCount: groupDetails.memberCount || 0,
+                messages: messages.map(msg => this.mapMessageToChatMessage(msg))
+              };
+              this.loadingMessages = false;
+            },
+            error: (error) => {
+              console.error('Failed to load group messages:', error);
+              this.loadingMessages = false;
+            }
+          });
+        } else {
+          this.loadingMessages = false;
+        }
+      },
+      error: (error) => {
+        console.error('Failed to load group details:', error);
+        this.loadingMessages = false;
       }
-      this.loadingMessages = false;
-    }).catch(error => {
-      console.error('Failed to load group messages:', error);
-      this.loadingMessages = false;
     });
   }
 
