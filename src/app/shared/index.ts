@@ -7,3 +7,4 @@ export * from './components/footer/footer.component';
 
 // Other Shared Components
 export * from './components/toast-container.component';
+export * from './components/skeleton-loader/skeleton-loader.component';

@@ -7,21 +7,29 @@
   </div>
 
   <div class="sidebar-content">
-    <div class="chats-list" *ngIf="chats.length > 0; else noChats">
+    <!-- Loading State -->
+    <div *ngIf="loading" class="chats-list">
+      <app-skeleton-loader 
+        *ngFor="let item of [1,2,3,4,5]"
+        type="chat-item">
+      </app-skeleton-loader>
+    </div>
+
+    <!-- Loaded Chats -->
+    <div class="chats-list" *ngIf="!loading && chats.length > 0">
       <app-chat-item *ngFor="let chat of chats; trackBy: trackByGroupId" [chat]="chat"
         [isActive]="isActivechat(chat.groupId)" (chatSelect)="onChatSelect($event)">
       </app-chat-item>
     </div>
 
-    <ng-template #noChats>
-      <div class="no-chats">
-        <i class="bi bi-chat-text empty-icon"></i>
-        <p class="empty-text">No conversations yet</p>
-        <button class="btn start-chat-btn">
-          <i class="bi bi-plus-circle-fill me-1"></i>
-          New Group
-        </button>
-      </div>
-    </ng-template>
+    <!-- No Chats State -->
+    <div *ngIf="!loading && chats.length === 0" class="no-chats">
+      <i class="bi bi-chat-text empty-icon"></i>
+      <p class="empty-text">No conversations yet</p>
+      <button class="btn start-chat-btn">
+        <i class="bi bi-plus-circle-fill me-1"></i>
+        New Group
+      </button>
+    </div>
   </div>
 </aside>

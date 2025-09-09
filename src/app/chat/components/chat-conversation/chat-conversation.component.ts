@@ -2,6 +2,7 @@ import { Component, Input, Output, EventEmitter, ViewChild, ElementRef, AfterVie
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ChatMessageComponent, ChatMessageData } from '../chat-message/chat-message.component';
+import { SkeletonLoaderComponent } from '../../../shared/components/skeleton-loader/skeleton-loader.component';
 
 export interface ConversationData {
   groupId: string;
@@ -12,13 +13,14 @@ export interface ConversationData {
 
 @Component({
   selector: 'app-chat-conversation',
-  imports: [CommonModule, FormsModule, ChatMessageComponent],
+  imports: [CommonModule, FormsModule, ChatMessageComponent, SkeletonLoaderComponent],
   templateUrl: './chat-conversation.component.html',
   styleUrl: './chat-conversation.component.scss'
 })
 export class ChatConversationComponent implements AfterViewChecked {
   @Input() conversation: ConversationData | null = null;
   @Input() currentUserId: string | null = null;
+  @Input() loading: boolean = false;
   @Output() sendMessage = new EventEmitter<string>();
   
   @ViewChild('messagesContainer') messagesContainer!: ElementRef;

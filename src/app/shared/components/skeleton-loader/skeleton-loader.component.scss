@@ -1,0 +1,91 @@
+.skeleton-container {
+  display: contents;
+}
+
+.skeleton {
+  background: linear-gradient(90deg, 
+    var(--skeleton-base, #2a2a2a) 25%, 
+    var(--skeleton-highlight, #383838) 50%, 
+    var(--skeleton-base, #2a2a2a) 75%
+  );
+  background-size: 200% 100%;
+  animation: skeleton-loading 1.5s infinite;
+  border-radius: 4px;
+  display: inline-block;
+}
+
+.skeleton-text {
+  border-radius: 2px;
+}
+
+.skeleton-circle {
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.skeleton-rectangle {
+  border-radius: 4px;
+}
+
+.skeleton-chat-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid var(--border-color, #3a3a3a);
+
+  .skeleton-chat-content {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .skeleton-chat-meta {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 0.25rem;
+  }
+}
+
+.skeleton-message {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+
+  .skeleton-message-content {
+    flex: 1;
+    min-width: 0;
+  }
+}
+
+@keyframes skeleton-loading {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+/* Light theme override for better contrast */
+:root {
+  --skeleton-base: #2a2a2a;
+  --skeleton-highlight: #383838;
+  --border-color: #3a3a3a;
+}
+
+/* For light theme contexts (if needed) */
+.light-theme {
+  --skeleton-base: #f0f0f0;
+  --skeleton-highlight: #f8f8f8;
+  --border-color: #e0e0e0;
+}
+
+/* Dark theme specific styles */
+.dark-theme,
+body.dark {
+  --skeleton-base: #1a1a1a;
+  --skeleton-highlight: #2d2d2d;
+  --border-color: #404040;
+}

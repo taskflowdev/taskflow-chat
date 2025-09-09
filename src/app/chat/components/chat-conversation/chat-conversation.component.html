@@ -1,6 +1,6 @@
-<div class="chat-conversation" *ngIf="conversation; else noConversationSelected">
+<div class="chat-conversation" *ngIf="conversation || loading; else noConversationSelected">
   <!-- Conversation Header -->
-  <div class="conversation-header">
+  <div class="conversation-header" *ngIf="conversation && !loading">
     <div class="conversation-info">
       <h4 class="conversation-title">{{ conversation.groupName }}</h4>
       <p class="conversation-subtitle" *ngIf="conversation.memberCount">
@@ -15,16 +15,36 @@
     </div>
   </div>
 
+  <!-- Header Skeleton -->
+  <div class="conversation-header" *ngIf="loading">
+    <div class="conversation-info">
+      <app-skeleton-loader type="text" width="150px" height="1.2rem" style="margin-bottom: 0.25rem;"></app-skeleton-loader>
+      <app-skeleton-loader type="text" width="80px" height="0.875rem"></app-skeleton-loader>
+    </div>
+    <div class="conversation-actions">
+      <app-skeleton-loader type="circle" width="32px" height="32px"></app-skeleton-loader>
+    </div>
+  </div>
+
   <!-- Messages Container -->
   <div class="messages-container" #messagesContainer>
-    <div class="messages-list">
+    <!-- Loading Messages -->
+    <div class="messages-list" *ngIf="loading">
+      <app-skeleton-loader 
+        *ngFor="let item of [1,2,3,4,5,6]"
+        type="message">
+      </app-skeleton-loader>
+    </div>
+
+    <!-- Loaded Messages -->
+    <div class="messages-list" *ngIf="conversation && !loading">
       <app-chat-message *ngFor="let message of conversation.messages; trackBy: trackByMessageId" [message]="message">
       </app-chat-message>
     </div>
   </div>
 
   <!-- Message Input -->
-  <div class="message-input-container">
+  <div class="message-input-container" *ngIf="!loading">
     <div class="input-wrapper">
       <textarea [(ngModel)]="newMessage" (keydown)="onKeyDown($event)" placeholder="Type a message..."
         class="message-input" rows="1">

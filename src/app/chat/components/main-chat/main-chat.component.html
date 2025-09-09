@@ -5,6 +5,7 @@
     <app-chat-sidebar
       [chats]="chats"
       [selectedChatId]="selectedChatId"
+      [loading]="loading"
       (chatSelect)="onChatSelect($event)">
     </app-chat-sidebar>
 
@@ -12,6 +13,7 @@
     <app-chat-conversation
       [conversation]="currentConversation"
       [currentUserId]="user?.id || null"
+      [loading]="loadingMessages"
       (sendMessage)="onSendMessage($event)">
     </app-chat-conversation>
   </div>

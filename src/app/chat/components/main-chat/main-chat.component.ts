@@ -6,6 +6,8 @@ import { ChatSidebarComponent } from '../chat-sidebar/chat-sidebar.component';
 import { ChatConversationComponent, ConversationData } from '../chat-conversation/chat-conversation.component';
 import { ChatItemData } from '../chat-item/chat-item.component';
 import { ChatMessageData } from '../chat-message/chat-message.component';
+import { GroupServiceProxy, GroupWithMessages } from '../../../api/group.service.proxy';
+import { MessageDto } from '../../../api/model/messageDto';
 
 @Component({
   selector: 'app-main-chat',
@@ -22,92 +24,16 @@ export class MainChatComponent implements OnInit {
   user: AuthUser | null = null;
   selectedChatId: string | null = null;
   currentConversation: ConversationData | null = null;
+  chats: ChatItemData[] = [];
+  loading: boolean = true;
+  loadingMessages: boolean = false;
 
-  // Mock data for development - will be replaced with real API calls
-  chats: ChatItemData[] = [
-    {
-      groupId: '1',
-      name: 'General Discussion',
-      lastMessage: 'Hey everyone! How is the project going?',
-      lastMessageTime: new Date().toISOString(),
-      unreadCount: 3
-    },
-    {
-      groupId: '2',
-      name: 'Development Team',
-      lastMessage: 'I pushed the latest changes to the repo',
-      lastMessageTime: new Date(Date.now() - 1000 * 60 * 30).toISOString(),
-      unreadCount: 1
-    },
-    {
-      groupId: '3',
-      name: 'Design Review',
-      lastMessage: 'The new mockups look great!',
-      lastMessageTime: new Date(Date.now() - 1000 * 60 * 60 * 2).toISOString(),
-      unreadCount: 0
-    },
-    {
-      groupId: '4',
-      name: 'TaskFlow Planning',
-      lastMessage: 'Let\'s schedule the next sprint planning',
-      lastMessageTime: new Date(Date.now() - 1000 * 60 * 60 * 24).toISOString(),
-      unreadCount: 0
-    }
-  ];
 
-  // Mock conversations data
-  conversations: { [key: string]: ConversationData } = {
-    '1': {
-      groupId: '1',
-      groupName: 'General Discussion',
-      memberCount: 12,
-      messages: [
-        {
-          messageId: '1',
-          senderId: 'other-user-1',
-          senderName: 'John Doe',
-          content: 'Hey everyone! How is the project going?',
-          createdAt: new Date(Date.now() - 1000 * 60 * 5).toISOString(),
-          isOwn: false
-        },
-        {
-          messageId: '2',
-          senderId: this.user?.id || 'current-user',
-          senderName: 'You',
-          content: 'It\'s going well! Just finished implementing the chat UI.',
-          createdAt: new Date(Date.now() - 1000 * 60 * 3).toISOString(),
-          isOwn: true
-        },
-        {
-          messageId: '3',
-          senderId: 'other-user-2',
-          senderName: 'Jane Smith',
-          content: 'That sounds great! Can\'t wait to see it in action.',
-          createdAt: new Date(Date.now() - 1000 * 60 * 1).toISOString(),
-          isOwn: false
-        }
-      ]
-    },
-    '2': {
-      groupId: '2',
-      groupName: 'Development Team',
-      memberCount: 5,
-      messages: [
-        {
-          messageId: '4',
-          senderId: 'other-user-3',
-          senderName: 'Mike Johnson',
-          content: 'I pushed the latest changes to the repo',
-          createdAt: new Date(Date.now() - 1000 * 60 * 30).toISOString(),
-          isOwn: false
-        }
-      ]
-    }
-  };
 
   constructor(
     private authService: AuthService,
     private router: Router,
+    private groupServiceProxy: GroupServiceProxy,
     @Inject(PLATFORM_ID) private platformId: Object
   ) { }
 
@@ -120,14 +46,51 @@ export class MainChatComponent implements OnInit {
         this.user = user;
         if (!user) {
           this.router.navigate(['/auth/login']);
+        } else {
+          this.loadUserGroups();
         }
       });
+
+      // Load initial data if user is already authenticated
+      if (this.user) {
+        this.loadUserGroups();
+      }
     }
+  }
+
+  /**
+   * Loads user groups from API
+   */
+  private loadUserGroups(): void {
+    this.loading = true;
+    this.groupServiceProxy.getUserGroups().subscribe({
+      next: (groups: GroupWithMessages[]) => {
+        this.chats = groups.map(group => this.mapGroupToChatItem(group));
+        this.loading = false;
+      },
+      error: (error) => {
+        console.error('Failed to load user groups:', error);
+        this.loading = false;
+      }
+    });
+  }
+
+  /**
+   * Maps a GroupWithMessages to ChatItemData format
+   */
+  private mapGroupToChatItem(group: GroupWithMessages): ChatItemData {
+    return {
+      groupId: group.groupId || '',
+      name: group.name || 'Unnamed Group',
+      lastMessage: group.lastMessage?.content?.toString() || 'No messages yet',
+      lastMessageTime: group.lastMessage?.createdAt || new Date().toISOString(),
+      unreadCount: group.unreadCount || 0
+    };
   }
 
   onChatSelect(groupId: string): void {
     this.selectedChatId = groupId;
-    this.currentConversation = this.conversations[groupId] || null;
+    this.loadGroupMessages(groupId);
 
     // Mark chat as read (update unread count)
     const chat = this.chats.find(c => c.groupId === groupId);
@@ -136,12 +99,53 @@ export class MainChatComponent implements OnInit {
     }
   }
 
+  /**
+   * Loads messages for a specific group
+   */
+  private loadGroupMessages(groupId: string): void {
+    this.loadingMessages = true;
+    this.currentConversation = null;
+
+    // Load group details and messages in parallel
+    Promise.all([
+      this.groupServiceProxy.getGroupDetails(groupId).toPromise(),
+      this.groupServiceProxy.getGroupMessages(groupId).toPromise()
+    ]).then(([groupDetails, messages]) => {
+      if (groupDetails && messages) {
+        this.currentConversation = {
+          groupId: groupDetails.groupId || '',
+          groupName: groupDetails.name || 'Unnamed Group',
+          memberCount: groupDetails.memberCount || 0,
+          messages: messages.map(msg => this.mapMessageToChatMessage(msg))
+        };
+      }
+      this.loadingMessages = false;
+    }).catch(error => {
+      console.error('Failed to load group messages:', error);
+      this.loadingMessages = false;
+    });
+  }
+
+  /**
+   * Maps a MessageDto to ChatMessageData format
+   */
+  private mapMessageToChatMessage(message: MessageDto): ChatMessageData {
+    return {
+      messageId: message.messageId || '',
+      senderId: message.senderId || '',
+      senderName: message.senderName || 'Unknown',
+      content: message.content?.toString() || '',
+      createdAt: message.createdAt || new Date().toISOString(),
+      isOwn: message.senderId === this.user?.id
+    };
+  }
+
   onSendMessage(messageContent: string): void {
     if (!this.currentConversation || !this.user) return;
 
-    // Create new message
-    const newMessage: ChatMessageData = {
-      messageId: Date.now().toString(),
+    // Optimistically add message to UI
+    const optimisticMessage: ChatMessageData = {
+      messageId: 'temp-' + Date.now().toString(),
       senderId: this.user.id,
       senderName: 'You',
       content: messageContent,
@@ -149,8 +153,7 @@ export class MainChatComponent implements OnInit {
       isOwn: true
     };
 
-    // Add to current conversation
-    this.currentConversation.messages.push(newMessage);
+    this.currentConversation.messages.push(optimisticMessage);
 
     // Update last message in chat list
     const chat = this.chats.find(c => c.groupId === this.currentConversation?.groupId);
@@ -159,6 +162,31 @@ export class MainChatComponent implements OnInit {
       chat.lastMessageTime = new Date().toISOString();
     }
 
-    // TODO: Send message via API
+    // Send message via API (when available)
+    this.groupServiceProxy.sendMessage(this.currentConversation.groupId, messageContent).subscribe({
+      next: (sentMessage) => {
+        // Replace optimistic message with real one if API returns it
+        if (sentMessage && this.currentConversation) {
+          const index = this.currentConversation.messages.findIndex(
+            msg => msg.messageId === optimisticMessage.messageId
+          );
+          if (index !== -1) {
+            this.currentConversation.messages[index] = this.mapMessageToChatMessage(sentMessage);
+          }
+        }
+      },
+      error: (error) => {
+        console.error('Failed to send message:', error);
+        // Remove optimistic message on error
+        if (this.currentConversation) {
+          const index = this.currentConversation.messages.findIndex(
+            msg => msg.messageId === optimisticMessage.messageId
+          );
+          if (index !== -1) {
+            this.currentConversation.messages.splice(index, 1);
+          }
+        }
+      }
+    });
   }
 }
