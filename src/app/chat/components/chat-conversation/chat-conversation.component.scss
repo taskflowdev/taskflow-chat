@@ -16,6 +16,36 @@
   border-bottom: 1px solid #444444;
   background: black;
 
+  .back-button {
+    background: transparent;
+    border: 1px solid #444444;
+    color: white;
+    border-radius: 6px;
+    width: 36px;
+    height: 36px;
+    display: none; // Hidden by default
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+    margin-right: 0.75rem;
+    flex-shrink: 0;
+
+    &:hover {
+      background: #333333;
+      border-color: #666666;
+    }
+
+    i {
+      font-size: 1rem;
+    }
+  }
+
+  .back-button-skeleton {
+    margin-right: 0.75rem;
+    flex-shrink: 0;
+    display: none; // Hidden by default
+  }
+
   .conversation-info {
     .conversation-title {
       color: white;
@@ -211,6 +241,11 @@
   .conversation-header {
     padding: 0.75rem 1rem;
 
+    .back-button,
+    .back-button-skeleton {
+      display: flex; // Show back button on mobile
+    }
+
     .conversation-info {
       .conversation-title {
         font-size: 1rem;
@@ -269,6 +304,16 @@
 @media (max-width: 480px) {
   .conversation-header {
     padding: 0.6rem 0.75rem;
+
+    .back-button {
+      width: 32px;
+      height: 32px;
+      margin-right: 0.5rem;
+
+      i {
+        font-size: 0.9rem;
+      }
+    }
   }
 
   .message-input-container {

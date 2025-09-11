@@ -39,7 +39,30 @@
 
 // Responsive behavior
 @media (max-width: 768px) {
-  .chat-content-area {
-    // Mobile layout handled by individual components
+  .main-chat-container.mobile-view {
+    .chat-content-area {
+      display: flex;
+      width: 100%;
+    }
+
+    app-chat-sidebar,
+    app-chat-conversation {
+      width: 100%;
+      transition: transform 0.3s ease;
+      
+      &.mobile-hidden {
+        display: none;
+      }
+    }
+
+    app-chat-sidebar {
+      position: relative;
+      z-index: 2;
+    }
+
+    app-chat-conversation {
+      position: relative;
+      z-index: 1;
+    }
   }
 }

@@ -1,0 +1,138 @@
+// User dropdown component styles - reusable user menu component
+.user-section {
+  .dropdown {
+    .user-dropdown-btn {
+      background: transparent;
+      color: rgba(255, 255, 255, 0.9);
+      font-weight: 500;
+      font-size: 0.85rem;
+      padding: 0.5rem 1rem;
+      border-radius: 6px;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+
+      .user-name {
+        max-width: 120px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+
+      .dropdown-icon {
+        font-size: 0.7rem;
+        transition: transform 0.3s ease;
+      }
+
+      &:hover {
+        background: rgba(255, 255, 255, 0.1);
+        color: white;
+      }
+
+      &[aria-expanded="true"] {
+        background: rgba(255, 255, 255, 0.15);
+        color: white;
+
+        .dropdown-icon {
+          transform: rotate(180deg);
+        }
+      }
+
+      &:focus {
+        box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.2);
+      }
+    }
+
+    .dropdown-menu {
+      background: #1a1a1a;
+      border: 1px solid #333333;
+      border-radius: 8px;
+      padding: 0.5rem 0;
+      min-width: 160px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+      margin-top: 0.25rem;
+
+      .dropdown-item {
+        color: rgba(255, 255, 255, 0.8);
+        background: transparent;
+        border: none;
+        width: 100%;
+        text-align: left;
+        padding: 0.5rem 1rem;
+        font-size: 0.8rem;
+        transition: all 0.2s ease;
+        display: flex;
+        align-items: center;
+
+        &:hover,
+        &:focus {
+          background: rgba(255, 255, 255, 0.1);
+          color: white;
+        }
+
+        i {
+          font-size: 0.9rem;
+          width: 16px;
+        }
+      }
+
+      .dropdown-divider {
+        border-color: #333333;
+        margin: 0.25rem 0;
+      }
+    }
+  }
+}
+
+// Responsive behavior
+@media (max-width: 768px) {
+  .user-section {
+    .dropdown {
+      .user-dropdown-btn {
+        padding: 0.4rem 0.75rem;
+        font-size: 0.8rem;
+
+        .user-name {
+          max-width: 100px;
+        }
+
+        .dropdown-icon {
+          font-size: 0.65rem;
+        }
+      }
+
+      .dropdown-menu {
+        min-width: 140px;
+
+        .dropdown-item {
+          padding: 0.4rem 0.75rem;
+          font-size: 0.75rem;
+
+          i {
+            font-size: 0.8rem;
+            width: 14px;
+          }
+        }
+      }
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .user-section {
+    .dropdown {
+      .user-dropdown-btn {
+        padding: 0.3rem 0.5rem;
+        
+        .user-name {
+          max-width: 80px;
+        }
+      }
+
+      .dropdown-menu {
+        min-width: 120px;
+      }
+    }
+  }
+}

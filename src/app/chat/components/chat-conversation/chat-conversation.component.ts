@@ -2,6 +2,7 @@ import { Component, Input, Output, EventEmitter, ViewChild, ElementRef, AfterVie
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ChatMessageComponent, ChatMessageData } from '../chat-message/chat-message.component';
+import { SkeletonLoaderComponent } from '../../../shared/components/skeleton-loader/skeleton-loader.component';
 
 export interface ConversationData {
   groupId: string;
@@ -12,19 +13,31 @@ export interface ConversationData {
 
 @Component({
   selector: 'app-chat-conversation',
-  imports: [CommonModule, FormsModule, ChatMessageComponent],
+  imports: [CommonModule, FormsModule, ChatMessageComponent, SkeletonLoaderComponent],
   templateUrl: './chat-conversation.component.html',
   styleUrl: './chat-conversation.component.scss'
 })
 export class ChatConversationComponent implements AfterViewChecked {
   @Input() conversation: ConversationData | null = null;
   @Input() currentUserId: string | null = null;
+  @Input() loading: boolean = false;
+  @Input() showBackButton: boolean = false; // For mobile back navigation
   @Output() sendMessage = new EventEmitter<string>();
-  
+  @Output() backToChats = new EventEmitter<void>(); // Mobile back navigation
+
   @ViewChild('messagesContainer') messagesContainer!: ElementRef;
-  
+
   newMessage = '';
   private shouldScrollToBottom = false;
+
+  // Generate varied message skeleton items
+  get messageSkeletonItems(): Array<{ index: number }> {
+    const items = [];
+    for (let i = 0; i < 1; i++) {
+      items.push({ index: i });
+    }
+    return items;
+  }
 
   ngAfterViewChecked(): void {
     if (this.shouldScrollToBottom) {
@@ -57,5 +70,16 @@ export class ChatConversationComponent implements AfterViewChecked {
 
   trackByMessageId(index: number, message: ChatMessageData): string {
     return message.messageId;
+  }
+
+  trackByMessageIndex(index: number, item: { index: number }): number {
+    return item.index;
+  }
+
+  /**
+   * Handle back button click for mobile navigation
+   */
+  onBackClick(): void {
+    this.backToChats.emit();
   }
 }

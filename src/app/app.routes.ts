@@ -4,8 +4,8 @@ import { MainLayoutComponent } from './shared/components/layout/main-layout.comp
 
 export const routes: Routes = [
   { path: '', redirectTo: '/auth/login', pathMatch: 'full' },
-  { 
-    path: 'auth', 
+  {
+    path: 'auth',
     loadChildren: () => import('./auth/auth.module').then(m => m.AuthModule)
   },
   {
@@ -13,8 +13,8 @@ export const routes: Routes = [
     component: MainLayoutComponent,
     canActivate: [AuthGuard],
     children: [
-      { 
-        path: 'chat', 
+      {
+        path: 'chats',
         loadChildren: () => import('./chat/chat.module').then(m => m.ChatModule)
       },
       // Future protected routes can be added here
