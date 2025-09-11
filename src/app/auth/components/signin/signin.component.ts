@@ -32,7 +32,7 @@ export class SigninComponent implements OnInit {
   ngOnInit() {
     // Redirect if already logged in
     if (this.authService.isAuthenticated()) {
-      this.router.navigate(['/chat']);
+      this.router.navigate(['/chats']);
     }
   }
 

@@ -3,9 +3,9 @@
 }
 
 .skeleton {
-  background: linear-gradient(90deg, 
-    var(--skeleton-base, #2a2a2a) 25%, 
-    var(--skeleton-highlight, #383838) 50%, 
+  background: linear-gradient(90deg,
+    var(--skeleton-base, #2a2a2a) 25%,
+    var(--skeleton-highlight, #383838) 50%,
     var(--skeleton-base, #2a2a2a) 75%
   );
   background-size: 200% 100%;
@@ -61,26 +61,26 @@
 
 .skeleton-message-wrapper {
   margin: 0.5rem 1rem;
-  
+
   .skeleton-message {
     margin-bottom: 1rem;
-    
+
     &:last-child {
       margin-bottom: 0;
     }
   }
-  
+
   .skeleton-message-other {
     display: flex;
     justify-content: flex-start;
     margin-bottom: 0.75rem;
-    
+
     .skeleton-message-bubble {
       max-width: 70%;
       padding: 0.75rem;
       border-radius: 1rem 1rem 1rem 0.25rem;
       background: var(--skeleton-bubble-other, #2a2a2a);
-      
+
       .skeleton-message-header {
         display: flex;
         justify-content: space-between;
@@ -90,18 +90,18 @@
       }
     }
   }
-  
+
   .skeleton-message-own {
     display: flex;
     justify-content: flex-end;
     margin-bottom: 0.75rem;
-    
+
     .skeleton-message-bubble {
       max-width: 70%;
       padding: 0.75rem;
       border-radius: 1rem 1rem 0.25rem 1rem;
-      background: var(--skeleton-bubble-own, #1a4d2e);
-      
+      background: var(--skeleton-bubble-own, #2a2a2a);
+
       .skeleton-message-footer {
         display: flex;
         justify-content: flex-end;
@@ -111,25 +111,41 @@
   }
 }
 
+// .skeleton-chat-header {
+//   display: flex;
+//   align-items: center;
+//   justify-content: space-between;
+//   padding: 1rem 1.5rem;
+//   gap: 1rem;
+
+//   .skeleton-header-back {
+//     flex-shrink: 0;
+//     display: flex;
+//     align-items: center;
+//   }
+
+//   .skeleton-header-info {
+//     flex: 1;
+//     min-width: 120px;
+//   }
+
+//   .skeleton-header-actions {
+//     flex-shrink: 0;
+//   }
+// }
+
 .skeleton-chat-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 1rem 1.5rem;
-
-  .skeleton-header-back {
-    flex-shrink: 0;
-    display: flex;
-    align-items: center;
-  }
+  gap: 1rem;
+  width: 100%;
 
   .skeleton-header-info {
+    display: flex;
+    flex-direction: column;
     flex: 1;
-    min-width: 0;
-  }
-
-  .skeleton-header-actions {
-    flex-shrink: 0;
+    min-width: 120px;
   }
 }
 

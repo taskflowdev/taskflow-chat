@@ -24,16 +24,16 @@ export class ChatConversationComponent implements AfterViewChecked {
   @Input() showBackButton: boolean = false; // For mobile back navigation
   @Output() sendMessage = new EventEmitter<string>();
   @Output() backToChats = new EventEmitter<void>(); // Mobile back navigation
-  
+
   @ViewChild('messagesContainer') messagesContainer!: ElementRef;
-  
+
   newMessage = '';
   private shouldScrollToBottom = false;
 
   // Generate varied message skeleton items
-  get messageSkeletonItems(): Array<{index: number}> {
+  get messageSkeletonItems(): Array<{ index: number }> {
     const items = [];
-    for (let i = 0; i < 8; i++) { // Show 8 message skeletons
+    for (let i = 0; i < 1; i++) {
       items.push({ index: i });
     }
     return items;
@@ -72,7 +72,7 @@ export class ChatConversationComponent implements AfterViewChecked {
     return message.messageId;
   }
 
-  trackByMessageIndex(index: number, item: {index: number}): number {
+  trackByMessageIndex(index: number, item: { index: number }): number {
     return item.index;
   }
 

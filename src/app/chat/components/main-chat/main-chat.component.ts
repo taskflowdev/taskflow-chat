@@ -43,7 +43,7 @@ export class MainChatComponent implements OnInit {
 
   ngOnInit() {
     this.user = this.authService.getCurrentUser();
-    
+
     // Check if mobile view initially
     if (isPlatformBrowser(this.platformId)) {
       this.checkMobileView();
@@ -74,7 +74,7 @@ export class MainChatComponent implements OnInit {
   private checkMobileView(): void {
     if (isPlatformBrowser(this.platformId)) {
       this.isMobileView = window.innerWidth <= 768;
-      
+
       // Reset sidebar visibility when switching from mobile to desktop
       if (!this.isMobileView) {
         this.showSidebar = true;
@@ -161,7 +161,7 @@ export class MainChatComponent implements OnInit {
                 memberCount: groupDetails.memberCount || 0,
                 messages: messages.map(msg => this.mapMessageToChatMessage(msg))
               };
-              this.loadingMessages = false;
+              this.loadingMessages = true;
             },
             error: (error) => {
               console.error('Failed to load group messages:', error);
