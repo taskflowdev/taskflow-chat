@@ -64,6 +64,11 @@
   justify-content: center;
 }
 
+.user-dropdown-container {
+  display: flex;
+  justify-content: end;
+}
+
 // Responsive behavior for layout
 @media (max-width: 768px) {
   .app-navbar {

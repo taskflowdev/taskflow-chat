@@ -15,10 +15,9 @@
     </div>
 
     <!-- Right: User Dropdown - Now using reusable component -->
-    <app-user-dropdown 
-      [user]="user"
-      [dropdownItems]="userDropdownItems"
-      (itemClick)="onDropdownItemClick($event)">
-    </app-user-dropdown>
+    <div class="user-dropdown-container">
+      <app-user-dropdown [user]="user" [dropdownItems]="userDropdownItems" (itemClick)="onDropdownItemClick($event)">
+      </app-user-dropdown>
+    </div>
   </div>
 </nav>

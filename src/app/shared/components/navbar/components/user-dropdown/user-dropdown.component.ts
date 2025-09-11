@@ -21,9 +21,9 @@ export interface DropdownItem {
   template: `
     <div class="user-section" *ngIf="user">
       <div class="dropdown">
-        <button 
-          class="btn user-dropdown-btn dropdown-toggle border-0" 
-          type="button" 
+        <button
+          class="btn user-dropdown-btn border-0"
+          type="button"
           data-bs-toggle="dropdown"
           aria-expanded="false">
           <span class="user-name">{{ user.fullName }}</span>
@@ -32,16 +32,16 @@ export interface DropdownItem {
         <ul class="dropdown-menu dropdown-menu-end">
           <ng-container *ngFor="let item of dropdownItems; trackBy: trackByLabel">
             <li *ngIf="!item.divider">
-              <a 
-                *ngIf="item.href" 
-                class="dropdown-item" 
-                [href]="item.href" 
+              <a
+                *ngIf="item.href"
+                class="dropdown-item"
+                [href]="item.href"
                 [title]="item.label">
                 <i class="bi me-2" [ngClass]="item.icon"></i>{{ item.label }}
               </a>
-              <button 
-                *ngIf="!item.href" 
-                class="dropdown-item" 
+              <button
+                *ngIf="!item.href"
+                class="dropdown-item"
                 (click)="onItemClick(item)"
                 [title]="item.label">
                 <i class="bi me-2" [ngClass]="item.icon"></i>{{ item.label }}
@@ -59,28 +59,7 @@ export interface DropdownItem {
 })
 export class UserDropdownComponent {
   @Input() user: AuthUser | null = null;
-  @Input() dropdownItems: DropdownItem[] = [
-    {
-      label: 'Profile',
-      icon: 'bi-person',
-      href: '#'
-    },
-    {
-      label: 'Settings',
-      icon: 'bi-gear',
-      href: '#'
-    },
-    {
-      divider: true,
-      label: '',
-      icon: ''
-    },
-    {
-      label: 'Logout',
-      icon: 'bi-box-arrow-right',
-      action: 'logout'
-    }
-  ];
+  @Input() dropdownItems: DropdownItem[] = [];
 
   @Output() itemClick = new EventEmitter<DropdownItem>();
 

@@ -19,11 +19,11 @@ export interface NavLink {
   imports: [CommonModule, RouterModule],
   template: `
     <nav class="nav-links">
-      <a 
-        *ngFor="let link of navLinks; trackBy: trackByPath" 
-        [routerLink]="link.path" 
-        class="nav-link" 
-        [class.active]="isActiveRoute(link.path)" 
+      <a
+        *ngFor="let link of navLinks; trackBy: trackByPath"
+        [routerLink]="link.path"
+        class="nav-link"
+        [class.active]="isActiveRoute(link.path)"
         [title]="link.title">
         <i class="bi" [ngClass]="link.icon"></i>
         <span class="nav-text">{{ link.label }}</span>
@@ -33,22 +33,9 @@ export interface NavLink {
   styleUrls: ['./nav-links.component.scss']
 })
 export class NavLinksComponent {
-  @Input() navLinks: NavLink[] = [
-    {
-      path: '/chat',
-      label: 'Chat',
-      icon: 'bi-chat-quote',
-      title: 'Chat'
-    },
-    {
-      path: '/dashboard',
-      label: 'Settings',
-      icon: 'bi-gear',
-      title: 'Dashboard'
-    }
-  ];
+  @Input() navLinks: NavLink[] = [];
 
-  constructor(private router: Router) {}
+  constructor(private router: Router) { }
 
   /**
    * Check if the current route is active

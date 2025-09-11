@@ -10,9 +10,9 @@ import { UserDropdownComponent, DropdownItem } from './components/user-dropdown/
   selector: 'app-navbar',
   standalone: true,
   imports: [
-    CommonModule, 
-    RouterModule, 
-    NavLinksComponent, 
+    CommonModule,
+    RouterModule,
+    NavLinksComponent,
     UserDropdownComponent
   ],
   templateUrl: './navbar.component.html',
@@ -26,15 +26,15 @@ export class NavbarComponent implements OnInit, OnDestroy {
   navLinks: NavLink[] = [
     {
       path: '/chat',
-      label: 'Chat',
+      label: 'Chats',
       icon: 'bi-chat-quote',
-      title: 'Chat'
+      title: 'Chats'
     },
     {
-      path: '/dashboard',
+      path: '/settings',
       label: 'Settings',
       icon: 'bi-gear',
-      title: 'Dashboard'
+      title: 'Settings'
     }
   ];
 
