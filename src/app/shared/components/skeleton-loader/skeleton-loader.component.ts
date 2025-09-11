@@ -51,20 +51,41 @@ export type SkeletonType = 'text' | 'circle' | 'rectangle' | 'chat-item' | 'mess
       </div>
       
       <!-- Message skeleton -->
-      <div *ngSwitchCase="'message'" class="skeleton-message" [style.opacity]="fadeOpacity">
-        <div class="skeleton skeleton-circle" style="width: 32px; height: 32px;"></div>
-        <div class="skeleton-message-content">
-          <div class="skeleton skeleton-text" style="width: 60%; height: 0.875rem; margin-bottom: 0.25rem;"></div>
-          <div class="skeleton skeleton-text" style="width: 85%; height: 1rem;"></div>
+      <div *ngSwitchCase="'message'" class="skeleton-message-wrapper" [style.opacity]="fadeOpacity">
+        <!-- Other's message (left side) -->
+        <div class="skeleton-message skeleton-message-other">
+          <div class="skeleton-message-bubble skeleton-message-bubble-other">
+            <div class="skeleton-message-header">
+              <div class="skeleton skeleton-text" style="width: 80px; height: 0.875rem; margin-bottom: 0.25rem;"></div>
+              <div class="skeleton skeleton-text" style="width: 40px; height: 0.75rem;"></div>
+            </div>
+            <div class="skeleton skeleton-text" style="width: 75%; height: 1rem;"></div>
+          </div>
+        </div>
+        
+        <!-- Own message (right side) -->
+        <div class="skeleton-message skeleton-message-own">
+          <div class="skeleton-message-bubble skeleton-message-bubble-own">
+            <div class="skeleton skeleton-text" style="width: 65%; height: 1rem; margin-bottom: 0.25rem;"></div>
+            <div class="skeleton-message-footer">
+              <div class="skeleton skeleton-text" style="width: 35px; height: 0.75rem;"></div>
+            </div>
+          </div>
         </div>
       </div>
 
       <!-- Chat header skeleton -->
       <div *ngSwitchCase="'chat-header'" class="skeleton-chat-header" [style.opacity]="fadeOpacity">
-        <div class="skeleton-header-info">
-          <div class="skeleton skeleton-text" style="width: 180px; height: 1.2rem; margin-bottom: 0.25rem;"></div>
-          <div class="skeleton skeleton-text" style="width: 100px; height: 0.875rem;"></div>
+        <!-- Back button skeleton (only shown when needed) -->
+        <div class="skeleton-header-back" *ngIf="showBackButton">
+          <div class="skeleton skeleton-circle" style="width: 36px; height: 36px; margin-right: 0.75rem;"></div>
         </div>
+        
+        <div class="skeleton-header-info">
+          <div class="skeleton skeleton-text" style="width: 140px; height: 1.25rem; margin-bottom: 0.25rem;"></div>
+          <div class="skeleton skeleton-text" style="width: 85px; height: 0.875rem;"></div>
+        </div>
+        
         <div class="skeleton-header-actions">
           <div class="skeleton skeleton-circle" style="width: 36px; height: 36px;"></div>
         </div>
@@ -80,6 +101,7 @@ export class SkeletonLoaderComponent {
   @Input() height?: string;
   @Input() count: number = 1;
   @Input() fadeOpacity: number = 1; // For progressive fade effect
+  @Input() showBackButton: boolean = false; // For chat-header skeleton
 
   constructor() {}
 }

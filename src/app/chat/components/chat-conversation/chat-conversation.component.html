@@ -27,7 +27,7 @@
       <app-skeleton-loader type="circle" width="36px" height="36px"></app-skeleton-loader>
     </div>
     
-    <app-skeleton-loader type="chat-header"></app-skeleton-loader>
+    <app-skeleton-loader type="chat-header" [showBackButton]="showBackButton"></app-skeleton-loader>
   </div>
 
   <!-- Messages Container -->
@@ -35,7 +35,7 @@
     <!-- Loading Messages -->
     <div class="messages-list" *ngIf="loading">
       <app-skeleton-loader 
-        *ngFor="let item of [1,2,3,4,5,6]"
+        *ngFor="let item of messageSkeletonItems; trackBy: trackByMessageIndex"
         type="message">
       </app-skeleton-loader>
     </div>

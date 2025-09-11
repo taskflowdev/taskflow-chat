@@ -30,6 +30,15 @@ export class ChatConversationComponent implements AfterViewChecked {
   newMessage = '';
   private shouldScrollToBottom = false;
 
+  // Generate varied message skeleton items
+  get messageSkeletonItems(): Array<{index: number}> {
+    const items = [];
+    for (let i = 0; i < 8; i++) { // Show 8 message skeletons
+      items.push({ index: i });
+    }
+    return items;
+  }
+
   ngAfterViewChecked(): void {
     if (this.shouldScrollToBottom) {
       this.scrollToBottom();
@@ -61,6 +70,10 @@ export class ChatConversationComponent implements AfterViewChecked {
 
   trackByMessageId(index: number, message: ChatMessageData): string {
     return message.messageId;
+  }
+
+  trackByMessageIndex(index: number, item: {index: number}): number {
+    return item.index;
   }
 
   /**
