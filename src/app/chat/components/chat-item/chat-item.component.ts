@@ -1,12 +1,12 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { GroupDto, MessageDto } from '../../../api/models';
+import { SimpleMessageDto } from '../../../shared/models/simple-chat.models';
 import { MessageContentServiceProxy } from '../../../services/message-content.service.proxy';
 
 export interface ChatItemData {
   groupId: string;
   name: string;
-  lastMessage?: MessageDto; // Changed to MessageDto for rich content support
+  lastMessage?: SimpleMessageDto; // Changed to SimpleMessageDto for working implementation
   lastMessageTime?: string;
   unreadCount?: number;
   isActive?: boolean;

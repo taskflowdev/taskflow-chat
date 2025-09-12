@@ -1,21 +1,5 @@
 import { Injectable } from '@angular/core';
-// Using any types temporarily to work around circular reference issues in generated API
-import { 
-  MessageDto 
-} from '../api/models';
-
-// Temporary interfaces to work around API type issues
-interface SimpleMessageContent {
-  $type: string;
-  text?: string;
-  url?: string;
-  fileName?: string;
-  fileSize?: number;
-  mimeType?: string;
-  width?: number;
-  height?: number;
-  durationSeconds?: number;
-}
+import { SimpleMessageDto, SimpleMessageContent } from '../shared/models/simple-chat.models';
 
 /**
  * Utility service for handling message content types and display formatting.
@@ -35,7 +19,7 @@ export class MessageContentServiceProxy {
    * @param message - The message DTO to generate preview for
    * @returns string - Formatted preview text with icons for non-text content
    */
-  getMessagePreview(message: MessageDto): string {
+  getMessagePreview(message: SimpleMessageDto): string {
     if (!message.content || !message.contentType) {
       return 'No content';
     }
@@ -73,7 +57,7 @@ export class MessageContentServiceProxy {
    * @param message - The message DTO to get content description for
    * @returns string - Detailed content description
    */
-  getContentDescription(message: MessageDto): string {
+  getContentDescription(message: SimpleMessageDto): string {
     if (!message.content || !message.contentType) {
       return 'No content available';
     }

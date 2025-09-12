@@ -49,6 +49,29 @@
 
   <!-- Message Input - Always visible -->
   <div class="message-input-container">
+    <!-- Demo Buttons for Different Message Types -->
+    <div class="demo-controls" *ngIf="!loading" style="margin-bottom: 10px; display: flex; gap: 5px; flex-wrap: wrap; justify-content: center; padding: 10px; background: #f8f9fa; border-radius: 8px;">
+      <small style="width: 100%; text-align: center; margin-bottom: 5px; color: #6c757d;">Demo: Add different message types</small>
+      <button class="btn btn-sm btn-outline-primary" (click)="addSampleMessage('text')" title="Add text message">
+        <i class="bi bi-chat-text"></i> Text
+      </button>
+      <button class="btn btn-sm btn-outline-success" (click)="addSampleMessage('image')" title="Add image message">
+        <i class="bi bi-image"></i> Image
+      </button>
+      <button class="btn btn-sm btn-outline-info" (click)="addSampleMessage('file')" title="Add file message">
+        <i class="bi bi-file-earmark"></i> File
+      </button>
+      <button class="btn btn-sm btn-outline-warning" (click)="addSampleMessage('audio')" title="Add audio message">
+        <i class="bi bi-music-note"></i> Audio
+      </button>
+      <button class="btn btn-sm btn-outline-danger" (click)="addSampleMessage('video')" title="Add video message">
+        <i class="bi bi-play-btn"></i> Video
+      </button>
+      <button class="btn btn-sm btn-outline-secondary" (click)="addSampleMessage('poll')" title="Add poll message">
+        <i class="bi bi-bar-chart"></i> Poll
+      </button>
+    </div>
+    
     <div class="input-wrapper">
       <textarea 
         [(ngModel)]="newMessage" 

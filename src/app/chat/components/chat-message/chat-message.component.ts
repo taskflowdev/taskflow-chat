@@ -1,6 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { MessageDto } from '../../../api/models';
+import { SimpleMessageDto } from '../../../shared/models/simple-chat.models';
 import { MessageContentServiceProxy } from '../../../services/message-content.service.proxy';
 
 export interface ChatMessageData {
@@ -9,7 +9,7 @@ export interface ChatMessageData {
   senderName?: string;
   content: string; // Keep as string for backward compatibility
   contentType?: string; // Add content type
-  messageDto?: MessageDto; // Optional full message DTO for rich content
+  messageDto?: SimpleMessageDto; // Optional full message DTO for rich content
   createdAt: string;
   isOwn: boolean;
 }

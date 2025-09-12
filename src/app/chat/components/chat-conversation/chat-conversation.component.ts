@@ -24,6 +24,7 @@ export class ChatConversationComponent implements AfterViewChecked {
   @Input() showBackButton: boolean = false; // For mobile back navigation
   @Output() sendMessage = new EventEmitter<string>();
   @Output() backToChats = new EventEmitter<void>(); // Mobile back navigation
+  @Output() addSampleMessage = new EventEmitter<'text' | 'file' | 'image' | 'audio' | 'video' | 'poll'>(); // Demo functionality
 
   @ViewChild('messagesContainer') messagesContainer!: ElementRef;
 
