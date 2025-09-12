@@ -6,7 +6,9 @@
     </div>
     
     <div class="message-content">
-      {{ message.content }}
+      <!-- Show icon for non-text content -->
+      <i class="{{ getContentTypeIcon() }}" *ngIf="requiresSpecialRendering()"></i>
+      {{ getMessageContent() }}
     </div>
     
     <div class="message-footer" *ngIf="message.isOwn">

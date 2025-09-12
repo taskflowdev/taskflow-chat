@@ -1,16 +1,22 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { GroupDto } from '../../../api/model/groupDto';
+import { GroupDto, MessageDto } from '../../../api/models';
+import { MessageContentServiceProxy } from '../../../services/message-content.service.proxy';
 
 export interface ChatItemData {
   groupId: string;
   name: string;
-  lastMessage?: string;
+  lastMessage?: MessageDto; // Changed to MessageDto for rich content support
   lastMessageTime?: string;
   unreadCount?: number;
   isActive?: boolean;
 }
 
+/**
+ * Chat list item component that displays group information with WhatsApp-style
+ * message previews. Supports all message content types with appropriate icons
+ * and formatted text previews.
+ */
 @Component({
   selector: 'app-chat-item',
   imports: [CommonModule],
@@ -22,8 +28,21 @@ export class ChatItemComponent {
   @Input() isActive = false;
   @Output() chatSelect = new EventEmitter<string>();
 
+  constructor(private messageContentService: MessageContentServiceProxy) {}
+
   onChatClick(): void {
     this.chatSelect.emit(this.chat.groupId);
+  }
+
+  /**
+   * Get formatted message preview for display in chat list
+   * Uses WhatsApp-style formatting with icons for media content
+   */
+  getMessagePreview(): string {
+    if (!this.chat.lastMessage) {
+      return 'No messages yet';
+    }
+    return this.messageContentService.getMessagePreview(this.chat.lastMessage);
   }
 
   getTimeDisplay(timeString?: string): string {

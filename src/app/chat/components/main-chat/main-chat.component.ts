@@ -6,8 +6,10 @@ import { ChatSidebarComponent } from '../chat-sidebar/chat-sidebar.component';
 import { ChatConversationComponent, ConversationData } from '../chat-conversation/chat-conversation.component';
 import { ChatItemData } from '../chat-item/chat-item.component';
 import { ChatMessageData } from '../chat-message/chat-message.component';
-import { GroupServiceProxy, GroupWithMessages } from '../../../api/group.service.proxy';
-import { MessageDto } from '../../../api/model/messageDto';
+import { GroupServiceProxy, GroupWithMessages } from '../../../services/group.service.proxy';
+import { MessageDto } from '../../../api/models';
+import { MessageContentServiceProxy } from '../../../services/message-content.service.proxy';
+import { MessageServiceProxy } from '../../../services/message.service.proxy';
 
 @Component({
   selector: 'app-main-chat',
@@ -38,6 +40,8 @@ export class MainChatComponent implements OnInit {
     private authService: AuthService,
     private router: Router,
     private groupServiceProxy: GroupServiceProxy,
+    private messageContentService: MessageContentServiceProxy,
+    private messageServiceProxy: MessageServiceProxy,
     @Inject(PLATFORM_ID) private platformId: Object
   ) { }
 
@@ -106,7 +110,7 @@ export class MainChatComponent implements OnInit {
     return {
       groupId: group.groupId || '',
       name: group.name || 'Unnamed Group',
-      lastMessage: group.lastMessage?.content?.toString() || 'No messages yet',
+      lastMessage: group.lastMessage, // Now MessageDto instead of string
       lastMessageTime: group.lastMessage?.createdAt || new Date().toISOString(),
       unreadCount: group.unreadCount || 0
     };
@@ -148,22 +152,21 @@ export class MainChatComponent implements OnInit {
 
     // Load group details and messages in parallel
     const groupDetails$ = this.groupServiceProxy.getGroupDetails(groupId);
-    const messages$ = this.groupServiceProxy.getGroupMessages(groupId);
 
     groupDetails$.subscribe({
-      next: (groupDetails) => {
+      next: (groupDetails: any) => {
         if (groupDetails) {
-          messages$.subscribe({
-            next: (messages) => {
+          this.messageServiceProxy.getGroupMessages(groupId).subscribe({
+            next: (messages: any) => {
               this.currentConversation = {
                 groupId: groupDetails.groupId || '',
                 groupName: groupDetails.name || 'Unnamed Group',
                 memberCount: groupDetails.memberCount || 0,
-                messages: messages.map(msg => this.mapMessageToChatMessage(msg))
+                messages: messages.map((msg: any) => this.mapMessageToChatMessage(msg))
               };
               this.loadingMessages = true;
             },
-            error: (error) => {
+            error: (error: any) => {
               console.error('Failed to load group messages:', error);
               this.loadingMessages = false;
             }
@@ -172,7 +175,7 @@ export class MainChatComponent implements OnInit {
           this.loadingMessages = false;
         }
       },
-      error: (error) => {
+      error: (error: any) => {
         console.error('Failed to load group details:', error);
         this.loadingMessages = false;
       }
@@ -187,7 +190,9 @@ export class MainChatComponent implements OnInit {
       messageId: message.messageId || '',
       senderId: message.senderId || '',
       senderName: message.senderName || 'Unknown',
-      content: message.content?.toString() || '',
+      content: message.content?.toString() || '', // Keep for backward compatibility
+      contentType: message.contentType,
+      messageDto: message, // Add full DTO for rich content
       createdAt: message.createdAt || new Date().toISOString(),
       isOwn: message.senderId === this.user?.id
     };
@@ -211,13 +216,22 @@ export class MainChatComponent implements OnInit {
     // Update last message in chat list
     const chat = this.chats.find(c => c.groupId === this.currentConversation?.groupId);
     if (chat) {
-      chat.lastMessage = messageContent;
+      // Create a temporary MessageDto for the preview
+      const previewMessage: MessageDto = {
+        messageId: optimisticMessage.messageId,
+        content: { $type: 'text', text: messageContent } as any,
+        contentType: 'text',
+        createdAt: new Date().toISOString(),
+        senderId: this.user.id,
+        senderName: 'You'
+      };
+      chat.lastMessage = previewMessage;
       chat.lastMessageTime = new Date().toISOString();
     }
 
     // Send message via API (when available)
-    this.groupServiceProxy.sendMessage(this.currentConversation.groupId, messageContent).subscribe({
-      next: (sentMessage) => {
+    this.messageServiceProxy.sendTextMessage(this.currentConversation.groupId, { text: messageContent }).subscribe({
+      next: (sentMessage: any) => {
         // Replace optimistic message with real one if API returns it
         if (sentMessage && this.currentConversation) {
           const index = this.currentConversation.messages.findIndex(
@@ -228,7 +242,7 @@ export class MainChatComponent implements OnInit {
           }
         }
       },
-      error: (error) => {
+      error: (error: any) => {
         console.error('Failed to send message:', error);
         // Remove optimistic message on error
         if (this.currentConversation) {
