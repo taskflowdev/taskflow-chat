@@ -9,5 +9,9 @@
   "clearOutputFolder": true,
   "httpClientType": "HttpClient",
   "useClass": false,
-  "noImplicitAdditionalProperties": false
+  "noImplicitAdditionalProperties": false,
+  "generateApiModule": true,
+  "moduleName": "ApiModule",
+  "exportModels": true,
+  "exportServices": true
 }
