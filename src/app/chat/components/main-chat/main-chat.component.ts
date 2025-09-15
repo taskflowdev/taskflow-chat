@@ -7,7 +7,6 @@ import { ChatConversationComponent, ConversationData } from '../chat-conversatio
 import { ChatItemData } from '../chat-item/chat-item.component';
 import { ChatMessageData } from '../chat-message/chat-message.component';
 import { MessagesServiceProxy, GroupWithMessages } from '../../../shared/services/messages.service.proxy';
-import { MessageDto } from '../../../api/models';
 
 @Component({
   selector: 'app-main-chat',
@@ -187,7 +186,7 @@ export class MainChatComponent implements OnInit {
   /**
    * Maps a MessageDto to ChatMessageData format
    */
-  private mapMessageToChatMessage(message: MessageDto): ChatMessageData {
+  private mapMessageToChatMessage(message: any): ChatMessageData {
     return {
       messageId: message.messageId || '',
       senderId: message.senderId || '',

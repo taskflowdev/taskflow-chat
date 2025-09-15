@@ -4,7 +4,18 @@
  * and format them for display in the UI
  */
 import { Injectable } from '@angular/core';
-import { MessageDto } from '../../api/models';
+
+/**
+ * Simplified message DTO interface to avoid circular reference issues
+ */
+export interface SimpleMessageDto {
+  content?: any;
+  contentType?: 'text' | 'image' | 'video' | 'poll';
+  messageId?: string;
+  senderId?: string;
+  senderName?: string;
+  createdAt?: string;
+}
 
 /**
  * Simplified content type interface to avoid circular reference issues
@@ -51,10 +62,10 @@ export class MessageContentUtilityService {
 
   /**
    * Gets a preview text for display in chat list based on message content
-   * @param message MessageDto to generate preview for
+   * @param message SimpleMessageDto to generate preview for
    * @returns Formatted preview string
    */
-  getMessagePreview(message: MessageDto): string {
+  getMessagePreview(message: SimpleMessageDto): string {
     if (!message.content) {
       return 'No content';
     }
@@ -93,10 +104,10 @@ export class MessageContentUtilityService {
 
   /**
    * Gets display text for a message content
-   * @param message MessageDto to get display text for
+   * @param message SimpleMessageDto to get display text for
    * @returns Display text
    */
-  getContentDisplayText(message: MessageDto): string {
+  getContentDisplayText(message: SimpleMessageDto): string {
     if (!message.content) {
       return '';
     }
@@ -133,10 +144,10 @@ export class MessageContentUtilityService {
 
   /**
    * Gets media URL from image or video content
-   * @param message MessageDto to get media URL from
+   * @param message SimpleMessageDto to get media URL from
    * @returns Media URL or null if not available
    */
-  getMediaUrl(message: MessageDto): string | null {
+  getMediaUrl(message: SimpleMessageDto): string | null {
     if (!message.content || (message.contentType !== 'image' && message.contentType !== 'video')) {
       return null;
     }
@@ -152,10 +163,10 @@ export class MessageContentUtilityService {
 
   /**
    * Gets poll options from poll content
-   * @param message MessageDto to get poll options from
+   * @param message SimpleMessageDto to get poll options from
    * @returns Array of poll options
    */
-  getPollOptions(message: MessageDto): string[] {
+  getPollOptions(message: SimpleMessageDto): string[] {
     if (!message.content || message.contentType !== 'poll') {
       return [];
     }
@@ -171,10 +182,10 @@ export class MessageContentUtilityService {
 
   /**
    * Checks if poll allows multiple selections
-   * @param message MessageDto to check
+   * @param message SimpleMessageDto to check
    * @returns Whether poll allows multiple selections
    */
-  isPollMultiSelect(message: MessageDto): boolean {
+  isPollMultiSelect(message: SimpleMessageDto): boolean {
     if (!message.content || message.contentType !== 'poll') {
       return false;
     }

@@ -20,19 +20,20 @@ export class AuthServiceProxy {
    * @param credentials User login credentials
    * @returns Observable with authentication result
    */
-  login(credentials: LoginDto): Observable<{ success: boolean; data?: TokenDto; message?: string }> {
+  login(credentials: LoginDto): Observable<{ success: boolean; data?: TokenDto | null; message?: string | null }> {
     return this.apiAuthService.apiAuthLoginPost({
       body: credentials
     }).pipe(
       map(response => ({
         success: response.success ?? false,
-        data: response.data,
-        message: response.message
+        data: response.data ?? null,
+        message: response.message ?? null
       })),
       catchError(error => {
         console.error('AuthServiceProxy - Login error:', error);
         return of({
           success: false,
+          data: null,
           message: error.error?.message || 'Login failed. Please try again.'
         });
       })
@@ -44,19 +45,20 @@ export class AuthServiceProxy {
    * @param userData User registration data
    * @returns Observable with registration result
    */
-  register(userData: RegisterDto): Observable<{ success: boolean; data?: TokenDto; message?: string }> {
+  register(userData: RegisterDto): Observable<{ success: boolean; data?: TokenDto | null; message?: string | null }> {
     return this.apiAuthService.apiAuthRegisterPost({
       body: userData
     }).pipe(
       map(response => ({
         success: response.success ?? false,
-        data: response.data,
-        message: response.message
+        data: response.data ?? null,
+        message: response.message ?? null
       })),
       catchError(error => {
         console.error('AuthServiceProxy - Registration error:', error);
         return of({
           success: false,
+          data: null,
           message: error.error?.message || 'Registration failed. Please try again.'
         });
       })
@@ -67,17 +69,18 @@ export class AuthServiceProxy {
    * Gets current user profile
    * @returns Observable with user data
    */
-  getUserProfile(): Observable<{ success: boolean; data?: UserDto; message?: string }> {
+  getUserProfile(): Observable<{ success: boolean; data?: UserDto | null; message?: string | null }> {
     return this.apiAuthService.apiAuthMeGet().pipe(
       map(response => ({
         success: response.success ?? false,
-        data: response.data,
-        message: response.message
+        data: response.data ?? null,
+        message: response.message ?? null
       })),
       catchError(error => {
         console.error('AuthServiceProxy - Get user profile error:', error);
         return of({
           success: false,
+          data: null,
           message: error.error?.message || 'Failed to get user profile.'
         });
       })
@@ -89,19 +92,20 @@ export class AuthServiceProxy {
    * @param refreshTokenDto Refresh token data
    * @returns Observable with new token data
    */
-  refreshToken(refreshTokenDto: { refreshToken: string }): Observable<{ success: boolean; data?: TokenDto; message?: string }> {
+  refreshToken(refreshTokenDto: { refreshToken: string }): Observable<{ success: boolean; data?: TokenDto | null; message?: string | null }> {
     return this.apiAuthService.apiAuthRefreshPost({
       body: refreshTokenDto
     }).pipe(
       map(response => ({
         success: response.success ?? false,
-        data: response.data,
-        message: response.message
+        data: response.data ?? null,
+        message: response.message ?? null
       })),
       catchError(error => {
         console.error('AuthServiceProxy - Token refresh error:', error);
         return of({
           success: false,
+          data: null,
           message: error.error?.message || 'Token refresh failed.'
         });
       })

@@ -2,8 +2,40 @@ import { Injectable } from '@angular/core';
 import { Observable, map, catchError, of } from 'rxjs';
 import { MessagesService } from '../../api/services/messages.service';
 import { GroupsService } from '../../api/services/groups.service';
-import { MessageDto, SendMessageDto, GroupDto } from '../../api/models';
-import { MessageContentUtilityService, SimpleTextContent, SimpleImageContent, SimpleVideoContent, SimplePollContent } from './message-content-utility.service';
+import { MessageContentUtilityService, SimpleTextContent, SimpleImageContent, SimpleVideoContent, SimplePollContent, SimpleMessageDto } from './message-content-utility.service';
+
+// Import types individually to avoid circular reference issues
+type MessageDto = {
+  messageId?: string;
+  groupId?: string;
+  senderId?: string | null;
+  senderName?: string | null;
+  sourceType?: 'user' | 'system';
+  messageType?: 'userMessage' | 'userJoined' | 'userLeft' | 'groupCreated' | 'groupUpdated' | 'groupDeleted' | 'memberRoleChanged' | 'inviteCodeRegenerated';
+  contentType?: 'text' | 'image' | 'video' | 'poll';
+  content?: any;
+  metadata?: any;
+  createdAt?: string;
+};
+
+type SendMessageDto = {
+  messageType?: 'userMessage' | 'userJoined' | 'userLeft' | 'groupCreated' | 'groupUpdated' | 'groupDeleted' | 'memberRoleChanged' | 'inviteCodeRegenerated';
+  contentType?: 'text' | 'image' | 'video' | 'poll';
+  content: any;
+  metadata?: any | null;
+};
+
+type GroupDto = {
+  createdAt?: string;
+  createdBy?: string;
+  groupId?: string;
+  inviteCode?: string;
+  inviteLink?: string;
+  isPublic?: boolean;
+  lastMessage?: MessageDto | null;
+  memberCount?: number;
+  name?: string;
+};
 
 /**
  * Extended group data with message information for chat UI
@@ -249,6 +281,6 @@ export class MessagesServiceProxy {
    * @returns String representation of message for chat list
    */
   getMessagePreview(message: MessageDto): string {
-    return this.messageContentUtility.getMessagePreview(message);
+    return this.messageContentUtility.getMessagePreview(message as SimpleMessageDto);
   }
 }

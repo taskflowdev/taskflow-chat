@@ -1,6 +1,5 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { GroupDto, MessageDto } from '../../../api/models';
 
 export interface ChatItemData {
   groupId: string;

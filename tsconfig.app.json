@@ -15,5 +15,12 @@
   ],
   "include": [
     "src/**/*.d.ts"
+  ],
+  "exclude": [
+    "src/app/api/models/text-content.ts",
+    "src/app/api/models/image-content.ts", 
+    "src/app/api/models/video-content.ts",
+    "src/app/api/models/poll-content.ts",
+    "src/app/api/models/message-content.ts"
   ]
 }

@@ -1,7 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { MessageDto } from '../../../api/models';
-import { MessageContentUtilityService } from '../../../shared/services/message-content-utility.service';
+import { MessageContentUtilityService, SimpleMessageDto } from '../../../shared/services/message-content-utility.service';
 
 export interface ChatMessageData {
   messageId: string;
@@ -9,7 +8,7 @@ export interface ChatMessageData {
   senderName?: string;
   content: string;
   contentType?: 'text' | 'image' | 'video' | 'poll';
-  messageContent?: MessageDto['content'];
+  messageContent?: any;
   createdAt: string;
   isOwn: boolean;
 }
@@ -33,8 +32,8 @@ export class ChatMessageComponent {
       return this.message.content;
     }
 
-    // Create a mock MessageDto to use the utility service
-    const mockMessage: MessageDto = {
+    // Create a mock SimpleMessageDto to use the utility service
+    const mockMessage: SimpleMessageDto = {
       content: this.message.messageContent,
       contentType: this.message.contentType
     };
@@ -64,8 +63,8 @@ export class ChatMessageComponent {
       return null;
     }
 
-    // Create a mock MessageDto to use the utility service
-    const mockMessage: MessageDto = {
+    // Create a mock SimpleMessageDto to use the utility service
+    const mockMessage: SimpleMessageDto = {
       content: this.message.messageContent,
       contentType: this.message.contentType
     };
@@ -81,8 +80,8 @@ export class ChatMessageComponent {
       return [];
     }
 
-    // Create a mock MessageDto to use the utility service
-    const mockMessage: MessageDto = {
+    // Create a mock SimpleMessageDto to use the utility service
+    const mockMessage: SimpleMessageDto = {
       content: this.message.messageContent,
       contentType: this.message.contentType
     };
@@ -98,8 +97,8 @@ export class ChatMessageComponent {
       return false;
     }
 
-    // Create a mock MessageDto to use the utility service
-    const mockMessage: MessageDto = {
+    // Create a mock SimpleMessageDto to use the utility service
+    const mockMessage: SimpleMessageDto = {
       content: this.message.messageContent,
       contentType: this.message.contentType
     };
