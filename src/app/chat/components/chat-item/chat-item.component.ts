@@ -1,12 +1,13 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { GroupDto } from '../../../api/model/groupDto';
+import { GroupDto, MessageDto } from '../../../api/models';
 
 export interface ChatItemData {
   groupId: string;
   name: string;
   lastMessage?: string;
   lastMessageTime?: string;
+  lastMessageType?: 'text' | 'image' | 'video' | 'poll';
   unreadCount?: number;
   isActive?: boolean;
 }
@@ -24,6 +25,42 @@ export class ChatItemComponent {
 
   onChatClick(): void {
     this.chatSelect.emit(this.chat.groupId);
+  }
+
+  /**
+   * Gets Bootstrap icon class based on last message type
+   */
+  getMessageIcon(): string {
+    switch (this.chat.lastMessageType) {
+      case 'image':
+        return 'bi-image';
+      case 'video':
+        return 'bi-play-circle';
+      case 'poll':
+        return 'bi-bar-chart';
+      default:
+        return '';
+    }
+  }
+
+  /**
+   * Checks if message has an icon to display
+   */
+  hasMessageIcon(): boolean {
+    return this.chat.lastMessageType !== 'text' && !!this.chat.lastMessageType;
+  }
+
+  /**
+   * Gets formatted last message display text
+   */
+  getLastMessageDisplay(): string {
+    if (!this.chat.lastMessage) {
+      return 'No messages yet';
+    }
+
+    // For non-text messages, the lastMessage already contains the formatted preview
+    // e.g., "📷 Photo", "🎥 Video", "📊 Poll Question"
+    return this.chat.lastMessage;
   }
 
   getTimeDisplay(timeString?: string): string {

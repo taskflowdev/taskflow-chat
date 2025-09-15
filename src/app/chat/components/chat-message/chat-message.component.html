@@ -6,7 +6,50 @@
     </div>
     
     <div class="message-content">
-      {{ message.content }}
+      <!-- Text Content -->
+      <div *ngIf="message.contentType === 'text' || !message.contentType" class="text-content">
+        {{ getContentText() }}
+      </div>
+      
+      <!-- Image Content -->
+      <div *ngIf="message.contentType === 'image'" class="image-content">
+        <div class="media-header">
+          <i class="bi bi-image"></i>
+          <span class="media-label">{{ getContentText() }}</span>
+        </div>
+        <img *ngIf="getMediaUrl()" [src]="getMediaUrl()!" alt="Image" class="message-image" />
+      </div>
+      
+      <!-- Video Content -->
+      <div *ngIf="message.contentType === 'video'" class="video-content">
+        <div class="media-header">
+          <i class="bi bi-play-circle"></i>
+          <span class="media-label">{{ getContentText() }}</span>
+        </div>
+        <video *ngIf="getMediaUrl()" [src]="getMediaUrl()!" controls class="message-video">
+          Your browser does not support the video tag.
+        </video>
+      </div>
+      
+      <!-- Poll Content -->
+      <div *ngIf="message.contentType === 'poll'" class="poll-content">
+        <div class="poll-header">
+          <i class="bi bi-bar-chart"></i>
+          <span class="poll-question">{{ getContentText() }}</span>
+        </div>
+        <div class="poll-options">
+          <div *ngFor="let option of getPollOptions(); let i = index" class="poll-option">
+            <label class="poll-option-label">
+              <input 
+                [type]="isPollMultiSelect() ? 'checkbox' : 'radio'" 
+                [name]="'poll-' + message.messageId" 
+                [value]="option"
+                class="poll-option-input" />
+              <span class="poll-option-text">{{ option }}</span>
+            </label>
+          </div>
+        </div>
+      </div>
     </div>
     
     <div class="message-footer" *ngIf="message.isOwn">

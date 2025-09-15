@@ -4,7 +4,7 @@ import { provideHttpClient, withInterceptorsFromDi, HTTP_INTERCEPTORS } from '@a
 
 import { routes } from './app.routes';
 import { provideClientHydration, withEventReplay } from '@angular/platform-browser';
-import { BASE_PATH } from './api/variables';
+import { ApiConfiguration } from './api/api-configuration';
 import { AuthInterceptor } from './auth/interceptors/auth.interceptor';
 
 export const appConfig: ApplicationConfig = {
@@ -13,7 +13,10 @@ export const appConfig: ApplicationConfig = {
     provideRouter(routes),
     provideClientHydration(withEventReplay()),
     provideHttpClient(withInterceptorsFromDi()),
-    { provide: BASE_PATH, useValue: 'https://localhost:44347' }, // Configure your API base URL here
+    { 
+      provide: ApiConfiguration, 
+      useValue: { rootUrl: 'https://localhost:44347' } as ApiConfiguration 
+    },
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true }
   ]
 };
