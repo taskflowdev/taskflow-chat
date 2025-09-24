@@ -4,6 +4,7 @@
 
 export type { ApiResponse } from './models/api-response';
 export type { CreateGroupDto } from './models/create-group-dto';
+export type { GeneralFileContent } from './models/general-file-content';
 export type { GroupDto } from './models/group-dto';
 export type { GroupDtoApiResponse } from './models/group-dto-api-response';
 export type { GroupDtoIEnumerableApiResponse } from './models/group-dto-i-enumerable-api-response';
@@ -13,7 +14,6 @@ export type { GuidApiResponse } from './models/guid-api-response';
 export type { ImageContent } from './models/image-content';
 export type { JoinGroupDto } from './models/join-group-dto';
 export type { LoginDto } from './models/login-dto';
-export type { MessageContent } from './models/message-content';
 export type { MessageDto } from './models/message-dto';
 export type { MessageDtoApiResponse } from './models/message-dto-api-response';
 export type { MessageDtoIEnumerableApiResponse } from './models/message-dto-i-enumerable-api-response';

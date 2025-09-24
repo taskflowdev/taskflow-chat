@@ -13,5 +13,8 @@
   "generateApiModule": true,
   "moduleName": "ApiModule",
   "exportModels": true,
-  "exportServices": true
+  "exportServices": true,
+  "model": {
+    "noRefs": true
+  }
 }
