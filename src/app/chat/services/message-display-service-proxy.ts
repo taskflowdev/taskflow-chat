@@ -174,10 +174,12 @@ export class MessageDisplayServiceProxy {
    * @returns MessagePreview Text message display information
    */
   private getTextContentPreview(content: any): MessagePreview {
-    if (isTextContent(content)) {
-      // For now, since TextContent only has contentType discriminator,
-      // we'll return a generic text message indicator
-      return { text: 'Text message', hasIcon: false };
+    // Check if content is our extended TextContent with text property
+    if (content && typeof content.text === 'string') {
+      const truncatedText = content.text.length > 50 
+        ? content.text.substring(0, 47) + '...' 
+        : content.text;
+      return { text: truncatedText, hasIcon: false };
     }
     
     // If content is a string (fallback for legacy data)
@@ -187,13 +189,10 @@ export class MessageDisplayServiceProxy {
         : content;
       return { text: truncatedText, hasIcon: false };
     }
-
-    // If content has a text property (extended TextContent)
-    if (content && typeof content.text === 'string') {
-      const truncatedText = content.text.length > 50 
-        ? content.text.substring(0, 47) + '...' 
-        : content.text;
-      return { text: truncatedText, hasIcon: false };
+    
+    // Handle basic TextContent (which only has contentType)
+    if (isTextContent(content)) {
+      return { text: 'Text message', hasIcon: false };
     }
 
     return { text: 'Text message', hasIcon: false };
@@ -206,8 +205,17 @@ export class MessageDisplayServiceProxy {
    * @returns MessagePreview Image message display information
    */
   private getImageContentPreview(content: any): MessagePreview {
+    // Check if it's an extended image content with filename
+    if (content && content.fileName) {
+      return {
+        text: `📷 ${content.fileName}`,
+        icon: 'image',
+        hasIcon: true
+      };
+    }
+    
     return {
-      text: 'Photo',
+      text: '📷 Photo',
       icon: 'image',
       hasIcon: true
     };
@@ -220,8 +228,24 @@ export class MessageDisplayServiceProxy {
    * @returns MessagePreview Video message display information
    */
   private getVideoContentPreview(content: any): MessagePreview {
+    // Check if it's an extended video content with filename and duration
+    if (content && content.fileName) {
+      let previewText = `🎥 ${content.fileName}`;
+      if (content.duration) {
+        const minutes = Math.floor(content.duration / 60);
+        const seconds = Math.floor(content.duration % 60);
+        previewText += ` (${minutes}:${seconds.toString().padStart(2, '0')})`;
+      }
+      
+      return {
+        text: previewText,
+        icon: 'play-circle',
+        hasIcon: true
+      };
+    }
+    
     return {
-      text: 'Video',
+      text: '🎥 Video',
       icon: 'play-circle',
       hasIcon: true
     };
@@ -234,8 +258,21 @@ export class MessageDisplayServiceProxy {
    * @returns MessagePreview Poll message display information
    */
   private getPollContentPreview(content: any): MessagePreview {
+    // Check if it's an extended poll content with question
+    if (content && content.question) {
+      const truncatedQuestion = content.question.length > 30
+        ? content.question.substring(0, 27) + '...'
+        : content.question;
+        
+      return {
+        text: `📊 Poll: ${truncatedQuestion}`,
+        icon: 'bar-chart',
+        hasIcon: true
+      };
+    }
+    
     return {
-      text: 'Poll',
+      text: '📊 Poll',
       icon: 'bar-chart',
       hasIcon: true
     };
@@ -248,8 +285,17 @@ export class MessageDisplayServiceProxy {
    * @returns MessagePreview File message display information
    */
   private getGeneralFileContentPreview(content: any): MessagePreview {
+    // Check if it's an extended file content with filename
+    if (content && content.fileName) {
+      return {
+        text: `📎 ${content.fileName}`,
+        icon: 'file-earmark',
+        hasIcon: true
+      };
+    }
+    
     return {
-      text: 'File',
+      text: '📎 File',
       icon: 'file-earmark',
       hasIcon: true
     };

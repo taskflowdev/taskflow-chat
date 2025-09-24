@@ -6,7 +6,8 @@ import { ChatSidebarComponent } from '../chat-sidebar/chat-sidebar.component';
 import { ChatConversationComponent, ConversationData } from '../chat-conversation/chat-conversation.component';
 import { ChatItemData } from '../chat-item/chat-item.component';
 import { ChatMessageData } from '../chat-message/chat-message.component';
-import { GroupsServiceProxy, GroupWithMessages } from '../../services/groups-service-proxy';
+import { GroupsServiceProxy, MessageFactoryServiceProxy } from '../../services';
+import type { GroupWithMessages } from '../../services';
 import { MessageDto } from '../../../api/models/message-dto';
 
 @Component({
@@ -38,6 +39,7 @@ export class MainChatComponent implements OnInit {
     private authService: AuthService,
     private router: Router,
     private groupsServiceProxy: GroupsServiceProxy,
+    private messageFactoryService: MessageFactoryServiceProxy,
     @Inject(PLATFORM_ID) private platformId: Object
   ) { }
 
@@ -193,8 +195,19 @@ export class MainChatComponent implements OnInit {
     };
   }
 
+  /**
+   * Handles sending messages with proper validation and type handling.
+   * Supports text messages and can be extended for other content types.
+   */
   onSendMessage(messageContent: string): void {
-    if (!this.currentConversation || !this.user) return;
+    if (!this.currentConversation || !this.user || !messageContent.trim()) return;
+
+    // Validate message content
+    const validation = this.messageFactoryService.validateMessageContent('text', messageContent);
+    if (!validation.isValid) {
+      console.error('Message validation failed:', validation.error);
+      return;
+    }
 
     // Optimistically add message to UI
     const optimisticMessage: ChatMessageData = {
@@ -216,7 +229,7 @@ export class MainChatComponent implements OnInit {
         messageId: optimisticMessage.messageId,
         senderId: optimisticMessage.senderId,
         senderName: optimisticMessage.senderName,
-        content: { contentType: 'text' }, // Use proper TextContent structure
+        content: { contentType: 'text' }, // Use basic TextContent structure
         createdAt: optimisticMessage.createdAt,
         contentType: 'text',
         messageType: 'userMessage',
@@ -226,8 +239,8 @@ export class MainChatComponent implements OnInit {
       chat.lastMessageTime = new Date().toISOString();
     }
 
-    // Send message via API (when available)
-    this.groupsServiceProxy.sendMessage(this.currentConversation.groupId, messageContent).subscribe({
+    // Send message via the message factory service
+    this.messageFactoryService.sendTextMessage(this.currentConversation.groupId, messageContent).subscribe({
       next: (sentMessage) => {
         // Replace optimistic message with real one if API returns it
         if (sentMessage && this.currentConversation) {
@@ -256,6 +269,58 @@ export class MainChatComponent implements OnInit {
             this.currentConversation.messages.splice(index, 1);
           }
         }
+      }
+    });
+  }
+
+  /**
+   * Sends an image message to the current conversation.
+   * Future enhancement for file upload functionality.
+   */
+  onSendImageMessage(imageData: { url: string; fileName: string; fileSize: number }): void {
+    if (!this.currentConversation || !this.user) return;
+
+    this.messageFactoryService.sendImageMessage(this.currentConversation.groupId, imageData).subscribe({
+      next: (sentMessage) => {
+        if (sentMessage && this.currentConversation) {
+          this.currentConversation.messages.push(this.mapMessageToChatMessage(sentMessage));
+          
+          // Update chat list
+          const chat = this.chats.find(c => c.groupId === this.currentConversation?.groupId);
+          if (chat) {
+            chat.lastMessage = sentMessage;
+            chat.lastMessageTime = new Date().toISOString();
+          }
+        }
+      },
+      error: (error) => {
+        console.error('Failed to send image message:', error);
+      }
+    });
+  }
+
+  /**
+   * Sends a poll message to the current conversation.
+   * Future enhancement for poll creation functionality.
+   */
+  onSendPollMessage(pollData: { question: string; options: string[] }): void {
+    if (!this.currentConversation || !this.user) return;
+
+    this.messageFactoryService.sendPollMessage(this.currentConversation.groupId, pollData).subscribe({
+      next: (sentMessage) => {
+        if (sentMessage && this.currentConversation) {
+          this.currentConversation.messages.push(this.mapMessageToChatMessage(sentMessage));
+          
+          // Update chat list
+          const chat = this.chats.find(c => c.groupId === this.currentConversation?.groupId);
+          if (chat) {
+            chat.lastMessage = sentMessage;
+            chat.lastMessageTime = new Date().toISOString();
+          }
+        }
+      },
+      error: (error) => {
+        console.error('Failed to send poll message:', error);
       }
     });
   }

@@ -1,7 +1,7 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { GroupDto } from '../../../api/models/group-dto';
-import { MessageDisplayServiceProxy } from '../../services/message-display-service-proxy';
+import { MessageDisplayServiceProxy } from '../../services';
 import { MessageDto } from '../../../api/models/message-dto';
 
 export interface ChatItemData {
