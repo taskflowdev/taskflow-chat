@@ -1,8 +1,8 @@
 import { Injectable, Inject, PLATFORM_ID } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { BehaviorSubject, Observable, catchError, map, of, tap } from 'rxjs';
-import { AuthService as ApiAuthService } from '../../api/api/auth.service';
-import { LoginDto, RegisterDto, UserDto } from '../../api/model/models';
+import { AuthService as ApiAuthService } from '../../api/services/auth.service';
+import { LoginDto, RegisterDto, UserDto } from '../../api/models';
 import { LocalStorageService } from './local-storage.service';
 
 export interface AuthUser {
@@ -35,7 +35,7 @@ export class AuthService {
   }
 
   login(credentials: LoginDto): Observable<{ success: boolean; user?: AuthUser; error?: string }> {
-    return this.apiAuthService.apiAuthLoginPost(credentials).pipe(
+    return this.apiAuthService.apiAuthLoginPost({ body: credentials }).pipe(
       tap(response => {
         if (response.success && response.data && isPlatformBrowser(this.platformId)) {
           // Store tokens and user data
@@ -66,7 +66,7 @@ export class AuthService {
   }
 
   register(userData: RegisterDto): Observable<{ success: boolean; user?: AuthUser; error?: string }> {
-    return this.apiAuthService.apiAuthRegisterPost(userData).pipe(
+    return this.apiAuthService.apiAuthRegisterPost({ body: userData }).pipe(
       tap(response => {
         if (response.success && response.data && isPlatformBrowser(this.platformId)) {
           // Store tokens after successful registration
@@ -190,7 +190,9 @@ export class AuthService {
     const refreshToken = this.getRefreshToken();
     if (!refreshToken) return of(false);
 
-    return this.apiAuthService.apiAuthRefreshPost({ refreshToken }).pipe(
+    return this.apiAuthService.apiAuthRefreshPost({ 
+      body: { refreshToken } 
+    }).pipe(
       tap(response => {
         if (response.success && response.data && isPlatformBrowser(this.platformId)) {
           const tokenData = response.data;

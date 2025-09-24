@@ -1,6 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { MessageDto } from '../../../api/model/messageDto';
+import { MessageDto } from '../../../api/models/message-dto';
 
 export interface ChatMessageData {
   messageId: string;

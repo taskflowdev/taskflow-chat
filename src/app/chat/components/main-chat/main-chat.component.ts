@@ -6,8 +6,8 @@ import { ChatSidebarComponent } from '../chat-sidebar/chat-sidebar.component';
 import { ChatConversationComponent, ConversationData } from '../chat-conversation/chat-conversation.component';
 import { ChatItemData } from '../chat-item/chat-item.component';
 import { ChatMessageData } from '../chat-message/chat-message.component';
-import { GroupServiceProxy, GroupWithMessages } from '../../../api/group.service.proxy';
-import { MessageDto } from '../../../api/model/messageDto';
+import { GroupsServiceProxy, GroupWithMessages } from '../../services/groups-service-proxy';
+import { MessageDto } from '../../../api/models/message-dto';
 
 @Component({
   selector: 'app-main-chat',
@@ -37,7 +37,7 @@ export class MainChatComponent implements OnInit {
   constructor(
     private authService: AuthService,
     private router: Router,
-    private groupServiceProxy: GroupServiceProxy,
+    private groupsServiceProxy: GroupsServiceProxy,
     @Inject(PLATFORM_ID) private platformId: Object
   ) { }
 
@@ -87,7 +87,7 @@ export class MainChatComponent implements OnInit {
    */
   private loadUserGroups(): void {
     this.loading = true;
-    this.groupServiceProxy.getUserGroups().subscribe({
+    this.groupsServiceProxy.getUserGroups().subscribe({
       next: (groups: GroupWithMessages[]) => {
         this.chats = groups.map(group => this.mapGroupToChatItem(group));
         this.loading = false;
@@ -106,7 +106,7 @@ export class MainChatComponent implements OnInit {
     return {
       groupId: group.groupId || '',
       name: group.name || 'Unnamed Group',
-      lastMessage: group.lastMessage?.content?.toString() || 'No messages yet',
+      lastMessage: group.lastMessage, // Now passing MessageDto instead of string
       lastMessageTime: group.lastMessage?.createdAt || new Date().toISOString(),
       unreadCount: group.unreadCount || 0
     };
@@ -147,8 +147,8 @@ export class MainChatComponent implements OnInit {
     this.currentConversation = null;
 
     // Load group details and messages in parallel
-    const groupDetails$ = this.groupServiceProxy.getGroupDetails(groupId);
-    const messages$ = this.groupServiceProxy.getGroupMessages(groupId);
+    const groupDetails$ = this.groupsServiceProxy.getGroupDetails(groupId);
+    const messages$ = this.groupsServiceProxy.getGroupMessages(groupId);
 
     groupDetails$.subscribe({
       next: (groupDetails) => {
@@ -211,12 +211,23 @@ export class MainChatComponent implements OnInit {
     // Update last message in chat list
     const chat = this.chats.find(c => c.groupId === this.currentConversation?.groupId);
     if (chat) {
-      chat.lastMessage = messageContent;
+      // Create a temporary MessageDto for the optimistic update
+      const tempMessageDto: MessageDto = {
+        messageId: optimisticMessage.messageId,
+        senderId: optimisticMessage.senderId,
+        senderName: optimisticMessage.senderName,
+        content: { contentType: 'text' }, // Use proper TextContent structure
+        createdAt: optimisticMessage.createdAt,
+        contentType: 'text',
+        messageType: 'userMessage',
+        sourceType: 'user'
+      };
+      chat.lastMessage = tempMessageDto;
       chat.lastMessageTime = new Date().toISOString();
     }
 
     // Send message via API (when available)
-    this.groupServiceProxy.sendMessage(this.currentConversation.groupId, messageContent).subscribe({
+    this.groupsServiceProxy.sendMessage(this.currentConversation.groupId, messageContent).subscribe({
       next: (sentMessage) => {
         // Replace optimistic message with real one if API returns it
         if (sentMessage && this.currentConversation) {
@@ -225,6 +236,12 @@ export class MainChatComponent implements OnInit {
           );
           if (index !== -1) {
             this.currentConversation.messages[index] = this.mapMessageToChatMessage(sentMessage);
+          }
+          
+          // Update the chat list with the real message
+          const chat = this.chats.find(c => c.groupId === this.currentConversation?.groupId);
+          if (chat) {
+            chat.lastMessage = sentMessage;
           }
         }
       },
