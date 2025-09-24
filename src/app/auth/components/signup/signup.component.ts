@@ -33,9 +33,9 @@ export class SignupComponent implements OnInit {
 
   ngOnInit() {
     // Redirect if already logged in
-    if (this.authService.isAuthenticated()) {
-      this.router.navigate(['/chat']);
-    }
+    // if (this.authService.isAuthenticated()) {
+    //   this.router.navigate(['/chat']);
+    // }
   }
 
   passwordMatchValidator(form: FormGroup) {

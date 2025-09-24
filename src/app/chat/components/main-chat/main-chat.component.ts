@@ -163,7 +163,7 @@ export class MainChatComponent implements OnInit {
                 memberCount: groupDetails.memberCount || 0,
                 messages: messages.map(msg => this.mapMessageToChatMessage(msg))
               };
-              this.loadingMessages = true;
+              this.loadingMessages = false;
             },
             error: (error) => {
               console.error('Failed to load group messages:', error);
@@ -250,7 +250,7 @@ export class MainChatComponent implements OnInit {
           if (index !== -1) {
             this.currentConversation.messages[index] = this.mapMessageToChatMessage(sentMessage);
           }
-          
+
           // Update the chat list with the real message
           const chat = this.chats.find(c => c.groupId === this.currentConversation?.groupId);
           if (chat) {
@@ -284,7 +284,7 @@ export class MainChatComponent implements OnInit {
       next: (sentMessage) => {
         if (sentMessage && this.currentConversation) {
           this.currentConversation.messages.push(this.mapMessageToChatMessage(sentMessage));
-          
+
           // Update chat list
           const chat = this.chats.find(c => c.groupId === this.currentConversation?.groupId);
           if (chat) {
@@ -310,7 +310,7 @@ export class MainChatComponent implements OnInit {
       next: (sentMessage) => {
         if (sentMessage && this.currentConversation) {
           this.currentConversation.messages.push(this.mapMessageToChatMessage(sentMessage));
-          
+
           // Update chat list
           const chat = this.chats.find(c => c.groupId === this.currentConversation?.groupId);
           if (chat) {
