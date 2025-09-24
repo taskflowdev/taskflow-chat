@@ -80,6 +80,15 @@
       overflow: hidden;
       text-overflow: ellipsis;
       max-width: 250px;
+      display: flex;
+      align-items: center;
+
+      .message-icon {
+        margin-right: 0.3rem;
+        font-size: 0.75rem;
+        color: #9ca3af;
+        flex-shrink: 0;
+      }
     }
 
     .unread-count {

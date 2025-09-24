@@ -6,8 +6,9 @@ import { ChatSidebarComponent } from '../chat-sidebar/chat-sidebar.component';
 import { ChatConversationComponent, ConversationData } from '../chat-conversation/chat-conversation.component';
 import { ChatItemData } from '../chat-item/chat-item.component';
 import { ChatMessageData } from '../chat-message/chat-message.component';
-import { GroupServiceProxy, GroupWithMessages } from '../../../api/group.service.proxy';
-import { MessageDto } from '../../../api/model/messageDto';
+import { GroupsServiceProxy, MessageFactoryServiceProxy } from '../../services';
+import type { GroupWithMessages } from '../../services';
+import { MessageDto } from '../../../api/models/message-dto';
 
 @Component({
   selector: 'app-main-chat',
@@ -37,7 +38,8 @@ export class MainChatComponent implements OnInit {
   constructor(
     private authService: AuthService,
     private router: Router,
-    private groupServiceProxy: GroupServiceProxy,
+    private groupsServiceProxy: GroupsServiceProxy,
+    private messageFactoryService: MessageFactoryServiceProxy,
     @Inject(PLATFORM_ID) private platformId: Object
   ) { }
 
@@ -87,7 +89,7 @@ export class MainChatComponent implements OnInit {
    */
   private loadUserGroups(): void {
     this.loading = true;
-    this.groupServiceProxy.getUserGroups().subscribe({
+    this.groupsServiceProxy.getUserGroups().subscribe({
       next: (groups: GroupWithMessages[]) => {
         this.chats = groups.map(group => this.mapGroupToChatItem(group));
         this.loading = false;
@@ -106,7 +108,7 @@ export class MainChatComponent implements OnInit {
     return {
       groupId: group.groupId || '',
       name: group.name || 'Unnamed Group',
-      lastMessage: group.lastMessage?.content?.toString() || 'No messages yet',
+      lastMessage: group.lastMessage, // Now passing MessageDto instead of string
       lastMessageTime: group.lastMessage?.createdAt || new Date().toISOString(),
       unreadCount: group.unreadCount || 0
     };
@@ -147,8 +149,8 @@ export class MainChatComponent implements OnInit {
     this.currentConversation = null;
 
     // Load group details and messages in parallel
-    const groupDetails$ = this.groupServiceProxy.getGroupDetails(groupId);
-    const messages$ = this.groupServiceProxy.getGroupMessages(groupId);
+    const groupDetails$ = this.groupsServiceProxy.getGroupDetails(groupId);
+    const messages$ = this.groupsServiceProxy.getGroupMessages(groupId);
 
     groupDetails$.subscribe({
       next: (groupDetails) => {
@@ -161,7 +163,7 @@ export class MainChatComponent implements OnInit {
                 memberCount: groupDetails.memberCount || 0,
                 messages: messages.map(msg => this.mapMessageToChatMessage(msg))
               };
-              this.loadingMessages = true;
+              this.loadingMessages = false;
             },
             error: (error) => {
               console.error('Failed to load group messages:', error);
@@ -193,8 +195,19 @@ export class MainChatComponent implements OnInit {
     };
   }
 
+  /**
+   * Handles sending messages with proper validation and type handling.
+   * Supports text messages and can be extended for other content types.
+   */
   onSendMessage(messageContent: string): void {
-    if (!this.currentConversation || !this.user) return;
+    if (!this.currentConversation || !this.user || !messageContent.trim()) return;
+
+    // Validate message content
+    const validation = this.messageFactoryService.validateMessageContent('text', messageContent);
+    if (!validation.isValid) {
+      console.error('Message validation failed:', validation.error);
+      return;
+    }
 
     // Optimistically add message to UI
     const optimisticMessage: ChatMessageData = {
@@ -211,12 +224,23 @@ export class MainChatComponent implements OnInit {
     // Update last message in chat list
     const chat = this.chats.find(c => c.groupId === this.currentConversation?.groupId);
     if (chat) {
-      chat.lastMessage = messageContent;
+      // Create a temporary MessageDto for the optimistic update
+      const tempMessageDto: MessageDto = {
+        messageId: optimisticMessage.messageId,
+        senderId: optimisticMessage.senderId,
+        senderName: optimisticMessage.senderName,
+        content: { contentType: 'text' }, // Use basic TextContent structure
+        createdAt: optimisticMessage.createdAt,
+        contentType: 'text',
+        messageType: 'userMessage',
+        sourceType: 'user'
+      };
+      chat.lastMessage = tempMessageDto;
       chat.lastMessageTime = new Date().toISOString();
     }
 
-    // Send message via API (when available)
-    this.groupServiceProxy.sendMessage(this.currentConversation.groupId, messageContent).subscribe({
+    // Send message via the message factory service
+    this.messageFactoryService.sendTextMessage(this.currentConversation.groupId, messageContent).subscribe({
       next: (sentMessage) => {
         // Replace optimistic message with real one if API returns it
         if (sentMessage && this.currentConversation) {
@@ -225,6 +249,12 @@ export class MainChatComponent implements OnInit {
           );
           if (index !== -1) {
             this.currentConversation.messages[index] = this.mapMessageToChatMessage(sentMessage);
+          }
+
+          // Update the chat list with the real message
+          const chat = this.chats.find(c => c.groupId === this.currentConversation?.groupId);
+          if (chat) {
+            chat.lastMessage = sentMessage;
           }
         }
       },
@@ -239,6 +269,58 @@ export class MainChatComponent implements OnInit {
             this.currentConversation.messages.splice(index, 1);
           }
         }
+      }
+    });
+  }
+
+  /**
+   * Sends an image message to the current conversation.
+   * Future enhancement for file upload functionality.
+   */
+  onSendImageMessage(imageData: { url: string; fileName: string; fileSize: number }): void {
+    if (!this.currentConversation || !this.user) return;
+
+    this.messageFactoryService.sendImageMessage(this.currentConversation.groupId, imageData).subscribe({
+      next: (sentMessage) => {
+        if (sentMessage && this.currentConversation) {
+          this.currentConversation.messages.push(this.mapMessageToChatMessage(sentMessage));
+
+          // Update chat list
+          const chat = this.chats.find(c => c.groupId === this.currentConversation?.groupId);
+          if (chat) {
+            chat.lastMessage = sentMessage;
+            chat.lastMessageTime = new Date().toISOString();
+          }
+        }
+      },
+      error: (error) => {
+        console.error('Failed to send image message:', error);
+      }
+    });
+  }
+
+  /**
+   * Sends a poll message to the current conversation.
+   * Future enhancement for poll creation functionality.
+   */
+  onSendPollMessage(pollData: { question: string; options: string[] }): void {
+    if (!this.currentConversation || !this.user) return;
+
+    this.messageFactoryService.sendPollMessage(this.currentConversation.groupId, pollData).subscribe({
+      next: (sentMessage) => {
+        if (sentMessage && this.currentConversation) {
+          this.currentConversation.messages.push(this.mapMessageToChatMessage(sentMessage));
+
+          // Update chat list
+          const chat = this.chats.find(c => c.groupId === this.currentConversation?.groupId);
+          if (chat) {
+            chat.lastMessage = sentMessage;
+            chat.lastMessageTime = new Date().toISOString();
+          }
+        }
+      },
+      error: (error) => {
+        console.error('Failed to send poll message:', error);
       }
     });
   }

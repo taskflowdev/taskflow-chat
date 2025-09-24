@@ -1,11 +1,13 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { GroupDto } from '../../../api/model/groupDto';
+import { GroupDto } from '../../../api/models/group-dto';
+import { MessageDisplayServiceProxy } from '../../services';
+import { MessageDto } from '../../../api/models/message-dto';
 
 export interface ChatItemData {
   groupId: string;
   name: string;
-  lastMessage?: string;
+  lastMessage?: MessageDto; // Changed from string to MessageDto
   lastMessageTime?: string;
   unreadCount?: number;
   isActive?: boolean;
@@ -22,8 +24,40 @@ export class ChatItemComponent {
   @Input() isActive = false;
   @Output() chatSelect = new EventEmitter<string>();
 
+  constructor(private messageDisplayService: MessageDisplayServiceProxy) {}
+
   onChatClick(): void {
     this.chatSelect.emit(this.chat.groupId);
+  }
+
+  /**
+   * Gets the message preview text with appropriate icon and formatting.
+   * Supports WhatsApp-style display for different message types.
+   */
+  getLastMessagePreview(): string {
+    if (!this.chat.lastMessage) {
+      return 'No messages yet';
+    }
+
+    return this.messageDisplayService.getCompleteMessagePreview(this.chat.lastMessage, true);
+  }
+
+  /**
+   * Gets the Bootstrap icon class for the last message type.
+   */
+  getLastMessageIcon(): string | undefined {
+    if (!this.chat.lastMessage) {
+      return undefined;
+    }
+
+    return this.messageDisplayService.getMessageIcon(this.chat.lastMessage);
+  }
+
+  /**
+   * Determines if an icon should be displayed for the last message.
+   */
+  hasLastMessageIcon(): boolean {
+    return this.getLastMessageIcon() !== undefined;
   }
 
   getTimeDisplay(timeString?: string): string {

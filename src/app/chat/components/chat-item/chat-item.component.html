@@ -17,7 +17,9 @@
     
     <div class="chat-preview">
       <span class="last-message">
-        {{ chat.lastMessage || 'No messages yet' }}
+        <i *ngIf="hasLastMessageIcon()" 
+           class="bi bi-{{ getLastMessageIcon() }} message-icon"></i>
+        {{ getLastMessagePreview() }}
       </span>
       <span class="unread-count" *ngIf="chat.unreadCount && chat.unreadCount > 0">
         {{ chat.unreadCount }}

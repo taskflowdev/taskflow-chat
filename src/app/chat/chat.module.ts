@@ -8,8 +8,7 @@ import { MainChatComponent } from './components/main-chat/main-chat.component';
   declarations: [],
   imports: [
     CommonModule,
-    ChatRoutingModule,
-    MainChatComponent
+    ChatRoutingModule
   ]
 })
 export class ChatModule { }

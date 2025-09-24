@@ -1,6 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { MessageDto } from '../../../api/model/messageDto';
+import { MessageDto } from '../../../api/models/message-dto';
 
 export interface ChatMessageData {
   messageId: string;
@@ -22,8 +22,8 @@ export class ChatMessageComponent {
 
   getTimeDisplay(timeString: string): string {
     const messageTime = new Date(timeString);
-    return messageTime.toLocaleTimeString([], { 
-      hour: '2-digit', 
+    return messageTime.toLocaleTimeString([], {
+      hour: '2-digit',
       minute: '2-digit'
     });
   }
@@ -32,15 +32,15 @@ export class ChatMessageComponent {
     const messageTime = new Date(timeString);
     const now = new Date();
     const diffInDays = Math.floor((now.getTime() - messageTime.getTime()) / (1000 * 60 * 60 * 24));
-    
+
     if (diffInDays === 0) {
       return 'Today';
     } else if (diffInDays === 1) {
       return 'Yesterday';
     } else {
-      return messageTime.toLocaleDateString([], { 
-        month: 'short', 
-        day: 'numeric', 
+      return messageTime.toLocaleDateString([], {
+        month: 'short',
+        day: 'numeric',
         year: 'numeric'
       });
     }
