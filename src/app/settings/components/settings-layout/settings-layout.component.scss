@@ -1,5 +1,5 @@
 .settings-layout {
-  height: 100vh;
+  min-height: calc(100vh - 80px); /* Account for navbar height */
   background: var(--light-gray, #f8fafc);
 }
 
@@ -7,10 +7,12 @@
   background: white;
   border-right: 1px solid var(--medium-gray, #e2e8f0);
   box-shadow: 2px 0 4px rgba(0, 0, 0, 0.04);
+  min-height: calc(100vh - 80px); /* Match parent height */
   
   @media (max-width: 767.98px) {
     border-right: none;
     border-bottom: 1px solid var(--medium-gray, #e2e8f0);
+    min-height: auto;
   }
 }
 
