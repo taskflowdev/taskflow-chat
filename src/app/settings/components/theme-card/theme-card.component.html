@@ -1,0 +1,54 @@
+<div 
+  [class]="cardClasses.join(' ')"
+  (click)="onClick()"
+  (keydown)="onKeyPress($event)"
+  tabindex="0"
+  role="button"
+  [attr.aria-pressed]="selected"
+  [attr.aria-label]="'Select ' + (theme?.name || 'theme')">
+  
+  @if (theme) {
+    <!-- Theme Preview Section -->
+    <div class="theme-preview-section">
+      <app-theme-preview [theme]="theme"></app-theme-preview>
+    </div>
+    
+    <!-- Theme Info Section -->
+    <div class="theme-info-section">
+      <div class="theme-header">
+        <h4 class="theme-name">{{ theme.name }}</h4>
+        @if (theme.isBuiltIn) {
+          <span class="built-in-badge" aria-label="Built-in theme">
+            <i class="bi bi-star-fill" aria-hidden="true"></i>
+          </span>
+        }
+      </div>
+      
+      <!-- Selection Indicator -->
+      <div class="selection-indicator">
+        @if (selected) {
+          <div class="selected-badge">
+            <i class="bi bi-check-circle-fill selected-icon" aria-hidden="true"></i>
+            <span class="selected-text">Active</span>
+          </div>
+        } @else {
+          <div class="select-prompt">
+            <i class="bi bi-circle select-icon" aria-hidden="true"></i>
+            <span class="select-text">Select</span>
+          </div>
+        }
+      </div>
+    </div>
+  } @else {
+    <!-- Loading or Error State -->
+    <div class="theme-card-placeholder">
+      <div class="placeholder-preview">
+        <div class="placeholder-content"></div>
+      </div>
+      <div class="placeholder-info">
+        <div class="placeholder-name"></div>
+        <div class="placeholder-badge"></div>
+      </div>
+    </div>
+  }
+</div>

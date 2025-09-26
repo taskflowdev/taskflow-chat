@@ -1,0 +1,132 @@
+.settings-layout {
+  height: 100vh;
+  background: var(--light-gray, #f8fafc);
+}
+
+.settings-sidebar {
+  background: white;
+  border-right: 1px solid var(--medium-gray, #e2e8f0);
+  box-shadow: 2px 0 4px rgba(0, 0, 0, 0.04);
+  
+  @media (max-width: 767.98px) {
+    border-right: none;
+    border-bottom: 1px solid var(--medium-gray, #e2e8f0);
+  }
+}
+
+.settings-nav-container {
+  padding: 2rem 0;
+  height: 100%;
+  
+  @media (max-width: 767.98px) {
+    padding: 1rem 0;
+  }
+}
+
+.settings-nav-header {
+  padding: 0 1.5rem 1.5rem;
+  border-bottom: 1px solid var(--medium-gray, #e2e8f0);
+  margin-bottom: 1.5rem;
+}
+
+.settings-title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--primary-black, #0f172a);
+  margin: 0;
+}
+
+.settings-nav {
+  padding: 0 1rem;
+}
+
+.nav-pills .nav-item {
+  margin-bottom: 0.5rem;
+}
+
+.settings-nav-link {
+  display: flex;
+  align-items: center;
+  padding: 0.875rem 1rem;
+  color: var(--dark-gray, #64748b);
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: 12px;
+  text-decoration: none;
+  transition: all 0.2s ease;
+  font-weight: 500;
+  
+  &:hover {
+    color: var(--primary-green, #22c55e);
+    background: rgba(34, 197, 94, 0.05);
+    border-color: rgba(34, 197, 94, 0.1);
+    text-decoration: none;
+  }
+  
+  &.active {
+    color: white;
+    background: linear-gradient(135deg, var(--primary-green, #22c55e) 0%, var(--dark-green, #16a34a) 100%);
+    border-color: var(--primary-green, #22c55e);
+    box-shadow: 0 4px 12px rgba(34, 197, 94, 0.2);
+  }
+}
+
+.nav-icon {
+  font-size: 1.1rem;
+  margin-right: 0.75rem;
+  flex-shrink: 0;
+  width: 1.1rem;
+  text-align: center;
+}
+
+.nav-label {
+  font-size: 0.9rem;
+  line-height: 1.4;
+}
+
+.settings-main {
+  padding: 0;
+  background: var(--light-gray, #f8fafc);
+  overflow-y: auto;
+}
+
+.settings-content {
+  padding: 2rem;
+  max-width: 1000px;
+  
+  @media (max-width: 767.98px) {
+    padding: 1rem;
+  }
+}
+
+// Accessibility improvements
+@media (prefers-reduced-motion: reduce) {
+  .settings-nav-link {
+    transition: none;
+  }
+}
+
+// Focus states for accessibility
+.settings-nav-link:focus {
+  outline: 2px solid var(--primary-green, #22c55e);
+  outline-offset: 2px;
+}
+
+// High contrast mode support
+@media (prefers-contrast: high) {
+  .settings-sidebar {
+    border-right-color: var(--primary-black, #0f172a);
+  }
+  
+  .settings-nav-header {
+    border-bottom-color: var(--primary-black, #0f172a);
+  }
+  
+  .settings-nav-link {
+    border-color: var(--dark-gray, #64748b);
+    
+    &.active {
+      border-color: var(--primary-black, #0f172a);
+    }
+  }
+}

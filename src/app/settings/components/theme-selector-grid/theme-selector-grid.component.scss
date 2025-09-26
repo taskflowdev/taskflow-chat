@@ -1,0 +1,81 @@
+.theme-selector-grid {
+  width: 100%;
+}
+
+.themes-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1.5rem;
+  
+  @media (max-width: 767.98px) {
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 1rem;
+  }
+  
+  @media (max-width: 575.98px) {
+    grid-template-columns: 1fr;
+    gap: 0.75rem;
+  }
+}
+
+.theme-grid-item {
+  display: flex;
+  width: 100%;
+}
+
+.empty-grid {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem 1rem;
+  text-align: center;
+  color: var(--dark-gray, #64748b);
+  
+  .empty-icon {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+    opacity: 0.6;
+  }
+  
+  .empty-text {
+    font-size: 1rem;
+    margin: 0;
+    line-height: 1.4;
+  }
+}
+
+// Responsive adjustments for better grid layout
+@media (min-width: 1200px) {
+  .themes-grid {
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  }
+}
+
+@media (max-width: 480px) {
+  .themes-grid {
+    grid-template-columns: 1fr;
+    gap: 0.5rem;
+  }
+  
+  .empty-grid {
+    padding: 2rem 0.5rem;
+    
+    .empty-icon {
+      font-size: 2rem;
+    }
+    
+    .empty-text {
+      font-size: 0.9rem;
+    }
+  }
+}
+
+// High contrast support
+@media (prefers-contrast: high) {
+  .empty-grid {
+    .empty-icon {
+      opacity: 1;
+    }
+  }
+}

@@ -1,0 +1,40 @@
+<div class="settings-layout">
+  <div class="container-fluid h-100">
+    <div class="row h-100">
+      <!-- Settings Navigation Sidebar -->
+      <aside class="col-md-3 col-lg-2 settings-sidebar p-0">
+        <div class="settings-nav-container">
+          <div class="settings-nav-header">
+            <h2 class="settings-title">Settings</h2>
+          </div>
+          
+          <nav class="settings-nav" role="navigation" aria-label="Settings navigation">
+            <ul class="nav nav-pills flex-column">
+              @for (item of settingsNavItems; track item.path) {
+                <li class="nav-item">
+                  <a 
+                    class="nav-link settings-nav-link" 
+                    [routerLink]="item.path" 
+                    routerLinkActive="active"
+                    [attr.aria-current]="'page'"
+                    [title]="item.description"
+                  >
+                    <i class="nav-icon" [class]="item.icon" aria-hidden="true"></i>
+                    <span class="nav-label">{{ item.label }}</span>
+                  </a>
+                </li>
+              }
+            </ul>
+          </nav>
+        </div>
+      </aside>
+      
+      <!-- Settings Content Area -->
+      <main class="col-md-9 col-lg-10 settings-main" role="main">
+        <div class="settings-content">
+          <router-outlet></router-outlet>
+        </div>
+      </main>
+    </div>
+  </div>
+</div>

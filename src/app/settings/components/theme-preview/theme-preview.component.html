@@ -1,0 +1,62 @@
+<div class="theme-preview" [ngStyle]="previewStyles">
+  @if (theme) {
+    <!-- Preview Mini Interface -->
+    <div class="preview-interface">
+      <!-- Header Bar -->
+      <div class="preview-header">
+        <div class="preview-nav-dots">
+          <div class="nav-dot nav-dot--active"></div>
+          <div class="nav-dot"></div>
+          <div class="nav-dot"></div>
+        </div>
+        <div class="preview-actions">
+          <i class="preview-icon bi bi-search" aria-hidden="true"></i>
+          <i class="preview-icon bi bi-bell" aria-hidden="true"></i>
+        </div>
+      </div>
+
+      <!-- Content Area -->
+      <div class="preview-content">
+        <!-- Sidebar -->
+        <div class="preview-sidebar">
+          <div class="sidebar-item sidebar-item--active">
+            <div class="sidebar-indicator"></div>
+          </div>
+          <div class="sidebar-item">
+            <div class="sidebar-indicator"></div>
+          </div>
+          <div class="sidebar-item">
+            <div class="sidebar-indicator"></div>
+          </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="preview-main">
+          <div class="preview-card">
+            <div class="card-header">
+              <div class="card-title"></div>
+              <div class="card-action"></div>
+            </div>
+            <div class="card-content">
+              <div class="content-line content-line--primary"></div>
+              <div class="content-line content-line--secondary"></div>
+              <div class="content-line content-line--short"></div>
+            </div>
+          </div>
+          
+          <!-- Status Indicators -->
+          <div class="preview-status">
+            <div class="status-item status-item--success"></div>
+            <div class="status-item status-item--warning"></div>
+            <div class="status-item status-item--error"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  } @else {
+    <!-- Loading State -->
+    <div class="preview-loading">
+      <div class="loading-spinner"></div>
+    </div>
+  }
+</div>

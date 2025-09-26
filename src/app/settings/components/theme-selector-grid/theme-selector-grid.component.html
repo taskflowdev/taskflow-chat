@@ -1,0 +1,23 @@
+<div class="theme-selector-grid">
+  @if (themes.length === 0) {
+    <div class="empty-grid">
+      <i class="bi bi-palette2 empty-icon" aria-hidden="true"></i>
+      <p class="empty-text">No themes available</p>
+    </div>
+  } @else {
+    <div class="themes-grid" role="radiogroup" aria-label="Theme selection">
+      @for (theme of themes; track trackByThemeId($index, theme)) {
+        <div class="theme-grid-item">
+          <app-theme-card
+            [theme]="theme"
+            [selected]="isSelected(theme)"
+            (themeClick)="onThemeSelect(theme.id || '')"
+            [attr.aria-checked]="isSelected(theme)"
+            role="radio"
+            [attr.aria-label]="'Select ' + theme.name + ' theme'">
+          </app-theme-card>
+        </div>
+      }
+    </div>
+  }
+</div>

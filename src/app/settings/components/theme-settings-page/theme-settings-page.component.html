@@ -1,0 +1,96 @@
+<div class="theme-settings-page">
+  <!-- Page Header -->
+  <div class="page-header">
+    <h1 class="page-title">Theme</h1>
+    <p class="page-description">
+      Personalize your interface with custom themes. Choose different themes for light and dark modes,
+      or sync with your system settings.
+    </p>
+  </div>
+
+  <!-- Error Alert -->
+  @if (error) {
+    <div class="alert alert-danger d-flex align-items-center justify-content-between" role="alert">
+      <div class="d-flex align-items-center">
+        <i class="bi bi-exclamation-triangle me-2" aria-hidden="true"></i>
+        <span>{{ error }}</span>
+      </div>
+      <button 
+        type="button" 
+        class="btn-close" 
+        aria-label="Dismiss error"
+        (click)="dismissError()">
+      </button>
+    </div>
+  }
+
+  <!-- Loading State -->
+  @if (isLoading) {
+    <div class="loading-container d-flex justify-content-center align-items-center">
+      <div class="spinner-border text-primary" role="status">
+        <span class="visually-hidden">Loading theme settings...</span>
+      </div>
+      <span class="ms-3">Loading theme settings...</span>
+    </div>
+  } @else {
+    <!-- Theme Mode Selector -->
+    <div class="theme-mode-section">
+      <app-theme-mode-selector
+        [syncWithSystem]="userPreferences?.syncWithSystem || false"
+        [currentMode]="currentThemeMode"
+        (syncToggle)="onSystemSyncToggle($event)">
+      </app-theme-mode-selector>
+    </div>
+
+    <!-- Theme Selection Grids -->
+    <div class="theme-selection-section">
+      <!-- Light Themes -->
+      <div class="theme-group">
+        <h3 class="theme-group-title">
+          <i class="bi bi-sun theme-group-icon" aria-hidden="true"></i>
+          Light Themes
+        </h3>
+        <p class="theme-group-description">
+          Choose your preferred theme for light mode
+        </p>
+        
+        @if (lightThemes.length > 0) {
+          <app-theme-selector-grid
+            [themes]="lightThemes"
+            [selectedThemeId]="userPreferences?.lightThemeId || ''"
+            (themeSelected)="onThemeSelection($event, true)">
+          </app-theme-selector-grid>
+        } @else {
+          <div class="no-themes-message">
+            <i class="bi bi-palette2 no-themes-icon" aria-hidden="true"></i>
+            <p>No light themes available</p>
+          </div>
+        }
+      </div>
+
+      <!-- Dark Themes -->
+      <div class="theme-group">
+        <h3 class="theme-group-title">
+          <i class="bi bi-moon theme-group-icon" aria-hidden="true"></i>
+          Dark Themes
+        </h3>
+        <p class="theme-group-description">
+          Choose your preferred theme for dark mode
+        </p>
+        
+        @if (darkThemes.length > 0) {
+          <app-theme-selector-grid
+            [themes]="darkThemes"
+            [selectedThemeId]="userPreferences?.darkThemeId || ''"
+            (themeSelected)="onThemeSelection($event, false)">
+          </app-theme-selector-grid>
+        } @else {
+          <div class="no-themes-message">
+            <i class="bi bi-palette2 no-themes-icon" aria-hidden="true"></i>
+            <p>No dark themes available</p>
+          </div>
+        }
+      </div>
+    </div>
+  }
+</div>
