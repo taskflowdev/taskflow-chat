@@ -1,22 +1,26 @@
 import { Component } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
+
+interface SettingsNavItem {
+  path: string;
+  label: string;
+  icon: string;
+  description: string;
+}
 
 @Component({
   selector: 'app-settings-layout',
-  standalone: true,
-  imports: [CommonModule, RouterModule],
   templateUrl: './settings-layout.component.html',
   styleUrls: ['./settings-layout.component.scss']
 })
 export class SettingsLayoutComponent {
   
-  settingsNavItems = [
+  settingsNavItems: SettingsNavItem[] = [
     {
       path: '/settings/theme',
       label: 'Theme',
       icon: 'bi-palette',
       description: 'Personalize your interface with custom themes'
     }
+    // Add more settings sections here as needed
   ];
 }

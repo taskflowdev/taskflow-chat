@@ -1,11 +1,8 @@
 import { Component, Input } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import { ThemeDto } from '../../../api/models';
 
 @Component({
   selector: 'app-theme-preview',
-  standalone: true,
-  imports: [CommonModule],
   templateUrl: './theme-preview.component.html',
   styleUrls: ['./theme-preview.component.scss']
 })

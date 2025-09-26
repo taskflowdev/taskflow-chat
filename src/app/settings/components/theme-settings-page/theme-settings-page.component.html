@@ -58,6 +58,7 @@
           <app-theme-selector-grid
             [themes]="lightThemes"
             [selectedThemeId]="userPreferences?.lightThemeId || ''"
+            [isLoading]="isLoading"
             (themeSelected)="onThemeSelection($event, true)">
           </app-theme-selector-grid>
         } @else {
@@ -82,6 +83,7 @@
           <app-theme-selector-grid
             [themes]="darkThemes"
             [selectedThemeId]="userPreferences?.darkThemeId || ''"
+            [isLoading]="isLoading"
             (themeSelected)="onThemeSelection($event, false)">
           </app-theme-selector-grid>
         } @else {

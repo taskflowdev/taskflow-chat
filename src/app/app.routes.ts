@@ -19,7 +19,7 @@ export const routes: Routes = [
       },
       {
         path: 'settings',
-        loadChildren: () => import('./settings/settings-routing.module').then(m => m.default)
+        loadChildren: () => import('./settings/settings.module').then(m => m.SettingsModule)
       }
     ]
   },

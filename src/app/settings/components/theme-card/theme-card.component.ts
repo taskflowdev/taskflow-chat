@@ -1,12 +1,8 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import { ThemeDto } from '../../../api/models';
-import { ThemePreviewComponent } from '../theme-preview/theme-preview.component';
 
 @Component({
   selector: 'app-theme-card',
-  standalone: true,
-  imports: [CommonModule, ThemePreviewComponent],
   templateUrl: './theme-card.component.html',
   styleUrls: ['./theme-card.component.scss']
 })

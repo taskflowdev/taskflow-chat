@@ -1,15 +1,10 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import { Subscription, combineLatest } from 'rxjs';
 import { ThemeService, ThemeMode } from '../../services/theme.service';
 import { ThemeDto, UserThemeDto } from '../../../api/models';
-import { ThemeModeSelector } from '../theme-mode-selector/theme-mode-selector.component';
-import { ThemeSelectorGrid } from '../theme-selector-grid/theme-selector-grid.component';
 
 @Component({
   selector: 'app-theme-settings-page',
-  standalone: true,
-  imports: [CommonModule, ThemeModeSelector, ThemeSelectorGrid],
   templateUrl: './theme-settings-page.component.html',
   styleUrls: ['./theme-settings-page.component.scss']
 })

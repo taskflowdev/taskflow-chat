@@ -1,12 +1,8 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
 import { ThemeMode } from '../../services/theme.service';
 
 @Component({
   selector: 'app-theme-mode-selector',
-  standalone: true,
-  imports: [CommonModule, FormsModule],
   templateUrl: './theme-mode-selector.component.html',
   styleUrls: ['./theme-mode-selector.component.scss']
 })

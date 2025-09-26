@@ -1,7 +1,8 @@
 /* You can add global styles to this file, and also import other style files */
 
-// Custom CSS variables for green and black theme
+// Default theme CSS custom properties
 :root {
+  // Legacy variables (keep for backward compatibility)
   --primary-green: #22c55e;
   --dark-green: #16a34a;
   --light-green: #4ade80;
@@ -12,15 +13,28 @@
   --light-gray: #f8fafc;
   --medium-gray: #e2e8f0;
   --dark-gray: #64748b;
+
+  // Theme system variables (updated by theme service)
+  --theme-bg-primary: #ffffff;
+  --theme-bg-secondary: #f8fafc;
+  --theme-text-primary: #0f172a;
+  --theme-text-secondary: #64748b;
+  --theme-highlight: #22c55e;
+  --theme-border: #e2e8f0;
+  --theme-icon: #64748b;
+  --theme-success: #10b981;
+  --theme-warning: #f59e0b;
+  --theme-error: #ef4444;
 }
 
 // Global styles for the app
 body {
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  background: var(--light-gray);
+  background: var(--theme-bg-secondary, var(--light-gray));
   margin: 0;
   padding: 0;
-  color: var(--primary-black);
+  color: var(--theme-text-primary, var(--primary-black));
+  transition: background-color 0.2s ease, color 0.2s ease;
 }
 
 // Auth form styles
