@@ -11,6 +11,7 @@ import { GroupsService } from './services/groups.service';
 import { HealthService } from './services/health.service';
 import { MessageMetadataService } from './services/message-metadata.service';
 import { MessagesService } from './services/messages.service';
+import { ThemesService } from './services/themes.service';
 
 /**
  * Module that provides all services and configuration.
@@ -25,6 +26,7 @@ import { MessagesService } from './services/messages.service';
     HealthService,
     MessageMetadataService,
     MessagesService,
+    ThemesService,
     ApiConfiguration
   ],
 })

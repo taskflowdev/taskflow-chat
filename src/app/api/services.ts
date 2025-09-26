@@ -7,3 +7,4 @@ export { GroupsService } from './services/groups.service';
 export { HealthService } from './services/health.service';
 export { MessageMetadataService } from './services/message-metadata.service';
 export { MessagesService } from './services/messages.service';
+export { ThemesService } from './services/themes.service';
