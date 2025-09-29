@@ -22,15 +22,15 @@
       <div class="settings-section">
         <h2 class="h5 mb-3">
           <i class="bi bi-palette me-2"></i>
-          Appearance Settings
+          Appearance
         </h2>
         <p class="text-muted mb-4">
-          Customize your visual experience with light and dark themes, plus accent colors.
-          Your settings will automatically sync across all devices.
+          Choose how TaskFlow looks to you. Select a single theme, or sync with your system and automatically switch between day and night themes.
         </p>
 
         <!-- Theme Mode Selector -->
-        <div class="mb-4">
+        <div class="theme-mode-section mb-5">
+          <h6 class="form-label fw-semibold mb-3">Theme mode</h6>
           <app-theme-mode-selector
             [currentMode]="themeService.userPreferences().themeMode"
             [syncWithSystem]="themeService.userPreferences().syncWithSystem"
@@ -40,39 +40,52 @@
           </app-theme-mode-selector>
         </div>
 
-        <!-- Theme Panels -->
-        <div class="row">
-          <div class="col-lg-6 mb-4">
-            <app-theme-panel
-              mode="light"
-              title="Light Theme"
-              description="Choose your preferred light theme style"
-              [themes]="lightThemes"
-              [selectedVariantId]="themeService.userPreferences().lightThemeVariantId"
-              [isActive]="isLightModeActive"
-              (variantChange)="onThemeVariantChange('light', $event)">
-            </app-theme-panel>
-          </div>
-
-          <div class="col-lg-6 mb-4">
-            <app-theme-panel
-              mode="dark"
-              title="Dark Theme" 
-              description="Choose your preferred dark theme style"
-              [themes]="darkThemes"
-              [selectedVariantId]="themeService.userPreferences().darkThemeVariantId"
-              [isActive]="isDarkModeActive"
-              (variantChange)="onThemeVariantChange('dark', $event)">
-            </app-theme-panel>
-          </div>
-        </div>
-
-        <!-- Theme Preview -->
-        <div class="mb-4">
+        <!-- Theme Preview Window -->
+        <div class="theme-preview-section mb-4">
+          <h6 class="form-label fw-semibold mb-3">Preview</h6>
           <app-theme-preview
-            [currentTheme]="themeService.currentTheme()"
+            [currentTheme]="previewTheme || themeService.currentTheme()"
             [effectiveMode]="themeService.effectiveThemeMode()">
           </app-theme-preview>
+        </div>
+
+        <!-- Accent Color Selector Section -->
+        <div class="accent-colors-section mb-4">
+          <h6 class="form-label fw-semibold mb-3">
+            Choose your {{ themeService.effectiveThemeMode() === ThemeMode.LIGHT ? 'light' : 'dark' }} mode theme
+          </h6>
+          <p class="text-muted small mb-3">
+            This will set the color scheme for the {{ themeService.effectiveThemeMode() === ThemeMode.LIGHT ? 'light' : 'dark' }} theme.
+          </p>
+          
+          <div class="theme-accent-grid">
+            <div 
+              class="theme-accent-item"
+              *ngFor="let variant of getActiveThemeVariants()"
+              [class.selected]="variant.id === getSelectedVariantId()"
+              [class.hovered]="variant.id === hoveredVariantId"
+              (click)="onVariantSelect(variant.id)"
+              (mouseenter)="onVariantHover(variant)"
+              (mouseleave)="onVariantHover(null)"
+              [attr.role]="'button'"
+              [attr.tabindex]="'0'"
+              [attr.aria-label]="'Select ' + variant.name + ' theme'"
+              [title]="variant.name + ': ' + variant.description">
+              
+              <!-- Color Circle -->
+              <div class="color-circle" 
+                   [style.background-color]="variant.accentColors.primary"
+                   [style.border-color]="variant.accentColors.secondary">
+                <!-- Selection Indicator -->
+                <div class="selection-indicator" *ngIf="variant.id === getSelectedVariantId()">
+                  <i class="bi bi-check"></i>
+                </div>
+              </div>
+              
+              <!-- Theme Name -->
+              <div class="theme-name">{{ variant.name }}</div>
+            </div>
+          </div>
         </div>
       </div>
     </div>

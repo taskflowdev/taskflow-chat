@@ -24,13 +24,207 @@
       height: 3rem;
     }
   }
+
+  // Theme Mode Section
+  .theme-mode-section {
+    .form-label {
+      font-size: 0.875rem;
+      font-weight: 600;
+      color: var(--bs-body-color);
+    }
+  }
+
+  // Theme Preview Section  
+  .theme-preview-section {
+    .form-label {
+      font-size: 0.875rem;
+      font-weight: 600;
+      color: var(--bs-body-color);
+    }
+  }
+
+  // Accent Colors Section
+  .accent-colors-section {
+    .form-label {
+      font-size: 0.875rem;
+      font-weight: 600;
+      color: var(--bs-body-color);
+    }
+
+    .small {
+      font-size: 0.75rem;
+      line-height: 1.4;
+    }
+
+    .theme-accent-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+      gap: 1rem;
+      max-width: 600px;
+
+      .theme-accent-item {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 1rem;
+        border: 2px solid transparent;
+        border-radius: 8px;
+        background: var(--bs-body-bg);
+        cursor: pointer;
+        transition: all 0.2s ease;
+        text-align: center;
+
+        &:hover {
+          border-color: var(--bs-border-color);
+          transform: translateY(-2px);
+          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        &.selected {
+          border-color: var(--theme-primary);
+          box-shadow: 0 2px 8px color-mix(in srgb, var(--theme-primary) 25%, transparent);
+        }
+
+        &.hovered {
+          border-color: color-mix(in srgb, var(--theme-primary) 50%, var(--bs-border-color));
+          background: color-mix(in srgb, var(--theme-primary) 3%, var(--bs-body-bg));
+        }
+
+        .color-circle {
+          width: 48px;
+          height: 48px;
+          border-radius: 50%;
+          border: 3px solid;
+          margin-bottom: 0.75rem;
+          position: relative;
+          transition: all 0.2s ease;
+          box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+
+          .selection-indicator {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            i {
+              color: var(--theme-primary);
+              font-size: 1.25rem;
+              font-weight: bold;
+            }
+          }
+        }
+
+        .theme-name {
+          font-size: 0.8rem;
+          font-weight: 500;
+          color: var(--bs-body-color);
+          line-height: 1.2;
+        }
+
+        &:focus-visible {
+          outline: 2px solid var(--theme-primary);
+          outline-offset: 2px;
+        }
+      }
+    }
+  }
 }
 
 /* Responsive adjustments */
 @media (max-width: 768px) {
   .theme-settings-page {
+    .accent-colors-section {
+      .theme-accent-grid {
+        grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+        gap: 0.75rem;
+
+        .theme-accent-item {
+          padding: 0.75rem;
+
+          .color-circle {
+            width: 40px;
+            height: 40px;
+          }
+
+          .theme-name {
+            font-size: 0.75rem;
+          }
+        }
+      }
+    }
+
     h2 {
       font-size: 1.25rem;
+    }
+  }
+}
+
+@media (max-width: 576px) {
+  .theme-settings-page {
+    .accent-colors-section {
+      .theme-accent-grid {
+        grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+        gap: 0.5rem;
+
+        .theme-accent-item {
+          padding: 0.5rem;
+
+          .color-circle {
+            width: 32px;
+            height: 32px;
+          }
+
+          .theme-name {
+            font-size: 0.7rem;
+          }
+        }
+      }
+    }
+  }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .theme-settings-page {
+    .accent-colors-section {
+      .theme-accent-grid {
+        .theme-accent-item {
+          border-width: 3px;
+
+          &.selected,
+          &:hover {
+            border-width: 3px;
+          }
+
+          .color-circle {
+            border-width: 4px;
+          }
+        }
+      }
+    }
+  }
+}
+
+/* Reduce motion for accessibility */
+@media (prefers-reduced-motion: reduce) {
+  .theme-settings-page {
+    .accent-colors-section {
+      .theme-accent-grid {
+        .theme-accent-item,
+        .color-circle {
+          transition: none;
+        }
+
+        .theme-accent-item:hover {
+          transform: none;
+        }
+      }
     }
   }
 }

@@ -1,9 +1,8 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ThemeService } from '../../../shared/services/theme.service';
-import { ThemeMode, Theme } from '../../../shared/models/theme.models';
+import { ThemeMode, Theme, ThemeVariant } from '../../../shared/models/theme.models';
 import { ThemeModeSelectorsComponent } from './theme-mode-selector.component';
-import { ThemePanelComponent } from './theme-panel.component';
 import { ThemePreviewComponent } from './theme-preview.component';
 
 @Component({
@@ -12,7 +11,6 @@ import { ThemePreviewComponent } from './theme-preview.component';
   imports: [
     CommonModule,
     ThemeModeSelectorsComponent,
-    ThemePanelComponent,
     ThemePreviewComponent
   ],
   templateUrl: './theme-settings-page.component.html',
@@ -21,6 +19,9 @@ import { ThemePreviewComponent } from './theme-preview.component';
 export class ThemeSettingsPageComponent implements OnInit {
   public readonly themeService = inject(ThemeService);
   public readonly ThemeMode = ThemeMode;
+  
+  public previewTheme: ThemeVariant | null = null;
+  public hoveredVariantId: string | null = null;
 
   ngOnInit(): void {
     this.themeService.loadThemes().subscribe();
@@ -34,12 +35,23 @@ export class ThemeSettingsPageComponent implements OnInit {
     return this.themeService.availableThemes().filter(t => t.mode === 'dark');
   }
 
-  get isLightModeActive(): boolean {
-    return this.themeService.effectiveThemeMode() === ThemeMode.LIGHT;
+  getActiveThemeVariants(): ThemeVariant[] {
+    const effectiveMode = this.themeService.effectiveThemeMode();
+    const themes = effectiveMode === ThemeMode.LIGHT ? this.lightThemes : this.darkThemes;
+    
+    // Flatten all variants from all themes of the current mode
+    return themes.reduce((variants: ThemeVariant[], theme: Theme) => {
+      return variants.concat(theme.variants);
+    }, []);
   }
 
-  get isDarkModeActive(): boolean {
-    return this.themeService.effectiveThemeMode() === ThemeMode.DARK;
+  getSelectedVariantId(): string {
+    const effectiveMode = this.themeService.effectiveThemeMode();
+    const prefs = this.themeService.userPreferences();
+    
+    return effectiveMode === ThemeMode.LIGHT 
+      ? prefs.lightThemeVariantId 
+      : prefs.darkThemeVariantId;
   }
 
   onThemeModeChange(mode: ThemeMode): void {
@@ -50,7 +62,14 @@ export class ThemeSettingsPageComponent implements OnInit {
     this.themeService.toggleSystemSync(enabled).subscribe();
   }
 
-  onThemeVariantChange(mode: 'light' | 'dark', variantId: string): void {
+  onVariantSelect(variantId: string): void {
+    const effectiveMode = this.themeService.effectiveThemeMode();
+    const mode = effectiveMode === ThemeMode.LIGHT ? 'light' : 'dark';
     this.themeService.updateThemeVariant(mode, variantId).subscribe();
+  }
+
+  onVariantHover(variant: ThemeVariant | null): void {
+    this.hoveredVariantId = variant?.id || null;
+    this.previewTheme = variant;
   }
 }

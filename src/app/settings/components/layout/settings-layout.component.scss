@@ -2,7 +2,7 @@
   min-height: 100vh;
   background: var(--bs-body-bg);
   color: var(--bs-body-color);
-  padding-top: 2rem;
+  padding-top: 80px; /* Add padding to avoid navbar overlap */
 
   .container-fluid {
     max-width: 1200px;
