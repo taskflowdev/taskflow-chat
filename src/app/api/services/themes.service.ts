@@ -31,7 +31,7 @@ import { apiThemesUsersUserIdSyncPut$Json } from '../fn/themes/api-themes-users-
 import { ApiThemesUsersUserIdSyncPut$Json$Params } from '../fn/themes/api-themes-users-user-id-sync-put-json';
 import { apiThemesUsersUserIdSyncPut$Plain } from '../fn/themes/api-themes-users-user-id-sync-put-plain';
 import { ApiThemesUsersUserIdSyncPut$Plain$Params } from '../fn/themes/api-themes-users-user-id-sync-put-plain';
-import { ThemeDtoApiResponse } from '../models/theme-dto-api-response';
+import { CompleteThemeDtoApiResponse } from '../models/complete-theme-dto-api-response';
 import { ThemeDtoIEnumerableApiResponse } from '../models/theme-dto-i-enumerable-api-response';
 import { UserThemeDtoApiResponse } from '../models/user-theme-dto-api-response';
 
@@ -306,7 +306,7 @@ export class ThemesService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  apiThemesUsersUserIdEffectiveGet$Plain$Response(params: ApiThemesUsersUserIdEffectiveGet$Plain$Params, context?: HttpContext): Observable<StrictHttpResponse<ThemeDtoApiResponse>> {
+  apiThemesUsersUserIdEffectiveGet$Plain$Response(params: ApiThemesUsersUserIdEffectiveGet$Plain$Params, context?: HttpContext): Observable<StrictHttpResponse<CompleteThemeDtoApiResponse>> {
     return apiThemesUsersUserIdEffectiveGet$Plain(this.http, this.rootUrl, params, context);
   }
 
@@ -320,9 +320,9 @@ export class ThemesService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  apiThemesUsersUserIdEffectiveGet$Plain(params: ApiThemesUsersUserIdEffectiveGet$Plain$Params, context?: HttpContext): Observable<ThemeDtoApiResponse> {
+  apiThemesUsersUserIdEffectiveGet$Plain(params: ApiThemesUsersUserIdEffectiveGet$Plain$Params, context?: HttpContext): Observable<CompleteThemeDtoApiResponse> {
     return this.apiThemesUsersUserIdEffectiveGet$Plain$Response(params, context).pipe(
-      map((r: StrictHttpResponse<ThemeDtoApiResponse>): ThemeDtoApiResponse => r.body)
+      map((r: StrictHttpResponse<CompleteThemeDtoApiResponse>): CompleteThemeDtoApiResponse => r.body)
     );
   }
 
@@ -336,7 +336,7 @@ export class ThemesService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  apiThemesUsersUserIdEffectiveGet$Json$Response(params: ApiThemesUsersUserIdEffectiveGet$Json$Params, context?: HttpContext): Observable<StrictHttpResponse<ThemeDtoApiResponse>> {
+  apiThemesUsersUserIdEffectiveGet$Json$Response(params: ApiThemesUsersUserIdEffectiveGet$Json$Params, context?: HttpContext): Observable<StrictHttpResponse<CompleteThemeDtoApiResponse>> {
     return apiThemesUsersUserIdEffectiveGet$Json(this.http, this.rootUrl, params, context);
   }
 
@@ -350,9 +350,9 @@ export class ThemesService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  apiThemesUsersUserIdEffectiveGet$Json(params: ApiThemesUsersUserIdEffectiveGet$Json$Params, context?: HttpContext): Observable<ThemeDtoApiResponse> {
+  apiThemesUsersUserIdEffectiveGet$Json(params: ApiThemesUsersUserIdEffectiveGet$Json$Params, context?: HttpContext): Observable<CompleteThemeDtoApiResponse> {
     return this.apiThemesUsersUserIdEffectiveGet$Json$Response(params, context).pipe(
-      map((r: StrictHttpResponse<ThemeDtoApiResponse>): ThemeDtoApiResponse => r.body)
+      map((r: StrictHttpResponse<CompleteThemeDtoApiResponse>): CompleteThemeDtoApiResponse => r.body)
     );
   }
 

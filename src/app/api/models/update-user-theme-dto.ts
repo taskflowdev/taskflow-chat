@@ -9,12 +9,22 @@
 export interface UpdateUserThemeDto {
 
   /**
-   * ID of the selected theme for dark mode
+   * ID of the selected accent variant for dark mode
+   */
+  darkAccentId: string;
+
+  /**
+   * ID of the selected base theme for dark mode
    */
   darkThemeId: string;
 
   /**
-   * ID of the selected theme for light mode
+   * ID of the selected accent variant for light mode
+   */
+  lightAccentId: string;
+
+  /**
+   * ID of the selected base theme for light mode
    */
   lightThemeId: string;
 }

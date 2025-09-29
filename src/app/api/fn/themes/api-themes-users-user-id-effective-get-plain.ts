@@ -8,7 +8,7 @@ import { filter, map } from 'rxjs/operators';
 import { StrictHttpResponse } from '../../strict-http-response';
 import { RequestBuilder } from '../../request-builder';
 
-import { ThemeDtoApiResponse } from '../../models/theme-dto-api-response';
+import { CompleteThemeDtoApiResponse } from '../../models/complete-theme-dto-api-response';
 
 export interface ApiThemesUsersUserIdEffectiveGet$Plain$Params {
 
@@ -23,7 +23,7 @@ export interface ApiThemesUsersUserIdEffectiveGet$Plain$Params {
   isDarkMode?: boolean;
 }
 
-export function apiThemesUsersUserIdEffectiveGet$Plain(http: HttpClient, rootUrl: string, params: ApiThemesUsersUserIdEffectiveGet$Plain$Params, context?: HttpContext): Observable<StrictHttpResponse<ThemeDtoApiResponse>> {
+export function apiThemesUsersUserIdEffectiveGet$Plain(http: HttpClient, rootUrl: string, params: ApiThemesUsersUserIdEffectiveGet$Plain$Params, context?: HttpContext): Observable<StrictHttpResponse<CompleteThemeDtoApiResponse>> {
   const rb = new RequestBuilder(rootUrl, apiThemesUsersUserIdEffectiveGet$Plain.PATH, 'get');
   if (params) {
     rb.path('userId', params.userId, {});
@@ -35,7 +35,7 @@ export function apiThemesUsersUserIdEffectiveGet$Plain(http: HttpClient, rootUrl
   ).pipe(
     filter((r: any): r is HttpResponse<any> => r instanceof HttpResponse),
     map((r: HttpResponse<any>) => {
-      return r as StrictHttpResponse<ThemeDtoApiResponse>;
+      return r as StrictHttpResponse<CompleteThemeDtoApiResponse>;
     })
   );
 }
