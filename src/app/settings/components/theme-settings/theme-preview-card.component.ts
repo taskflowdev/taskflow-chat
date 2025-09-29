@@ -11,10 +11,17 @@ import { ThemeVariant, ThemeMode } from '../../../shared/models/theme.models';
       <div class="card-header">
         <div class="mode-indicator">
           <i class="bi" [class]="mode === 'light' ? 'bi-sun-fill' : 'bi-moon-fill'"></i>
-          <span>{{ mode === 'light' ? 'Light' : 'Dark' }} theme</span>
+          <div class="mode-text">
+            <span class="theme-title">
+              {{ mode === 'light' ? 'Light' : 'Dark' }} theme
+            </span>
+            <small class="theme-subtext text-muted">
+              Active in system “{{ mode }} mode”.
+            </small>
+          </div>
         </div>
       </div>
-      
+
       <div class="card-preview">
         <!-- Minimal mockup -->
         <div class="mock-window" [style.background-color]="getBackgroundColor()">
@@ -26,14 +33,14 @@ import { ThemeVariant, ThemeMode } from '../../../shared/models/theme.models';
             </div>
             <div class="mock-title">TaskFlow</div>
           </div>
-          
+
           <div class="mock-content">
             <div class="mock-sidebar" [style.background-color]="getSidebarColor()">
               <div class="mock-nav-item active" [style.background-color]="currentVariant.accentColors.primary"></div>
               <div class="mock-nav-item"></div>
               <div class="mock-nav-item"></div>
             </div>
-            
+
             <div class="mock-main">
               <div class="mock-card" [style.background-color]="getCardColor()">
                 <div class="mock-text-line" [style.background-color]="getTextColor()"></div>

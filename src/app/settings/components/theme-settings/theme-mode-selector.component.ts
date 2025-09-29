@@ -30,7 +30,7 @@ export class ThemeModeSelectorsComponent {
 
   get effectiveMode(): string {
     if (this.syncWithSystem) {
-      return this.systemPrefersDark ? 'dark' : 'light';
+      return this.systemPrefersDark ? 'Dark' : 'Light';
     }
     return this.currentMode;
   }

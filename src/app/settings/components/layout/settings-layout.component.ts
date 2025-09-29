@@ -23,7 +23,7 @@ export class SettingsLayoutComponent {
       id: 'appearance',
       icon: 'bi bi-palette',
       label: 'Appearance',
-      route: '/settings/theme',
+      route: '/settings/appearance',
       description: 'Customize themes, colors and visual preferences'
     }
   ];

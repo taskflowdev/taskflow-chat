@@ -27,14 +27,14 @@
       margin-bottom: 32px;
 
       h2 {
-        font-size: 20px;
+        font-size: 24px;
         font-weight: 600;
         margin: 0 0 8px 0;
         color: var(--bs-body-color);
       }
 
       p {
-        font-size: 14px;
+        font-size: 16px;
         color: var(--bs-text-muted);
         margin: 0;
         line-height: 1.5;
@@ -46,7 +46,7 @@
     }
 
     .theme-previews-section {
-      margin-bottom: 32px;
+      margin-bottom: 22px;
 
       .preview-cards {
         display: grid;
@@ -55,20 +55,27 @@
       }
     }
 
-    .color-selection-section {
-      margin-bottom: 32px;
-
-      &:last-child {
-        margin-bottom: 0;
-      }
+    .color-selection-wrapper {
+      display: flex;
+      gap: 20px;
+      justify-content: flex-start; // align left (or use center/space-between if needed)
+      flex-wrap: wrap; // allows stacking on small screens
     }
 
-    .section-label {
-      display: block;
-      font-size: 14px;
-      font-weight: 600;
-      color: var(--bs-body-color);
-      margin-bottom: 16px;
+    .color-selection-card {
+      flex: 1 1 300px; // responsive: min 300px, grows if space available
+      padding: 1.25rem;
+      border: 1px solid var(--bs-border-color);
+      border-radius: 0.75rem;
+      background: var(--bs-body-bg);
+      box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+
+      .section-label {
+        font-size: 1rem;
+        font-weight: 600;
+        margin-bottom: 1rem;
+        color: var(--bs-body-color);
+      }
     }
   }
 }

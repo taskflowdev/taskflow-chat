@@ -1,20 +1,17 @@
 <div class="theme-mode-selector card">
-  <div class="card-header">
-    <h5 class="card-title mb-0">
-      <i class="bi bi-sun-fill me-2"></i>
-      Theme Mode
-    </h5>
-  </div>
   <div class="card-body">
-    <p class="text-muted mb-3">
-      Choose how your theme should behave. You can set specific themes or sync with your system preferences.
-    </p>
+    <div>
+      <h5>Theme Modes</h5>
+      <p class="text-muted mb-3">
+        Choose how your theme should behave. You can set specific themes or sync with your system preferences.
+      </p>
+    </div>
 
     <!-- Theme Mode Options -->
-    <div class="row g-3 mb-4">
+    <div class="row g-3">
       <!-- Light Mode -->
       <div class="col-md-4">
-        <div class="theme-mode-option" 
+        <div class="theme-mode-option"
              [class.active]="currentMode === ThemeMode.LIGHT && !syncWithSystem"
              (click)="onModeSelect(ThemeMode.LIGHT)"
              role="button"
@@ -25,12 +22,11 @@
             <i class="bi bi-sun-fill"></i>
           </div>
           <div class="theme-mode-content">
-            <h6 class="theme-mode-title">Light</h6>
-            <small class="text-muted">Always use light theme</small>
+            <h6 class="theme-mode-title">Light Mode</h6>
+            <small class="text-muted">Always use light theme accents.</small>
           </div>
           <div class="theme-mode-radio">
-            <input type="radio" 
-                   name="themeMode" 
+            <input type="radio" name="themeMode"
                    [value]="ThemeMode.LIGHT"
                    [checked]="currentMode === ThemeMode.LIGHT && !syncWithSystem"
                    (change)="onModeSelect(ThemeMode.LIGHT)">
@@ -40,7 +36,7 @@
 
       <!-- Dark Mode -->
       <div class="col-md-4">
-        <div class="theme-mode-option" 
+        <div class="theme-mode-option"
              [class.active]="currentMode === ThemeMode.DARK && !syncWithSystem"
              (click)="onModeSelect(ThemeMode.DARK)"
              role="button"
@@ -51,12 +47,11 @@
             <i class="bi bi-moon-fill"></i>
           </div>
           <div class="theme-mode-content">
-            <h6 class="theme-mode-title">Dark</h6>
-            <small class="text-muted">Always use dark theme</small>
+            <h6 class="theme-mode-title">Dark Mode</h6>
+            <small class="text-muted">Always use dark theme accents.</small>
           </div>
           <div class="theme-mode-radio">
-            <input type="radio" 
-                   name="themeMode" 
+            <input type="radio" name="themeMode"
                    [value]="ThemeMode.DARK"
                    [checked]="currentMode === ThemeMode.DARK && !syncWithSystem"
                    (change)="onModeSelect(ThemeMode.DARK)">
@@ -66,7 +61,7 @@
 
       <!-- System Mode -->
       <div class="col-md-4">
-        <div class="theme-mode-option" 
+        <div class="theme-mode-option"
              [class.active]="syncWithSystem"
              (click)="onSystemSyncChange(true)"
              role="button"
@@ -79,14 +74,12 @@
           <div class="theme-mode-content">
             <h6 class="theme-mode-title">Sync with system</h6>
             <small class="text-muted">
-              Currently: {{ effectiveMode }}
-              <i class="bi" [class.bi-sun-fill]="effectiveMode === 'light'" 
-                          [class.bi-moon-fill]="effectiveMode === 'dark'"></i>
+              <i class="bi" [class.bi-sun-fill]="effectiveMode === 'Light'" [class.bi-moon-fill]="effectiveMode === 'Dark'"></i>
+              {{ effectiveMode }} Mode
             </small>
           </div>
           <div class="theme-mode-radio">
-            <input type="radio" 
-                   name="themeMode" 
+            <input type="radio" name="themeMode"
                    value="system"
                    [checked]="syncWithSystem"
                    (change)="onSystemSyncChange(true)">
@@ -95,11 +88,12 @@
       </div>
     </div>
 
-    <!-- System Sync Info -->
-    <div class="alert alert-info" *ngIf="syncWithSystem">
-      <i class="bi bi-info-circle-fill me-2"></i>
-      <strong>System sync enabled:</strong> 
-      Your theme will automatically switch between your selected light and dark themes based on your system settings.
+      <!-- System Sync Info -->
+      <div class="sync-alert small text-muted">
+        <div class="mt-3 p-0" *ngIf="syncWithSystem">
+          <i class="bi bi-check-circle-fill me-1"></i>
+          Your theme will automatically switch between your selected light and dark themes based on your system settings.
+        </div>
+      </div>
     </div>
-  </div>
 </div>

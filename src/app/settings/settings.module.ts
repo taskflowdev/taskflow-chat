@@ -11,8 +11,8 @@ import { ProfileSettingsComponent } from './components/profile/profile-settings.
         path: '',
         component: SettingsLayoutComponent,
         children: [
-          { path: '', redirectTo: 'theme', pathMatch: 'full' },
-          { path: 'theme', component: ThemeSettingsPageComponent },
+          { path: '', redirectTo: 'profile', pathMatch: 'full' },
+          { path: 'appearance', component: ThemeSettingsPageComponent },
           { path: 'profile', component: ProfileSettingsComponent }
         ]
       }

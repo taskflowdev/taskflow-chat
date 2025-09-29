@@ -27,7 +27,7 @@ export interface SettingsMenuItem {
           </div>
           <div class="nav-content">
             <div class="nav-label">{{ item.label }}</div>
-            <div class="nav-description">{{ item.description }}</div>
+            <!-- <div class="nav-description">{{ item.description }}</div> -->
           </div>
         </a>
       </nav>

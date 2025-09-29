@@ -1,17 +1,17 @@
 <div class="settings-layout">
-  <div class="container-fluid">
+  <div class="container">
     <!-- Settings Header -->
     <div class="settings-header">
       <h1>Settings</h1>
       <p>Manage your account preferences and customizations</p>
     </div>
-    
+
     <div class="settings-main">
       <!-- Settings Sidebar -->
       <div class="settings-sidebar-container">
         <app-settings-sidebar [menuItems]="menuItems"></app-settings-sidebar>
       </div>
-      
+
       <!-- Settings Content -->
       <div class="settings-content">
         <router-outlet></router-outlet>

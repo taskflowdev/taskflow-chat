@@ -1,71 +1,142 @@
 .circular-color-grid {
   display: flex;
-  gap: 12px;
+  gap: 15px;
   flex-wrap: wrap;
   justify-content: flex-start;
+  align-items: center;
 
-  .color-circle {
-    width: 32px;
-    height: 32px;
-    border-radius: 50%;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    border: 2px solid transparent;
+  .color-circle-wrapper {
     position: relative;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+    transition: transform 0.2s ease;
+    border: 3px solid black;
+    border-radius: 50%;
+
+     &.selected {
+      outline: 2px solid var(--theme-primary);
+      outline-offset: 4px;
+      transform: scale(1.1);
+    }
 
     &:hover {
       transform: scale(1.1);
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
-    }
-
-    &.selected {
-      border-color: var(--theme-primary);
-      box-shadow: 0 0 0 3px color-mix(in srgb, var(--theme-primary) 25%, transparent);
-    }
-
-    &.hovered {
-      transform: scale(1.15);
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
     }
 
     &:focus-visible {
-      outline: 2px solid var(--theme-primary);
+      outline: 2px solid var(--theme-primary, #3b82f6);
       outline-offset: 2px;
     }
 
-    .selection-indicator {
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background: rgba(255, 255, 255, 0.9);
+    .color-circle {
+      width: 45px;
+      height: 45px;
       border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+      transition: box-shadow 0.2s ease;
+      position: relative;
+      overflow: hidden;
 
-      i {
-        color: var(--theme-primary);
-        font-size: 14px;
-        font-weight: bold;
+      // Solid color circles (for default/neutral variants)
+      &.solid {
+        background: #ffffff; // Light mode default
+
+        &.dark-mode {
+          background: #1a1a1a; // Dark mode default
+        }
       }
+
+      // Split diagonal circles (for color variants)
+      &.split {
+        background: transparent;
+        display: flex;
+
+        .color-half {
+          position: absolute;
+          width: 100%;
+          height: 100%;
+          top: 0;
+          left: 0;
+
+          &.top-left {
+            clip-path: polygon(0 0, 100% 0, 0 100%);
+            z-index: 2;
+          }
+
+          &.bottom-right {
+            clip-path: polygon(100% 0, 100% 100%, 0 100%);
+            z-index: 1;
+          }
+        }
+      }
+    }
+
+    &:hover .color-circle {
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
     }
   }
 }
 
-/* Responsive adjustments */
+// Dark theme adjustments
+@media (prefers-color-scheme: dark) {
+  .circular-color-grid {
+    .color-circle-wrapper {
+      border: 3px solid white;
+    }
+  }
+}
+
+// Light theme adjustments
+@media (prefers-color-scheme: dark) {
+  .circular-color-grid {
+    .color-circle-wrapper {
+      border: 3px solid black;
+    }
+  }
+}
+
+// // Light theme specific (if using data attributes)
+// [data-theme="light"] {
+//   .circular-color-grid {
+//     .color-circle-wrapper {
+//       &.selected {
+//         background: #ffffff;
+//         box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.1);
+//       }
+
+//       .color-circle.solid:not(.dark-mode) {
+//         background: #ffffff;
+//       }
+//     }
+//   }
+// }
+
+// // Dark theme specific (if using data attributes)
+// [data-theme="dark"] {
+//   .circular-color-grid {
+//     .color-circle-wrapper {
+//       &.selected {
+//         background: #ffffff;
+//         box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.15);
+//       }
+
+//       .color-circle.solid.dark-mode {
+//         background: #1a1a1a;
+//       }
+//     }
+//   }
+// }
+
+// Responsive adjustments
 @media (max-width: 576px) {
   .circular-color-grid {
-    gap: 8px;
+    gap: 6px;
 
-    .color-circle {
-      width: 28px;
-      height: 28px;
+    .color-circle-wrapper {
+      padding: 2px;
 
-      .selection-indicator i {
-        font-size: 12px;
+      .color-circle {
+        width: 28px;
+        height: 28px;
       }
     }
   }

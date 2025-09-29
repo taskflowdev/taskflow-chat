@@ -4,18 +4,13 @@
   color: var(--bs-body-color);
   padding-top: 80px;
 
-  .container-fluid {
-    max-width: 1000px;
-    padding: 32px;
-  }
-
   .settings-header {
     margin-bottom: 32px;
     border-bottom: 1px solid var(--bs-border-color);
     padding-bottom: 24px;
 
     h1 {
-      font-size: 24px;
+      font-size: 28px;
       font-weight: 600;
       color: var(--bs-body-color);
       margin: 0 0 8px 0;
@@ -42,7 +37,7 @@
 
   .settings-content {
     background: var(--bs-body-bg);
-    border: 1px solid var(--bs-border-color);
+    // border: 1px solid var(--bs-border-color);
     border-radius: 8px;
     min-height: 500px;
   }

@@ -8,22 +8,27 @@ import { ThemeVariant } from '../../../shared/models/theme.models';
   imports: [CommonModule],
   template: `
     <div class="circular-color-grid">
-      <div 
+      <div
         *ngFor="let variant of variants"
-        class="color-circle"
+        class="color-circle-wrapper"
         [class.selected]="variant.id === selectedVariantId"
-        [class.hovered]="variant.id === hoveredVariantId"
-        [style.background]="'linear-gradient(135deg, ' + variant.accentColors.primary + ' 0%, ' + variant.accentColors.secondary + ' 100%)'"
-        [title]="variant.name"
+        [class.is-default]="isDefaultVariant(variant)"
         (click)="onSelect(variant.id)"
         (mouseenter)="onHover(variant)"
         (mouseleave)="onHover(null)"
         role="button"
         tabindex="0"
         [attr.aria-label]="'Select ' + variant.name + ' color theme'">
-        
-        <div class="selection-indicator" *ngIf="variant.id === selectedVariantId">
-          <i class="bi bi-check"></i>
+
+        <div
+          class="color-circle split"
+          [title]="variant.name">
+          <div class="color-half top-left"
+               [style.background]="isDarkMode ? 'black' : 'white'">
+          </div>
+          <div class="color-half bottom-right"
+               [style.background]="variant.accentColors.primary">
+          </div>
         </div>
       </div>
     </div>
@@ -34,7 +39,8 @@ export class CircularColorSelectorComponent {
   @Input() variants: ThemeVariant[] = [];
   @Input() selectedVariantId: string = '';
   @Input() hoveredVariantId: string | null = null;
-  
+  @Input() isDarkMode: boolean = false;
+
   @Output() variantSelect = new EventEmitter<string>();
   @Output() variantHover = new EventEmitter<ThemeVariant | null>();
 
@@ -44,5 +50,9 @@ export class CircularColorSelectorComponent {
 
   onHover(variant: ThemeVariant | null) {
     this.variantHover.emit(variant);
+  }
+
+  isDefaultVariant(variant: ThemeVariant): boolean {
+    return variant.description.includes('default');
   }
 }
