@@ -1,0 +1,185 @@
+/* Theme CSS Variables - Global Theme Support */
+
+:root {
+  /* Default theme (neutral for auth pages) */
+  --theme-bg-primary: #ffffff;
+  --theme-bg-secondary: #f8f9fa;
+  --theme-text-primary: #212529;
+  --theme-text-secondary: #6c757d;
+  --theme-border: #dee2e6;
+  --theme-accent: #0d6efd;
+  --theme-icon: #495057;
+  --theme-success: #198754;
+  --theme-warning: #fd7e14;
+  --theme-error: #dc3545;
+}
+
+/* Theme classes */
+body.theme-neutral {
+  /* Already using root defaults */
+}
+
+body.theme-light {
+  /* Light theme variations will be set by ThemeService */
+}
+
+body.theme-dark {
+  /* Dark theme variations will be set by ThemeService */
+}
+
+/* Component overrides for themed elements */
+.themed-bg-primary {
+  background-color: var(--theme-bg-primary) !important;
+}
+
+.themed-bg-secondary {
+  background-color: var(--theme-bg-secondary) !important;
+}
+
+.themed-text-primary {
+  color: var(--theme-text-primary) !important;
+}
+
+.themed-text-secondary {
+  color: var(--theme-text-secondary) !important;
+}
+
+.themed-border {
+  border-color: var(--theme-border) !important;
+}
+
+.themed-accent {
+  color: var(--theme-accent) !important;
+}
+
+.themed-accent-bg {
+  background-color: var(--theme-accent) !important;
+}
+
+/* Bootstrap component theme integration */
+.btn-primary {
+  --bs-btn-bg: var(--theme-accent);
+  --bs-btn-border-color: var(--theme-accent);
+  --bs-btn-hover-bg: color-mix(in srgb, var(--theme-accent) 85%, #000000);
+  --bs-btn-hover-border-color: color-mix(in srgb, var(--theme-accent) 85%, #000000);
+  --bs-btn-active-bg: color-mix(in srgb, var(--theme-accent) 85%, #000000);
+  --bs-btn-active-border-color: color-mix(in srgb, var(--theme-accent) 85%, #000000);
+}
+
+.btn-success {
+  --bs-btn-bg: var(--theme-success);
+  --bs-btn-border-color: var(--theme-success);
+}
+
+.btn-warning {
+  --bs-btn-bg: var(--theme-warning);
+  --bs-btn-border-color: var(--theme-warning);
+}
+
+.btn-danger {
+  --bs-btn-bg: var(--theme-error);
+  --bs-btn-border-color: var(--theme-error);
+}
+
+.text-primary {
+  color: var(--theme-accent) !important;
+}
+
+.text-success {
+  color: var(--theme-success) !important;
+}
+
+.text-warning {
+  color: var(--theme-warning) !important;
+}
+
+.text-danger {
+  color: var(--theme-error) !important;
+}
+
+/* Form controls */
+.form-control:focus,
+.form-select:focus {
+  border-color: var(--theme-accent);
+  box-shadow: 0 0 0 0.2rem color-mix(in srgb, var(--theme-accent) 25%, transparent);
+}
+
+/* Navigation and layout theming */
+.navbar {
+  background-color: var(--theme-bg-secondary) !important;
+  border-bottom: 1px solid var(--theme-border);
+}
+
+.navbar .nav-link {
+  color: var(--theme-text-secondary) !important;
+}
+
+.navbar .nav-link.active,
+.navbar .nav-link:hover {
+  color: var(--theme-accent) !important;
+}
+
+/* Card theming */
+.card {
+  background-color: var(--theme-bg-primary);
+  border-color: var(--theme-border);
+  color: var(--theme-text-primary);
+}
+
+.card-header {
+  background-color: var(--theme-bg-secondary);
+  border-bottom-color: var(--theme-border);
+  color: var(--theme-text-primary);
+}
+
+/* Modal theming */
+.modal-content {
+  background-color: var(--theme-bg-primary);
+  color: var(--theme-text-primary);
+}
+
+.modal-header {
+  border-bottom-color: var(--theme-border);
+}
+
+.modal-footer {
+  border-top-color: var(--theme-border);
+}
+
+/* Alert theming */
+.alert-primary {
+  background-color: color-mix(in srgb, var(--theme-accent) 10%, var(--theme-bg-primary));
+  border-color: color-mix(in srgb, var(--theme-accent) 25%, var(--theme-border));
+  color: var(--theme-accent);
+}
+
+.alert-success {
+  background-color: color-mix(in srgb, var(--theme-success) 10%, var(--theme-bg-primary));
+  border-color: color-mix(in srgb, var(--theme-success) 25%, var(--theme-border));
+  color: var(--theme-success);
+}
+
+.alert-warning {
+  background-color: color-mix(in srgb, var(--theme-warning) 10%, var(--theme-bg-primary));
+  border-color: color-mix(in srgb, var(--theme-warning) 25%, var(--theme-border));
+  color: var(--theme-warning);
+}
+
+.alert-danger {
+  background-color: color-mix(in srgb, var(--theme-error) 10%, var(--theme-bg-primary));
+  border-color: color-mix(in srgb, var(--theme-error) 25%, var(--theme-border));
+  color: var(--theme-error);
+}
+
+/* Transition animations for theme changes */
+* {
+  transition: 
+    background-color 0.2s ease-in-out,
+    border-color 0.2s ease-in-out,
+    color 0.2s ease-in-out;
+}
+
+/* Disable transitions during theme initialization */
+body.theme-loading * {
+  transition: none !important;
+}

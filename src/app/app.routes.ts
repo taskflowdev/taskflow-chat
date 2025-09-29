@@ -17,9 +17,12 @@ export const routes: Routes = [
         path: 'chats',
         loadChildren: () => import('./chat/chat.module').then(m => m.ChatModule)
       },
+      {
+        path: 'settings',
+        loadChildren: () => import('./settings/settings.module').then(m => m.SettingsModule)
+      },
       // Future protected routes can be added here
       // { path: 'dashboard', component: DashboardComponent },
-      // { path: 'settings', component: SettingsComponent },
     ]
   },
   { path: '**', redirectTo: '/auth/login' }
