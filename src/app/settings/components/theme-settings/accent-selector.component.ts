@@ -1,6 +1,6 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { AccentColors } from '../../../shared/models/theme.models';
+import { AccentColors, ThemeVariant } from '../../../shared/models/theme.models';
 
 @Component({
   selector: 'app-accent-selector',
@@ -11,10 +11,15 @@ import { AccentColors } from '../../../shared/models/theme.models';
 })
 export class AccentSelectorComponent {
   @Input() accentColors!: AccentColors;
+  @Input() availableVariants: ThemeVariant[] = [];
+  @Input() selectedVariantId: string = '';
   @Input() readonly: boolean = false;
   @Input() compact: boolean = false;
+  @Input() mode: 'light' | 'dark' = 'light';
 
-  @Output() colorChange = new EventEmitter<{ colorType: string; color: string }>();
+  @Output() variantChange = new EventEmitter<string>();
+
+  hoveredVariantId: string | null = null;
 
   public readonly colorLabels = {
     primary: 'Primary',
@@ -29,19 +34,25 @@ export class AccentSelectorComponent {
 
   public readonly displayOrder = ['primary', 'secondary', 'success', 'danger', 'warning', 'info'];
 
-  onColorClick(colorType: string): void {
+  onVariantSelect(variantId: string): void {
     if (this.readonly) return;
-    
-    // In a real app, this might open a color picker
-    // For now, we'll just emit the current color
-    const color = this.accentColors[colorType as keyof AccentColors];
-    this.colorChange.emit({ colorType, color });
+    this.variantChange.emit(variantId);
   }
 
-  onColorKeyDown(event: KeyboardEvent, colorType: string): void {
+  onVariantHover(variantId: string | null): void {
+    if (this.readonly) return;
+    this.hoveredVariantId = variantId;
+  }
+
+  onColorClick(colorType: string): void {
+    // Legacy method for backward compatibility
+    if (this.readonly) return;
+  }
+
+  onColorKeyDown(event: KeyboardEvent, variantId: string): void {
     if (event.key === 'Enter' || event.key === ' ') {
       event.preventDefault();
-      this.onColorClick(colorType);
+      this.onVariantSelect(variantId);
     }
   }
 
@@ -51,5 +62,12 @@ export class AccentSelectorComponent {
 
   getColorLabel(colorType: string): string {
     return this.colorLabels[colorType as keyof typeof this.colorLabels] || colorType;
+  }
+
+  getVariantPreviewColors(variant: ThemeVariant): { primary: string; secondary: string } {
+    return {
+      primary: variant.accentColors.primary,
+      secondary: variant.accentColors.secondary
+    };
   }
 }

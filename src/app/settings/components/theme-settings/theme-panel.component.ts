@@ -1,12 +1,12 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Theme } from '../../../shared/models/theme.models';
-import { ThemeCardComponent } from './theme-card.component';
+import { AccentSelectorComponent } from './accent-selector.component';
 
 @Component({
   selector: 'app-theme-panel',
   standalone: true,
-  imports: [CommonModule, ThemeCardComponent],
+  imports: [CommonModule, AccentSelectorComponent],
   templateUrl: './theme-panel.component.html',
   styleUrls: ['./theme-panel.component.scss']
 })

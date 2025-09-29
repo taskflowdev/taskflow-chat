@@ -20,13 +20,13 @@
           <div class="theme-group">
             <h6 class="theme-group-title">{{ theme.name }}</h6>
             <div class="theme-variants-grid">
-              <app-theme-card
+              <app-accent-selector
                 *ngFor="let variant of theme.variants"
-                [variant]="variant"
-                [isSelected]="variant.id === selectedVariantId"
-                [isActive]="isActive && variant.id === selectedVariantId"
-                (click)="onVariantSelect(variant.id)">
-              </app-theme-card>
+                [availableVariants]="theme.variants"
+                [selectedVariantId]="selectedVariantId"
+                [mode]="mode"
+                (variantChange)="onVariantSelect($event)">
+              </app-accent-selector>
             </div>
           </div>
         </div>

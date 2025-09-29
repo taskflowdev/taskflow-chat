@@ -1,0 +1,54 @@
+<div class="settings-layout">
+  <div class="container-fluid">
+    <div class="row">
+      <!-- Settings Header -->
+      <div class="col-12 mb-4">
+        <div class="settings-header">
+          <h1 class="h3 mb-1">
+            <i class="bi bi-gear-fill me-2"></i>
+            Settings
+          </h1>
+          <p class="text-muted mb-0">Manage your account preferences and customizations</p>
+        </div>
+      </div>
+    </div>
+    
+    <div class="row">
+      <!-- Settings Sidebar -->
+      <div class="col-lg-3 col-md-4 mb-4">
+        <div class="settings-sidebar">
+          <div class="sidebar-menu">
+            <div class="menu-section">
+              <h6 class="menu-section-title">Personal</h6>
+              <nav class="menu-nav">
+                <a
+                  *ngFor="let item of menuItems"
+                  [routerLink]="item.route"
+                  routerLinkActive="active"
+                  class="menu-item">
+                  <div class="menu-item-icon">
+                    <i [class]="item.icon"></i>
+                  </div>
+                  <div class="menu-item-content">
+                    <div class="menu-item-label">{{ item.label }}</div>
+                    <div class="menu-item-description">{{ item.description }}</div>
+                  </div>
+                  <div class="menu-item-arrow">
+                    <i class="bi bi-chevron-right"></i>
+                  </div>
+                </a>
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Settings Content -->
+      <div class="col-lg-9 col-md-8">
+        <div class="settings-content">
+          <router-outlet></router-outlet>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

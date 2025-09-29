@@ -2,6 +2,7 @@ import { Injectable, signal, computed, effect, inject } from '@angular/core';
 import { Observable, of, from } from 'rxjs';
 import { map, catchError, tap } from 'rxjs/operators';
 import { HttpClient } from '@angular/common/http';
+import { LocalStorageService } from './local-storage.service';
 import { 
   Theme, 
   ThemeVariant, 
@@ -18,6 +19,8 @@ import {
 })
 export class ThemeService {
   private readonly httpClient = inject(HttpClient);
+  private readonly localStorageService = inject(LocalStorageService);
+  private readonly THEME_PREFERENCES_KEY = 'theme-preferences';
 
   // Default theme data - would normally come from API
   private readonly defaultThemes: Theme[] = [
@@ -356,27 +359,11 @@ export class ThemeService {
   }
 
   private getStoredPreferences(): UserThemePreferences {
-    if (typeof localStorage === 'undefined') return this.defaultPreferences;
-    
-    try {
-      const stored = localStorage.getItem('theme-preferences');
-      if (stored) {
-        return JSON.parse(stored);
-      }
-    } catch (error) {
-      console.warn('Failed to parse stored theme preferences:', error);
-    }
-    
-    return this.defaultPreferences;
+    const stored = this.localStorageService.getItem<UserThemePreferences>(this.THEME_PREFERENCES_KEY);
+    return stored || this.defaultPreferences;
   }
 
   private storePreferences(preferences: UserThemePreferences): void {
-    if (typeof localStorage === 'undefined') return;
-    
-    try {
-      localStorage.setItem('theme-preferences', JSON.stringify(preferences));
-    } catch (error) {
-      console.warn('Failed to store theme preferences:', error);
-    }
+    this.localStorageService.setItem(this.THEME_PREFERENCES_KEY, preferences);
   }
 }
