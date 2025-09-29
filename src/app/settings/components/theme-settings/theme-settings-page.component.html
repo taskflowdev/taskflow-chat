@@ -1,0 +1,87 @@
+<div class="theme-settings-page">
+  <div class="container-fluid py-4">
+    <!-- Page Header -->
+    <div class="row">
+      <div class="col-12">
+        <div class="d-flex align-items-center mb-4">
+          <h1 class="h3 mb-0">
+            <i class="bi bi-palette me-2"></i>
+            Theme Preferences
+          </h1>
+        </div>
+        <p class="text-muted mb-4">
+          Customize your visual experience with light and dark themes, plus accent colors.
+          Your settings will automatically sync across all devices.
+        </p>
+      </div>
+    </div>
+
+    <!-- Loading State -->
+    <div class="row" *ngIf="themeService.isLoading()">
+      <div class="col-12">
+        <div class="d-flex justify-content-center py-5">
+          <div class="spinner-border text-primary" role="status">
+            <span class="visually-hidden">Loading themes...</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Error State -->
+    <div class="row" *ngIf="themeService.error()">
+      <div class="col-12">
+        <div class="alert alert-danger" role="alert">
+          <i class="bi bi-exclamation-triangle-fill me-2"></i>
+          {{ themeService.error() }}
+        </div>
+      </div>
+    </div>
+
+    <!-- Theme Settings Content -->
+    <div class="row" *ngIf="!themeService.isLoading() && !themeService.error()">
+      <!-- Theme Mode Selector -->
+      <div class="col-12 mb-4">
+        <app-theme-mode-selector
+          [currentMode]="themeService.userPreferences().themeMode"
+          [syncWithSystem]="themeService.userPreferences().syncWithSystem"
+          [systemPrefersDark]="themeService.systemPrefersDark()"
+          (modeChange)="onThemeModeChange($event)"
+          (systemSyncToggle)="onSystemSyncToggle($event)">
+        </app-theme-mode-selector>
+      </div>
+
+      <!-- Theme Panels -->
+      <div class="col-lg-6 mb-4">
+        <app-theme-panel
+          mode="light"
+          title="Light Theme"
+          description="Choose your preferred light theme style"
+          [themes]="lightThemes"
+          [selectedVariantId]="themeService.userPreferences().lightThemeVariantId"
+          [isActive]="isLightModeActive"
+          (variantChange)="onThemeVariantChange('light', $event)">
+        </app-theme-panel>
+      </div>
+
+      <div class="col-lg-6 mb-4">
+        <app-theme-panel
+          mode="dark"
+          title="Dark Theme" 
+          description="Choose your preferred dark theme style"
+          [themes]="darkThemes"
+          [selectedVariantId]="themeService.userPreferences().darkThemeVariantId"
+          [isActive]="isDarkModeActive"
+          (variantChange)="onThemeVariantChange('dark', $event)">
+        </app-theme-panel>
+      </div>
+
+      <!-- Theme Preview -->
+      <div class="col-12">
+        <app-theme-preview
+          [currentTheme]="themeService.currentTheme()"
+          [effectiveMode]="themeService.effectiveThemeMode()">
+        </app-theme-preview>
+      </div>
+    </div>
+  </div>
+</div>

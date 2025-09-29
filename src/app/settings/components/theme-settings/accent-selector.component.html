@@ -1,0 +1,62 @@
+<div class="accent-selector" [class.compact]="compact" [class.readonly]="readonly">
+  <div class="accent-colors-grid">
+    <div class="accent-color-item"
+         *ngFor="let colorType of displayOrder"
+         [class.interactive]="!readonly"
+         (click)="onColorClick(colorType)"
+         (keydown)="onColorKeyDown($event, colorType)"
+         [attr.role]="readonly ? 'presentation' : 'button'"
+         [attr.tabindex]="readonly ? '-1' : '0'"
+         [attr.aria-label]="readonly ? null : 'Select ' + getColorLabel(colorType) + ' color'"
+         [title]="getColorLabel(colorType) + ': ' + getColorValue(colorType)">
+      
+      <div class="color-swatch" 
+           [style.background-color]="getColorValue(colorType)"
+           [attr.data-color]="getColorValue(colorType)">
+        <div class="color-overlay" *ngIf="!readonly && !compact">
+          <i class="bi bi-palette2"></i>
+        </div>
+      </div>
+      
+      <div class="color-info" *ngIf="!compact">
+        <span class="color-label">{{ getColorLabel(colorType) }}</span>
+        <span class="color-value">{{ getColorValue(colorType) }}</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Additional colors (light/dark) for non-compact view -->
+  <div class="additional-colors" *ngIf="!compact">
+    <div class="accent-color-item"
+         *ngFor="let colorType of ['light', 'dark']"
+         [class.interactive]="!readonly"
+         (click)="onColorClick(colorType)"
+         (keydown)="onColorKeyDown($event, colorType)"
+         [attr.role]="readonly ? 'presentation' : 'button'"
+         [attr.tabindex]="readonly ? '-1' : '0'"
+         [attr.aria-label]="readonly ? null : 'Select ' + getColorLabel(colorType) + ' color'"
+         [title]="getColorLabel(colorType) + ': ' + getColorValue(colorType)">
+      
+      <div class="color-swatch" 
+           [style.background-color]="getColorValue(colorType)"
+           [attr.data-color]="getColorValue(colorType)">
+        <div class="color-overlay" *ngIf="!readonly">
+          <i class="bi bi-palette2"></i>
+        </div>
+      </div>
+      
+      <div class="color-info">
+        <span class="color-label">{{ getColorLabel(colorType) }}</span>
+        <span class="color-value">{{ getColorValue(colorType) }}</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Compact info -->
+  <div class="compact-info" *ngIf="compact && !readonly">
+    <small class="text-muted">
+      <i class="bi bi-palette me-1"></i>
+      {{ displayOrder.length }} accent colors
+    </small>
+  </div>
+</div>

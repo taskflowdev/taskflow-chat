@@ -1,0 +1,197 @@
+.accent-selector {
+  &.compact {
+    .accent-colors-grid {
+      gap: 0.25rem;
+    }
+
+    .color-swatch {
+      width: 16px;
+      height: 16px;
+      border-width: 1px;
+    }
+
+    .additional-colors {
+      display: none;
+    }
+  }
+
+  &.readonly {
+    .accent-color-item {
+      pointer-events: none;
+    }
+  }
+
+  .accent-colors-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .additional-colors {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-top: 0.75rem;
+    padding-top: 0.75rem;
+    border-top: 1px solid var(--bs-border-color);
+  }
+
+  .accent-color-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: all 0.2s ease;
+
+    &.interactive {
+      cursor: pointer;
+      
+      &:hover {
+        .color-swatch {
+          transform: scale(1.1);
+          box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .color-overlay {
+          opacity: 1;
+        }
+      }
+
+      &:focus-visible {
+        outline: 2px solid var(--theme-primary);
+        outline-offset: 2px;
+        border-radius: 0.25rem;
+      }
+    }
+
+    .color-swatch {
+      position: relative;
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      border: 2px solid white;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+      transition: all 0.2s ease;
+      overflow: hidden;
+      flex-shrink: 0;
+
+      .color-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.4);
+        color: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.625rem;
+        opacity: 0;
+        transition: opacity 0.2s ease;
+      }
+    }
+
+    .color-info {
+      display: flex;
+      flex-direction: column;
+      min-width: 0;
+
+      .color-label {
+        font-size: 0.75rem;
+        font-weight: 500;
+        color: var(--bs-body-color);
+        line-height: 1.2;
+      }
+
+      .color-value {
+        font-size: 0.65rem;
+        color: var(--bs-text-muted);
+        font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+        text-transform: uppercase;
+        line-height: 1.2;
+      }
+    }
+  }
+
+  .compact-info {
+    margin-top: 0.25rem;
+    
+    small {
+      font-size: 0.65rem;
+      opacity: 0.8;
+    }
+  }
+}
+
+/* Special handling for light/dark colors */
+.accent-color-item .color-swatch[data-color*="#f8f9fa"],
+.accent-color-item .color-swatch[data-color*="#ffffff"] {
+  border-color: var(--bs-border-color);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2), inset 0 0 0 1px rgba(0, 0, 0, 0.1);
+}
+
+.accent-color-item .color-swatch[data-color*="#212529"],
+.accent-color-item .color-swatch[data-color*="#000000"] {
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+/* Responsive adjustments */
+@media (max-width: 576px) {
+  .accent-selector {
+    &:not(.compact) {
+      .accent-colors-grid,
+      .additional-colors {
+        justify-content: center;
+      }
+
+      .accent-color-item {
+        flex-direction: column;
+        text-align: center;
+        gap: 0.25rem;
+
+        .color-info {
+          align-items: center;
+        }
+      }
+    }
+  }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .accent-selector {
+    .color-swatch {
+      border-width: 3px;
+      border-color: var(--bs-body-color);
+    }
+
+    .accent-color-item.interactive:focus-visible {
+      outline-width: 3px;
+    }
+  }
+}
+
+/* Reduce motion for accessibility */
+@media (prefers-reduced-motion: reduce) {
+  .accent-selector {
+    .accent-color-item,
+    .color-swatch,
+    .color-overlay {
+      transition: none;
+    }
+
+    .accent-color-item.interactive:hover .color-swatch {
+      transform: none;
+    }
+  }
+}
+
+/* Print styles */
+@media print {
+  .accent-selector {
+    .color-overlay {
+      display: none;
+    }
+  }
+}

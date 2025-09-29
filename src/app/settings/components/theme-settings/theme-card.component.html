@@ -1,0 +1,67 @@
+<div class="theme-card" 
+     [class.selected]="isSelected"
+     [class.active]="isActive"
+     (click)="onCardClick()"
+     (keydown)="onCardKeyDown($event)"
+     role="button"
+     tabindex="0"
+     [attr.aria-selected]="isSelected"
+     [attr.aria-pressed]="isSelected">
+
+  <!-- Theme Preview -->
+  <div class="theme-preview">
+    <div class="preview-header" [style.background-color]="variant.accentColors.primary">
+      <div class="preview-nav">
+        <span class="nav-item" [style.background-color]="variant.accentColors.light"></span>
+        <span class="nav-item" [style.background-color]="variant.accentColors.secondary"></span>
+        <span class="nav-item active" [style.background-color]="variant.accentColors.primary"></span>
+      </div>
+    </div>
+    
+    <div class="preview-body">
+      <div class="preview-sidebar" [style.background-color]="variant.accentColors.light">
+        <div class="sidebar-item" [style.background-color]="variant.accentColors.primary"></div>
+        <div class="sidebar-item" [style.background-color]="variant.accentColors.secondary"></div>
+        <div class="sidebar-item" [style.background-color]="variant.accentColors.secondary"></div>
+      </div>
+      
+      <div class="preview-content">
+        <div class="content-card" [style.border-color]="variant.accentColors.secondary">
+          <div class="card-header" [style.background-color]="variant.accentColors.light"></div>
+          <div class="card-body">
+            <div class="content-line primary" [style.background-color]="variant.accentColors.primary"></div>
+            <div class="content-line secondary" [style.background-color]="variant.accentColors.secondary"></div>
+            <div class="content-line success" [style.background-color]="variant.accentColors.success"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Theme Info -->
+  <div class="theme-info">
+    <div class="theme-header">
+      <h6 class="theme-name">{{ variant.name }}</h6>
+      <span class="theme-status" [class.selected]="isSelected" [class.active]="isActive">
+        <i class="bi" [class]="statusIcon"></i>
+        {{ statusText }}
+      </span>
+    </div>
+    
+    <p class="theme-description">{{ variant.description }}</p>
+    
+    <!-- Accent Colors Preview -->
+    <app-accent-selector
+      [accentColors]="variant.accentColors"
+      [readonly]="true"
+      [compact]="true">
+    </app-accent-selector>
+  </div>
+
+  <!-- Selection Overlay -->
+  <div class="selection-overlay" *ngIf="isSelected">
+    <div class="selection-check">
+      <i class="bi bi-check-lg"></i>
+    </div>
+  </div>
+</div>
