@@ -3,7 +3,7 @@ import { isPlatformBrowser } from '@angular/common';
 import { BehaviorSubject, Observable, catchError, map, of, tap } from 'rxjs';
 import { AuthService as ApiAuthService } from '../../api/services/auth.service';
 import { LoginDto, RegisterDto, UserDto } from '../../api/models';
-import { LocalStorageService } from './local-storage.service';
+import { LocalStorageService } from '../../shared/services/local-storage.service';
 
 export interface AuthUser {
   id: string;
@@ -41,10 +41,10 @@ export class AuthService {
           // Store tokens and user data
           const tokenData = response.data;
           if (tokenData.accessToken) {
-            this.localStorageService.setItem(this.TOKEN_KEY, tokenData.accessToken);
+            this.localStorageService.setEncryptedItem(this.TOKEN_KEY, tokenData.accessToken);
           }
           if (tokenData.refreshToken) {
-            this.localStorageService.setItem(this.REFRESH_TOKEN_KEY, tokenData.refreshToken);
+            this.localStorageService.setEncryptedItem(this.REFRESH_TOKEN_KEY, tokenData.refreshToken);
           }
 
           // Get user profile after successful login
@@ -72,10 +72,10 @@ export class AuthService {
           // Store tokens after successful registration
           const tokenData = response.data;
           if (tokenData.accessToken) {
-            this.localStorageService.setItem(this.TOKEN_KEY, tokenData.accessToken);
+            this.localStorageService.setEncryptedItem(this.TOKEN_KEY, tokenData.accessToken);
           }
           if (tokenData.refreshToken) {
-            this.localStorageService.setItem(this.REFRESH_TOKEN_KEY, tokenData.refreshToken);
+            this.localStorageService.setEncryptedItem(this.REFRESH_TOKEN_KEY, tokenData.refreshToken);
           }
 
           // Get user profile after successful registration
@@ -110,12 +110,12 @@ export class AuthService {
 
   getToken(): string | null {
     if (!isPlatformBrowser(this.platformId)) return null;
-    return this.localStorageService.getItem(this.TOKEN_KEY);
+    return this.localStorageService.getEncryptedItem<string>(this.TOKEN_KEY);
   }
 
   getRefreshToken(): string | null {
     if (!isPlatformBrowser(this.platformId)) return null;
-    return this.localStorageService.getItem(this.REFRESH_TOKEN_KEY);
+    return this.localStorageService.getEncryptedItem<string>(this.REFRESH_TOKEN_KEY);
   }
 
   isAuthenticated(): boolean {
@@ -147,7 +147,7 @@ export class AuthService {
           };
 
           // Store user data
-          this.localStorageService.setItem(this.USER_KEY, JSON.stringify(user));
+          this.localStorageService.setItem(this.USER_KEY, user);
           this.currentUserSubject.next(user);
 
           return user;
@@ -164,14 +164,9 @@ export class AuthService {
   private getUserFromStorage(): AuthUser | null {
     if (!isPlatformBrowser(this.platformId)) return null;
 
-    const userData = this.localStorageService.getItem(this.USER_KEY);
+    const userData = this.localStorageService.getItem<AuthUser>(this.USER_KEY);
     if (userData) {
-      try {
-        return JSON.parse(userData) as AuthUser;
-      } catch (error) {
-        console.error('Error parsing stored user data:', error);
-        this.localStorageService.removeItem(this.USER_KEY);
-      }
+      return userData;
     }
     return null;
   }
@@ -197,10 +192,10 @@ export class AuthService {
         if (response.success && response.data && isPlatformBrowser(this.platformId)) {
           const tokenData = response.data;
           if (tokenData.accessToken) {
-            this.localStorageService.setItem(this.TOKEN_KEY, tokenData.accessToken);
+            this.localStorageService.setEncryptedItem(this.TOKEN_KEY, tokenData.accessToken);
           }
           if (tokenData.refreshToken) {
-            this.localStorageService.setItem(this.REFRESH_TOKEN_KEY, tokenData.refreshToken);
+            this.localStorageService.setEncryptedItem(this.REFRESH_TOKEN_KEY, tokenData.refreshToken);
           }
         }
       }),

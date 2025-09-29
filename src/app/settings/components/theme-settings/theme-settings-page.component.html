@@ -1,0 +1,76 @@
+<div class="theme-settings-page">
+  <div class="settings-content">
+    <!-- Loading State -->
+    <div *ngIf="themeService.isLoading()" class="loading-state">
+      <div class="spinner-border text-primary" role="status">
+        <span class="visually-hidden">Loading themes...</span>
+      </div>
+    </div>
+
+    <!-- Error State -->
+    <div *ngIf="themeService.error()" class="error-state">
+      <div class="alert alert-danger" role="alert">
+        <i class="bi bi-exclamation-triangle-fill me-2"></i>
+        {{ themeService.error() }}
+      </div>
+    </div>
+
+    <!-- Theme Settings Content -->
+    <div *ngIf="!themeService.isLoading() && !themeService.error()" class="theme-content">
+      <!-- Header -->
+      <div class="content-header">
+        <i class="bi bi-palette fs-1"></i>
+        <h2 class="mt-2">Appearance</h2>
+        <p>Choose how TaskFlow looks to you. Select a single theme, or sync with your system and automatically switch between day and night themes.</p>
+      </div>
+
+      <!-- Theme Mode Selector -->
+      <div class="theme-mode-section">
+        <app-theme-mode-selector
+          [currentMode]="themeService.userPreferences().themeMode"
+          [syncWithSystem]="themeService.userPreferences().syncWithSystem"
+          [systemPrefersDark]="themeService.systemPrefersDark()"
+          (modeChange)="onThemeModeChange($event)"
+          (systemSyncToggle)="onSystemSyncToggle($event)">
+        </app-theme-mode-selector>
+      </div>
+
+      <!-- Theme Preview Cards -->
+      <div class="theme-previews-section">
+        <div class="preview-cards">
+          <app-theme-preview-card
+            mode="light"
+            [currentVariant]="getLightPreviewVariant()"
+            [isHovered]="isLightHovered">
+          </app-theme-preview-card>
+
+          <app-theme-preview-card
+            mode="dark"
+            [currentVariant]="getDarkPreviewVariant()"
+            [isHovered]="isDarkHovered">
+          </app-theme-preview-card>
+        </div>
+      </div>
+
+      <!-- Theme Colors -->
+      <div class="color-selection-wrapper">
+        <!-- Light Theme Card -->
+        <div class="color-selection-card">
+          <h6 class="section-label">Light theme accents</h6>
+          <app-circular-color-selector [variants]="getLightVariants()"
+            [selectedVariantId]="themeService.userPreferences().lightThemeVariantId" [hoveredVariantId]="hoveredVariantId"
+            (variantSelect)="onLightVariantSelect($event)" (variantHover)="onVariantHover($event, 'light')">
+          </app-circular-color-selector>
+        </div>
+        <!-- Dark Theme Card -->
+        <div class="color-selection-card">
+          <h6 class="section-label">Dark theme accents</h6>
+          <app-circular-color-selector [variants]="getDarkVariants()"
+            [selectedVariantId]="themeService.userPreferences().darkThemeVariantId" [hoveredVariantId]="hoveredVariantId"
+            (variantSelect)="onDarkVariantSelect($event)" (variantHover)="onVariantHover($event, 'dark')">
+          </app-circular-color-selector>
+        </div>
+        </div>
+        </div>
+        </div>
+  </div>

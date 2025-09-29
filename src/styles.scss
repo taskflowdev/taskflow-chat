@@ -1,6 +1,10 @@
 /* You can add global styles to this file, and also import other style files */
 
-// Custom CSS variables for green and black theme
+// ==========================================
+// THEME SYSTEM - CSS Custom Properties
+// ==========================================
+
+// Default theme variables (fallbacks)
 :root {
   --primary-green: #22c55e;
   --dark-green: #16a34a;
@@ -12,18 +16,76 @@
   --light-gray: #f8fafc;
   --medium-gray: #e2e8f0;
   --dark-gray: #64748b;
+
+  // Dynamic theme colors (overridden by ThemeService)
+  --theme-primary: #007bff;
+  --theme-secondary: #6c757d;
+  --theme-success: #198754;
+  --theme-danger: #dc3545;
+  --theme-warning: #ffc107;
+  --theme-info: #0dcaf0;
+  --theme-light: #f8f9fa;
+  --theme-dark: #212529;
+  
+  // Semantic colors that adapt based on theme mode
+  --bs-body-bg: #ffffff;
+  --bs-body-color: #212529;
+  --bs-border-color: #dee2e6;
+  --bs-text-muted: #6c757d;
+  --bs-link-color: var(--theme-primary);
 }
 
-// Global styles for the app
+// Light Mode Theme
+.light-mode {
+  --bs-body-bg: #ffffff;
+  --bs-body-color: #212529;
+  --bs-border-color: #dee2e6;
+  --bs-text-muted: #6c757d;
+  --bs-link-color: var(--theme-primary);
+}
+
+// Dark Mode Theme  
+.dark-mode {
+  --bs-body-bg: #1a1d29;
+  --bs-body-color: #ffffff;
+  --bs-border-color: #495057;
+  --bs-text-muted: #adb5bd;
+  --bs-link-color: var(--theme-primary);
+}
+
+// Neutral Theme (for auth pages)
+.neutral-theme {
+  --bs-body-bg: #f8f9fa;
+  --bs-body-color: #212529;
+  --bs-border-color: #dee2e6;
+  --bs-text-muted: #6c757d;
+  --theme-primary: #6c757d;
+  --theme-secondary: #adb5bd;
+}
+
+// ==========================================
+// GLOBAL BASE STYLES
+// ==========================================
+
+html {
+  background: var(--bs-body-bg);
+  color: var(--bs-body-color);
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
 body {
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  background: var(--light-gray);
+  background: var(--bs-body-bg);
   margin: 0;
   padding: 0;
-  color: var(--primary-black);
+  color: var(--bs-body-color);
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-// Auth form styles
+// ==========================================
+// AUTH FORM STYLES (NEUTRAL THEMED)
+// ==========================================
+
 .auth-container {
   min-height: 100vh;
   display: flex;
@@ -61,7 +123,10 @@ body {
   font-size: 0.9rem;
 }
 
-// Form input groups with floating labels
+// ==========================================
+// THEME-AWARE FORM STYLES
+// ==========================================
+
 .form-floating {
   position: relative;
   margin-bottom: 1rem;
@@ -70,27 +135,99 @@ body {
 .form-floating > .form-control {
   height: calc(3.5rem + 2px);
   padding: 1rem 0.75rem;
-  border: 2px solid var(--medium-gray);
+  border: 2px solid var(--bs-border-color);
   border-radius: 12px;
   font-size: 1rem;
   transition: all 0.3s ease;
-  background: var(--light-gray);
+  background: var(--bs-body-bg);
+  color: var(--bs-body-color);
 }
 
 .form-floating > .form-control:focus {
-  border-color: var(--primary-green);
-  box-shadow: 0 0 0 0.2rem rgba(34, 197, 94, 0.25);
-  background: white;
+  border-color: var(--theme-primary);
+  box-shadow: 0 0 0 0.2rem color-mix(in srgb, var(--theme-primary) 25%, transparent);
+  background: var(--bs-body-bg);
 }
 
 .form-floating > label {
   padding: 1rem 0.75rem;
-  color: var(--dark-gray);
+  color: var(--bs-text-muted);
   font-size: 0.9rem;
   font-weight: 500;
 }
 
-// Password toggle button
+// ==========================================
+// THEME-AWARE BUTTON STYLES
+// ==========================================
+
+.btn-primary {
+  background: var(--theme-primary);
+  border: 1px solid var(--theme-primary);
+  border-radius: 12px;
+  padding: 14px 24px;
+  font-weight: 600;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+  text-transform: none;
+  color: white;
+}
+
+.btn-primary:hover {
+  background: color-mix(in srgb, var(--theme-primary) 85%, black);
+  border-color: color-mix(in srgb, var(--theme-primary) 85%, black);
+  transform: translateY(-1px);
+  box-shadow: 0 8px 25px color-mix(in srgb, var(--theme-primary) 30%, transparent);
+}
+
+.btn-primary:focus {
+  box-shadow: 0 0 0 0.2rem color-mix(in srgb, var(--theme-primary) 50%, transparent);
+}
+
+.btn-primary:disabled {
+  background: var(--bs-border-color);
+  color: var(--bs-text-muted);
+  border-color: var(--bs-border-color);
+  transform: none;
+  box-shadow: none;
+}
+
+.btn-secondary {
+  background: var(--theme-secondary);
+  border: 1px solid var(--theme-secondary);
+  color: white;
+}
+
+.btn-secondary:hover {
+  background: color-mix(in srgb, var(--theme-secondary) 85%, black);
+  border-color: color-mix(in srgb, var(--theme-secondary) 85%, black);
+}
+
+.btn-success {
+  background: var(--theme-success);
+  border: 1px solid var(--theme-success);
+  color: white;
+}
+
+.btn-success:hover {
+  background: color-mix(in srgb, var(--theme-success) 85%, black);
+  border-color: color-mix(in srgb, var(--theme-success) 85%, black);
+}
+
+.btn-danger {
+  background: var(--theme-danger);
+  border: 1px solid var(--theme-danger);
+  color: white;
+}
+
+.btn-danger:hover {
+  background: color-mix(in srgb, var(--theme-danger) 85%, black);
+  border-color: color-mix(in srgb, var(--theme-danger) 85%, black);
+}
+
+// ==========================================
+// THEME-AWARE COMPONENT STYLES
+// ==========================================
+
 .password-toggle {
   position: absolute;
   right: 12px;
@@ -98,7 +235,7 @@ body {
   transform: translateY(-50%);
   background: none;
   border: none;
-  color: var(--dark-gray);
+  color: var(--bs-text-muted);
   cursor: pointer;
   z-index: 10;
   padding: 4px;
@@ -107,82 +244,169 @@ body {
 }
 
 .password-toggle:hover {
-  color: var(--primary-green);
-  background: rgba(34, 197, 94, 0.1);
+  color: var(--theme-primary);
+  background: color-mix(in srgb, var(--theme-primary) 10%, transparent);
 }
 
-// Primary button styling
-.btn-primary {
-  background: linear-gradient(135deg, var(--primary-green) 0%, var(--dark-green) 100%);
-  border: none;
-  border-radius: 12px;
-  padding: 14px 24px;
-  font-weight: 600;
-  font-size: 1rem;
-  transition: all 0.3s ease;
-  text-transform: none;
-}
-
-.btn-primary:hover {
-  background: linear-gradient(135deg, var(--dark-green) 0%, var(--accent-green) 100%);
-  transform: translateY(-1px);
-  box-shadow: 0 8px 25px rgba(34, 197, 94, 0.3);
-}
-
-.btn-primary:focus {
-  box-shadow: 0 0 0 0.2rem rgba(34, 197, 94, 0.5);
-}
-
-.btn-primary:disabled {
-  background: var(--medium-gray);
-  color: var(--dark-gray);
-  transform: none;
-  box-shadow: none;
-}
-
-// Link styling
 .auth-link {
-  color: var(--primary-green);
+  color: var(--theme-primary);
   text-decoration: none;
   font-weight: 600;
   transition: color 0.3s ease;
 }
 
 .auth-link:hover {
-  color: var(--dark-green);
+  color: color-mix(in srgb, var(--theme-primary) 85%, black);
   text-decoration: underline;
 }
 
-// Loading spinner
+// ==========================================
+// ALERT STYLES
+// ==========================================
+
+.alert-danger {
+  border-radius: 12px;
+  border: none;
+  background: color-mix(in srgb, var(--theme-danger) 10%, var(--bs-body-bg));
+  color: var(--theme-danger);
+  font-size: 0.9rem;
+  border-left: 4px solid var(--theme-danger);
+}
+
+.alert-success {
+  border-radius: 12px;
+  border: none;
+  background: color-mix(in srgb, var(--theme-success) 10%, var(--bs-body-bg));
+  color: var(--theme-success);
+  font-size: 0.9rem;
+  border-left: 4px solid var(--theme-success);
+}
+
+.alert-info {
+  border-radius: 12px;
+  border: none;
+  background: color-mix(in srgb, var(--theme-info) 10%, var(--bs-body-bg));
+  color: var(--theme-info);
+  border-left: 4px solid var(--theme-info);
+}
+
+.alert-warning {
+  border-radius: 12px;
+  border: none;
+  background: color-mix(in srgb, var(--theme-warning) 10%, var(--bs-body-bg));
+  color: color-mix(in srgb, var(--theme-warning) 15%, var(--bs-body-color));
+  border-left: 4px solid var(--theme-warning);
+}
+
+// ==========================================
+// CARD AND LAYOUT STYLES
+// ==========================================
+
+.card {
+  border-radius: 16px;
+  border: 1px solid var(--bs-border-color);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  background: var(--bs-body-bg);
+  color: var(--bs-body-color);
+}
+
+.card-body {
+  padding: 1.5rem;
+}
+
+.card-header {
+  background: var(--bs-body-bg);
+  border-bottom: 1px solid var(--bs-border-color);
+}
+
+// ==========================================
+// FORM CONTROLS
+// ==========================================
+
+.form-check-input:checked {
+  background-color: var(--theme-primary);
+  border-color: var(--theme-primary);
+}
+
+.form-check-input:focus {
+  border-color: var(--theme-primary);
+  outline: 0;
+  box-shadow: 0 0 0 0.2rem color-mix(in srgb, var(--theme-primary) 25%, transparent);
+}
+
+// ==========================================
+// DROPDOWN STYLES
+// ==========================================
+
+.dropdown-toggle::after {
+  margin-left: 0.5rem;
+}
+
+.dropdown-menu {
+  border-radius: 12px;
+  border: 1px solid var(--bs-border-color);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+  padding: 0.5rem 0;
+  background: var(--bs-body-bg);
+}
+
+.dropdown-item {
+  padding: 0.5rem 1rem;
+  transition: all 0.2s ease;
+  color: var(--bs-body-color);
+}
+
+.dropdown-item:hover {
+  background-color: color-mix(in srgb, var(--theme-primary) 10%, transparent);
+  color: var(--theme-primary);
+}
+
+.dropdown-item:focus {
+  background-color: color-mix(in srgb, var(--theme-primary) 15%, transparent);
+  color: var(--theme-primary);
+}
+
+// ==========================================
+// UTILITY STYLES
+// ==========================================
+
+.spinner-border {
+  color: var(--theme-primary);
+}
+
 .spinner-border-sm {
   width: 1rem;
   height: 1rem;
 }
 
-// Error alerts
-.alert-danger {
-  border-radius: 12px;
-  border: none;
-  background: #fef2f2;
-  color: #dc2626;
-  font-size: 0.9rem;
-  border-left: 4px solid #dc2626;
+.text-success {
+  color: var(--theme-success) !important;
 }
 
-// Success alerts
-.alert-success {
-  border-radius: 12px;
-  border: none;
-  background: #f0fdf4;
-  color: var(--accent-green);
-  font-size: 0.9rem;
-  border-left: 4px solid var(--primary-green);
+.text-danger {
+  color: var(--theme-danger) !important;
 }
 
-// Chat container styles - removed to avoid conflicts with component-level styles
-// Individual chat components now handle their own styling
+.text-warning {
+  color: var(--theme-warning) !important;
+}
 
-// Responsive design
+.text-info {
+  color: var(--theme-info) !important;
+}
+
+.text-muted {
+  color: var(--bs-text-muted) !important;
+}
+
+i.bi {
+  line-height: 1;
+}
+
+// ==========================================
+// RESPONSIVE DESIGN
+// ==========================================
+
 @media (max-width: 576px) {
   .auth-card {
     padding: 1.5rem;
@@ -193,71 +417,45 @@ body {
   .auth-container {
     padding: 10px;
   }
-  
-  .chat-header {
-    padding: 1rem;
+}
+
+// ==========================================
+// ACCESSIBILITY SUPPORT
+// ==========================================
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    transition: none !important;
+    animation-duration: 0.01ms !important;
+  }
+}
+
+@media (prefers-contrast: high) {
+  :root {
+    --bs-border-color: #000000;
   }
   
-  .chat-content {
-    padding: 1rem;
+  .dark-mode {
+    --bs-border-color: #ffffff;
+  }
+  
+  .card,
+  .form-control,
+  .btn {
+    border-width: 2px;
   }
 }
 
-// Additional component styles for better UI
-.card {
-  border-radius: 16px;
-  border: none;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-}
+// ==========================================
+// PRINT STYLES
+// ==========================================
 
-.card-body {
-  padding: 1.5rem;
-}
-
-.form-check-input:checked {
-  background-color: var(--primary-green);
-  border-color: var(--primary-green);
-}
-
-.form-check-input:focus {
-  border-color: var(--primary-green);
-  outline: 0;
-  box-shadow: 0 0 0 0.2rem rgba(34, 197, 94, 0.25);
-}
-
-// Dropdown improvements
-.dropdown-toggle::after {
-  margin-left: 0.5rem;
-}
-
-.dropdown-menu {
-  border-radius: 12px;
-  border: none;
-  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
-  padding: 0.5rem 0;
-}
-
-.dropdown-item {
-  padding: 0.5rem 1rem;
-  transition: all 0.2s ease;
-}
-
-.dropdown-item:hover {
-  background-color: rgba(34, 197, 94, 0.1);
-  color: var(--primary-green);
-}
-
-// Loading spinner color
-.spinner-border {
-  color: var(--primary-green);
-}
-
-// Text colors
-.text-success {
-  color: var(--primary-green) !important;
-}
-
-// Icon styling
-i.bi {
-  line-height: 1;
+@media print {
+  .theme-preview,
+  .accent-selector,
+  .theme-mode-selector {
+    display: none !important;
+  }
 }

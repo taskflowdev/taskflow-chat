@@ -1,0 +1,127 @@
+.theme-mode-selector {
+
+  p {
+    font-size: 14px;
+  }
+
+  .card-body {
+    padding: 20px;
+  }
+
+  .theme-mode-option {
+    display: flex;
+    flex-direction: column;
+    align-items: start  ;
+    padding: 0.8rem;
+    border: 2px solid var(--bs-border-color);
+    border-radius: 0.5rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    background: var(--bs-body-bg);
+
+    &:hover {
+      border-color: var(--theme-primary);
+      background: color-mix(in srgb, var(--theme-primary) 5%, var(--bs-body-bg));
+    }
+
+    &.active {
+      border-color: var(--theme-primary);
+      background: color-mix(in srgb, var(--theme-primary) 10%, var(--bs-body-bg));
+      box-shadow: 0 0 0 0.125rem color-mix(in srgb, var(--theme-primary) 25%, transparent);
+
+      .theme-mode-icon i {
+        color: var(--theme-primary);
+      }
+
+      .theme-mode-title {
+        color: var(--theme-primary);
+        font-weight: 600;
+      }
+    }
+
+    &:focus-visible {
+      outline: 2px solid var(--theme-primary);
+      outline-offset: 2px;
+    }
+
+    .theme-mode-icon {
+      margin-right: 0.75rem;
+      font-size: 1.4rem;
+      margin-bottom: 5px;
+
+      i {
+        color: var(--bs-text-muted);
+        transition: color 0.2s ease;
+      }
+    }
+
+    .theme-mode-content {
+      flex: 1;
+
+      .theme-mode-title {
+        margin-bottom: 0.125rem;
+        font-size: 1rem;
+        font-weight: 500;
+        color: var(--bs-body-color);
+      }
+    }
+
+    .theme-mode-radio {
+      input[type="radio"] {
+        margin: 0;
+        cursor: pointer;
+        display: none;
+      }
+    }
+  }
+
+  .sync-alert {
+    i {
+      color: var(--theme-primary);
+    }
+  }
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .theme-mode-selector {
+    .theme-mode-option {
+      flex-direction: column;
+      text-align: center;
+      gap: 0.5rem;
+
+      .theme-mode-icon {
+        margin-right: 0;
+        margin-bottom: 0.5rem;
+      }
+
+      .theme-mode-content {
+        margin-bottom: 0.5rem;
+      }
+    }
+  }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .theme-mode-selector {
+    .theme-mode-option {
+      border-width: 3px;
+
+      &.active {
+        border-width: 3px;
+        box-shadow: 0 0 0 0.25rem var(--theme-primary);
+      }
+    }
+  }
+}
+
+/* Reduce motion for accessibility */
+@media (prefers-reduced-motion: reduce) {
+  .theme-mode-selector {
+    .theme-mode-option,
+    .theme-mode-icon i {
+      transition: none;
+    }
+  }
+}
