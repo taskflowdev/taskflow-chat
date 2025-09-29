@@ -1,0 +1,146 @@
+.theme-preview-card {
+  border: 1px solid var(--bs-border-color);
+  border-radius: 8px;
+  overflow: hidden;
+  background: var(--bs-body-bg);
+  transition: all 0.2s ease;
+
+  &:hover {
+    border-color: var(--theme-primary);
+    box-shadow: 0 2px 8px color-mix(in srgb, var(--theme-primary) 25%, transparent);
+  }
+
+  .card-header {
+    padding: 16px;
+    background: var(--bs-body-bg);
+    border-bottom: 1px solid var(--bs-border-color);
+
+    .mode-indicator {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--bs-body-color);
+
+      i {
+        font-size: 16px;
+        color: var(--theme-primary);
+      }
+    }
+  }
+
+  .card-preview {
+    padding: 20px;
+    background: color-mix(in srgb, var(--bs-border-color) 10%, var(--bs-body-bg));
+
+    .mock-window {
+      width: 100%;
+      height: 140px;
+      border-radius: 6px;
+      overflow: hidden;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      border: 1px solid color-mix(in srgb, var(--bs-border-color) 50%, transparent);
+
+      .mock-header {
+        height: 24px;
+        display: flex;
+        align-items: center;
+        padding: 0 8px;
+        position: relative;
+
+        .mock-controls {
+          display: flex;
+          gap: 4px;
+
+          .control {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+          }
+        }
+
+        .mock-title {
+          position: absolute;
+          left: 50%;
+          transform: translateX(-50%);
+          font-size: 10px;
+          font-weight: 500;
+          color: white;
+        }
+      }
+
+      .mock-content {
+        display: flex;
+        height: calc(100% - 24px);
+
+        .mock-sidebar {
+          width: 40px;
+          padding: 8px 6px;
+          display: flex;
+          flex-direction: column;
+          gap: 4px;
+
+          .mock-nav-item {
+            height: 6px;
+            border-radius: 3px;
+            background: color-mix(in srgb, var(--bs-border-color) 30%, transparent);
+
+            &.active {
+              opacity: 1;
+            }
+
+            &:not(.active) {
+              opacity: 0.5;
+            }
+          }
+        }
+
+        .mock-main {
+          flex: 1;
+          padding: 8px;
+
+          .mock-card {
+            width: 100%;
+            height: 60px;
+            border-radius: 4px;
+            padding: 8px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+
+            .mock-text-line {
+              height: 3px;
+              border-radius: 2px;
+              margin-bottom: 4px;
+              opacity: 0.3;
+
+              &:last-child {
+                margin-bottom: 0;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+/* Dark theme specific styling */
+[data-theme="dark"] .theme-preview-card {
+  .mock-window {
+    .mock-content {
+      .mock-sidebar {
+        .mock-nav-item {
+          background: color-mix(in srgb, white 20%, transparent);
+        }
+      }
+
+      .mock-main {
+        .mock-card {
+          .mock-text-line {
+            background: color-mix(in srgb, white 30%, transparent) !important;
+          }
+        }
+      }
+    }
+  }
+}
