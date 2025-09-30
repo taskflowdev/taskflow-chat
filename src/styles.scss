@@ -1,7 +1,9 @@
 /* You can add global styles to this file, and also import other style files */
 
-// Custom CSS variables for green and black theme
+// Default theme tokens (Light theme defaults)
+// These will be overridden by the ThemeService when themes are loaded from API
 :root {
+  // Old variables kept for backward compatibility
   --primary-green: #22c55e;
   --dark-green: #16a34a;
   --light-green: #4ade80;
@@ -12,18 +14,44 @@
   --light-gray: #f8fafc;
   --medium-gray: #e2e8f0;
   --dark-gray: #64748b;
+
+  // Theme tokens (Default Light Theme)
+  --BackgroundColor: #ffffff;
+  --SecondaryBackgroundColor: #f8fafc;
+  --TextColor: #0f172a;
+  --TextMutedColor: #64748b;
+  --LinkColor: #3b82f6;
+  --ButtonPrimary: #22c55e;
+  --ButtonPrimaryText: #ffffff;
+  --ButtonSecondary: #e5e7eb;
+  --ButtonSecondaryText: #0f172a;
+  --IconColor: #64748b;
+  --BadgeSuccess: #22c55e;
+  --BadgeWarning: #f59e0b;
+  --BadgeError: #ef4444;
+  --ToastSuccess: #22c55e;
+  --ToastWarning: #f59e0b;
+  --ToastError: #ef4444;
+  --NavbarBackground: #000000;
+  --NavbarText: #ffffff;
+  --NavbarBorder: #444444;
+  --BorderColor: #e5e7eb;
+
+  // Smooth transitions for theme changes
+  transition: background-color 0.25s ease-in-out, color 0.25s ease-in-out;
 }
 
 // Global styles for the app
 body {
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  background: var(--light-gray);
+  background: var(--BackgroundColor, var(--light-gray));
   margin: 0;
   padding: 0;
-  color: var(--primary-black);
+  color: var(--TextColor, var(--primary-black));
+  transition: all 0.25s ease-in-out;
 }
 
-// Auth form styles
+// Auth form styles - kept separate from theme system
 .auth-container {
   min-height: 100vh;
   display: flex;

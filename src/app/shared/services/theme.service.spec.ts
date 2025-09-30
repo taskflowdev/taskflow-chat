@@ -18,11 +18,20 @@ describe('ThemeService', () => {
       'apiThemesUserEffectiveGet'
     ]);
 
+    // Set default return values
+    mockThemesService.apiThemesGet.and.returnValue(of({ success: true, data: [] }));
+    mockThemesService.apiThemesUserGet.and.returnValue(of({ success: true, data: null }));
+    mockThemesService.apiThemesUserPost.and.returnValue(of({ success: true, data: null }));
+    mockThemesService.apiThemesUserEffectiveGet.and.returnValue(of({ success: true, data: null }));
+
     mockLocalStorageService = jasmine.createSpyObj('LocalStorageService', [
       'getItem',
       'setItem',
       'removeItem'
     ]);
+
+    // Default localStorage behavior
+    mockLocalStorageService.getItem.and.returnValue(null);
 
     TestBed.configureTestingModule({
       providers: [
