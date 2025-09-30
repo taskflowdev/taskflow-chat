@@ -5,6 +5,7 @@ import { Subscription } from 'rxjs';
 import { AuthService, AuthUser } from '../../../auth/services/auth.service';
 import { NavLinksComponent, NavLink } from './components/nav-links/nav-links.component';
 import { UserDropdownComponent, DropdownItem } from './components/user-dropdown/user-dropdown.component';
+import { ThemeToggleComponent } from '../theme/theme-toggle.component';
 
 @Component({
   selector: 'app-navbar',
@@ -13,7 +14,8 @@ import { UserDropdownComponent, DropdownItem } from './components/user-dropdown/
     CommonModule,
     RouterModule,
     NavLinksComponent,
-    UserDropdownComponent
+    UserDropdownComponent,
+    ThemeToggleComponent
   ],
   templateUrl: './navbar.component.html',
   styleUrls: ['./navbar.component.scss']
@@ -25,7 +27,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
   // Configuration for nav links
   navLinks: NavLink[] = [
     {
-      path: '/chat',
+      path: '/chats',
       label: 'Chats',
       icon: 'bi-chat-quote',
       title: 'Chats'
@@ -48,7 +50,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
     {
       label: 'Settings',
       icon: 'bi-gear',
-      href: '#'
+      href: '/settings'
     },
     {
       divider: true,
@@ -90,6 +92,9 @@ export class NavbarComponent implements OnInit, OnDestroy {
         break;
       default:
         // Handle other actions as needed
+        if (item.href) {
+          this.router.navigate([item.href]);
+        }
         break;
     }
   }

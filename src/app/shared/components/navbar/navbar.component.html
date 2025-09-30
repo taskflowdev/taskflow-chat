@@ -14,8 +14,9 @@
       <app-nav-links [navLinks]="navLinks"></app-nav-links>
     </div>
 
-    <!-- Right: User Dropdown - Now using reusable component -->
-    <div class="user-dropdown-container">
+    <!-- Right: Theme Toggle & User Dropdown -->
+    <div class="navbar-actions">
+      <app-theme-toggle></app-theme-toggle>
       <app-user-dropdown [user]="user" [dropdownItems]="userDropdownItems" (itemClick)="onDropdownItemClick($event)">
       </app-user-dropdown>
     </div>
