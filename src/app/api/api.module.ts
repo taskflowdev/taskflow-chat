@@ -7,11 +7,11 @@ import { HttpClient } from '@angular/common/http';
 import { ApiConfiguration, ApiConfigurationParams } from './api-configuration';
 
 import { AuthService } from './services/auth.service';
+import { DynamicThemesService } from './services/dynamic-themes.service';
 import { GroupsService } from './services/groups.service';
 import { HealthService } from './services/health.service';
 import { MessageMetadataService } from './services/message-metadata.service';
 import { MessagesService } from './services/messages.service';
-import { ThemesService } from './services/themes.service';
 
 /**
  * Module that provides all services and configuration.
@@ -22,11 +22,11 @@ import { ThemesService } from './services/themes.service';
   declarations: [],
   providers: [
     AuthService,
+    DynamicThemesService,
     GroupsService,
     HealthService,
     MessageMetadataService,
     MessagesService,
-    ThemesService,
     ApiConfiguration
   ],
 })
