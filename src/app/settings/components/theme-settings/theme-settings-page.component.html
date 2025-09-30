@@ -27,7 +27,7 @@
       <!-- Theme Mode Selector -->
       <div class="theme-mode-section">
         <app-theme-mode-selector
-          [currentMode]="themeService.userPreferences().themeMode"
+          [currentMode]="themeService.userPreferences().currentMode"
           [syncWithSystem]="themeService.userPreferences().syncWithSystem"
           [systemPrefersDark]="themeService.systemPrefersDark()"
           (modeChange)="onThemeModeChange($event)"

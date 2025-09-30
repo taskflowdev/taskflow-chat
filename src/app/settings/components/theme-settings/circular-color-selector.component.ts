@@ -53,6 +53,6 @@ export class CircularColorSelectorComponent {
   }
 
   isDefaultVariant(variant: ThemeVariant): boolean {
-    return variant.description.includes('default');
+    return variant.isDefault;
   }
 }

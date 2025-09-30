@@ -33,24 +33,45 @@
   --bs-border-color: #dee2e6;
   --bs-text-muted: #6c757d;
   --bs-link-color: var(--theme-primary);
+
+  // Dynamic theme tokens from API (fallback values)
+  // These will be overridden by ThemeService
+  --background-color: #ffffff;
+  --secondary-background-color: #f8f9fa;
+  --text-color: #212529;
+  --text-muted-color: #6c757d;
+  --link-color: #007bff;
+  --button-primary: #007bff;
+  --button-primary-text: #ffffff;
+  --button-secondary: #6c757d;
+  --button-secondary-text: #ffffff;
+  --icon-color: #212529;
+  --badge-success: #198754;
+  --badge-danger: #dc3545;
+  --badge-warning: #ffc107;
+  --toast-warning: #ffc107;
+  --toast-error: #dc3545;
+  --toast-success: #198754;
+  --accent-primary: #007bff;
+  --accent-secondary: #6c757d;
 }
 
 // Light Mode Theme
 .light-mode {
-  --bs-body-bg: #ffffff;
-  --bs-body-color: #212529;
-  --bs-border-color: #dee2e6;
-  --bs-text-muted: #6c757d;
-  --bs-link-color: var(--theme-primary);
+  --bs-body-bg: var(--background-color, #ffffff);
+  --bs-body-color: var(--text-color, #212529);
+  --bs-border-color: var(--border-color, #dee2e6);
+  --bs-text-muted: var(--text-muted-color, #6c757d);
+  --bs-link-color: var(--link-color, var(--theme-primary));
 }
 
 // Dark Mode Theme  
 .dark-mode {
-  --bs-body-bg: #1a1d29;
-  --bs-body-color: #ffffff;
-  --bs-border-color: #495057;
-  --bs-text-muted: #adb5bd;
-  --bs-link-color: var(--theme-primary);
+  --bs-body-bg: var(--background-color, #1a1d29);
+  --bs-body-color: var(--text-color, #ffffff);
+  --bs-border-color: var(--border-color, #495057);
+  --bs-text-muted: var(--text-muted-color, #adb5bd);
+  --bs-link-color: var(--link-color, var(--theme-primary));
 }
 
 // Neutral Theme (for auth pages)

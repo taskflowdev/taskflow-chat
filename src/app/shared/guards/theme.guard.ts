@@ -52,6 +52,9 @@ export class ThemeGuard implements CanActivate {
     root.style.setProperty('--theme-light', '#f8f9fa');
     root.style.setProperty('--theme-dark', '#212529');
     
+    root.style.setProperty('--background-color', '#f8f9fa');
+    root.style.setProperty('--text-color', '#212529');
+    
     document.documentElement.setAttribute('data-theme-variant', 'neutral');
   }
 
@@ -60,5 +63,6 @@ export class ThemeGuard implements CanActivate {
     
     document.documentElement.classList.remove('neutral-theme');
     // The ThemeService will handle reapplying the user's theme
+    // Note: This happens automatically because the theme is cached and applied on init
   }
 }
