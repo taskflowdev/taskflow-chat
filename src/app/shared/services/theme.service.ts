@@ -13,6 +13,11 @@ import {
   UserThemePreferencesDto,
   AccentColors 
 } from '../models/theme.models';
+import { ThemesService } from '../../api/services/themes.service';
+import { AuthService } from '../../api/services/auth.service';
+import { UserThemeDto } from '../../api/models/user-theme-dto';
+import { UpdateUserThemeDto } from '../../api/models/update-user-theme-dto';
+import { UpdateThemeSyncDto } from '../../api/models/update-theme-sync-dto';
 
 @Injectable({
   providedIn: 'root'
@@ -20,7 +25,10 @@ import {
 export class ThemeService {
   private readonly httpClient = inject(HttpClient);
   private readonly localStorageService = inject(LocalStorageService);
+  private readonly themesApiService = inject(ThemesService);
+  private readonly authService = inject(AuthService);
   private readonly THEME_PREFERENCES_KEY = 'theme-preferences';
+  private currentUserId: string | null = null;
 
   // Default theme data - would normally come from API
   private readonly defaultThemes: Theme[] = [
@@ -199,33 +207,78 @@ export class ThemeService {
     mediaQuery.addEventListener('change', handler);
   }
 
-  private initializeTheme(): void {
-    // In a real app, this would load from storage or API
-    this.loadUserPreferences().subscribe();
+  private async initializeTheme(): Promise<void> {
+    try {
+      // Get current user to set userId
+      const userResponse = await this.authService.apiAuthMeGet().toPromise();
+      if (userResponse?.data?.id) {
+        this.currentUserId = userResponse.data.id;
+        // Load user preferences from API
+        this.loadUserPreferences().subscribe();
+      } else {
+        // Fallback to local storage if not authenticated
+        this.loadLocalPreferences();
+      }
+    } catch (error) {
+      console.warn('Could not load user data, using local preferences:', error);
+      this.loadLocalPreferences();
+    }
+  }
+
+  private loadLocalPreferences(): void {
+    const storedPrefs = this.getStoredPreferences();
+    this._state.update(state => ({
+      ...state,
+      userPreferences: storedPrefs
+    }));
+    this.updateCurrentTheme(storedPrefs);
   }
 
   public loadThemes(): Observable<Theme[]> {
     this._state.update(state => ({ ...state, isLoading: true, error: null }));
     
-    // In a real implementation, this would call the API
-    // return this.httpClient.get<ThemeApiResponse>('/api/themes')
-    
-    return of({ themes: this.defaultThemes }).pipe(
-      map(response => response.themes),
-      tap(themes => {
+    return this.themesApiService.apiThemesGet$Json().pipe(
+      map(response => {
+        // Transform API response to our internal format
+        const themes: Theme[] = response.data?.map(apiTheme => ({
+          id: apiTheme.id || '',
+          name: apiTheme.name || '',
+          mode: apiTheme.isDarkTheme ? 'dark' : 'light',
+          isDefault: apiTheme.isBuiltIn || false,
+          variants: apiTheme.accentVariants?.map((accent) => ({
+            id: accent.id || '',
+            name: accent.name || '',
+            description: accent.isDefault ? 'Default accent' : `${accent.name} accent`,
+            accentColors: {
+              primary: accent.primaryAccentColor || '#007bff',
+              secondary: accent.secondaryAccentColor || '#6c757d',
+              success: accent.successColor || '#198754',
+              danger: accent.errorColor || '#dc3545',
+              warning: accent.warningColor || '#ffc107',
+              info: accent.iconColor || '#0dcaf0',
+              light: '#f8f9fa',
+              dark: '#212529'
+            }
+          })) || []
+        })) || this.defaultThemes;
+        
         this._state.update(state => ({
           ...state,
           availableThemes: themes,
           isLoading: false
         }));
+        
+        return themes;
       }),
       catchError(error => {
+        console.warn('Failed to load themes from API, using defaults:', error);
         this._state.update(state => ({
           ...state,
+          availableThemes: this.defaultThemes,
           isLoading: false,
           error: 'Failed to load themes'
         }));
-        return of([]);
+        return of(this.defaultThemes);
       })
     );
   }
@@ -233,26 +286,50 @@ export class ThemeService {
   public loadUserPreferences(): Observable<UserThemePreferences> {
     this._state.update(state => ({ ...state, isLoading: true, error: null }));
     
-    // In a real implementation, this would call the API
-    // return this.httpClient.get<UserThemePreferencesDto>('/api/users/me/theme')
-    
-    const storedPrefs = this.getStoredPreferences();
-    return of(storedPrefs).pipe(
-      tap(preferences => {
+    if (!this.currentUserId) {
+      // Fallback to local storage if no user ID
+      const storedPrefs = this.getStoredPreferences();
+      this._state.update(state => ({
+        ...state,
+        userPreferences: storedPrefs,
+        isLoading: false
+      }));
+      this.updateCurrentTheme(storedPrefs);
+      return of(storedPrefs);
+    }
+
+    return this.themesApiService.apiThemesUsersUserIdGet$Json({ userId: this.currentUserId }).pipe(
+      map(response => {
+        const apiData = response.data;
+        const preferences: UserThemePreferences = {
+          lightThemeVariantId: apiData?.lightAccentId || 'light-default',
+          darkThemeVariantId: apiData?.darkAccentId || 'dark-default',
+          themeMode: apiData?.syncWithSystem ? ThemeMode.SYSTEM : 
+                    (this.systemPrefersDark() ? ThemeMode.DARK : ThemeMode.LIGHT),
+          syncWithSystem: apiData?.syncWithSystem || false
+        };
+        
         this._state.update(state => ({
           ...state,
           userPreferences: preferences,
           isLoading: false
         }));
         this.updateCurrentTheme(preferences);
+        this.storePreferences(preferences); // Cache locally
+        
+        return preferences;
       }),
       catchError(error => {
+        console.warn('Failed to load user preferences from API, using local storage:', error);
+        const storedPrefs = this.getStoredPreferences();
         this._state.update(state => ({
           ...state,
+          userPreferences: storedPrefs,
           isLoading: false,
           error: 'Failed to load user preferences'
         }));
-        return of(this.defaultPreferences);
+        this.updateCurrentTheme(storedPrefs);
+        return of(storedPrefs);
       })
     );
   }
@@ -284,31 +361,97 @@ export class ThemeService {
       themeMode: enabled ? ThemeMode.SYSTEM : (this.systemPrefersDark() ? ThemeMode.DARK : ThemeMode.LIGHT)
     };
 
-    return this.saveUserPreferences(newPreferences);
+    // Store locally first
+    this.storePreferences(newPreferences);
+
+    // Update API if user is authenticated
+    if (this.currentUserId && enabled !== this.userPreferences().syncWithSystem) {
+      const syncDto: UpdateThemeSyncDto = {
+        syncWithSystem: enabled
+      };
+
+      return this.themesApiService.apiThemesUsersUserIdSyncPut$Json({
+        userId: this.currentUserId,
+        body: syncDto
+      }).pipe(
+        tap(() => {
+          this._state.update(state => ({
+            ...state,
+            userPreferences: newPreferences,
+            isLoading: false
+          }));
+          this.updateCurrentTheme(newPreferences);
+        }),
+        map(() => newPreferences),
+        catchError(error => {
+          console.warn('Failed to sync system preference to API:', error);
+          // Still apply locally even if API fails
+          this._state.update(state => ({
+            ...state,
+            userPreferences: newPreferences,
+            error: 'Failed to sync system preference'
+          }));
+          this.updateCurrentTheme(newPreferences);
+          return of(newPreferences);
+        })
+      );
+    }
+
+    // No API call needed, just return the updated preferences
+    this._state.update(state => ({
+      ...state,
+      userPreferences: newPreferences
+    }));
+    this.updateCurrentTheme(newPreferences);
+    return of(newPreferences);
   }
 
   private saveUserPreferences(preferences: UserThemePreferences): Observable<UserThemePreferences> {
     this._state.update(state => ({ ...state, isLoading: true, error: null }));
     
-    // In a real implementation, this would call the API
-    // return this.httpClient.put<UserThemePreferencesDto>('/api/users/me/theme', preferences)
+    // Always store locally first as a fallback
+    this.storePreferences(preferences);
     
-    return of(preferences).pipe(
-      tap(prefs => {
-        this.storePreferences(prefs);
+    if (!this.currentUserId) {
+      // If no user ID, just use local storage
+      this._state.update(state => ({
+        ...state,
+        userPreferences: preferences,
+        isLoading: false
+      }));
+      this.updateCurrentTheme(preferences);
+      return of(preferences);
+    }
+
+    const updateDto: UpdateUserThemeDto = {
+      lightThemeId: 'light', // Default light theme ID
+      lightAccentId: preferences.lightThemeVariantId,
+      darkThemeId: 'dark', // Default dark theme ID
+      darkAccentId: preferences.darkThemeVariantId
+    };
+
+    return this.themesApiService.apiThemesUsersUserIdPut$Json({ 
+      userId: this.currentUserId, 
+      body: updateDto 
+    }).pipe(
+      tap(() => {
         this._state.update(state => ({
           ...state,
-          userPreferences: prefs,
+          userPreferences: preferences,
           isLoading: false
         }));
-        this.updateCurrentTheme(prefs);
+        this.updateCurrentTheme(preferences);
       }),
+      map(() => preferences),
       catchError(error => {
+        console.warn('Failed to save preferences to API, kept local changes:', error);
         this._state.update(state => ({
           ...state,
           isLoading: false,
           error: 'Failed to save preferences'
         }));
+        // Still apply locally even if API fails
+        this.updateCurrentTheme(preferences);
         return of(preferences);
       })
     );
@@ -349,6 +492,7 @@ export class ThemeService {
     document.documentElement.classList.add(`${effectiveMode}-mode`);
     
     // Apply CSS custom properties for accent colors
+    // These should ONLY affect icons, error messages, and badges
     const root = document.documentElement;
     Object.entries(currentTheme.accentColors).forEach(([key, value]) => {
       root.style.setProperty(`--theme-${key}`, value);
@@ -356,6 +500,14 @@ export class ThemeService {
     
     // Set data attribute for theme variant
     document.documentElement.setAttribute('data-theme-variant', currentTheme.id);
+    
+    // Set specific accent properties that should be restricted
+    // These will be used only for icons, error messages, and badges
+    root.style.setProperty('--accent-primary', currentTheme.accentColors.primary);
+    root.style.setProperty('--accent-danger', currentTheme.accentColors.danger);
+    root.style.setProperty('--accent-success', currentTheme.accentColors.success);
+    root.style.setProperty('--accent-warning', currentTheme.accentColors.warning);
+    root.style.setProperty('--accent-info', currentTheme.accentColors.info);
   }
 
   private getStoredPreferences(): UserThemePreferences {

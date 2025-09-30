@@ -17,22 +17,30 @@
   --medium-gray: #e2e8f0;
   --dark-gray: #64748b;
 
-  // Dynamic theme colors (overridden by ThemeService)
-  --theme-primary: #007bff;
-  --theme-secondary: #6c757d;
-  --theme-success: #198754;
-  --theme-danger: #dc3545;
-  --theme-warning: #ffc107;
-  --theme-info: #0dcaf0;
-  --theme-light: #f8f9fa;
-  --theme-dark: #212529;
+  // Base theme colors (not affected by accent changes)
+  --theme-base-primary: #007bff;
+  --theme-base-secondary: #6c757d;
+  --theme-base-success: #198754;
+  --theme-base-danger: #dc3545;
+  --theme-base-warning: #ffc107;
+  --theme-base-info: #0dcaf0;
+  --theme-base-light: #f8f9fa;
+  --theme-base-dark: #212529;
   
-  // Semantic colors that adapt based on theme mode
+  // Accent colors (ONLY for icons, badges, error messages)
+  --accent-primary: #007bff;
+  --accent-secondary: #6c757d;
+  --accent-success: #198754;
+  --accent-danger: #dc3545;
+  --accent-warning: #ffc107;
+  --accent-info: #0dcaf0;
+  
+  // Semantic colors that adapt based on theme mode (NOT affected by accents)
   --bs-body-bg: #ffffff;
   --bs-body-color: #212529;
   --bs-border-color: #dee2e6;
   --bs-text-muted: #6c757d;
-  --bs-link-color: var(--theme-primary);
+  --bs-link-color: #007bff;
 }
 
 // Light Mode Theme
@@ -41,7 +49,7 @@
   --bs-body-color: #212529;
   --bs-border-color: #dee2e6;
   --bs-text-muted: #6c757d;
-  --bs-link-color: var(--theme-primary);
+  --bs-link-color: #007bff;
 }
 
 // Dark Mode Theme  
@@ -50,7 +58,7 @@
   --bs-body-color: #ffffff;
   --bs-border-color: #495057;
   --bs-text-muted: #adb5bd;
-  --bs-link-color: var(--theme-primary);
+  --bs-link-color: #007bff;
 }
 
 // Neutral Theme (for auth pages)
@@ -144,8 +152,8 @@ body {
 }
 
 .form-floating > .form-control:focus {
-  border-color: var(--theme-primary);
-  box-shadow: 0 0 0 0.2rem color-mix(in srgb, var(--theme-primary) 25%, transparent);
+  border-color: var(--theme-base-primary);
+  box-shadow: 0 0 0 0.2rem color-mix(in srgb, var(--theme-base-primary) 25%, transparent);
   background: var(--bs-body-bg);
 }
 
@@ -161,8 +169,8 @@ body {
 // ==========================================
 
 .btn-primary {
-  background: var(--theme-primary);
-  border: 1px solid var(--theme-primary);
+  background: var(--theme-base-primary);
+  border: 1px solid var(--theme-base-primary);
   border-radius: 12px;
   padding: 14px 24px;
   font-weight: 600;
@@ -173,14 +181,14 @@ body {
 }
 
 .btn-primary:hover {
-  background: color-mix(in srgb, var(--theme-primary) 85%, black);
-  border-color: color-mix(in srgb, var(--theme-primary) 85%, black);
+  background: color-mix(in srgb, var(--theme-base-primary) 85%, black);
+  border-color: color-mix(in srgb, var(--theme-base-primary) 85%, black);
   transform: translateY(-1px);
-  box-shadow: 0 8px 25px color-mix(in srgb, var(--theme-primary) 30%, transparent);
+  box-shadow: 0 8px 25px color-mix(in srgb, var(--theme-base-primary) 30%, transparent);
 }
 
 .btn-primary:focus {
-  box-shadow: 0 0 0 0.2rem color-mix(in srgb, var(--theme-primary) 50%, transparent);
+  box-shadow: 0 0 0 0.2rem color-mix(in srgb, var(--theme-base-primary) 50%, transparent);
 }
 
 .btn-primary:disabled {
@@ -192,36 +200,36 @@ body {
 }
 
 .btn-secondary {
-  background: var(--theme-secondary);
-  border: 1px solid var(--theme-secondary);
+  background: var(--theme-base-secondary);
+  border: 1px solid var(--theme-base-secondary);
   color: white;
 }
 
 .btn-secondary:hover {
-  background: color-mix(in srgb, var(--theme-secondary) 85%, black);
-  border-color: color-mix(in srgb, var(--theme-secondary) 85%, black);
+  background: color-mix(in srgb, var(--theme-base-secondary) 85%, black);
+  border-color: color-mix(in srgb, var(--theme-base-secondary) 85%, black);
 }
 
 .btn-success {
-  background: var(--theme-success);
-  border: 1px solid var(--theme-success);
+  background: var(--theme-base-success);
+  border: 1px solid var(--theme-base-success);
   color: white;
 }
 
 .btn-success:hover {
-  background: color-mix(in srgb, var(--theme-success) 85%, black);
-  border-color: color-mix(in srgb, var(--theme-success) 85%, black);
+  background: color-mix(in srgb, var(--theme-base-success) 85%, black);
+  border-color: color-mix(in srgb, var(--theme-base-success) 85%, black);
 }
 
 .btn-danger {
-  background: var(--theme-danger);
-  border: 1px solid var(--theme-danger);
+  background: var(--theme-base-danger);
+  border: 1px solid var(--theme-base-danger);
   color: white;
 }
 
 .btn-danger:hover {
-  background: color-mix(in srgb, var(--theme-danger) 85%, black);
-  border-color: color-mix(in srgb, var(--theme-danger) 85%, black);
+  background: color-mix(in srgb, var(--theme-base-danger) 85%, black);
+  border-color: color-mix(in srgb, var(--theme-base-danger) 85%, black);
 }
 
 // ==========================================
@@ -244,58 +252,58 @@ body {
 }
 
 .password-toggle:hover {
-  color: var(--theme-primary);
-  background: color-mix(in srgb, var(--theme-primary) 10%, transparent);
+  color: var(--theme-base-primary);
+  background: color-mix(in srgb, var(--theme-base-primary) 10%, transparent);
 }
 
 .auth-link {
-  color: var(--theme-primary);
+  color: var(--theme-base-primary);
   text-decoration: none;
   font-weight: 600;
   transition: color 0.3s ease;
 }
 
 .auth-link:hover {
-  color: color-mix(in srgb, var(--theme-primary) 85%, black);
+  color: color-mix(in srgb, var(--theme-base-primary) 85%, black);
   text-decoration: underline;
 }
 
 // ==========================================
-// ALERT STYLES
+// ALERT STYLES (USE ACCENT COLORS)
 // ==========================================
 
 .alert-danger {
   border-radius: 12px;
   border: none;
-  background: color-mix(in srgb, var(--theme-danger) 10%, var(--bs-body-bg));
-  color: var(--theme-danger);
+  background: color-mix(in srgb, var(--accent-danger) 10%, var(--bs-body-bg));
+  color: var(--accent-danger);
   font-size: 0.9rem;
-  border-left: 4px solid var(--theme-danger);
+  border-left: 4px solid var(--accent-danger);
 }
 
 .alert-success {
   border-radius: 12px;
   border: none;
-  background: color-mix(in srgb, var(--theme-success) 10%, var(--bs-body-bg));
-  color: var(--theme-success);
+  background: color-mix(in srgb, var(--accent-success) 10%, var(--bs-body-bg));
+  color: var(--accent-success);
   font-size: 0.9rem;
-  border-left: 4px solid var(--theme-success);
+  border-left: 4px solid var(--accent-success);
 }
 
 .alert-info {
   border-radius: 12px;
   border: none;
-  background: color-mix(in srgb, var(--theme-info) 10%, var(--bs-body-bg));
-  color: var(--theme-info);
-  border-left: 4px solid var(--theme-info);
+  background: color-mix(in srgb, var(--accent-info) 10%, var(--bs-body-bg));
+  color: var(--accent-info);
+  border-left: 4px solid var(--accent-info);
 }
 
 .alert-warning {
   border-radius: 12px;
   border: none;
-  background: color-mix(in srgb, var(--theme-warning) 10%, var(--bs-body-bg));
-  color: color-mix(in srgb, var(--theme-warning) 15%, var(--bs-body-color));
-  border-left: 4px solid var(--theme-warning);
+  background: color-mix(in srgb, var(--accent-warning) 10%, var(--bs-body-bg));
+  color: color-mix(in srgb, var(--accent-warning) 15%, var(--bs-body-color));
+  border-left: 4px solid var(--accent-warning);
 }
 
 // ==========================================
@@ -324,14 +332,14 @@ body {
 // ==========================================
 
 .form-check-input:checked {
-  background-color: var(--theme-primary);
-  border-color: var(--theme-primary);
+  background-color: var(--theme-base-primary);
+  border-color: var(--theme-base-primary);
 }
 
 .form-check-input:focus {
-  border-color: var(--theme-primary);
+  border-color: var(--theme-base-primary);
   outline: 0;
-  box-shadow: 0 0 0 0.2rem color-mix(in srgb, var(--theme-primary) 25%, transparent);
+  box-shadow: 0 0 0 0.2rem color-mix(in srgb, var(--theme-base-primary) 25%, transparent);
 }
 
 // ==========================================
@@ -357,13 +365,13 @@ body {
 }
 
 .dropdown-item:hover {
-  background-color: color-mix(in srgb, var(--theme-primary) 10%, transparent);
-  color: var(--theme-primary);
+  background-color: color-mix(in srgb, var(--theme-base-primary) 10%, transparent);
+  color: var(--theme-base-primary);
 }
 
 .dropdown-item:focus {
-  background-color: color-mix(in srgb, var(--theme-primary) 15%, transparent);
-  color: var(--theme-primary);
+  background-color: color-mix(in srgb, var(--theme-base-primary) 15%, transparent);
+  color: var(--theme-base-primary);
 }
 
 // ==========================================
@@ -371,7 +379,7 @@ body {
 // ==========================================
 
 .spinner-border {
-  color: var(--theme-primary);
+  color: var(--theme-base-primary);
 }
 
 .spinner-border-sm {
@@ -380,19 +388,19 @@ body {
 }
 
 .text-success {
-  color: var(--theme-success) !important;
+  color: var(--accent-success) !important;
 }
 
 .text-danger {
-  color: var(--theme-danger) !important;
+  color: var(--accent-danger) !important;
 }
 
 .text-warning {
-  color: var(--theme-warning) !important;
+  color: var(--accent-warning) !important;
 }
 
 .text-info {
-  color: var(--theme-info) !important;
+  color: var(--accent-info) !important;
 }
 
 .text-muted {
@@ -401,6 +409,71 @@ body {
 
 i.bi {
   line-height: 1;
+}
+
+// ==========================================
+// ACCENT COLOR SPECIFIC STYLES
+// Icons, Badges, and Error Messages Only
+// ==========================================
+
+// Icons using accent colors
+.icon-primary {
+  color: var(--accent-primary) !important;
+}
+
+.icon-danger {
+  color: var(--accent-danger) !important;
+}
+
+.icon-success {
+  color: var(--accent-success) !important;
+}
+
+.icon-warning {
+  color: var(--accent-warning) !important;
+}
+
+.icon-info {
+  color: var(--accent-info) !important;
+}
+
+// Badges using accent colors
+.badge-primary {
+  background-color: var(--accent-primary) !important;
+  color: white !important;
+}
+
+.badge-danger {
+  background-color: var(--accent-danger) !important;
+  color: white !important;
+}
+
+.badge-success {
+  background-color: var(--accent-success) !important;
+  color: white !important;
+}
+
+.badge-warning {
+  background-color: var(--accent-warning) !important;
+  color: black !important;
+}
+
+.badge-info {
+  background-color: var(--accent-info) !important;
+  color: white !important;
+}
+
+// Error state elements using accent colors
+.is-invalid {
+  border-color: var(--accent-danger) !important;
+}
+
+.invalid-feedback {
+  color: var(--accent-danger) !important;
+}
+
+.valid-feedback {
+  color: var(--accent-success) !important;
 }
 
 // ==========================================
