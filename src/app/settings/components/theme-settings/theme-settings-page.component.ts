@@ -1,10 +1,13 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ThemeService } from '../../../shared/services/theme.service';
-import { ThemeMode, Theme, ThemeVariant } from '../../../shared/models/theme.models';
+import { ThemeManagementService } from '../../../shared/services/theme-management.service';
 import { ThemeModeSelectorsComponent } from './theme-mode-selector.component';
 import { ThemePreviewCardComponent } from './theme-preview-card.component';
 import { CircularColorSelectorComponent } from './circular-color-selector.component';
+import { 
+  ThemeDto, 
+  ThemeAccentDto 
+} from '../../../api/models';
 
 @Component({
   selector: 'app-theme-settings-page',
@@ -19,61 +22,93 @@ import { CircularColorSelectorComponent } from './circular-color-selector.compon
   styleUrls: ['./theme-settings-page.component.scss']
 })
 export class ThemeSettingsPageComponent implements OnInit {
-  public readonly themeService = inject(ThemeService);
-  public readonly ThemeMode = ThemeMode;
+  public readonly themeService = inject(ThemeManagementService);
   
   public hoveredVariantId: string | null = null;
   public isLightHovered = false;
   public isDarkHovered = false;
 
   ngOnInit(): void {
-    this.themeService.loadThemes().subscribe();
+    // Initialize theme service if not already done
+    if (!this.themeService.isInitialized()) {
+      this.themeService.lazyInitialize().subscribe();
+    }
   }
 
-  get lightThemes(): Theme[] {
-    return this.themeService.availableThemes().filter(t => t.mode === 'light');
+  get lightThemes(): ThemeDto[] {
+    return this.themeService.lightThemes();
   }
 
-  get darkThemes(): Theme[] {
-    return this.themeService.availableThemes().filter(t => t.mode === 'dark');
+  get darkThemes(): ThemeDto[] {
+    return this.themeService.darkThemes();
   }
 
-  getLightVariants(): ThemeVariant[] {
-    return this.lightThemes.reduce((variants: ThemeVariant[], theme: Theme) => {
-      return variants.concat(theme.variants);
+  getLightVariants(): Array<{id: string, name: string, primaryColor: string}> {
+    return this.lightThemes.reduce((variants: Array<{id: string, name: string, primaryColor: string}>, theme: ThemeDto) => {
+      const themeVariants = (theme.accentVariants || []).map((accent: any) => ({
+        id: accent.id || '',
+        name: accent.name || '',
+        primaryColor: accent.primaryAccentColor || '#007bff'
+      }));
+      return variants.concat(themeVariants);
     }, []);
   }
 
-  getDarkVariants(): ThemeVariant[] {
-    return this.darkThemes.reduce((variants: ThemeVariant[], theme: Theme) => {
-      return variants.concat(theme.variants);
+  getDarkVariants(): Array<{id: string, name: string, primaryColor: string}> {
+    return this.darkThemes.reduce((variants: Array<{id: string, name: string, primaryColor: string}>, theme: ThemeDto) => {
+      const themeVariants = (theme.accentVariants || []).map((accent: any) => ({
+        id: accent.id || '',
+        name: accent.name || '',
+        primaryColor: accent.primaryAccentColor || '#375a7f'
+      }));
+      return variants.concat(themeVariants);
     }, []);
   }
 
-  getLightPreviewVariant(): ThemeVariant {
+  getLightPreviewVariant(): {id: string, name: string, primaryColor: string} | null {
     if (this.hoveredVariantId && this.isLightHovered) {
       const hoveredVariant = this.getLightVariants()
         .find(v => v.id === this.hoveredVariantId);
       if (hoveredVariant) return hoveredVariant;
     }
     
-    const selectedId = this.themeService.userPreferences().lightThemeVariantId;
-    return this.getLightVariants().find(v => v.id === selectedId) || this.getLightVariants()[0];
+    const selectedId = this.themeService.userThemePreferences()?.lightAccentId;
+    const selectedVariant = this.getLightVariants().find(v => v.id === selectedId);
+    return selectedVariant || this.getLightVariants()[0] || null;
   }
 
-  getDarkPreviewVariant(): ThemeVariant {
+  getDarkPreviewVariant(): {id: string, name: string, primaryColor: string} | null {
     if (this.hoveredVariantId && this.isDarkHovered) {
       const hoveredVariant = this.getDarkVariants()
         .find(v => v.id === this.hoveredVariantId);
       if (hoveredVariant) return hoveredVariant;
     }
     
-    const selectedId = this.themeService.userPreferences().darkThemeVariantId;
-    return this.getDarkVariants().find(v => v.id === selectedId) || this.getDarkVariants()[0];
+    const selectedId = this.themeService.userThemePreferences()?.darkAccentId;
+    const selectedVariant = this.getDarkVariants().find(v => v.id === selectedId);
+    return selectedVariant || this.getDarkVariants()[0] || null;
   }
 
-  onThemeModeChange(mode: ThemeMode): void {
-    this.themeService.updateThemeMode(mode).subscribe();
+  getCurrentMode(): 'light' | 'dark' | 'system' {
+    const prefs = this.themeService.userThemePreferences();
+    if (prefs?.syncWithSystem) {
+      return 'system';
+    }
+    return this.themeService.currentEffectiveTheme()?.isDarkTheme ? 'dark' : 'light';
+  }
+
+  getSyncWithSystem(): boolean {
+    return this.themeService.userThemePreferences()?.syncWithSystem || false;
+  }
+
+  onThemeModeChange(mode: 'light' | 'dark' | 'system'): void {
+    if (mode === 'system') {
+      this.themeService.toggleSystemSync(true).subscribe();
+    } else {
+      // Switch to specific mode and disable system sync
+      this.themeService.toggleSystemSync(false).subscribe();
+      // The theme will be determined by the current effective theme
+    }
   }
 
   onSystemSyncToggle(enabled: boolean): void {
@@ -81,14 +116,14 @@ export class ThemeSettingsPageComponent implements OnInit {
   }
 
   onLightVariantSelect(variantId: string): void {
-    this.themeService.updateThemeVariant('light', variantId).subscribe();
+    this.themeService.updateAccent('light', variantId).subscribe();
   }
 
   onDarkVariantSelect(variantId: string): void {
-    this.themeService.updateThemeVariant('dark', variantId).subscribe();
+    this.themeService.updateAccent('dark', variantId).subscribe();
   }
 
-  onVariantHover(variant: ThemeVariant | null, mode: 'light' | 'dark'): void {
+  onVariantHover(variant: {id: string, name: string, primaryColor: string} | null, mode: 'light' | 'dark'): void {
     this.hoveredVariantId = variant?.id || null;
     
     if (mode === 'light') {
@@ -98,5 +133,13 @@ export class ThemeSettingsPageComponent implements OnInit {
       this.isDarkHovered = !!variant;
       this.isLightHovered = false;
     }
+  }
+
+  getSelectedLightAccentId(): string {
+    return this.themeService.userThemePreferences()?.lightAccentId || '';
+  }
+
+  getSelectedDarkAccentId(): string {
+    return this.themeService.userThemePreferences()?.darkAccentId || '';
   }
 }

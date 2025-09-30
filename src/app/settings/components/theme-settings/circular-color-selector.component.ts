@@ -1,6 +1,5 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ThemeVariant } from '../../../shared/models/theme.models';
 
 @Component({
   selector: 'app-circular-color-selector',
@@ -12,7 +11,7 @@ import { ThemeVariant } from '../../../shared/models/theme.models';
         *ngFor="let variant of variants"
         class="color-circle-wrapper"
         [class.selected]="variant.id === selectedVariantId"
-        [class.is-default]="isDefaultVariant(variant)"
+        [class.hovered]="variant.id === hoveredVariantId"
         (click)="onSelect(variant.id)"
         (mouseenter)="onHover(variant)"
         (mouseleave)="onHover(null)"
@@ -24,10 +23,10 @@ import { ThemeVariant } from '../../../shared/models/theme.models';
           class="color-circle split"
           [title]="variant.name">
           <div class="color-half top-left"
-               [style.background]="isDarkMode ? 'black' : 'white'">
+               [style.background]="isDarkMode ? '#212529' : '#ffffff'">
           </div>
           <div class="color-half bottom-right"
-               [style.background]="variant.accentColors.primary">
+               [style.background]="variant.primaryColor">
           </div>
         </div>
       </div>
@@ -36,23 +35,19 @@ import { ThemeVariant } from '../../../shared/models/theme.models';
   styleUrl: './circular-color-selector.component.scss'
 })
 export class CircularColorSelectorComponent {
-  @Input() variants: ThemeVariant[] = [];
+  @Input() variants: Array<{id: string, name: string, primaryColor: string}> = [];
   @Input() selectedVariantId: string = '';
   @Input() hoveredVariantId: string | null = null;
   @Input() isDarkMode: boolean = false;
 
   @Output() variantSelect = new EventEmitter<string>();
-  @Output() variantHover = new EventEmitter<ThemeVariant | null>();
+  @Output() variantHover = new EventEmitter<{id: string, name: string, primaryColor: string} | null>();
 
   onSelect(variantId: string) {
     this.variantSelect.emit(variantId);
   }
 
-  onHover(variant: ThemeVariant | null) {
+  onHover(variant: {id: string, name: string, primaryColor: string} | null) {
     this.variantHover.emit(variant);
-  }
-
-  isDefaultVariant(variant: ThemeVariant): boolean {
-    return variant.description.includes('default');
   }
 }

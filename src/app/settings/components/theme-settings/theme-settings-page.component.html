@@ -27,8 +27,8 @@
       <!-- Theme Mode Selector -->
       <div class="theme-mode-section">
         <app-theme-mode-selector
-          [currentMode]="themeService.userPreferences().themeMode"
-          [syncWithSystem]="themeService.userPreferences().syncWithSystem"
+          [currentMode]="getCurrentMode()"
+          [syncWithSystem]="getSyncWithSystem()"
           [systemPrefersDark]="themeService.systemPrefersDark()"
           (modeChange)="onThemeModeChange($event)"
           (systemSyncToggle)="onSystemSyncToggle($event)">
@@ -57,20 +57,29 @@
         <!-- Light Theme Card -->
         <div class="color-selection-card">
           <h6 class="section-label">Light theme accents</h6>
-          <app-circular-color-selector [variants]="getLightVariants()"
-            [selectedVariantId]="themeService.userPreferences().lightThemeVariantId" [hoveredVariantId]="hoveredVariantId"
-            (variantSelect)="onLightVariantSelect($event)" (variantHover)="onVariantHover($event, 'light')">
+          <app-circular-color-selector 
+            [variants]="getLightVariants()"
+            [selectedVariantId]="getSelectedLightAccentId()" 
+            [hoveredVariantId]="hoveredVariantId"
+            [isDarkMode]="false"
+            (variantSelect)="onLightVariantSelect($event)" 
+            (variantHover)="onVariantHover($event, 'light')">
           </app-circular-color-selector>
         </div>
+        
         <!-- Dark Theme Card -->
         <div class="color-selection-card">
           <h6 class="section-label">Dark theme accents</h6>
-          <app-circular-color-selector [variants]="getDarkVariants()"
-            [selectedVariantId]="themeService.userPreferences().darkThemeVariantId" [hoveredVariantId]="hoveredVariantId"
-            (variantSelect)="onDarkVariantSelect($event)" (variantHover)="onVariantHover($event, 'dark')">
+          <app-circular-color-selector 
+            [variants]="getDarkVariants()"
+            [selectedVariantId]="getSelectedDarkAccentId()" 
+            [hoveredVariantId]="hoveredVariantId"
+            [isDarkMode]="true"
+            (variantSelect)="onDarkVariantSelect($event)" 
+            (variantHover)="onVariantHover($event, 'dark')">
           </app-circular-color-selector>
         </div>
-        </div>
-        </div>
-        </div>
+      </div>
+    </div>
   </div>
+</div>

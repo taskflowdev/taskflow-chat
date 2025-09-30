@@ -1,7 +1,6 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { ThemeMode } from '../../../shared/models/theme.models';
 
 @Component({
   selector: 'app-theme-mode-selector',
@@ -11,16 +10,14 @@ import { ThemeMode } from '../../../shared/models/theme.models';
   styleUrls: ['./theme-mode-selector.component.scss']
 })
 export class ThemeModeSelectorsComponent {
-  @Input() currentMode: ThemeMode = ThemeMode.SYSTEM;
+  @Input() currentMode: 'light' | 'dark' | 'system' = 'system';
   @Input() syncWithSystem: boolean = true;
   @Input() systemPrefersDark: boolean = false;
 
-  @Output() modeChange = new EventEmitter<ThemeMode>();
+  @Output() modeChange = new EventEmitter<'light' | 'dark' | 'system'>();
   @Output() systemSyncToggle = new EventEmitter<boolean>();
 
-  public readonly ThemeMode = ThemeMode;
-
-  onModeSelect(mode: ThemeMode): void {
+  onModeSelect(mode: 'light' | 'dark' | 'system'): void {
     this.modeChange.emit(mode);
   }
 
@@ -32,6 +29,6 @@ export class ThemeModeSelectorsComponent {
     if (this.syncWithSystem) {
       return this.systemPrefersDark ? 'Dark' : 'Light';
     }
-    return this.currentMode;
+    return this.currentMode === 'system' ? (this.systemPrefersDark ? 'Dark' : 'Light') : this.currentMode;
   }
 }

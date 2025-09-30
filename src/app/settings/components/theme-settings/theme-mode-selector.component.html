@@ -12,12 +12,12 @@
       <!-- Light Mode -->
       <div class="col-md-4">
         <div class="theme-mode-option"
-             [class.active]="currentMode === ThemeMode.LIGHT && !syncWithSystem"
-             (click)="onModeSelect(ThemeMode.LIGHT)"
+             [class.active]="currentMode === 'light' && !syncWithSystem"
+             (click)="onModeSelect('light')"
              role="button"
              tabindex="0"
-             (keydown.enter)="onModeSelect(ThemeMode.LIGHT)"
-             (keydown.space)="onModeSelect(ThemeMode.LIGHT)">
+             (keydown.enter)="onModeSelect('light')"
+             (keydown.space)="onModeSelect('light')">
           <div class="theme-mode-icon">
             <i class="bi bi-sun-fill"></i>
           </div>
@@ -27,9 +27,9 @@
           </div>
           <div class="theme-mode-radio">
             <input type="radio" name="themeMode"
-                   [value]="ThemeMode.LIGHT"
-                   [checked]="currentMode === ThemeMode.LIGHT && !syncWithSystem"
-                   (change)="onModeSelect(ThemeMode.LIGHT)">
+                   value="light"
+                   [checked]="currentMode === 'light' && !syncWithSystem"
+                   (change)="onModeSelect('light')">
           </div>
         </div>
       </div>
@@ -37,12 +37,12 @@
       <!-- Dark Mode -->
       <div class="col-md-4">
         <div class="theme-mode-option"
-             [class.active]="currentMode === ThemeMode.DARK && !syncWithSystem"
-             (click)="onModeSelect(ThemeMode.DARK)"
+             [class.active]="currentMode === 'dark' && !syncWithSystem"
+             (click)="onModeSelect('dark')"
              role="button"
              tabindex="0"
-             (keydown.enter)="onModeSelect(ThemeMode.DARK)"
-             (keydown.space)="onModeSelect(ThemeMode.DARK)">
+             (keydown.enter)="onModeSelect('dark')"
+             (keydown.space)="onModeSelect('dark')">
           <div class="theme-mode-icon">
             <i class="bi bi-moon-fill"></i>
           </div>
@@ -52,9 +52,9 @@
           </div>
           <div class="theme-mode-radio">
             <input type="radio" name="themeMode"
-                   [value]="ThemeMode.DARK"
-                   [checked]="currentMode === ThemeMode.DARK && !syncWithSystem"
-                   (change)="onModeSelect(ThemeMode.DARK)">
+                   value="dark"
+                   [checked]="currentMode === 'dark' && !syncWithSystem"
+                   (change)="onModeSelect('dark')">
           </div>
         </div>
       </div>

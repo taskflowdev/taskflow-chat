@@ -1,6 +1,5 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ThemeVariant, ThemeMode } from '../../../shared/models/theme.models';
 
 @Component({
   selector: 'app-theme-preview-card',
@@ -25,7 +24,7 @@ import { ThemeVariant, ThemeMode } from '../../../shared/models/theme.models';
       <div class="card-preview">
         <!-- Minimal mockup -->
         <div class="mock-window" [style.background-color]="getBackgroundColor()">
-          <div class="mock-header" [style.background-color]="currentVariant.accentColors.primary">
+          <div class="mock-header" [style.background-color]="currentVariant?.primaryColor || getDefaultPrimaryColor()">
             <div class="mock-controls">
               <div class="control" style="background-color: #ff5f56;"></div>
               <div class="control" style="background-color: #ffbd2e;"></div>
@@ -36,7 +35,7 @@ import { ThemeVariant, ThemeMode } from '../../../shared/models/theme.models';
 
           <div class="mock-content">
             <div class="mock-sidebar" [style.background-color]="getSidebarColor()">
-              <div class="mock-nav-item active" [style.background-color]="currentVariant.accentColors.primary"></div>
+              <div class="mock-nav-item active" [style.background-color]="currentVariant?.primaryColor || getDefaultPrimaryColor()"></div>
               <div class="mock-nav-item"></div>
               <div class="mock-nav-item"></div>
             </div>
@@ -56,7 +55,7 @@ import { ThemeVariant, ThemeMode } from '../../../shared/models/theme.models';
 })
 export class ThemePreviewCardComponent {
   @Input() mode: 'light' | 'dark' = 'light';
-  @Input() currentVariant!: ThemeVariant;
+  @Input() currentVariant: {id: string, name: string, primaryColor: string} | null = null;
   @Input() isHovered = false;
 
   getBackgroundColor(): string {
@@ -73,5 +72,9 @@ export class ThemePreviewCardComponent {
 
   getTextColor(): string {
     return this.mode === 'light' ? '#e9ecef' : '#495057';
+  }
+
+  getDefaultPrimaryColor(): string {
+    return this.mode === 'light' ? '#007bff' : '#375a7f';
   }
 }
