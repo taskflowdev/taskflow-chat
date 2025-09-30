@@ -1,8 +1,17 @@
 import { Injectable, signal, computed, effect, inject } from '@angular/core';
-import { Observable, of, from } from 'rxjs';
+import { BehaviorSubject, Observable, of, from } from 'rxjs';
 import { map, catchError, tap } from 'rxjs/operators';
-import { HttpClient } from '@angular/common/http';
+import { Router } from '@angular/router';
 import { LocalStorageService } from './local-storage.service';
+import { DynamicThemesService } from '../../api/services/dynamic-themes.service';
+import { 
+  DEFAULT_LIGHT_THEME, 
+  DEFAULT_DARK_THEME, 
+  getDefaultTheme, 
+  themeToTokens, 
+  ThemeToken, 
+  DefaultTheme 
+} from '../constants/default-theme.constants';
 import { 
   Theme, 
   ThemeVariant, 
@@ -18,9 +27,16 @@ import {
   providedIn: 'root'
 })
 export class ThemeService {
-  private readonly httpClient = inject(HttpClient);
+  private readonly router = inject(Router);
   private readonly localStorageService = inject(LocalStorageService);
+  private readonly dynamicThemesService = inject(DynamicThemesService);
   private readonly THEME_PREFERENCES_KEY = 'theme-preferences';
+  
+  // Auth routes where theme should NOT be applied
+  private readonly AUTH_ROUTES = ['/auth/login', '/auth/signup', '/auth/forgot-password'];
+  
+  // BehaviorSubject for reactive theme updates
+  private readonly themeTokens$ = new BehaviorSubject<ThemeToken[]>([]);
 
   // Default theme data - would normally come from API
   private readonly defaultThemes: Theme[] = [
@@ -176,8 +192,98 @@ export class ThemeService {
       this.applyTheme();
     });
 
-    // Initialize theme
-    this.initializeTheme();
+    // Subscribe to theme tokens for reactive updates
+    this.themeTokens$.subscribe(tokens => {
+      this.applyTokensToDOM(tokens);
+    });
+  }
+
+  /**
+   * Apply default theme for unauthenticated users
+   * This is called from AppComponent before login
+   */
+  public applyDefaultTheme(): void {
+    if (typeof document === 'undefined') return;
+    
+    const prefersDark = this.getSystemPreference();
+    const defaultTheme = getDefaultTheme(prefersDark);
+    const tokens = themeToTokens(defaultTheme);
+    
+    // Apply tokens to DOM
+    this.applyTokensToDOM(tokens);
+    
+    // Set theme mode class
+    document.documentElement.classList.remove('light-mode', 'dark-mode');
+    document.documentElement.classList.add(prefersDark ? 'dark-mode' : 'light-mode');
+  }
+
+  /**
+   * Load user theme from API after login
+   * This fetches the user's saved theme preferences from the backend
+   */
+  public loadUserTheme(): Observable<void> {
+    return this.dynamicThemesService.apiThemesUserEffectiveGet().pipe(
+      map(response => {
+        if (response.success && response.data) {
+          const effectiveTheme = response.data;
+          const tokens: ThemeToken[] = [];
+          
+          // Convert API tokens to ThemeToken array
+          if (effectiveTheme.tokens) {
+            Object.entries(effectiveTheme.tokens).forEach(([key, value]) => {
+              tokens.push({ key, value });
+            });
+          }
+          
+          // Update theme tokens
+          this.themeTokens$.next(tokens);
+          
+          // Store in localStorage for quick reloads
+          this.localStorageService.setItem('user-theme-tokens', tokens);
+        }
+      }),
+      catchError(error => {
+        console.error('Failed to load user theme:', error);
+        // Fall back to cached theme or default
+        const cachedTokens = this.localStorageService.getItem<ThemeToken[]>('user-theme-tokens');
+        if (cachedTokens) {
+          this.themeTokens$.next(cachedTokens);
+        }
+        return of(undefined);
+      })
+    );
+  }
+
+  /**
+   * Check if current route is an auth route
+   */
+  private isAuthRoute(): boolean {
+    const currentUrl = this.router.url;
+    return this.AUTH_ROUTES.some(route => currentUrl.startsWith(route));
+  }
+
+  /**
+   * Apply tokens to DOM
+   */
+  private applyTokensToDOM(tokens: ThemeToken[]): void {
+    if (typeof document === 'undefined') return;
+    
+    // Skip if on auth page
+    if (this.isAuthRoute()) {
+      return;
+    }
+    
+    const root = document.documentElement;
+    tokens.forEach(token => {
+      root.style.setProperty(`--${token.key}`, token.value);
+    });
+  }
+
+  /**
+   * Get observable for theme updates
+   */
+  public getThemeTokens$(): Observable<ThemeToken[]> {
+    return this.themeTokens$.asObservable();
   }
 
   private getSystemPreference(): boolean {
@@ -200,7 +306,7 @@ export class ThemeService {
   }
 
   private initializeTheme(): void {
-    // In a real app, this would load from storage or API
+    // Load user preferences from localStorage
     this.loadUserPreferences().subscribe();
   }
 
@@ -340,6 +446,11 @@ export class ThemeService {
 
   private applyTheme(): void {
     if (typeof document === 'undefined') return;
+    
+    // Skip if on auth page
+    if (this.isAuthRoute()) {
+      return;
+    }
     
     const currentTheme = this.currentTheme();
     const effectiveMode = this.effectiveThemeMode();

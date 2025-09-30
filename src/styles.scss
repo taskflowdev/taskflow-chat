@@ -4,6 +4,13 @@
 // THEME SYSTEM - CSS Custom Properties
 // ==========================================
 
+// Smooth theme transitions
+:root {
+  transition: background-color 0.2s ease, 
+              color 0.2s ease,
+              border-color 0.2s ease;
+}
+
 // Default theme variables (fallbacks)
 :root {
   --primary-green: #22c55e;
@@ -17,7 +24,7 @@
   --medium-gray: #e2e8f0;
   --dark-gray: #64748b;
 
-  // Dynamic theme colors (overridden by ThemeService)
+  // Dynamic theme colors (overridden by ThemeService via CSS variables)
   --theme-primary: #007bff;
   --theme-secondary: #6c757d;
   --theme-success: #198754;
@@ -33,6 +40,26 @@
   --bs-border-color: #dee2e6;
   --bs-text-muted: #6c757d;
   --bs-link-color: var(--theme-primary);
+  
+  // API-based theme tokens (for authenticated users)
+  // These will be dynamically set by ThemeService
+  --BackgroundColor: var(--bs-body-bg);
+  --SecondaryBackgroundColor: #f6f8fa;
+  --TextColor: var(--bs-body-color);
+  --SecondaryTextColor: var(--bs-text-muted);
+  --BorderColor: var(--bs-border-color);
+  --HoverBackgroundColor: #f3f4f6;
+  --ButtonPrimary: var(--theme-primary);
+  --ButtonPrimaryText: #ffffff;
+  --ButtonPrimaryHover: color-mix(in srgb, var(--theme-primary) 85%, black);
+  --ToastSuccess: var(--theme-success);
+  --ToastWarning: var(--theme-warning);
+  --ToastError: var(--theme-danger);
+  --ToastInfo: var(--theme-info);
+  --IconPrimary: var(--theme-primary);
+  --IconSecondary: var(--bs-text-muted);
+  --LinkColor: var(--theme-primary);
+  --LinkHoverColor: color-mix(in srgb, var(--theme-primary) 85%, black);
 }
 
 // Light Mode Theme
@@ -42,6 +69,10 @@
   --bs-border-color: #dee2e6;
   --bs-text-muted: #6c757d;
   --bs-link-color: var(--theme-primary);
+  
+  // Use API tokens or fallback to defaults
+  background-color: var(--BackgroundColor, #ffffff);
+  color: var(--TextColor, #212529);
 }
 
 // Dark Mode Theme  
@@ -51,16 +82,10 @@
   --bs-border-color: #495057;
   --bs-text-muted: #adb5bd;
   --bs-link-color: var(--theme-primary);
-}
-
-// Neutral Theme (for auth pages)
-.neutral-theme {
-  --bs-body-bg: #f8f9fa;
-  --bs-body-color: #212529;
-  --bs-border-color: #dee2e6;
-  --bs-text-muted: #6c757d;
-  --theme-primary: #6c757d;
-  --theme-secondary: #adb5bd;
+  
+  // Use API tokens or fallback to defaults
+  background-color: var(--BackgroundColor, #1a1d29);
+  color: var(--TextColor, #ffffff);
 }
 
 // ==========================================
