@@ -1,4 +1,342 @@
 /* You can add global styles to this file, and also import other style files */
+@use "bootstrap/scss/bootstrap";
+
+// Global Theme Variables System
+:root {
+  // Theme accent colors (will be dynamically updated by ThemeService)
+  --theme-primary: #007bff;
+  --theme-secondary: #6c757d;
+  --theme-success: #198754;
+  --theme-danger: #dc3545;
+  --theme-warning: #ffc107;
+  --theme-info: #0dcaf0;
+
+  // Bootstrap theme color overrides
+  --bs-primary: var(--theme-primary);
+  --bs-secondary: var(--theme-secondary);
+  --bs-success: var(--theme-success);
+  --bs-danger: var(--theme-danger);
+  --bs-warning: var(--theme-warning);
+  --bs-info: var(--theme-info);
+
+  // Light theme colors (Bootstrap defaults)
+  --theme-body-bg: #ffffff;
+  --theme-body-color: #212529;
+  --theme-border-color: #dee2e6;
+  --theme-muted-color: #6c757d;
+  --theme-secondary-bg: #f8f9fa;
+}
+
+// Dark theme mode overrides
+.dark-mode {
+  --theme-body-bg: #212529;
+  --theme-body-color: #ffffff;
+  --theme-border-color: #495057;
+  --theme-muted-color: #adb5bd;
+  --theme-secondary-bg: #343a40;
+
+  // Override Bootstrap variables for dark mode
+  --bs-body-bg: var(--theme-body-bg);
+  --bs-body-color: var(--theme-body-color);
+  --bs-border-color: var(--theme-border-color);
+  --bs-secondary-bg: var(--theme-secondary-bg);
+  --bs-text-muted: var(--theme-muted-color);
+}
+
+// Light theme mode explicit overrides
+.light-mode {
+  --theme-body-bg: #ffffff;
+  --theme-body-color: #212529;
+  --theme-border-color: #dee2e6;
+  --theme-muted-color: #6c757d;
+  --theme-secondary-bg: #f8f9fa;
+
+  // Override Bootstrap variables for light mode
+  --bs-body-bg: var(--theme-body-bg);
+  --bs-body-color: var(--theme-body-color);
+  --bs-border-color: var(--theme-border-color);
+  --bs-secondary-bg: var(--theme-secondary-bg);
+  --bs-text-muted: var(--theme-muted-color);
+}
+
+// Global application of theme colors to specific elements
+// Apply accent colors to links, buttons, icons, and alerts only
+
+// Links
+a {
+  color: var(--theme-primary) !important;
+  
+  &:hover {
+    color: var(--theme-primary) !important;
+    filter: brightness(1.1);
+  }
+}
+
+// Buttons - apply theme colors
+.btn-primary {
+  background-color: var(--theme-primary) !important;
+  border-color: var(--theme-primary) !important;
+  
+  &:hover, &:focus, &:active {
+    background-color: var(--theme-primary) !important;
+    border-color: var(--theme-primary) !important;
+    filter: brightness(0.9);
+  }
+}
+
+.btn-secondary {
+  background-color: var(--theme-secondary) !important;
+  border-color: var(--theme-secondary) !important;
+  
+  &:hover, &:focus, &:active {
+    background-color: var(--theme-secondary) !important;
+    border-color: var(--theme-secondary) !important;
+    filter: brightness(0.9);
+  }
+}
+
+.btn-success {
+  background-color: var(--theme-success) !important;
+  border-color: var(--theme-success) !important;
+  
+  &:hover, &:focus, &:active {
+    background-color: var(--theme-success) !important;
+    border-color: var(--theme-success) !important;
+    filter: brightness(0.9);
+  }
+}
+
+.btn-danger {
+  background-color: var(--theme-danger) !important;
+  border-color: var(--theme-danger) !important;
+  
+  &:hover, &:focus, &:active {
+    background-color: var(--theme-danger) !important;
+    border-color: var(--theme-danger) !important;
+    filter: brightness(0.9);
+  }
+}
+
+.btn-warning {
+  background-color: var(--theme-warning) !important;
+  border-color: var(--theme-warning) !important;
+  
+  &:hover, &:focus, &:active {
+    background-color: var(--theme-warning) !important;
+    border-color: var(--theme-warning) !important;
+    filter: brightness(0.9);
+  }
+}
+
+.btn-info {
+  background-color: var(--theme-info) !important;
+  border-color: var(--theme-info) !important;
+  
+  &:hover, &:focus, &:active {
+    background-color: var(--theme-info) !important;
+    border-color: var(--theme-info) !important;
+    filter: brightness(0.9);
+  }
+}
+
+// Icons - apply theme colors
+.icon-primary, 
+i.text-primary, 
+.text-primary {
+  color: var(--theme-primary) !important;
+}
+
+.icon-secondary,
+i.text-secondary,
+.text-secondary {
+  color: var(--theme-secondary) !important;
+}
+
+.icon-success,
+i.text-success,
+.text-success {
+  color: var(--theme-success) !important;
+}
+
+.icon-danger,
+i.text-danger,
+.text-danger {
+  color: var(--theme-danger) !important;
+}
+
+.icon-warning,
+i.text-warning,
+.text-warning {
+  color: var(--theme-warning) !important;
+}
+
+.icon-info,
+i.text-info,
+.text-info {
+  color: var(--theme-info) !important;
+}
+
+// Bootstrap Icons with theme colors
+.bi {
+  &.text-primary { color: var(--theme-primary) !important; }
+  &.text-secondary { color: var(--theme-secondary) !important; }
+  &.text-success { color: var(--theme-success) !important; }
+  &.text-danger { color: var(--theme-danger) !important; }
+  &.text-warning { color: var(--theme-warning) !important; }
+  &.text-info { color: var(--theme-info) !important; }
+}
+
+// Alerts and toast messages
+.alert-primary {
+  background-color: color-mix(in srgb, var(--theme-primary) 10%, transparent) !important;
+  border-color: var(--theme-primary) !important;
+  color: var(--theme-primary) !important;
+}
+
+.alert-secondary {
+  background-color: color-mix(in srgb, var(--theme-secondary) 10%, transparent) !important;
+  border-color: var(--theme-secondary) !important;
+  color: var(--theme-secondary) !important;
+}
+
+.alert-success {
+  background-color: color-mix(in srgb, var(--theme-success) 10%, transparent) !important;
+  border-color: var(--theme-success) !important;
+  color: var(--theme-success) !important;
+}
+
+.alert-danger {
+  background-color: color-mix(in srgb, var(--theme-danger) 10%, transparent) !important;
+  border-color: var(--theme-danger) !important;
+  color: var(--theme-danger) !important;
+}
+
+.alert-warning {
+  background-color: color-mix(in srgb, var(--theme-warning) 10%, transparent) !important;
+  border-color: var(--theme-warning) !important;
+  color: var(--theme-warning) !important;
+}
+
+.alert-info {
+  background-color: color-mix(in srgb, var(--theme-info) 10%, transparent) !important;
+  border-color: var(--theme-info) !important;
+  color: var(--theme-info) !important;
+}
+
+// Form controls with theme accents
+.form-control:focus {
+  border-color: var(--theme-primary) !important;
+  box-shadow: 0 0 0 0.2rem color-mix(in srgb, var(--theme-primary) 25%, transparent) !important;
+}
+
+.form-check-input:checked {
+  background-color: var(--theme-primary) !important;
+  border-color: var(--theme-primary) !important;
+}
+
+// Navigation and progress elements
+.nav-link.active {
+  color: var(--theme-primary) !important;
+}
+
+.progress-bar {
+  background-color: var(--theme-primary) !important;
+}
+
+// Badge variants
+.badge.bg-primary {
+  background-color: var(--theme-primary) !important;
+}
+
+.badge.bg-secondary {
+  background-color: var(--theme-secondary) !important;
+}
+
+.badge.bg-success {
+  background-color: var(--theme-success) !important;
+}
+
+.badge.bg-danger {
+  background-color: var(--theme-danger) !important;
+}
+
+.badge.bg-warning {
+  background-color: var(--theme-warning) !important;
+}
+
+.badge.bg-info {
+  background-color: var(--theme-info) !important;
+}
+
+// Smooth transitions for theme changes
+* {
+  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease !important;
+}
+
+// Exclude auth pages from accent theming as requested
+.auth-container,
+.auth-content,
+.auth-form {
+  // Override theme colors to preserve original auth design
+  a {
+    color: inherit !important;
+  }
+  
+  .btn:not(.btn-login) {
+    background-color: inherit !important;
+    border-color: inherit !important;
+  }
+  
+  .icon-primary,
+  i.text-primary,
+  .text-primary {
+    color: inherit !important;
+  }
+}
+
+// Custom utility classes for theme integration
+.theme-bg-primary {
+  background-color: var(--theme-primary) !important;
+}
+
+.theme-bg-secondary {
+  background-color: var(--theme-secondary) !important;
+}
+
+.theme-text-primary {
+  color: var(--theme-primary) !important;
+}
+
+.theme-border-primary {
+  border-color: var(--theme-primary) !important;
+}
+
+// Toast notification styling with theme colors
+.toast {
+  &.toast-primary {
+    background-color: color-mix(in srgb, var(--theme-primary) 10%, var(--theme-body-bg)) !important;
+    border-left: 4px solid var(--theme-primary) !important;
+    color: var(--theme-body-color) !important;
+  }
+  
+  &.toast-success {
+    background-color: color-mix(in srgb, var(--theme-success) 10%, var(--theme-body-bg)) !important;
+    border-left: 4px solid var(--theme-success) !important;
+    color: var(--theme-body-color) !important;
+  }
+  
+  &.toast-danger {
+    background-color: color-mix(in srgb, var(--theme-danger) 10%, var(--theme-body-bg)) !important;
+    border-left: 4px solid var(--theme-danger) !important;
+    color: var(--theme-body-color) !important;
+  }
+  
+  &.toast-warning {
+    background-color: color-mix(in srgb, var(--theme-warning) 10%, var(--theme-body-bg)) !important;
+    border-left: 4px solid var(--theme-warning) !important;
+    color: var(--theme-body-color) !important;
+  }
+}
 
 // ==========================================
 // THEME SYSTEM - CSS Custom Properties

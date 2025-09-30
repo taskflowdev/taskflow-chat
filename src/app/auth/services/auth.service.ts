@@ -1,4 +1,4 @@
-import { Injectable, Inject, PLATFORM_ID } from '@angular/core';
+import { Injectable, Inject, PLATFORM_ID, inject } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { BehaviorSubject, Observable, catchError, map, of, tap } from 'rxjs';
 import { AuthService as ApiAuthService } from '../../api/services/auth.service';
@@ -48,7 +48,16 @@ export class AuthService {
           }
 
           // Get user profile after successful login
-          this.getUserProfile().subscribe();
+          this.getUserProfile().subscribe(user => {
+            if (user) {
+              // Lazy load theme service to avoid circular dependency
+              import('../../shared/services/theme.service').then(({ ThemeService }) => {
+                const themeService = inject(ThemeService);
+                themeService.setCurrentUserId(user.id);
+                themeService.loadUserPreferences(user.id).subscribe();
+              });
+            }
+          });
         }
       }),
       map(response => ({
@@ -79,7 +88,16 @@ export class AuthService {
           }
 
           // Get user profile after successful registration
-          this.getUserProfile().subscribe();
+          this.getUserProfile().subscribe(user => {
+            if (user) {
+              // Lazy load theme service to avoid circular dependency
+              import('../../shared/services/theme.service').then(({ ThemeService }) => {
+                const themeService = inject(ThemeService);
+                themeService.setCurrentUserId(user.id);
+                themeService.loadUserPreferences(user.id).subscribe();
+              });
+            }
+          });
         }
       }),
       map(response => ({
@@ -106,6 +124,14 @@ export class AuthService {
 
     // Update current user
     this.currentUserSubject.next(null);
+
+    // Clear theme data as requested
+    import('../../shared/services/theme.service').then(({ ThemeService }) => {
+      const themeService = inject(ThemeService);
+      themeService.clearThemeData();
+    }).catch(error => {
+      console.warn('Could not clear theme data on logout:', error);
+    });
   }
 
   getToken(): string | null {
