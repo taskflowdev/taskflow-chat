@@ -25,7 +25,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
   // Configuration for nav links
   navLinks: NavLink[] = [
     {
-      path: '/chats',
+      path: '/chat',
       label: 'Chats',
       icon: 'bi-chat-quote',
       title: 'Chats'
@@ -48,7 +48,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
     {
       label: 'Settings',
       icon: 'bi-gear',
-      href: '/settings'
+      href: '#'
     },
     {
       divider: true,

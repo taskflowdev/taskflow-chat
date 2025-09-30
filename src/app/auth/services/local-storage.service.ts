@@ -11,68 +11,46 @@ export class LocalStorageService {
   constructor(@Inject(PLATFORM_ID) private platformId: Object) {}
 
   /**
-   * Set an item in localStorage with optional encryption
+   * Set an item in localStorage with encryption
    * @param key The key to store the value under
-   * @param value The value to store (will be JSON.stringify'd and optionally encrypted)
-   * @param encrypt Whether to encrypt the value (default: false)
+   * @param value The value to store (will be encrypted)
    */
-  setItem<T>(key: string, value: T, encrypt: boolean = false): void {
+  setItem(key: string, value: string): void {
     if (!isPlatformBrowser(this.platformId)) {
       return;
     }
 
     try {
-      const stringValue = JSON.stringify(value);
-      const finalValue = encrypt ? this.encrypt(stringValue) : stringValue;
-      localStorage.setItem(key, finalValue);
+      const encryptedValue = this.encrypt(value);
+      localStorage.setItem(key, encryptedValue);
     } catch (error) {
       console.error('Error setting localStorage item:', error);
     }
   }
 
   /**
-   * Get an item from localStorage with optional decryption
+   * Get an item from localStorage with decryption
    * @param key The key to retrieve the value for
-   * @param encrypt Whether the value was encrypted (default: false)
-   * @returns The parsed value or null if not found
+   * @returns The decrypted value or null if not found
    */
-  getItem<T>(key: string, encrypt: boolean = false): T | null {
+  getItem(key: string): string | null {
     if (!isPlatformBrowser(this.platformId)) {
       return null;
     }
 
     try {
-      const storedValue = localStorage.getItem(key);
-      if (!storedValue) {
+      const encryptedValue = localStorage.getItem(key);
+      if (!encryptedValue) {
         return null;
       }
 
-      const decryptedValue = encrypt ? this.decrypt(storedValue) : storedValue;
-      return JSON.parse(decryptedValue) as T;
+      return this.decrypt(encryptedValue);
     } catch (error) {
       console.error('Error getting localStorage item:', error);
-      // If parsing/decryption fails, remove the corrupted item
+      // If decryption fails, remove the corrupted item
       this.removeItem(key);
       return null;
     }
-  }
-
-  /**
-   * Set an encrypted item in localStorage
-   * @param key The key to store the value under
-   * @param value The value to store (will be encrypted)
-   */
-  setEncryptedItem<T>(key: string, value: T): void {
-    this.setItem(key, value, true);
-  }
-
-  /**
-   * Get an encrypted item from localStorage
-   * @param key The key to retrieve the value for
-   * @returns The decrypted and parsed value or null if not found
-   */
-  getEncryptedItem<T>(key: string): T | null {
-    return this.getItem<T>(key, true);
   }
 
   /**
@@ -126,57 +104,6 @@ export class LocalStorageService {
       console.error('localStorage is not available:', error);
       return false;
     }
-  }
-
-  /**
-   * Get all keys from localStorage
-   * @returns Array of all localStorage keys
-   */
-  getAllKeys(): string[] {
-    if (!isPlatformBrowser(this.platformId)) {
-      return [];
-    }
-
-    try {
-      const keys: string[] = [];
-      for (let i = 0; i < localStorage.length; i++) {
-        const key = localStorage.key(i);
-        if (key) {
-          keys.push(key);
-        }
-      }
-      return keys;
-    } catch (error) {
-      console.error('Error getting localStorage keys:', error);
-      return [];
-    }
-  }
-
-  /**
-   * Check if a key exists in localStorage
-   * @param key The key to check
-   * @returns true if the key exists
-   */
-  hasItem(key: string): boolean {
-    if (!isPlatformBrowser(this.platformId)) {
-      return false;
-    }
-
-    return localStorage.getItem(key) !== null;
-  }
-
-  /**
-   * Get the storage size of a specific key in bytes (approximate)
-   * @param key The key to check
-   * @returns Size in bytes or 0 if not found
-   */
-  getItemSize(key: string): number {
-    if (!isPlatformBrowser(this.platformId)) {
-      return 0;
-    }
-
-    const item = localStorage.getItem(key);
-    return item ? new Blob([item]).size : 0;
   }
 
   /**

@@ -1,7 +1,6 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { ToastContainerComponent } from './shared/components/toast-container.component';
-import { ThemeService } from './shared/services/theme.service';
 
 @Component({
   selector: 'app-root',
@@ -9,14 +8,6 @@ import { ThemeService } from './shared/services/theme.service';
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss'
 })
-export class AppComponent implements OnInit {
+export class AppComponent {
   title = 'taskflow-chat';
-  
-  private readonly themeService = inject(ThemeService);
-
-  ngOnInit(): void {
-    // Initialize theme service - this will load user preferences and apply theme
-    this.themeService.loadThemes().subscribe();
-    this.themeService.loadUserPreferences().subscribe();
-  }
 }
