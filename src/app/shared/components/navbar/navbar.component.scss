@@ -1,7 +1,7 @@
 // Main navbar component styles - orchestrates the layout only
 .app-navbar {
-  background: var(--theme-primary) !important;
-  border-bottom: 1px solid color-mix(in srgb, var(--theme-primary) 80%, black);
+  background: #000000 !important;
+  border-bottom: 1px solid #444444;
   height: 60px;
   position: fixed;
   top: 0;
@@ -9,7 +9,6 @@
   right: 0;
   z-index: 1030; // Higher than Bootstrap modals
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  transition: background-color 0.3s ease, border-color 0.3s ease;
 
   .navbar-content {
     display: grid;
@@ -42,7 +41,7 @@
 
   .logo-icon {
     font-size: 2rem;
-    color: white;
+    color: #fff;
   }
 
   .logo-img {
@@ -54,7 +53,7 @@
   .logo-text {
     font-size: 1.1rem;
     font-weight: 600;
-    color: white;
+    color: #fff;
     letter-spacing: 0.5px;
   }
 }

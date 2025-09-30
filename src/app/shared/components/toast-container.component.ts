@@ -11,7 +11,7 @@ import { Subscription } from 'rxjs';
     <div class="toast-container position-fixed bottom-0 end-0 p-3" style="z-index: 9999;">
       <div
         *ngFor="let toast of toasts; trackBy: trackByToastId"
-        class="toast show"
+        class="toast show bg-black text-white"
         [ngClass]="getToastClass(toast.type)"
         role="alert">
         <div class="toast-header">
@@ -19,7 +19,7 @@ import { Subscription } from 'rxjs';
           <strong class="me-auto">{{ toast.title || getDefaultTitle(toast.type) }}</strong>
           <button
             type="button"
-            class="btn-close"
+            class="btn-close btn-close-white"
             (click)="removeToast(toast.id)"
             aria-label="Close"></button>
         </div>
@@ -33,49 +33,43 @@ import { Subscription } from 'rxjs';
     .toast {
       min-width: 300px;
       margin-bottom: 0.5rem;
-      border: 1px solid var(--bs-border-color);
-      background: var(--bs-body-bg);
-      color: var(--bs-body-color);
+      border: 0.2px solid rgba(255, 255, 255, 0.2);
     }
 
     .toast-success {
-      --bs-toast-header-bg: color-mix(in srgb, var(--theme-success) 10%, var(--bs-body-bg));
-      --bs-toast-header-border-color: color-mix(in srgb, var(--theme-success) 20%, transparent);
+      --bs-toast-header-bg: rgba(34, 197, 94, 0.1);
+      --bs-toast-header-border-color: rgba(34, 197, 94, 0.2);
     }
 
     .toast-success .toast-header {
-      color: var(--theme-success);
+      color: #16a34a;
     }
 
     .toast-error {
-      --bs-toast-header-bg: color-mix(in srgb, var(--theme-danger) 10%, var(--bs-body-bg));
-      --bs-toast-header-border-color: color-mix(in srgb, var(--theme-danger) 20%, transparent);
+      --bs-toast-header-bg: rgba(220, 38, 38, 0.1);
+      --bs-toast-header-border-color: rgba(220, 38, 38, 0.2);
     }
 
     .toast-error .toast-header {
-      color: var(--theme-danger);
+      color: #dc2626;
     }
 
     .toast-warning {
-      --bs-toast-header-bg: color-mix(in srgb, var(--theme-warning) 10%, var(--bs-body-bg));
-      --bs-toast-header-border-color: color-mix(in srgb, var(--theme-warning) 20%, transparent);
+      --bs-toast-header-bg: rgba(245, 158, 11, 0.1);
+      --bs-toast-header-border-color: rgba(245, 158, 11, 0.2);
     }
 
     .toast-warning .toast-header {
-      color: var(--theme-warning);
+      color: #f59e0b;
     }
 
     .toast-info {
-      --bs-toast-header-bg: color-mix(in srgb, var(--theme-info) 10%, var(--bs-body-bg));
-      --bs-toast-header-border-color: color-mix(in srgb, var(--theme-info) 20%, transparent);
+      --bs-toast-header-bg: rgba(59, 130, 246, 0.1);
+      --bs-toast-header-border-color: rgba(59, 130, 246, 0.2);
     }
 
     .toast-info .toast-header {
-      color: var(--theme-info);
-    }
-
-    .btn-close {
-      filter: var(--bs-btn-close-white-filter, none);
+      color: #3b82f6;
     }
   `]
 })
