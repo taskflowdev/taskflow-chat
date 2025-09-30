@@ -17,40 +17,58 @@
   --medium-gray: #e2e8f0;
   --dark-gray: #64748b;
 
-  // Dynamic theme colors (overridden by ThemeService)
-  --theme-primary: #007bff;
+  // NEW: Theme variables managed by ThemeManagementService
+  --theme-background-color: #ffffff;
+  --theme-secondary-background-color: #f8f9fa;
+  --theme-border-color: #dee2e6;
+  --theme-text-color: #212529;
+  --theme-secondary-text-color: #6c757d;
+  --theme-primary-accent-color: #007bff;
+  --theme-secondary-accent-color: #0056b3;
+  --theme-badge-color: #007bff;
+  --theme-error-color: #dc3545;
+  --theme-success-color: #198754;
+  --theme-warning-color: #ffc107;
+  --theme-icon-color: #6c757d;
+
+  // Legacy theme colors (for backward compatibility)
+  --theme-primary: var(--theme-primary-accent-color);
   --theme-secondary: #6c757d;
-  --theme-success: #198754;
-  --theme-danger: #dc3545;
-  --theme-warning: #ffc107;
+  --theme-success: var(--theme-success-color);
+  --theme-danger: var(--theme-error-color);
+  --theme-warning: var(--theme-warning-color);
   --theme-info: #0dcaf0;
   --theme-light: #f8f9fa;
   --theme-dark: #212529;
   
-  // Semantic colors that adapt based on theme mode
-  --bs-body-bg: #ffffff;
-  --bs-body-color: #212529;
-  --bs-border-color: #dee2e6;
-  --bs-text-muted: #6c757d;
-  --bs-link-color: var(--theme-primary);
+  // Bootstrap semantic colors that adapt based on theme mode
+  --bs-body-bg: var(--theme-background-color);
+  --bs-body-color: var(--theme-text-color);
+  --bs-border-color: var(--theme-border-color);
+  --bs-text-muted: var(--theme-secondary-text-color);
+  --bs-link-color: var(--theme-primary-accent-color);
 }
 
-// Light Mode Theme
-.light-mode {
-  --bs-body-bg: #ffffff;
-  --bs-body-color: #212529;
-  --bs-border-color: #dee2e6;
-  --bs-text-muted: #6c757d;
-  --bs-link-color: var(--theme-primary);
+// Light Theme Mode (updated by ThemeManagementService)
+.light-theme {
+  // These variables are automatically set by the theme service
+  // but we provide fallbacks for cases where service hasn't loaded yet
+  --bs-body-bg: var(--theme-background-color, #ffffff);
+  --bs-body-color: var(--theme-text-color, #212529);
+  --bs-border-color: var(--theme-border-color, #dee2e6);
+  --bs-text-muted: var(--theme-secondary-text-color, #6c757d);
+  --bs-link-color: var(--theme-primary-accent-color, #007bff);
 }
 
-// Dark Mode Theme  
-.dark-mode {
-  --bs-body-bg: #1a1d29;
-  --bs-body-color: #ffffff;
-  --bs-border-color: #495057;
-  --bs-text-muted: #adb5bd;
-  --bs-link-color: var(--theme-primary);
+// Dark Theme Mode (updated by ThemeManagementService)  
+.dark-theme {
+  // These variables are automatically set by the theme service
+  // but we provide fallbacks for cases where service hasn't loaded yet
+  --bs-body-bg: var(--theme-background-color, #1a1d29);
+  --bs-body-color: var(--theme-text-color, #ffffff);
+  --bs-border-color: var(--theme-border-color, #495057);
+  --bs-text-muted: var(--theme-secondary-text-color, #adb5bd);
+  --bs-link-color: var(--theme-primary-accent-color, #375a7f);
 }
 
 // Neutral Theme (for auth pages)

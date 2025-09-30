@@ -129,8 +129,8 @@ export class ThemeManagementService {
       this.applyThemeToDOM();
     });
 
-    // Initialize authentication and theme loading
-    this.initializeService();
+    // Set initial fallback theme to prevent blank screen
+    this.setFallbackTheme();
   }
 
   private getSystemPreference(): boolean {
@@ -158,36 +158,31 @@ export class ThemeManagementService {
     mediaQuery.addEventListener('change', handler);
   }
 
-  private initializeService(): void {
-    // Load current user first, then initialize themes
-    this.authService.apiAuthMeGet().pipe(
-      tap((response: any) => {
-        const userId = response?.data?.id;
-        if (userId) {
-          this.currentUserId$.next(userId);
-        }
-      }),
-      switchMap(() => this.lazyInitialize()),
-      take(1)
-    ).subscribe({
-      error: (error: any) => {
-        console.warn('Failed to load user, using fallback theme', error);
-        this.setFallbackTheme();
-      }
-    });
-  }
 
   /**
    * Lazy initialization - loads themes and user preferences
    * Falls back to safe defaults if API calls fail
    */
   public lazyInitialize(): Observable<boolean> {
+    // Return early if already initialized
+    if (this.isInitialized()) {
+      return of(true);
+    }
+
     this._state.update(state => ({ ...state, isLoading: true, error: null }));
 
-    return combineLatest([
-      this.loadAvailableThemes(),
-      this.loadUserThemePreferences()
-    ]).pipe(
+    // First try to get current user, then load themes and preferences
+    return this.authService.apiAuthMeGet().pipe(
+      tap((response: any) => {
+        const userId = response?.data?.id;
+        if (userId) {
+          this.currentUserId$.next(userId);
+        }
+      }),
+      switchMap(() => combineLatest([
+        this.loadAvailableThemes(),
+        this.loadUserThemePreferences()
+      ])),
       switchMap(() => this.loadEffectiveTheme()),
       map(() => {
         this._state.update(state => ({ 
@@ -197,7 +192,7 @@ export class ThemeManagementService {
         }));
         return true;
       }),
-      catchError(error => {
+      catchError((error: any) => {
         console.error('Theme initialization failed, using fallback', error);
         this.setFallbackTheme();
         this._state.update(state => ({ 
