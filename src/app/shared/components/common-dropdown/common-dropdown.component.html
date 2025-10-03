@@ -1,6 +1,6 @@
 <div class="dropdown">
-  <button 
-    [class]="'btn ' + buttonClass" 
+  <button
+    [class]="'btn ' + buttonClass"
     [title]="buttonTitle"
     type="button"
     (click)="toggleDropdown($event)"
@@ -12,7 +12,7 @@
     <ng-container *ngFor="let item of items; trackBy: trackByItemId">
       <li *ngIf="item.divider" class="dropdown-divider"></li>
       <li *ngIf="!item.divider">
-        <button 
+        <button
           class="dropdown-item"
           [class.disabled]="item.disabled"
           [disabled]="item.disabled"

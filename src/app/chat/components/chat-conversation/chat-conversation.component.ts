@@ -1,5 +1,5 @@
-import { Component, Input, Output, EventEmitter, ViewChild, ElementRef, AfterViewChecked, OnInit, OnDestroy } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component, Input, Output, EventEmitter, ViewChild, ElementRef, AfterViewChecked, OnInit, OnDestroy, PLATFORM_ID, Inject } from '@angular/core';
+import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs';
@@ -19,7 +19,7 @@ export interface ConversationData {
   selector: 'app-chat-conversation',
   imports: [CommonModule, FormsModule, ChatMessageComponent, SkeletonLoaderComponent, GroupInfoDialogComponent, CommonDropdownComponent],
   templateUrl: './chat-conversation.component.html',
-  styleUrl: './chat-conversation.component.scss'
+  styleUrls: ['./chat-conversation.component.scss']
 })
 export class ChatConversationComponent implements AfterViewChecked, OnInit, OnDestroy {
   @Input() conversation: ConversationData | null = null;
@@ -57,14 +57,16 @@ export class ChatConversationComponent implements AfterViewChecked, OnInit, OnDe
 
   constructor(
     private router: Router,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    @Inject(PLATFORM_ID) private platformId: Object
   ) {}
 
   ngOnInit(): void {
-    // Listen to URL fragment for group-info dialog
-    this.fragmentSubscription = this.route.fragment.subscribe(fragment => {
-      this.showGroupInfoDialog = fragment === 'group-info';
-    });
+    if (isPlatformBrowser(this.platformId)) {
+      this.fragmentSubscription = this.route.fragment.subscribe(fragment => {
+        this.showGroupInfoDialog = fragment === 'group-info';
+      });
+    }
   }
 
   ngOnDestroy(): void {

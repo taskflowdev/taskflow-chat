@@ -9,7 +9,7 @@
   <div class="sidebar-content">
     <!-- Loading State -->
     <div *ngIf="loading" class="chats-list">
-      <app-skeleton-loader 
+      <app-skeleton-loader
         *ngFor="let item of skeletonItems; trackBy: trackBySkeletonIndex"
         type="chat-item"
         [fadeOpacity]="item.opacity">
