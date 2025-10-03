@@ -97,103 +97,16 @@
   line-height: 1.4;
 }
 
-// Form styling (matching auth forms)
+// Form styling
 .create-group-form {
   margin-bottom: 0;
-}
-
-.form-group {
-  margin-bottom: 1.5rem;
-}
-
-.form-label {
-  display: block;
-  color: white;
-  font-size: 0.875rem;
-  font-weight: 500;
-  margin-bottom: 0.5rem;
-}
-
-.form-control {
-  width: 100%;
-  background: black;
-  border: 1px solid #444444;
-  border-radius: 6px;
-  color: white;
-  font-size: 0.875rem;
-  padding: 0.75rem 0.875rem;
-  transition: all 0.2s ease;
-  box-sizing: border-box;
-
-  &:focus {
-    background: black;
-    border-color: #666666;
-    box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.1);
-    outline: none;
-  }
-
-  &::placeholder {
-    color: #888888;
-  }
-
-  &.is-invalid {
-    border-color: #e74c3c;
-  }
-}
-
-.error-message {
-  color: #e74c3c;
-  font-size: 0.75rem;
-  margin-top: 0.375rem;
-  display: block;
-}
-
-// Create button (matching login button style)
-.btn-create {
-  width: 100%;
-  background: white;
-  border: none;
-  border-radius: 6px;
-  color: black;
-  font-weight: 500;
-  font-size: 0.875rem;
-  padding: 0.75rem 1rem;
-  transition: all 0.2s ease;
-  margin-bottom: 0.75rem;
-  cursor: pointer;
-
-  &:hover:not(:disabled) {
-    background: #f3f4f6;
-  }
-
-  &:disabled {
-    background: #1a1a1a;
-    color: #999999;
-    cursor: not-allowed;
-  }
-}
-
-// Cancel button (secondary style)
-.btn-cancel {
-  width: 100%;
-  background: transparent;
-  border: 1px solid #444444;
-  border-radius: 6px;
-  color: white;
-  font-weight: 400;
-  font-size: 0.875rem;
-  padding: 0.75rem 1rem;
-  transition: all 0.2s ease;
-  cursor: pointer;
-
-  &:hover:not(:disabled) {
-    background: #333333;
-    border-color: #555555;
-  }
-
-  &:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
+  
+  app-common-button {
+    margin-bottom: 0.75rem;
+    
+    &:last-child {
+      margin-bottom: 0;
+    }
   }
 }
 

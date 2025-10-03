@@ -16,46 +16,43 @@
 
       <!-- Form -->
       <form [formGroup]="createGroupForm" (ngSubmit)="onSubmit()" novalidate class="create-group-form">
-        <!-- Group Name Field -->
-        <div class="form-group">
-          <label for="groupName" class="form-label">Group Name</label>
-          <input 
-            type="text" 
-            class="form-control" 
-            [class.is-invalid]="getFieldError('groupName')" 
-            id="groupName"
-            formControlName="groupName" 
-            placeholder="Enter group name"
-            autocomplete="off">
-          <div class="error-message" *ngIf="getFieldError('groupName')">
-            <span *ngIf="createGroupForm.get('groupName')?.hasError('required')">
-              Group name is required
-            </span>
-            <span *ngIf="createGroupForm.get('groupName')?.hasError('minlength')">
-              Group name must be at least 3 characters
-            </span>
-            <span *ngIf="createGroupForm.get('groupName')?.hasError('maxlength')">
-              Group name must not exceed 50 characters
-            </span>
-          </div>
-        </div>
+        <!-- Group Name Field using Common Input -->
+        <app-common-input
+          label="Group Name"
+          placeholder="Enter group name"
+          formControlName="groupName"
+          [isInvalid]="getFieldError('groupName')"
+          [errorMessage]="getErrorMessage('groupName')"
+        ></app-common-input>
 
-        <!-- Create Button -->
-        <button 
-          type="submit" 
-          class="btn btn-create fw-bold" 
-          [disabled]="isLoading || createGroupForm.invalid">
+        <!-- Public/Private Toggle using Common Toggle -->
+        <app-common-toggle
+          label="Group Privacy"
+          description="Enable this to make the group publicly visible"
+          formControlName="isPublic"
+        ></app-common-toggle>
+
+        <!-- Create Button using Common Button -->
+        <app-common-button
+          type="submit"
+          variant="primary"
+          [fullWidth]="true"
+          [loading]="isLoading"
+          [disabled]="createGroupForm.invalid"
+        >
           {{ isLoading ? 'Creating...' : 'Create Group' }}
-        </button>
+        </app-common-button>
 
-        <!-- Cancel Button -->
-        <button 
-          type="button" 
-          class="btn btn-cancel" 
-          (click)="closeDialog()"
-          [disabled]="isLoading">
+        <!-- Cancel Button using Common Button -->
+        <app-common-button
+          type="button"
+          variant="secondary"
+          [fullWidth]="true"
+          [disabled]="isLoading"
+          (clicked)="closeDialog()"
+        >
           Cancel
-        </button>
+        </app-common-button>
       </form>
     </div>
   </div>

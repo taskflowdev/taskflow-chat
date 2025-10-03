@@ -23,5 +23,8 @@
   </div>
 
   <!-- Create Group Dialog -->
-  <app-create-group-dialog *ngIf="showCreateGroupDialog"></app-create-group-dialog>
+  <app-create-group-dialog 
+    *ngIf="showCreateGroupDialog"
+    (groupCreated)="onGroupCreated()">
+  </app-create-group-dialog>
 </div>

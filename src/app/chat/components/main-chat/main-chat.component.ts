@@ -153,6 +153,13 @@ export class MainChatComponent implements OnInit {
   }
 
   /**
+   * Handles group creation event - refreshes chat list instead of full page reload
+   */
+  onGroupCreated(): void {
+    this.loadUserGroups();
+  }
+
+  /**
    * Loads messages for a specific group
    */
   private loadGroupMessages(groupId: string): void {
