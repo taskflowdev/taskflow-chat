@@ -14,17 +14,13 @@
     </div>
 
     <div class="conversation-actions">
-      <button class="btn action-btn" title="More options" (click)="toggleOptionsDropdown()">
-        <i class="bi bi-three-dots-vertical"></i>
-      </button>
-      
-      <!-- Dropdown Menu -->
-      <div class="dropdown-menu" *ngIf="showOptionsDropdown">
-        <button class="dropdown-item" (click)="openGroupInfo()">
-          <i class="bi bi-info-circle"></i>
-          <span>Group Info</span>
-        </button>
-      </div>
+      <app-common-dropdown
+        [items]="dropdownItems"
+        buttonIcon="bi-three-dots-vertical"
+        buttonClass="action-btn"
+        buttonTitle="More options"
+        (itemSelected)="onDropdownItemSelected($event)">
+      </app-common-dropdown>
     </div>
   </div>
 

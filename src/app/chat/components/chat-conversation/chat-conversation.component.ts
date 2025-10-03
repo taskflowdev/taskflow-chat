@@ -1,9 +1,12 @@
-import { Component, Input, Output, EventEmitter, ViewChild, ElementRef, AfterViewChecked, HostListener } from '@angular/core';
+import { Component, Input, Output, EventEmitter, ViewChild, ElementRef, AfterViewChecked, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { Router, ActivatedRoute } from '@angular/router';
+import { Subscription } from 'rxjs';
 import { ChatMessageComponent, ChatMessageData } from '../chat-message/chat-message.component';
 import { SkeletonLoaderComponent } from '../../../shared/components/skeleton-loader/skeleton-loader.component';
 import { GroupInfoDialogComponent } from '../group-info-dialog/group-info-dialog.component';
+import { CommonDropdownComponent, DropdownItem } from '../../../shared/components/common-dropdown/common-dropdown.component';
 
 export interface ConversationData {
   groupId: string;
@@ -14,11 +17,11 @@ export interface ConversationData {
 
 @Component({
   selector: 'app-chat-conversation',
-  imports: [CommonModule, FormsModule, ChatMessageComponent, SkeletonLoaderComponent, GroupInfoDialogComponent],
+  imports: [CommonModule, FormsModule, ChatMessageComponent, SkeletonLoaderComponent, GroupInfoDialogComponent, CommonDropdownComponent],
   templateUrl: './chat-conversation.component.html',
   styleUrl: './chat-conversation.component.scss'
 })
-export class ChatConversationComponent implements AfterViewChecked {
+export class ChatConversationComponent implements AfterViewChecked, OnInit, OnDestroy {
   @Input() conversation: ConversationData | null = null;
   @Input() currentUserId: string | null = null;
   @Input() loading: boolean = false;
@@ -31,8 +34,17 @@ export class ChatConversationComponent implements AfterViewChecked {
 
   newMessage = '';
   private shouldScrollToBottom = false;
-  showOptionsDropdown = false;
   showGroupInfoDialog = false;
+  private fragmentSubscription?: Subscription;
+
+  // Dropdown items
+  dropdownItems: DropdownItem[] = [
+    {
+      id: 'group-info',
+      label: 'Group Info',
+      icon: 'bi-info-circle'
+    }
+  ];
 
   // Generate varied message skeleton items
   get messageSkeletonItems(): Array<{ index: number }> {
@@ -43,13 +55,20 @@ export class ChatConversationComponent implements AfterViewChecked {
     return items;
   }
 
-  @HostListener('document:click', ['$event'])
-  onDocumentClick(event: Event): void {
-    // Close dropdown when clicking outside
-    const target = event.target as HTMLElement;
-    if (!target.closest('.conversation-actions')) {
-      this.showOptionsDropdown = false;
-    }
+  constructor(
+    private router: Router,
+    private route: ActivatedRoute
+  ) {}
+
+  ngOnInit(): void {
+    // Listen to URL fragment for group-info dialog
+    this.fragmentSubscription = this.route.fragment.subscribe(fragment => {
+      this.showGroupInfoDialog = fragment === 'group-info';
+    });
+  }
+
+  ngOnDestroy(): void {
+    this.fragmentSubscription?.unsubscribe();
   }
 
   ngAfterViewChecked(): void {
@@ -59,17 +78,28 @@ export class ChatConversationComponent implements AfterViewChecked {
     }
   }
 
-  toggleOptionsDropdown(): void {
-    this.showOptionsDropdown = !this.showOptionsDropdown;
+  onDropdownItemSelected(itemId: string): void {
+    if (itemId === 'group-info') {
+      this.openGroupInfo();
+    }
   }
 
   openGroupInfo(): void {
-    this.showOptionsDropdown = false;
-    this.showGroupInfoDialog = true;
+    // Update URL fragment to show dialog
+    this.router.navigate([], {
+      fragment: 'group-info',
+      queryParamsHandling: 'preserve',
+      replaceUrl: false
+    });
   }
 
   onGroupInfoClosed(): void {
-    this.showGroupInfoDialog = false;
+    // Remove URL fragment when dialog closes
+    this.router.navigate([], {
+      fragment: undefined,
+      queryParamsHandling: 'preserve',
+      replaceUrl: false
+    });
   }
 
   onGroupInfoUpdated(): void {
