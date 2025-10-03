@@ -197,6 +197,17 @@ export class MainChatComponent implements OnInit {
   }
 
   /**
+   * Handles group update event - refreshes chat list and current conversation
+   */
+  onGroupUpdated(): void {
+    this.loadUserGroups();
+    // Reload current conversation to get updated details
+    if (this.selectedChatId) {
+      this.loadGroupMessages(this.selectedChatId);
+    }
+  }
+
+  /**
    * Loads messages for a specific group
    */
   private loadGroupMessages(groupId: string): void {

@@ -18,7 +18,8 @@
       [showBackButton]="isMobileView"
       [class.mobile-hidden]="isMobileView && showSidebar"
       (sendMessage)="onSendMessage($event)"
-      (backToChats)="onBackToChats()">
+      (backToChats)="onBackToChats()"
+      (groupUpdated)="onGroupUpdated()">
     </app-chat-conversation>
   </div>
 

@@ -1,8 +1,9 @@
-import { Component, Input, Output, EventEmitter, ViewChild, ElementRef, AfterViewChecked } from '@angular/core';
+import { Component, Input, Output, EventEmitter, ViewChild, ElementRef, AfterViewChecked, HostListener } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ChatMessageComponent, ChatMessageData } from '../chat-message/chat-message.component';
 import { SkeletonLoaderComponent } from '../../../shared/components/skeleton-loader/skeleton-loader.component';
+import { GroupInfoDialogComponent } from '../group-info-dialog/group-info-dialog.component';
 
 export interface ConversationData {
   groupId: string;
@@ -13,7 +14,7 @@ export interface ConversationData {
 
 @Component({
   selector: 'app-chat-conversation',
-  imports: [CommonModule, FormsModule, ChatMessageComponent, SkeletonLoaderComponent],
+  imports: [CommonModule, FormsModule, ChatMessageComponent, SkeletonLoaderComponent, GroupInfoDialogComponent],
   templateUrl: './chat-conversation.component.html',
   styleUrl: './chat-conversation.component.scss'
 })
@@ -24,11 +25,14 @@ export class ChatConversationComponent implements AfterViewChecked {
   @Input() showBackButton: boolean = false; // For mobile back navigation
   @Output() sendMessage = new EventEmitter<string>();
   @Output() backToChats = new EventEmitter<void>(); // Mobile back navigation
+  @Output() groupUpdated = new EventEmitter<void>(); // Group info updated
 
   @ViewChild('messagesContainer') messagesContainer!: ElementRef;
 
   newMessage = '';
   private shouldScrollToBottom = false;
+  showOptionsDropdown = false;
+  showGroupInfoDialog = false;
 
   // Generate varied message skeleton items
   get messageSkeletonItems(): Array<{ index: number }> {
@@ -39,11 +43,37 @@ export class ChatConversationComponent implements AfterViewChecked {
     return items;
   }
 
+  @HostListener('document:click', ['$event'])
+  onDocumentClick(event: Event): void {
+    // Close dropdown when clicking outside
+    const target = event.target as HTMLElement;
+    if (!target.closest('.conversation-actions')) {
+      this.showOptionsDropdown = false;
+    }
+  }
+
   ngAfterViewChecked(): void {
     if (this.shouldScrollToBottom) {
       this.scrollToBottom();
       this.shouldScrollToBottom = false;
     }
+  }
+
+  toggleOptionsDropdown(): void {
+    this.showOptionsDropdown = !this.showOptionsDropdown;
+  }
+
+  openGroupInfo(): void {
+    this.showOptionsDropdown = false;
+    this.showGroupInfoDialog = true;
+  }
+
+  onGroupInfoClosed(): void {
+    this.showGroupInfoDialog = false;
+  }
+
+  onGroupInfoUpdated(): void {
+    this.groupUpdated.emit();
   }
 
   onSendMessage(): void {

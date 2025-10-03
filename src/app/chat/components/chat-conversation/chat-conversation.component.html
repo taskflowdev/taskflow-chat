@@ -14,9 +14,17 @@
     </div>
 
     <div class="conversation-actions">
-      <button class="btn action-btn" title="More options">
+      <button class="btn action-btn" title="More options" (click)="toggleOptionsDropdown()">
         <i class="bi bi-three-dots-vertical"></i>
       </button>
+      
+      <!-- Dropdown Menu -->
+      <div class="dropdown-menu" *ngIf="showOptionsDropdown">
+        <button class="dropdown-item" (click)="openGroupInfo()">
+          <i class="bi bi-info-circle"></i>
+          <span>Group Info</span>
+        </button>
+      </div>
     </div>
   </div>
 
@@ -76,3 +84,11 @@
     </div>
   </div>
 </ng-template>
+
+<!-- Group Info Dialog -->
+<app-group-info-dialog 
+  *ngIf="showGroupInfoDialog && conversation"
+  [groupId]="conversation.groupId"
+  (closed)="onGroupInfoClosed()"
+  (groupUpdated)="onGroupInfoUpdated()">
+</app-group-info-dialog>
