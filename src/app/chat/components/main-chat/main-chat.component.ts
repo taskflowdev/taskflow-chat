@@ -1,6 +1,6 @@
 import { Component, OnInit, Inject, PLATFORM_ID } from '@angular/core';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { AuthService, AuthUser } from '../../../auth/services/auth.service';
 import { ChatSidebarComponent } from '../chat-sidebar/chat-sidebar.component';
 import { ChatConversationComponent, ConversationData } from '../chat-conversation/chat-conversation.component';
@@ -9,6 +9,7 @@ import { ChatMessageData } from '../chat-message/chat-message.component';
 import { GroupsServiceProxy, MessageFactoryServiceProxy } from '../../services';
 import type { GroupWithMessages } from '../../services';
 import { MessageDto } from '../../../api/models/message-dto';
+import { CreateGroupDialogComponent } from '../create-group-dialog/create-group-dialog.component';
 
 @Component({
   selector: 'app-main-chat',
@@ -16,7 +17,8 @@ import { MessageDto } from '../../../api/models/message-dto';
   imports: [
     CommonModule,
     ChatSidebarComponent,
-    ChatConversationComponent
+    ChatConversationComponent,
+    CreateGroupDialogComponent
   ],
   templateUrl: './main-chat.component.html',
   styleUrl: './main-chat.component.scss'
@@ -33,11 +35,15 @@ export class MainChatComponent implements OnInit {
   isMobileView: boolean = false;
   showSidebar: boolean = true; // On mobile, false when conversation is open
 
+  // Dialog state
+  showCreateGroupDialog: boolean = false;
+
 
 
   constructor(
     private authService: AuthService,
     private router: Router,
+    private route: ActivatedRoute,
     private groupsServiceProxy: GroupsServiceProxy,
     private messageFactoryService: MessageFactoryServiceProxy,
     @Inject(PLATFORM_ID) private platformId: Object
@@ -67,6 +73,11 @@ export class MainChatComponent implements OnInit {
       if (this.user) {
         this.loadUserGroups();
       }
+
+      // Listen to URL fragment changes for dialog
+      this.route.fragment.subscribe(fragment => {
+        this.showCreateGroupDialog = fragment === 'new-group';
+      });
     }
   }
 

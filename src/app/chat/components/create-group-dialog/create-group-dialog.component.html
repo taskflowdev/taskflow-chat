@@ -1,0 +1,62 @@
+<div class="dialog-overlay" (click)="closeDialog()">
+  <div class="dialog-container" (click)="$event.stopPropagation()">
+    <!-- Dialog Content -->
+    <div class="dialog-content">
+      <!-- Header -->
+      <div class="dialog-header">
+        <div class="fs-1 mb-2">
+          <i class="bi bi-people"></i>
+        </div>
+        <h1 class="main-title">Create New Group</h1>
+        <p class="subtitle">Enter a name for your group</p>
+        <button type="button" class="btn-close" (click)="closeDialog()" aria-label="Close">
+          <i class="bi bi-x"></i>
+        </button>
+      </div>
+
+      <!-- Form -->
+      <form [formGroup]="createGroupForm" (ngSubmit)="onSubmit()" novalidate class="create-group-form">
+        <!-- Group Name Field -->
+        <div class="form-group">
+          <label for="groupName" class="form-label">Group Name</label>
+          <input 
+            type="text" 
+            class="form-control" 
+            [class.is-invalid]="getFieldError('groupName')" 
+            id="groupName"
+            formControlName="groupName" 
+            placeholder="Enter group name"
+            autocomplete="off">
+          <div class="error-message" *ngIf="getFieldError('groupName')">
+            <span *ngIf="createGroupForm.get('groupName')?.hasError('required')">
+              Group name is required
+            </span>
+            <span *ngIf="createGroupForm.get('groupName')?.hasError('minlength')">
+              Group name must be at least 3 characters
+            </span>
+            <span *ngIf="createGroupForm.get('groupName')?.hasError('maxlength')">
+              Group name must not exceed 50 characters
+            </span>
+          </div>
+        </div>
+
+        <!-- Create Button -->
+        <button 
+          type="submit" 
+          class="btn btn-create fw-bold" 
+          [disabled]="isLoading || createGroupForm.invalid">
+          {{ isLoading ? 'Creating...' : 'Create Group' }}
+        </button>
+
+        <!-- Cancel Button -->
+        <button 
+          type="button" 
+          class="btn btn-cancel" 
+          (click)="closeDialog()"
+          [disabled]="isLoading">
+          Cancel
+        </button>
+      </form>
+    </div>
+  </div>
+</div>

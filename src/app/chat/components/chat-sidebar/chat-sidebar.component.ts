@@ -1,5 +1,6 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Router } from '@angular/router';
 import { ChatItemComponent, ChatItemData } from '../chat-item/chat-item.component';
 import { SkeletonLoaderComponent } from '../../../shared/components/skeleton-loader/skeleton-loader.component';
 
@@ -14,6 +15,8 @@ export class ChatSidebarComponent {
   @Input() selectedChatId: string | null = null;
   @Input() loading: boolean = false;
   @Output() chatSelect = new EventEmitter<string>();
+
+  constructor(private router: Router) {}
   
   // Generate skeleton items with progressive fade opacity
   get skeletonItems(): Array<{index: number, opacity: number}> {
@@ -39,5 +42,10 @@ export class ChatSidebarComponent {
 
   trackBySkeletonIndex(index: number, item: {index: number, opacity: number}): number {
     return item.index;
+  }
+
+  onCreateGroup(): void {
+    // Navigate with fragment to trigger dialog
+    this.router.navigate([], { fragment: 'new-group' });
   }
 }

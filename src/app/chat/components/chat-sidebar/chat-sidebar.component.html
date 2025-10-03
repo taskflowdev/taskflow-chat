@@ -1,7 +1,7 @@
 <aside class="chat-sidebar">
   <div class="sidebar-header">
     <h3 class="sidebar-title">Chats</h3>
-    <button class="btn new-chat-btn" title="New Chat">
+    <button class="btn new-chat-btn" title="New Chat" (click)="onCreateGroup()">
       <i class="bi bi-plus-lg"></i>
     </button>
   </div>
@@ -27,7 +27,7 @@
     <div *ngIf="!loading && chats.length === 0" class="no-chats">
       <i class="bi bi-chat-text empty-icon"></i>
       <p class="empty-text">No conversations yet</p>
-      <button class="btn start-chat-btn">
+      <button class="btn start-chat-btn" (click)="onCreateGroup()">
         <i class="bi bi-plus-circle-fill me-1"></i>
         New Group
       </button>
