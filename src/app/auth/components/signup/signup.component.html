@@ -1,0 +1,74 @@
+<div class="auth-container">
+  <a routerLink="/">
+    <div class="brand-logo">
+      <div class="logo-icon">
+        <i class="bi bi-chat-quote"></i>
+      </div>
+      <!-- <span class="brand-name">TaskFlow Chat</span> -->
+    </div>
+  </a>
+
+  <div class="auth-content">
+
+    <div class="auth-form">
+      <!-- Header -->
+      <div class="auth-header">
+        <div class="fs-1 mb-2">
+          <i class="bi bi-person-badge-fill"></i>
+        </div>
+        <h1 class=" main-title">Create an account</h1>
+        <p class="subtitle">Enter your information below to create your account</p>
+      </div>
+
+      <!-- Signup Form -->
+      <form [formGroup]="signupForm" (ngSubmit)="onSubmit()" novalidate class="signup-form">
+        <!-- Full Name Field -->
+        <div class="form-group">
+          <label for="fullName" class="form-label">Full Name</label>
+          <input type="text" class="form-control" [class.is-invalid]="getFieldError('fullName')" id="fullName"
+            formControlName="fullName" placeholder="John Doe" autocomplete="name">
+        </div>
+
+        <!-- Username Field -->
+        <div class="form-group">
+          <label for="userName" class="form-label">Username</label>
+          <input type="text" class="form-control" [class.is-invalid]="getFieldError('userName')" id="userName"
+            formControlName="userName" placeholder="johndoe" autocomplete="username">
+        </div>
+
+        <!-- Email Field -->
+        <div class="form-group">
+          <label for="email" class="form-label">Email</label>
+          <input type="email" class="form-control" [class.is-invalid]="getFieldError('email')" id="email"
+            formControlName="email" placeholder="m@example.com" autocomplete="email">
+        </div>
+
+        <!-- Password Field -->
+        <div class="form-group">
+          <label for="password" class="form-label">Password</label>
+          <input type="password" class="form-control" [class.is-invalid]="getFieldError('password')" id="password"
+            formControlName="password" placeholder="Password" autocomplete="new-password">
+        </div>
+
+        <!-- Confirm Password Field -->
+        <div class="form-group">
+          <label for="confirmPassword" class="form-label">Confirm Password</label>
+          <input type="password" class="form-control" [class.is-invalid]="getFieldError('confirmPassword')"
+            id="confirmPassword" formControlName="confirmPassword" placeholder="Confirm Password"
+            autocomplete="new-password">
+        </div>
+
+        <!-- Sign Up Button -->
+        <button type="submit" class="btn btn-signup fw-bold" [disabled]="isLoading || signupForm.invalid">
+          {{ isLoading ? 'Creating Account...' : 'Create Account' }}
+        </button>
+      </form>
+
+      <!-- Sign In Link -->
+      <div class="signin-link-container">
+        <span class="signin-text">Already have an account? </span>
+        <a routerLink="/auth/login" class="signin-link">Sign in</a>
+      </div>
+    </div>
+  </div>
+</div>

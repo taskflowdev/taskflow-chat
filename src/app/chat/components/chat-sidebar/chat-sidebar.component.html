@@ -1,0 +1,36 @@
+<aside class="chat-sidebar">
+  <div class="sidebar-header">
+    <h3 class="sidebar-title">Chats</h3>
+    <button class="btn new-chat-btn" title="New Chat">
+      <i class="bi bi-plus-lg"></i>
+    </button>
+  </div>
+
+  <div class="sidebar-content">
+    <!-- Loading State -->
+    <div *ngIf="loading" class="chats-list">
+      <app-skeleton-loader 
+        *ngFor="let item of skeletonItems; trackBy: trackBySkeletonIndex"
+        type="chat-item"
+        [fadeOpacity]="item.opacity">
+      </app-skeleton-loader>
+    </div>
+
+    <!-- Loaded Chats -->
+    <div class="chats-list" *ngIf="!loading && chats.length > 0">
+      <app-chat-item *ngFor="let chat of chats; trackBy: trackByGroupId" [chat]="chat"
+        [isActive]="isActivechat(chat.groupId)" (chatSelect)="onChatSelect($event)">
+      </app-chat-item>
+    </div>
+
+    <!-- No Chats State -->
+    <div *ngIf="!loading && chats.length === 0" class="no-chats">
+      <i class="bi bi-chat-text empty-icon"></i>
+      <p class="empty-text">No conversations yet</p>
+      <button class="btn start-chat-btn">
+        <i class="bi bi-plus-circle-fill me-1"></i>
+        New Group
+      </button>
+    </div>
+  </div>
+</aside>

@@ -1,0 +1,78 @@
+<div class="chat-conversation" *ngIf="conversation || loading; else noConversationSelected">
+  <!-- Conversation Header -->
+  <div class="conversation-header" *ngIf="conversation && !loading">
+    <!-- Mobile Back Button -->
+    <button *ngIf="showBackButton" class="back-button" (click)="onBackClick()" title="Back to chats">
+      <i class="bi bi-arrow-left"></i>
+    </button>
+
+    <div class="conversation-info">
+      <h4 class="conversation-title">{{ conversation.groupName }}</h4>
+      <p class="conversation-subtitle" *ngIf="conversation.memberCount">
+        {{ conversation.memberCount }} member{{ conversation.memberCount !== 1 ? 's' : '' }}
+      </p>
+    </div>
+
+    <div class="conversation-actions">
+      <button class="btn action-btn" title="More options">
+        <i class="bi bi-three-dots-vertical"></i>
+      </button>
+    </div>
+  </div>
+
+  <!-- Header Skeleton -->
+  <div class="conversation-header" *ngIf="loading">
+    <!-- Mobile Back Button Skeleton -->
+    <div *ngIf="showBackButton" class="back-button-skeleton">
+      <app-skeleton-loader type="circle" width="36px" height="36px"></app-skeleton-loader>
+    </div>
+
+    <app-skeleton-loader type="chat-header" [showBackButton]="showBackButton"></app-skeleton-loader>
+  </div>
+
+  <!-- Messages Container -->
+  <div class="messages-container" #messagesContainer>
+    <!-- Loading Messages -->
+    <div class="messages-list" *ngIf="loading">
+      <app-skeleton-loader
+        *ngFor="let item of messageSkeletonItems; trackBy: trackByMessageIndex"
+        type="message">
+      </app-skeleton-loader>
+    </div>
+
+    <!-- Loaded Messages -->
+    <div class="messages-list" *ngIf="conversation && !loading">
+      <app-chat-message *ngFor="let message of conversation.messages; trackBy: trackByMessageId" [message]="message">
+      </app-chat-message>
+    </div>
+  </div>
+
+  <!-- Message Input - Always visible -->
+  <div class="message-input-container">
+    <div class="input-wrapper">
+      <textarea [(ngModel)]="newMessage" (keydown)="onKeyDown($event)"
+        placeholder="Type a message..."
+        class="message-input"
+        rows="1"
+        [disabled]="loading">
+      </textarea>
+      <button class="btn send-btn" (click)="onSendMessage()" [disabled]="!newMessage.trim() || loading"
+        title="Send message">
+        <i class="bi" [ngClass]="newMessage.trim() && !loading ? 'bi-send-check' : 'bi-send'"></i>
+      </button>
+    </div>
+  </div>
+</div>
+
+<ng-template #noConversationSelected>
+  <div class="no-conversation">
+    <div class="placeholder-content">
+      <i class="bi bi-chat-quote placeholder-icon"></i>
+      <h3 class="placeholder-title">No Chat Selected</h3>
+      <p class="placeholder-subtitle">Pick a chat to continue</p>
+      <p class="placeholder-footer">
+        <i class="bi bi-lock"></i> Messages are end-to-end encrypted
+      </p>
+    </div>
+  </div>
+</ng-template>

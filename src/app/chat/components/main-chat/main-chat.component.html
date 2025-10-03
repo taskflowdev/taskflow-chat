@@ -1,0 +1,24 @@
+<div class="main-chat-container" [class.mobile-view]="isMobileView">
+  <!-- Chat Content Area without Header -->
+  <div class="chat-content-area">
+    <!-- Left Sidebar with Chat List -->
+    <app-chat-sidebar
+      [chats]="chats"
+      [selectedChatId]="selectedChatId"
+      [loading]="loading"
+      [class.mobile-hidden]="isMobileView && !showSidebar"
+      (chatSelect)="onChatSelect($event)">
+    </app-chat-sidebar>
+
+    <!-- Right Panel with Conversation -->
+    <app-chat-conversation
+      [conversation]="currentConversation"
+      [currentUserId]="user?.id || null"
+      [loading]="loadingMessages"
+      [showBackButton]="isMobileView"
+      [class.mobile-hidden]="isMobileView && showSidebar"
+      (sendMessage)="onSendMessage($event)"
+      (backToChats)="onBackToChats()">
+    </app-chat-conversation>
+  </div>
+</div>

@@ -1,0 +1,23 @@
+<nav class="app-navbar">
+  <div class="navbar-content">
+    <!-- Left: Logo -->
+    <div class="logo-section">
+      <a routerLink="/" class="logo-link">
+        <!-- <img src="/public/taskflow-light.png" alt="TaskFlow Logo" class="logo-img" /> -->
+        <i class="bi bi-chat-quote logo-icon"></i>
+        <!-- <span class="logo-text">TaskFlow</span> -->
+      </a>
+    </div>
+
+    <!-- Center: Navigation Menu - Now using reusable component -->
+    <div class="nav-menu">
+      <app-nav-links [navLinks]="navLinks"></app-nav-links>
+    </div>
+
+    <!-- Right: User Dropdown - Now using reusable component -->
+    <div class="user-dropdown-container">
+      <app-user-dropdown [user]="user" [dropdownItems]="userDropdownItems" (itemClick)="onDropdownItemClick($event)">
+      </app-user-dropdown>
+    </div>
+  </div>
+</nav>
