@@ -7,52 +7,39 @@
         <div class="fs-1 mb-2">
           <i class="bi bi-people"></i>
         </div>
-        <h1 class="main-title">Create New Group</h1>
-        <p class="subtitle">Enter a name for your group</p>
+        <h1 class="main-title">Create Group</h1>
+        <p class="subtitle">Create a place for collaboration and meaningful connections.</p>
         <button type="button" class="btn-close" (click)="closeDialog()" aria-label="Close">
           <i class="bi bi-x"></i>
         </button>
       </div>
 
+      <hr class="border-2" />
+
       <!-- Form -->
       <form [formGroup]="createGroupForm" (ngSubmit)="onSubmit()" novalidate class="create-group-form">
-        <!-- Group Name Field using Common Input -->
-        <app-common-input
-          label="Group Name"
-          placeholder="Enter group name"
-          formControlName="groupName"
-          [isInvalid]="getFieldError('groupName')"
-          [errorMessage]="getErrorMessage('groupName')"
-        ></app-common-input>
+        <div class="input-form-group">
+          <!-- Group Name Field using Common Input -->
+          <app-common-input label="Group Name" placeholder="Enter group name" formControlName="groupName"
+            [isInvalid]="getFieldError('groupName')" [errorMessage]="getErrorMessage('groupName')"></app-common-input>
 
-        <!-- Public/Private Toggle using Common Toggle -->
-        <app-common-toggle
-          label="Group Privacy"
-          description="Enable this to make the group publicly visible"
-          formControlName="isPublic"
-        ></app-common-toggle>
+          <!-- Public/Private Toggle using Common Toggle -->
+          <div>
+            <app-common-toggle label="Group Visibility" [description]="'Allow anyone to view and join this group.'"
+              formControlName="isPublic" [onText]="'Public'" [offText]="'Private'"></app-common-toggle>
+          </div>
+          </div>
 
-        <!-- Create Button using Common Button -->
-        <app-common-button
-          type="submit"
-          variant="primary"
-          [fullWidth]="true"
-          [loading]="isLoading"
-          [disabled]="createGroupForm.invalid"
-        >
-          {{ isLoading ? 'Creating...' : 'Create Group' }}
-        </app-common-button>
-
-        <!-- Cancel Button using Common Button -->
-        <app-common-button
-          type="button"
-          variant="secondary"
-          [fullWidth]="true"
-          [disabled]="isLoading"
-          (clicked)="closeDialog()"
-        >
-          Cancel
-        </app-common-button>
+        <div class="button-group">
+          <app-common-button type="submit" variant="primary" [fullWidth]="true" [loading]="isLoading"
+            [disabled]="createGroupForm.invalid">
+            {{ isLoading ? 'Creating...' : 'Create Group' }}
+          </app-common-button>
+          <app-common-button type="button" variant="secondary" [fullWidth]="true" [disabled]="isLoading"
+            (clicked)="closeDialog()">
+            Cancel
+          </app-common-button>
+        </div>
       </form>
     </div>
   </div>

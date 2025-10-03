@@ -124,19 +124,19 @@ export type ButtonSize = 'small' | 'medium' | 'large';
     }
 
     /* Loading state */
-    .spinner {
-      width: 14px;
-      height: 14px;
-      border: 2px solid rgba(255, 255, 255, 0.3);
-      border-top-color: currentColor;
-      border-radius: 50%;
-      animation: spin 0.6s linear infinite;
-    }
+    // .spinner {
+    //   width: 14px;
+    //   height: 14px;
+    //   border: 2px solid rgba(255, 255, 255, 0.3);
+    //   border-top-color: currentColor;
+    //   border-radius: 50%;
+    //   animation: spin 0.6s linear infinite;
+    // }
 
-    .btn-primary .spinner {
-      border-color: rgba(0, 0, 0, 0.3);
-      border-top-color: black;
-    }
+    // .btn-primary .spinner {
+    //   border-color: rgba(0, 0, 0, 0.3);
+    //   border-top-color: black;
+    // }
 
     @keyframes spin {
       to {
@@ -173,7 +173,7 @@ export class CommonButtonComponent {
   @Input() disabled = false;
   @Input() loading = false;
   @Input() fullWidth = false;
-  
+
   @Output() clicked = new EventEmitter<Event>();
 
   getButtonClasses(): string {

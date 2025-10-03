@@ -12,7 +12,7 @@ import { CommonToggleComponent } from '../../../shared/components/common-form-co
   selector: 'app-create-group-dialog',
   standalone: true,
   imports: [
-    CommonModule, 
+    CommonModule,
     ReactiveFormsModule,
     CommonInputComponent,
     CommonButtonComponent,
@@ -24,7 +24,7 @@ import { CommonToggleComponent } from '../../../shared/components/common-form-co
 export class CreateGroupDialogComponent implements OnInit {
   createGroupForm!: FormGroup;
   isLoading = false;
-  
+
   @Output() groupCreated = new EventEmitter<void>();
 
   constructor(

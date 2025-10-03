@@ -72,8 +72,9 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
     }
 
     .error-message {
+      min-height: 1rem;
       color: #e74c3c;
-      font-size: 0.75rem;
+      font-size: 0.85rem;
       margin-top: 0.375rem;
       display: block;
     }

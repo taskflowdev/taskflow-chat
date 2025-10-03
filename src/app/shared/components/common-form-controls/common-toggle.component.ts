@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter, forwardRef } from '@angular/core';
+import { Component, Input, forwardRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 
@@ -24,6 +24,10 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
         <label [for]="id" class="toggle-switch">
           <span class="toggle-slider"></span>
         </label>
+        <!-- Added ON/OFF text beside toggle -->
+        <span class="toggle-value-text" *ngIf="onText || offText">
+          {{ value ? onText : offText }}
+        </span>
       </div>
       <span class="toggle-description" *ngIf="description">
         {{ description }}
@@ -32,9 +36,14 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
   `,
   styles: [`
     .common-toggle-container {
-      display: flex;
-      flex-direction: column;
-      gap: 0.5rem;
+      // display: grid;
+      // display: flex;
+      // flex-direction: column;
+      // gap: 0.5rem;
+    }
+
+    .common-toggle-container > *:not(:last-child) {
+      margin-bottom: 0.5rem;
     }
 
     .common-toggle-label {
@@ -47,6 +56,7 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
       display: flex;
       align-items: center;
       gap: 0.75rem;
+      flex-shrink: 0;
     }
 
     .toggle-wrapper.disabled {
@@ -101,8 +111,16 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 
     .toggle-description {
       color: #9ca3af;
-      font-size: 0.75rem;
-      margin-top: 0.25rem;
+      font-size: 0.8rem;
+    }
+
+    .toggle-value-text {
+      border: 1px solid #444444;
+      color: white;
+      font-size: 0.813rem;
+      font-weight: 500;
+      border-radius: 10px;
+      padding: 0.1rem 0.5rem 0.2rem 0.5rem;
     }
 
     @media (max-width: 640px) {
@@ -112,6 +130,10 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 
       .toggle-description {
         font-size: 0.688rem;
+      }
+
+      .toggle-value-text {
+        font-size: 0.75rem;
       }
     }
   `],
@@ -128,11 +150,15 @@ export class CommonToggleComponent implements ControlValueAccessor {
   @Input() description?: string;
   @Input() disabled = false;
   @Input() id = `toggle-${Math.random().toString(36).substr(2, 9)}`;
-  
+
+  /** Text for ON/OFF states */
+  @Input() onText: string = 'ON';
+  @Input() offText: string = 'OFF';
+
   value = false;
-  
-  onChange: any = () => {};
-  onTouched: any = () => {};
+
+  onChange: any = () => { };
+  onTouched: any = () => { };
 
   writeValue(value: boolean): void {
     this.value = value;
