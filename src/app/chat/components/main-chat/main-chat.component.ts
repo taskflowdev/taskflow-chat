@@ -78,6 +78,18 @@ export class MainChatComponent implements OnInit {
       this.route.fragment.subscribe(fragment => {
         this.showCreateGroupDialog = fragment === 'new-group';
       });
+
+      // Listen to route parameters for group selection
+      this.route.params.subscribe(params => {
+        const groupId = params['groupId'];
+        if (groupId && this.chats.length > 0) {
+          // Only load if we have chats loaded and groupId exists in the list
+          const chatExists = this.chats.some(chat => chat.groupId === groupId);
+          if (chatExists) {
+            this.selectChatById(groupId);
+          }
+        }
+      });
     }
   }
 
@@ -104,6 +116,17 @@ export class MainChatComponent implements OnInit {
       next: (groups: GroupWithMessages[]) => {
         this.chats = groups.map(group => this.mapGroupToChatItem(group));
         this.loading = false;
+        
+        // After loading groups, check if there's a groupId in the route
+        if (isPlatformBrowser(this.platformId)) {
+          const groupId = this.route.snapshot.params['groupId'];
+          if (groupId) {
+            const chatExists = this.chats.some(chat => chat.groupId === groupId);
+            if (chatExists) {
+              this.selectChatById(groupId);
+            }
+          }
+        }
       },
       error: (error) => {
         console.error('Failed to load user groups:', error);
@@ -126,6 +149,18 @@ export class MainChatComponent implements OnInit {
   }
 
   onChatSelect(groupId: string): void {
+    // Navigate to the group URL
+    this.router.navigate(['/chats/group', groupId], { 
+      queryParamsHandling: 'preserve' 
+    });
+    
+    this.selectChatById(groupId);
+  }
+
+  /**
+   * Selects a chat by ID and loads its messages
+   */
+  private selectChatById(groupId: string): void {
     this.selectedChatId = groupId;
     this.loadGroupMessages(groupId);
 
@@ -149,6 +184,8 @@ export class MainChatComponent implements OnInit {
       this.showSidebar = true;
       this.selectedChatId = null;
       this.currentConversation = null;
+      // Navigate back to chats list
+      this.router.navigate(['/chats']);
     }
   }
 
