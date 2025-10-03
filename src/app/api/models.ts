@@ -4,14 +4,6 @@
 
 export type { ApiResponse } from './models/api-response';
 export type { CreateGroupDto } from './models/create-group-dto';
-export type { DynamicThemeDto } from './models/dynamic-theme-dto';
-export type { DynamicThemeDtoApiResponse } from './models/dynamic-theme-dto-api-response';
-export type { DynamicThemeDtoIEnumerableApiResponse } from './models/dynamic-theme-dto-i-enumerable-api-response';
-export type { DynamicThemeVariantDto } from './models/dynamic-theme-variant-dto';
-export type { DynamicUserThemeDto } from './models/dynamic-user-theme-dto';
-export type { DynamicUserThemeDtoApiResponse } from './models/dynamic-user-theme-dto-api-response';
-export type { EffectiveThemeDto } from './models/effective-theme-dto';
-export type { EffectiveThemeDtoApiResponse } from './models/effective-theme-dto-api-response';
 export type { GeneralFileContent } from './models/general-file-content';
 export type { GroupDto } from './models/group-dto';
 export type { GroupDtoApiResponse } from './models/group-dto-api-response';
@@ -35,7 +27,6 @@ export type { SendMessageDto } from './models/send-message-dto';
 export type { TextContent } from './models/text-content';
 export type { TokenDto } from './models/token-dto';
 export type { TokenDtoApiResponse } from './models/token-dto-api-response';
-export type { UpdateDynamicUserThemeDto } from './models/update-dynamic-user-theme-dto';
 export type { UpdateGroupNameDto } from './models/update-group-name-dto';
 export type { UserDto } from './models/user-dto';
 export type { UserDtoApiResponse } from './models/user-dto-api-response';
