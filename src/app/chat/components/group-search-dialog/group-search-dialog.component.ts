@@ -86,9 +86,12 @@ export class GroupSearchDialogComponent implements OnInit, OnDestroy, OnChanges,
   }
 
   ngAfterViewInit(): void {
-    if (this.searchInput) {
-      this.searchInput.nativeElement.focus();
-    }
+    // Use setTimeout to ensure the view is fully rendered before focusing
+    setTimeout(() => {
+      if (this.searchInput) {
+        this.searchInput.nativeElement.focus();
+      }
+    }, 0);
   }
 
   ngOnChanges(changes: SimpleChanges): void {
