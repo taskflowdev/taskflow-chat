@@ -10,6 +10,7 @@ import { GroupsServiceProxy, MessageFactoryServiceProxy } from '../../services';
 import type { GroupWithMessages } from '../../services';
 import { MessageDto } from '../../../api/models/message-dto';
 import { CreateGroupDialogComponent } from '../create-group-dialog/create-group-dialog.component';
+import { GroupSearchDialogComponent } from '../group-search-dialog/group-search-dialog.component';
 
 @Component({
   selector: 'app-main-chat',
@@ -18,7 +19,8 @@ import { CreateGroupDialogComponent } from '../create-group-dialog/create-group-
     CommonModule,
     ChatSidebarComponent,
     ChatConversationComponent,
-    CreateGroupDialogComponent
+    CreateGroupDialogComponent,
+    GroupSearchDialogComponent
   ],
   templateUrl: './main-chat.component.html',
   styleUrl: './main-chat.component.scss'
@@ -37,6 +39,7 @@ export class MainChatComponent implements OnInit {
 
   // Dialog state
   showCreateGroupDialog: boolean = false;
+  showSearchGroupDialog: boolean = false;
 
 
 
@@ -74,9 +77,10 @@ export class MainChatComponent implements OnInit {
         this.loadUserGroups();
       }
 
-      // Listen to URL fragment changes for dialog
+      // Listen to URL fragment changes for dialogs
       this.route.fragment.subscribe(fragment => {
         this.showCreateGroupDialog = fragment === 'new-group';
+        this.showSearchGroupDialog = fragment === 'search-groups';
       });
 
       // Listen to route parameters for group selection
@@ -389,5 +393,13 @@ export class MainChatComponent implements OnInit {
         console.error('Failed to send poll message:', error);
       }
     });
+  }
+
+  /**
+   * Handle search group dialog result
+   */
+  onGroupFromSearchSelected(groupId: string): void {
+    // Navigate to the selected group
+    this.router.navigate(['/chats/group', groupId]);
   }
 }

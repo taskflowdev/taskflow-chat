@@ -1,9 +1,14 @@
 <aside class="chat-sidebar">
   <div class="sidebar-header">
     <h3 class="sidebar-title">Chats</h3>
-    <button class="btn new-chat-btn" title="New Chat" (click)="onCreateGroup()">
-      <i class="bi bi-plus-lg"></i>
-    </button>
+    <div class="header-actions">
+      <button class="btn search-btn" title="Search Groups" (click)="onSearchGroups()">
+        <i class="bi bi-search"></i>
+      </button>
+      <button class="btn new-chat-btn" title="New Chat" (click)="onCreateGroup()">
+        <i class="bi bi-plus-lg"></i>
+      </button>
+    </div>
   </div>
 
   <div class="sidebar-content">

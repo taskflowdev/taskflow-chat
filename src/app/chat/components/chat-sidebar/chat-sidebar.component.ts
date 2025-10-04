@@ -48,4 +48,9 @@ export class ChatSidebarComponent {
     // Navigate with fragment to trigger dialog
     this.router.navigate([], { fragment: 'new-group' });
   }
+
+  onSearchGroups(): void {
+    // Navigate with fragment to trigger search dialog
+    this.router.navigate([], { fragment: 'search-groups' });
+  }
 }

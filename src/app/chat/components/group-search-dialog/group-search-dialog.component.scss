@@ -1,0 +1,394 @@
+// Group Search Dialog Styles
+// Enterprise-level styling matching app theme
+
+.dialog-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(5px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 1rem;
+  animation: fadeIn 0.2s ease-out;
+}
+
+.dialog-container {
+  background: black;
+  border: 1px solid #444444;
+  border-radius: 12px;
+  width: 100%;
+  max-width: 600px;
+  max-height: 90vh;
+  display: flex;
+  flex-direction: column;
+  animation: slideUp 0.3s ease-out;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+}
+
+// Dialog Header
+.dialog-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.5rem;
+  border-bottom: 1px solid #444444;
+}
+
+.header-content {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.header-icon {
+  font-size: 1.5rem;
+  color: white;
+}
+
+.dialog-title {
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: white;
+}
+
+.close-btn {
+  background: transparent;
+  border: none;
+  color: #999999;
+  font-size: 1.25rem;
+  cursor: pointer;
+  padding: 0.5rem;
+  border-radius: 6px;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  &:hover {
+    background: #333333;
+    color: white;
+  }
+}
+
+// Dialog Body
+.dialog-body {
+  padding: 1.5rem;
+  overflow-y: auto;
+  flex: 1;
+}
+
+// Search Form
+.search-form {
+  margin-bottom: 1.5rem;
+}
+
+.search-input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.search-icon {
+  position: absolute;
+  left: 1rem;
+  color: #999999;
+  font-size: 1.125rem;
+  pointer-events: none;
+}
+
+.search-input {
+  width: 100%;
+  background: black;
+  border: 1px solid #444444;
+  border-radius: 8px;
+  color: white;
+  font-size: 1rem;
+  padding: 0.875rem 1rem 0.875rem 3rem;
+  transition: all 0.2s ease;
+
+  &:focus {
+    outline: none;
+    border-color: #666666;
+    box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.1);
+  }
+
+  &::placeholder {
+    color: #666666;
+  }
+}
+
+.spin-icon {
+  position: absolute;
+  right: 1rem;
+  color: white;
+  font-size: 1.125rem;
+  animation: spin 1s linear infinite;
+}
+
+// Section Header
+.section-header {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: #999999;
+  font-size: 0.875rem;
+  font-weight: 500;
+  margin-bottom: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+
+  i {
+    font-size: 1rem;
+  }
+}
+
+// Recent Searches
+.recent-searches {
+  margin-bottom: 1.5rem;
+}
+
+.recent-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.recent-item {
+  background: transparent;
+  border: 1px solid #444444;
+  border-radius: 6px;
+  color: white;
+  padding: 0.75rem 1rem;
+  text-align: left;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-size: 0.9375rem;
+
+  i {
+    color: #999999;
+    font-size: 0.875rem;
+  }
+
+  .recent-query {
+    flex: 1;
+  }
+
+  &:hover {
+    background: #333333;
+    border-color: #666666;
+  }
+}
+
+// Search Results
+.search-results {
+  margin-top: 1.5rem;
+}
+
+.results-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.result-item {
+  background: transparent;
+  border: 1px solid #444444;
+  border-radius: 8px;
+  padding: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+
+  &:hover {
+    background: #333333;
+    border-color: #666666;
+  }
+}
+
+.result-avatar {
+  flex-shrink: 0;
+}
+
+.avatar-circle {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: #333333;
+  border: 1px solid #444444;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.avatar-initials {
+  font-size: 1rem;
+  font-weight: 600;
+  color: white;
+}
+
+.result-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.result-name {
+  color: white;
+  font-size: 1rem;
+  font-weight: 500;
+  margin-bottom: 0.25rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.result-description {
+  color: #999999;
+  font-size: 0.875rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+
+  i {
+    font-size: 0.875rem;
+  }
+}
+
+.public-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.125rem 0.5rem;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+  font-size: 0.75rem;
+  margin-left: 0.25rem;
+
+  i {
+    font-size: 0.75rem;
+  }
+}
+
+.result-action {
+  flex-shrink: 0;
+}
+
+// Skeleton Loading
+.skeleton-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.result-skeleton {
+  border-radius: 8px;
+}
+
+// No Results
+.no-results {
+  text-align: center;
+  padding: 3rem 1rem;
+  color: #999999;
+
+  i {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+    opacity: 0.5;
+  }
+
+  .no-results-title {
+    font-size: 1.125rem;
+    font-weight: 500;
+    color: white;
+    margin-bottom: 0.5rem;
+  }
+
+  .no-results-text {
+    font-size: 0.875rem;
+    margin: 0;
+  }
+}
+
+// Initial State
+.initial-state {
+  text-align: center;
+  padding: 3rem 1rem;
+  color: #999999;
+
+  i {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+    opacity: 0.5;
+  }
+
+  .initial-text {
+    font-size: 0.9375rem;
+    margin: 0;
+  }
+}
+
+// Animations
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+// Responsive Design
+@media (max-width: 768px) {
+  .dialog-container {
+    max-height: 95vh;
+    border-radius: 12px 12px 0 0;
+    margin-top: auto;
+  }
+
+  .dialog-header {
+    padding: 1.25rem;
+  }
+
+  .dialog-body {
+    padding: 1.25rem;
+  }
+
+  .result-item {
+    flex-direction: row;
+    align-items: center;
+  }
+
+  .result-action {
+    margin-top: 0;
+  }
+}

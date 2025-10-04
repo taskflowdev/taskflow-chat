@@ -28,4 +28,10 @@
     *ngIf="showCreateGroupDialog"
     (groupCreated)="onGroupCreated()">
   </app-create-group-dialog>
+
+  <!-- Search Group Dialog -->
+  <app-group-search-dialog
+    *ngIf="showSearchGroupDialog"
+    (groupSelected)="onGroupFromSearchSelected($event)">
+  </app-group-search-dialog>
 </div>
