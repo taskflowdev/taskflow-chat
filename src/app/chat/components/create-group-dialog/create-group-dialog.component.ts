@@ -83,7 +83,7 @@ export class CreateGroupDialogComponent implements OnInit {
       next: (response) => {
         this.isLoading = false;
         if (response.success && response.data) {
-          this.toastService.showSuccess('Group created successfully!', 'Success');
+          this.toastService.showSuccess('Group created.', 'Success');
           this.closeDialog();
           // Emit event to refresh the chat list instead of full page reload
           this.groupCreated.emit();

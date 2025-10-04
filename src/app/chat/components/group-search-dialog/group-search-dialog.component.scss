@@ -8,7 +8,7 @@
   right: 0;
   bottom: 0;
   background: rgba(0, 0, 0, 0.7);
-  backdrop-filter: blur(5px);
+  backdrop-filter: blur(1px);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -23,7 +23,7 @@
   border-radius: 12px;
   width: 100%;
   max-width: 600px;
-  max-height: 90vh;
+  max-height: 100vh;
   display: flex;
   flex-direction: column;
   animation: slideUp 0.3s ease-out;
@@ -35,7 +35,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 1.5rem;
+  padding: 1rem;
   border-bottom: 1px solid #444444;
 }
 
@@ -46,15 +46,27 @@
 }
 
 .header-icon {
-  font-size: 1.5rem;
+  margin-left: 0.5rem;
+  font-size: 2rem;
   color: white;
+}
+
+.header-text {
+  display: flex;
+  flex-direction: column;
 }
 
 .dialog-title {
   margin: 0;
-  font-size: 1.25rem;
+  font-size: 1.5rem;
   font-weight: 600;
   color: white;
+}
+
+.dialog-subtitle {
+  margin: 0;
+  font-size: 0.875rem;
+  color: #999999;
 }
 
 .close-btn {
@@ -78,14 +90,14 @@
 
 // Dialog Body
 .dialog-body {
-  padding: 1.5rem;
+  padding: 1rem;
   overflow-y: auto;
   flex: 1;
 }
 
 // Search Form
 .search-form {
-  margin-bottom: 1.5rem;
+  margin-bottom: 1rem;
 }
 
 .search-input-wrapper {
@@ -144,13 +156,13 @@
   letter-spacing: 0.5px;
 
   i {
-    font-size: 1rem;
+    font-size: 1.1rem;
   }
 }
 
 // Recent Searches
 .recent-searches {
-  margin-bottom: 1.5rem;
+  margin-bottom: 1rem;
 }
 
 .recent-list {
@@ -160,37 +172,83 @@
 }
 
 .recent-item {
-  background: transparent;
-  border: 1px solid #444444;
-  border-radius: 6px;
-  color: white;
-  padding: 0.75rem 1rem;
-  text-align: left;
-  cursor: pointer;
-  transition: all 0.2s ease;
   display: flex;
   align-items: center;
-  gap: 0.75rem;
-  font-size: 0.9375rem;
-
-  i {
-    color: #999999;
-    font-size: 0.875rem;
-  }
-
-  .recent-query {
-    flex: 1;
-  }
-
+  gap: 0.5rem;
+  border: 1px solid #444444;
+  border-radius: 6px;
+  padding: 0.3rem 0.5rem;
+  color: white;
+  background: transparent;
+  transition: all 0.2s ease;
+  
   &:hover {
     background: #333333;
     border-color: #666666;
   }
 }
 
+.recent-query-btn {
+  flex: 1;
+  background: transparent;
+  border: none;
+  color: white;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-size: 0.9375rem;
+  text-align: left;
+  padding: 0;
+  
+  i {
+    color: #999999;
+    font-size: 0.875rem;
+  }
+
+  &:focus {
+    outline: none;
+  }
+}
+
+.remove-recent-btn {
+  background: transparent;
+  border: none;
+  color: #999999;
+  font-size: 1rem;
+  cursor: pointer;
+  padding: 0.2rem 0.4rem;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: color 0.2s ease, background-color 0.2s ease;
+  
+  &:hover {
+    color: white;
+    background-color: #555555;
+  }
+
+  &:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(255,255,255,0.3);
+  }
+}
+
+.remove-recent-btn {
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s ease;
+}
+
+.recent-item:hover .remove-recent-btn {
+  opacity: 1;
+  pointer-events: auto;
+}
+
 // Search Results
 .search-results {
-  margin-top: 1.5rem;
+  margin-top: 1rem;
 }
 
 .results-list {
@@ -203,7 +261,7 @@
   background: transparent;
   border: 1px solid #444444;
   border-radius: 8px;
-  padding: 1rem;
+  padding: 0.8rem;
   display: flex;
   align-items: center;
   gap: 1rem;
@@ -221,8 +279,8 @@
 }
 
 .avatar-circle {
-  width: 48px;
-  height: 48px;
+  width: 60px;
+  height: 60px;
   border-radius: 50%;
   background: #333333;
   border: 1px solid #444444;
@@ -232,7 +290,7 @@
 }
 
 .avatar-initials {
-  font-size: 1rem;
+  font-size: 1.2rem;
   font-weight: 600;
   color: white;
 }
@@ -244,9 +302,9 @@
 
 .result-name {
   color: white;
-  font-size: 1rem;
+  font-size: 1.2rem;
   font-weight: 500;
-  margin-bottom: 0.25rem;
+  margin-bottom: 0rem;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -268,9 +326,10 @@
   display: inline-flex;
   align-items: center;
   gap: 0.25rem;
-  padding: 0.125rem 0.5rem;
-  background: rgba(255, 255, 255, 0.1);
-  border-radius: 4px;
+  padding: 0.175rem 0.4rem;
+  background: transparent;
+  border: 1px solid #444444;
+  border-radius: 10px;
   font-size: 0.75rem;
   margin-left: 0.25rem;
 
@@ -301,16 +360,17 @@
   color: #999999;
 
   i {
-    font-size: 3rem;
-    margin-bottom: 1rem;
+    display: inline-block;
+    font-size: 2.5rem;
+    margin-bottom: 0.8rem;
     opacity: 0.5;
   }
 
   .no-results-title {
-    font-size: 1.125rem;
+    font-size: 1rem;
     font-weight: 500;
     color: white;
-    margin-bottom: 0.5rem;
+    margin-bottom: 0.2rem;
   }
 
   .no-results-text {
@@ -326,8 +386,9 @@
   color: #999999;
 
   i {
-    font-size: 3rem;
-    margin-bottom: 1rem;
+    display: inline-block;
+    margin-bottom: 0.8rem;
+    font-size: 2.5rem;
     opacity: 0.5;
   }
 

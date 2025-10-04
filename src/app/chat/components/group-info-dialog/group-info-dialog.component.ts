@@ -129,7 +129,7 @@ export class GroupInfoDialogComponent implements OnInit {
       next: (response) => {
         this.isLoading = false;
         if (response.success) {
-          this.toastService.showSuccess('Group information updated successfully!', 'Success');
+          this.toastService.showSuccess('Group information updated.', 'Success');
           this.groupUpdated.emit();
           this.closeDialog();
         } else {

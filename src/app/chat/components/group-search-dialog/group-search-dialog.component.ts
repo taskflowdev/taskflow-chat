@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, OnDestroy, Output, EventEmitter, ViewChild, ElementRef, AfterViewInit, ChangeDetectorRef, NgZone, OnChanges, SimpleChanges } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
@@ -41,16 +41,16 @@ export interface RecentSearchItem {
   imports: [
     CommonModule,
     ReactiveFormsModule,
-    CommonInputComponent,
     CommonButtonComponent,
     SkeletonLoaderComponent
   ],
   templateUrl: './group-search-dialog.component.html',
   styleUrl: './group-search-dialog.component.scss'
 })
-export class GroupSearchDialogComponent implements OnInit, OnDestroy {
+export class GroupSearchDialogComponent implements OnInit, OnDestroy, OnChanges, AfterViewInit {
   @Output() dialogClosed = new EventEmitter<void>();
   @Output() groupSelected = new EventEmitter<string>();
+  @ViewChild('searchInput') searchInput!: ElementRef<HTMLInputElement>;
 
   searchForm: FormGroup;
   searchResults: SearchResultItem[] = [];
@@ -83,6 +83,28 @@ export class GroupSearchDialogComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.searchSubscription?.unsubscribe();
+  }
+
+  ngAfterViewInit(): void {
+    if (this.searchInput) {
+      this.searchInput.nativeElement.focus();
+    }
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['isOpen'] && changes['isOpen'].currentValue === true) {
+      // Wait for view update to complete, then focus input
+      setTimeout(() => this.focusSearchInput(), 0);
+    }
+  }
+
+  /** 
+   * Focus the search input field
+   */
+  private focusSearchInput(): void {
+    if (this.searchInput) {
+      this.searchInput.nativeElement.focus();
+    }
   }
 
   /**
@@ -122,7 +144,7 @@ export class GroupSearchDialogComponent implements OnInit, OnDestroy {
           
           if (response && response.success && response.data) {
             // Parse the data array
-            const groups = Array.isArray(response.data) ? response.data : [];
+            const groups = Array.isArray(response.data.groups) ? response.data.groups : [];
             this.searchResults = groups.map((group: any) => this.mapToSearchResult(group));
             this.showNoResults = this.searchResults.length === 0;
           } else {
@@ -292,5 +314,21 @@ export class GroupSearchDialogComponent implements OnInit, OnDestroy {
 
   trackByQuery(index: number, item: RecentSearchItem): string {
     return item.query;
+  }
+
+  /**
+   * Remove a recent search item
+   */
+  removeRecentSearch(event: Event, query: string): void {
+    event.stopPropagation();
+
+    this.recentSearches = this.recentSearches.filter(item => item.query !== query);
+    
+    // Update localStorage
+    try {
+      localStorage.setItem(this.RECENT_SEARCHES_KEY, JSON.stringify(this.recentSearches));
+    } catch (error) {
+      console.error('Error updating recent searches:', error);
+    }
   }
 }
