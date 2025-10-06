@@ -7,6 +7,7 @@ import { ChatMessageComponent, ChatMessageData } from '../chat-message/chat-mess
 import { SkeletonLoaderComponent } from '../../../shared/components/skeleton-loader/skeleton-loader.component';
 import { GroupInfoDialogComponent } from '../group-info-dialog/group-info-dialog.component';
 import { CommonDropdownComponent, DropdownItem } from '../../../shared/components/common-dropdown/common-dropdown.component';
+import { CommonTooltipDirective, TooltipPosition } from '../../../shared/components/common-tooltip';
 
 export interface ConversationData {
   groupId: string;
@@ -17,7 +18,7 @@ export interface ConversationData {
 
 @Component({
   selector: 'app-chat-conversation',
-  imports: [CommonModule, FormsModule, ChatMessageComponent, SkeletonLoaderComponent, GroupInfoDialogComponent, CommonDropdownComponent],
+  imports: [CommonModule, FormsModule, ChatMessageComponent, SkeletonLoaderComponent, GroupInfoDialogComponent, CommonDropdownComponent, CommonTooltipDirective],
   templateUrl: './chat-conversation.component.html',
   styleUrls: ['./chat-conversation.component.scss']
 })
@@ -36,6 +37,9 @@ export class ChatConversationComponent implements AfterViewChecked, OnInit, OnDe
   private shouldScrollToBottom = false;
   showGroupInfoDialog = false;
   private fragmentSubscription?: Subscription;
+
+  // Export enum for template use
+  TooltipPosition = TooltipPosition;
 
   // Dropdown items
   dropdownItems: DropdownItem[] = [

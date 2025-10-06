@@ -2,7 +2,12 @@
   <!-- Conversation Header -->
   <div class="conversation-header" *ngIf="conversation && !loading">
     <!-- Mobile Back Button -->
-    <button *ngIf="showBackButton" class="back-button" (click)="onBackClick()" title="Back to chats">
+    <button 
+      *ngIf="showBackButton" 
+      class="back-button" 
+      [appCommonTooltip]="'Back to chats'"
+      [tooltipPosition]="TooltipPosition.BOTTOM"
+      (click)="onBackClick()">
       <i class="bi bi-arrow-left"></i>
     </button>
 

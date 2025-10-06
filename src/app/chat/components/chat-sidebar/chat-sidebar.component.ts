@@ -3,10 +3,11 @@ import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { ChatItemComponent, ChatItemData } from '../chat-item/chat-item.component';
 import { SkeletonLoaderComponent } from '../../../shared/components/skeleton-loader/skeleton-loader.component';
+import { CommonTooltipDirective, TooltipPosition } from '../../../shared/components/common-tooltip';
 
 @Component({
   selector: 'app-chat-sidebar',
-  imports: [CommonModule, ChatItemComponent, SkeletonLoaderComponent],
+  imports: [CommonModule, ChatItemComponent, SkeletonLoaderComponent, CommonTooltipDirective],
   templateUrl: './chat-sidebar.component.html',
   styleUrl: './chat-sidebar.component.scss'
 })
@@ -15,6 +16,9 @@ export class ChatSidebarComponent {
   @Input() selectedChatId: string | null = null;
   @Input() loading: boolean = false;
   @Output() chatSelect = new EventEmitter<string>();
+
+  // Export enum for template use
+  TooltipPosition = TooltipPosition;
 
   constructor(private router: Router) {}
   

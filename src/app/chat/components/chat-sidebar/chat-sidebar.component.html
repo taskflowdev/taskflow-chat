@@ -2,10 +2,18 @@
   <div class="sidebar-header">
     <h3 class="sidebar-title">Chats</h3>
     <div class="header-actions">
-      <button class="btn search-btn" title="Search Groups" (click)="onSearchGroups()">
+      <button 
+        class="btn search-btn" 
+        [appCommonTooltip]="'Search for groups'"
+        [tooltipPosition]="TooltipPosition.BOTTOM"
+        (click)="onSearchGroups()">
         <i class="bi bi-search"></i>
       </button>
-      <button class="btn new-chat-btn" title="New Chat" (click)="onCreateGroup()">
+      <button 
+        class="btn new-chat-btn" 
+        [appCommonTooltip]="'Create new group'"
+        [tooltipPosition]="TooltipPosition.BOTTOM"
+        (click)="onCreateGroup()">
         <i class="bi bi-plus-lg"></i>
       </button>
     </div>
