@@ -1,4 +1,4 @@
-import { Component, OnInit, Inject, PLATFORM_ID } from '@angular/core';
+import { Component, OnInit, Inject, PLATFORM_ID, OnDestroy } from '@angular/core';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { Router, ActivatedRoute } from '@angular/router';
 import { AuthService, AuthUser } from '../../../auth/services/auth.service';
@@ -11,6 +11,9 @@ import type { GroupWithMessages } from '../../services';
 import { MessageDto } from '../../../api/models/message-dto';
 import { CreateGroupDialogComponent } from '../create-group-dialog/create-group-dialog.component';
 import { GroupSearchDialogComponent } from '../group-search-dialog/group-search-dialog.component';
+import { KeyboardShortcutsDialogComponent } from '../keyboard-shortcuts-dialog/keyboard-shortcuts-dialog.component';
+import { KeyboardShortcutService } from '../../../shared/services/keyboard-shortcut.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-main-chat',
@@ -20,12 +23,13 @@ import { GroupSearchDialogComponent } from '../group-search-dialog/group-search-
     ChatSidebarComponent,
     ChatConversationComponent,
     CreateGroupDialogComponent,
-    GroupSearchDialogComponent
+    GroupSearchDialogComponent,
+    KeyboardShortcutsDialogComponent
   ],
   templateUrl: './main-chat.component.html',
   styleUrl: './main-chat.component.scss'
 })
-export class MainChatComponent implements OnInit {
+export class MainChatComponent implements OnInit, OnDestroy {
   user: AuthUser | null = null;
   selectedChatId: string | null = null;
   currentConversation: ConversationData | null = null;
@@ -40,6 +44,10 @@ export class MainChatComponent implements OnInit {
   // Dialog state
   showCreateGroupDialog: boolean = false;
   showSearchGroupDialog: boolean = false;
+  showKeyboardShortcutsDialog: boolean = false;
+
+  // Subscriptions
+  private shortcutSubscription?: Subscription;
 
 
 
@@ -49,6 +57,7 @@ export class MainChatComponent implements OnInit {
     private route: ActivatedRoute,
     private groupsServiceProxy: GroupsServiceProxy,
     private messageFactoryService: MessageFactoryServiceProxy,
+    private keyboardShortcutService: KeyboardShortcutService,
     @Inject(PLATFORM_ID) private platformId: Object
   ) { }
 
@@ -94,7 +103,106 @@ export class MainChatComponent implements OnInit {
           }
         }
       });
+
+      // Subscribe to keyboard shortcuts
+      this.shortcutSubscription = this.keyboardShortcutService.shortcutTriggered$.subscribe(action => {
+        this.handleShortcutAction(action);
+      });
     }
+  }
+
+  ngOnDestroy(): void {
+    // Clean up subscription
+    if (this.shortcutSubscription) {
+      this.shortcutSubscription.unsubscribe();
+    }
+  }
+
+  /**
+   * Handle keyboard shortcut actions
+   */
+  private handleShortcutAction(action: string): void {
+    switch (action) {
+      case 'SHOW_SHORTCUTS':
+        this.showKeyboardShortcutsDialog = true;
+        break;
+      case 'OPEN_SEARCH':
+        this.router.navigate([], { fragment: 'search-groups', queryParamsHandling: 'preserve' });
+        break;
+      case 'CREATE_GROUP':
+        this.router.navigate([], { fragment: 'new-group', queryParamsHandling: 'preserve' });
+        break;
+      case 'GROUP_INFO':
+        if (this.selectedChatId) {
+          this.router.navigate([], { fragment: 'group-info', queryParamsHandling: 'preserve' });
+        }
+        break;
+      case 'BACK_TO_LIST':
+        if (this.isMobileView) {
+          this.onBackToChats();
+        } else {
+          this.router.navigate(['/chats']);
+        }
+        break;
+      case 'PREV_CHAT':
+        this.navigateToPreviousChat();
+        break;
+      case 'NEXT_CHAT':
+        this.navigateToNextChat();
+        break;
+      case 'CLOSE_DIALOG':
+        this.closeAllDialogs();
+        break;
+    }
+  }
+
+  /**
+   * Navigate to previous chat
+   */
+  private navigateToPreviousChat(): void {
+    if (this.chats.length === 0) return;
+    
+    const currentIndex = this.chats.findIndex(chat => chat.groupId === this.selectedChatId);
+    const prevIndex = currentIndex > 0 ? currentIndex - 1 : this.chats.length - 1;
+    const prevChat = this.chats[prevIndex];
+    
+    if (prevChat) {
+      this.onChatSelect(prevChat.groupId);
+    }
+  }
+
+  /**
+   * Navigate to next chat
+   */
+  private navigateToNextChat(): void {
+    if (this.chats.length === 0) return;
+    
+    const currentIndex = this.chats.findIndex(chat => chat.groupId === this.selectedChatId);
+    const nextIndex = currentIndex < this.chats.length - 1 ? currentIndex + 1 : 0;
+    const nextChat = this.chats[nextIndex];
+    
+    if (nextChat) {
+      this.onChatSelect(nextChat.groupId);
+    }
+  }
+
+  /**
+   * Close all open dialogs
+   */
+  private closeAllDialogs(): void {
+    if (this.showCreateGroupDialog || this.showSearchGroupDialog) {
+      this.router.navigate([], { fragment: undefined, queryParamsHandling: 'preserve' });
+    }
+    if (this.showKeyboardShortcutsDialog) {
+      this.showKeyboardShortcutsDialog = false;
+    }
+  }
+
+  /**
+   * Close keyboard shortcuts dialog
+   */
+  onKeyboardShortcutsClosed(): void {
+    this.showKeyboardShortcutsDialog = false;
   }
 
   /**

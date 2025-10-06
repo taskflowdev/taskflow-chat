@@ -34,4 +34,10 @@
     *ngIf="showSearchGroupDialog"
     (groupSelected)="onGroupFromSearchSelected($event)">
   </app-group-search-dialog>
+
+  <!-- Keyboard Shortcuts Dialog -->
+  <app-keyboard-shortcuts-dialog
+    *ngIf="showKeyboardShortcutsDialog"
+    (closeDialog)="onKeyboardShortcutsClosed()">
+  </app-keyboard-shortcuts-dialog>
 </div>
