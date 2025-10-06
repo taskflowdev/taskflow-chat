@@ -2,20 +2,23 @@
   <div class="sidebar-header">
     <h3 class="sidebar-title">Chats</h3>
     <div class="header-actions">
-      <button 
-        class="btn search-btn" 
-        [appCommonTooltip]="'Search for groups'"
-        [tooltipPosition]="TooltipPosition.AUTO"
+      <!-- Search Button -->
+      <button class="btn search-btn" [appCommonTooltip]="searchTooltip" [tooltipPosition]="TooltipPosition.BOTTOM"
         (click)="onSearchGroups()">
         <i class="bi bi-search"></i>
       </button>
-      <button 
-        class="btn new-chat-btn" 
-        [appCommonTooltip]="'Create new group'"
-        [tooltipPosition]="TooltipPosition.AUTO"
+      <ng-template #searchTooltip>
+        Search <span class="shortcut">Ctrl + K</span>
+      </ng-template>
+
+      <!-- New Chat Button -->
+      <button class="btn new-chat-btn" [appCommonTooltip]="btnCreateGroupTooltip" [tooltipPosition]="TooltipPosition.BOTTOM"
         (click)="onCreateGroup()">
         <i class="bi bi-plus-lg"></i>
       </button>
+      <ng-template #btnCreateGroupTooltip>
+        New Chat <span class="shortcut">Ctrl + N</span>
+      </ng-template>
     </div>
   </div>
 

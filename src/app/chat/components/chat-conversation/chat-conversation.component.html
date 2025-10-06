@@ -2,9 +2,7 @@
   <!-- Conversation Header -->
   <div class="conversation-header" *ngIf="conversation && !loading">
     <!-- Mobile Back Button -->
-    <button 
-      *ngIf="showBackButton" 
-      class="back-button" 
+    <button *ngIf="showBackButton" class="back-button"
       [appCommonTooltip]="'Back to chats'"
       [tooltipPosition]="TooltipPosition.BOTTOM"
       (click)="onBackClick()">
@@ -23,7 +21,7 @@
         [items]="dropdownItems"
         buttonIcon="bi-three-dots-vertical"
         buttonClass="action-btn"
-        buttonTitle="More options"
+        [appCommonTooltip]="'More options'"
         (itemSelected)="onDropdownItemSelected($event)">
       </app-common-dropdown>
     </div>
@@ -66,9 +64,12 @@
         [disabled]="loading">
       </textarea>
       <button class="btn send-btn" (click)="onSendMessage()" [disabled]="!newMessage.trim() || loading"
-        title="Send message">
+        [appCommonTooltip]="btnSendTooltip">
         <i class="bi" [ngClass]="newMessage.trim() && !loading ? 'bi-send-check' : 'bi-send'"></i>
       </button>
+      <ng-template #btnSendTooltip>
+        Send <span class="shortcut">Enter</span>
+      </ng-template>
     </div>
   </div>
 </div>

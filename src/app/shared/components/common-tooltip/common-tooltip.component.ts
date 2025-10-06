@@ -17,7 +17,7 @@ export enum TooltipPosition {
 
 /**
  * Enterprise-level tooltip directive
- * 
+ *
  * Features:
  * - Supports text and HTML content
  * - Configurable positioning with enum
@@ -26,14 +26,14 @@ export enum TooltipPosition {
  * - Smooth animations
  * - Auto-positioning to stay within viewport
  * - Accessible with ARIA attributes
- * 
+ *
  * Usage:
  * ```html
  * <!-- Simple text tooltip -->
  * <button [appCommonTooltip]="'Click to create group'" [tooltipPosition]="TooltipPosition.TOP">
  *   Create
  * </button>
- * 
+ *
  * <!-- HTML content tooltip -->
  * <button [appCommonTooltip]="htmlContent" [tooltipPosition]="TooltipPosition.BOTTOM">
  *   Info
@@ -42,7 +42,7 @@ export enum TooltipPosition {
  *   <strong>Group Info</strong>
  *   <p>Click to view details</p>
  * </ng-template>
- * 
+ *
  * <!-- Auto-positioning tooltip -->
  * <button [appCommonTooltip]="'Smart positioning'" [tooltipPosition]="TooltipPosition.AUTO">
  *   Auto
@@ -55,7 +55,7 @@ export enum TooltipPosition {
 })
 export class CommonTooltipDirective implements OnDestroy {
   @Input('appCommonTooltip') tooltipContent: string | TemplateRef<any> = '';
-  @Input() tooltipPosition: TooltipPosition = TooltipPosition.TOP;
+  @Input() tooltipPosition: TooltipPosition = TooltipPosition.AUTO;
   @Input() tooltipDelay: number = 200; // Delay in milliseconds before showing tooltip
   @Input() tooltipDisabled: boolean = false;
 
@@ -115,7 +115,7 @@ export class CommonTooltipDirective implements OnDestroy {
     this.tooltipElement = this.renderer.createElement('div');
     this.renderer.addClass(this.tooltipElement, 'common-tooltip');
     this.renderer.addClass(this.tooltipElement, `tooltip-${this.tooltipPosition}`);
-    
+
     // Set ARIA attributes for accessibility
     this.renderer.setAttribute(this.tooltipElement, 'role', 'tooltip');
     this.renderer.setAttribute(this.tooltipElement, 'aria-hidden', 'false');
