@@ -94,6 +94,11 @@
     border-right-color: #444444;
   }
 
+  /* Auto position inherits from determined position */
+  &.tooltip-auto::before {
+    display: none; // Arrow will be added dynamically based on final position
+  }
+
   /* HTML content support */
   strong {
     font-weight: 600;

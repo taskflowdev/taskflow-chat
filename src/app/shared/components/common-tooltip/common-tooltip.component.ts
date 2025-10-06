@@ -1,5 +1,4 @@
-import { Component, Input, HostListener, ElementRef, Renderer2, OnDestroy, ViewChild, TemplateRef } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Directive, Input, HostListener, ElementRef, Renderer2, OnDestroy, TemplateRef } from '@angular/core';
 
 /**
  * Enum for tooltip position
@@ -12,15 +11,17 @@ export enum TooltipPosition {
   TOP_LEFT = 'top-left',
   TOP_RIGHT = 'top-right',
   BOTTOM_LEFT = 'bottom-left',
-  BOTTOM_RIGHT = 'bottom-right'
+  BOTTOM_RIGHT = 'bottom-right',
+  AUTO = 'auto' // Automatically determines best position
 }
 
 /**
- * Enterprise-level tooltip directive component
+ * Enterprise-level tooltip directive
  * 
  * Features:
  * - Supports text and HTML content
  * - Configurable positioning with enum
+ * - AUTO positioning - intelligently determines best position
  * - Dark theme styling matching app design
  * - Smooth animations
  * - Auto-positioning to stay within viewport
@@ -41,14 +42,16 @@ export enum TooltipPosition {
  *   <strong>Group Info</strong>
  *   <p>Click to view details</p>
  * </ng-template>
+ * 
+ * <!-- Auto-positioning tooltip -->
+ * <button [appCommonTooltip]="'Smart positioning'" [tooltipPosition]="TooltipPosition.AUTO">
+ *   Auto
+ * </button>
  * ```
  */
-@Component({
+@Directive({
   selector: '[appCommonTooltip]',
-  standalone: true,
-  imports: [CommonModule],
-  template: '',
-  styles: []
+  standalone: true
 })
 export class CommonTooltipDirective implements OnDestroy {
   @Input('appCommonTooltip') tooltipContent: string | TemplateRef<any> = '';
@@ -168,11 +171,41 @@ export class CommonTooltipDirective implements OnDestroy {
     const hostRect = this.elementRef.nativeElement.getBoundingClientRect();
     const tooltipRect = this.tooltipElement.getBoundingClientRect();
     const offset = 8; // Gap between element and tooltip
+    const viewportWidth = window.innerWidth;
+    const viewportHeight = window.innerHeight;
+    const scrollX = window.scrollX;
+    const scrollY = window.scrollY;
+
+    let position = this.tooltipPosition;
+
+    // AUTO positioning - determine best position based on available space
+    if (this.tooltipPosition === TooltipPosition.AUTO) {
+      const spaceTop = hostRect.top;
+      const spaceBottom = viewportHeight - hostRect.bottom;
+      const spaceLeft = hostRect.left;
+      const spaceRight = viewportWidth - hostRect.right;
+
+      // Calculate which side has most space
+      const maxSpace = Math.max(spaceTop, spaceBottom, spaceLeft, spaceRight);
+
+      if (maxSpace === spaceBottom && spaceBottom >= tooltipRect.height + offset) {
+        position = TooltipPosition.BOTTOM;
+      } else if (maxSpace === spaceTop && spaceTop >= tooltipRect.height + offset) {
+        position = TooltipPosition.TOP;
+      } else if (maxSpace === spaceRight && spaceRight >= tooltipRect.width + offset) {
+        position = TooltipPosition.RIGHT;
+      } else if (maxSpace === spaceLeft && spaceLeft >= tooltipRect.width + offset) {
+        position = TooltipPosition.LEFT;
+      } else {
+        // Default to bottom if no clear winner
+        position = TooltipPosition.BOTTOM;
+      }
+    }
 
     let top = 0;
     let left = 0;
 
-    switch (this.tooltipPosition) {
+    switch (position) {
       case TooltipPosition.TOP:
         top = hostRect.top - tooltipRect.height - offset;
         left = hostRect.left + (hostRect.width - tooltipRect.width) / 2;
@@ -219,11 +252,6 @@ export class CommonTooltipDirective implements OnDestroy {
     }
 
     // Adjust position to stay within viewport
-    const viewportWidth = window.innerWidth;
-    const viewportHeight = window.innerHeight;
-    const scrollX = window.scrollX;
-    const scrollY = window.scrollY;
-
     // Keep tooltip within horizontal bounds
     if (left < scrollX) {
       left = scrollX + 5;
@@ -237,6 +265,10 @@ export class CommonTooltipDirective implements OnDestroy {
     } else if (top + tooltipRect.height > scrollY + viewportHeight) {
       top = scrollY + viewportHeight - tooltipRect.height - 5;
     }
+
+    // Update tooltip class to match final position (for arrow styling)
+    this.renderer.removeClass(this.tooltipElement, `tooltip-${this.tooltipPosition}`);
+    this.renderer.addClass(this.tooltipElement, `tooltip-${position}`);
 
     // Apply position
     this.renderer.setStyle(this.tooltipElement, 'top', `${top}px`);
