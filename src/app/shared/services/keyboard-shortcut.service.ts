@@ -1,4 +1,5 @@
-import { Injectable } from '@angular/core';
+import { Injectable, PLATFORM_ID, Inject } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
 import { Subject } from 'rxjs';
 
 export interface KeyboardShortcut {
@@ -45,12 +46,16 @@ export class KeyboardShortcutService {
     { key: 's', ctrl: true, description: 'Save changes', category: 'Actions', action: 'SAVE_CHANGES' },
   ];
 
-  constructor() {
-    this.initializeGlobalListener();
+  constructor(@Inject(PLATFORM_ID) private platformId: Object) {
+    // Initialize listener only in browser environment
+    if (isPlatformBrowser(this.platformId)) {
+      this.initializeGlobalListener();
+    }
   }
 
   /**
    * Initialize global keyboard event listener
+   * Only runs in browser environment (not SSR)
    */
   private initializeGlobalListener(): void {
     document.addEventListener('keydown', (event: KeyboardEvent) => {

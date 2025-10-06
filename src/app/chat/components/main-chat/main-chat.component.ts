@@ -90,6 +90,7 @@ export class MainChatComponent implements OnInit, OnDestroy {
       this.route.fragment.subscribe(fragment => {
         this.showCreateGroupDialog = fragment === 'new-group';
         this.showSearchGroupDialog = fragment === 'search-groups';
+        this.showKeyboardShortcutsDialog = fragment === 'keyboard-shortcuts';
       });
 
       // Listen to route parameters for group selection

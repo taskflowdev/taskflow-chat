@@ -1,15 +1,13 @@
-import { Component, Input, Output, EventEmitter, HostListener } from '@angular/core';
+import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { ChatItemComponent, ChatItemData } from '../chat-item/chat-item.component';
 import { SkeletonLoaderComponent } from '../../../shared/components/skeleton-loader/skeleton-loader.component';
 import { CommonTooltipDirective, TooltipPosition } from '../../../shared/components/common-tooltip';
-import { CommonDropdownComponent, DropdownItem } from '../../../shared/components/common-dropdown/common-dropdown.component';
-import { KeyboardShortcutService } from '../../../shared/services/keyboard-shortcut.service';
 
 @Component({
   selector: 'app-chat-sidebar',
-  imports: [CommonModule, ChatItemComponent, SkeletonLoaderComponent, CommonTooltipDirective, CommonDropdownComponent],
+  imports: [CommonModule, ChatItemComponent, SkeletonLoaderComponent, CommonTooltipDirective],
   templateUrl: './chat-sidebar.component.html',
   styleUrl: './chat-sidebar.component.scss'
 })
@@ -22,32 +20,7 @@ export class ChatSidebarComponent {
   // Export enum for template use
   TooltipPosition = TooltipPosition;
 
-  // User dropdown state
-  showUserDropdown: boolean = false;
-
-  // User dropdown items
-  userDropdownItems: DropdownItem[] = [
-    {
-      id: 'keyboard-shortcuts',
-      label: 'Keyboard Shortcuts',
-      icon: 'bi-keyboard'
-    },
-    {
-      id: 'divider',
-      divider: true,
-      label: ''
-    },
-    {
-      id: 'logout',
-      label: 'Logout',
-      icon: 'bi-box-arrow-right'
-    }
-  ];
-
-  constructor(
-    private router: Router,
-    private keyboardShortcutService: KeyboardShortcutService
-  ) {}
+  constructor(private router: Router) {}
 
   // Generate skeleton items with progressive fade opacity
   get skeletonItems(): Array<{index: number, opacity: number}> {
@@ -83,21 +56,5 @@ export class ChatSidebarComponent {
   onSearchGroups(): void {
     // Navigate with fragment to trigger search dialog
     this.router.navigate([], { fragment: 'search-groups' });
-  }
-
-  /**
-   * Handle user dropdown item selection
-   */
-  onUserDropdownItemSelected(itemId: string): void {
-    switch (itemId) {
-      case 'keyboard-shortcuts':
-        // Trigger keyboard shortcuts dialog
-        this.keyboardShortcutService.triggerShortcut('SHOW_SHORTCUTS');
-        break;
-      case 'logout':
-        // Handle logout
-        this.router.navigate(['/auth/logout']);
-        break;
-    }
   }
 }

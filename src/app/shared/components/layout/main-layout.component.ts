@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterOutlet } from '@angular/router';
+import { RouterOutlet, Router } from '@angular/router';
 import { NavbarComponent } from '../navbar/navbar.component';
 import { FooterComponent } from '../footer/footer.component';
 
@@ -11,7 +11,7 @@ import { FooterComponent } from '../footer/footer.component';
   template: `
     <div class="app-layout">
       <!-- Global Navigation Bar -->
-      <app-navbar></app-navbar>
+      <app-navbar (showKeyboardShortcuts)="onShowKeyboardShortcuts()"></app-navbar>
 
       <!-- Main Content Area -->
       <main class="main-content">
@@ -25,5 +25,17 @@ import { FooterComponent } from '../footer/footer.component';
   styleUrls: ['./main-layout.component.scss']
 })
 export class MainLayoutComponent {
+  
+  constructor(private router: Router) {}
 
+  /**
+   * Handle keyboard shortcuts dialog request from navbar
+   */
+  onShowKeyboardShortcuts(): void {
+    // Navigate with fragment to show keyboard shortcuts
+    this.router.navigate([], { 
+      fragment: 'keyboard-shortcuts',
+      queryParamsHandling: 'preserve'
+    });
+  }
 }
