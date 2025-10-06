@@ -34,7 +34,8 @@ export class ChatSidebarComponent {
     },
     {
       id: 'divider',
-      divider: true
+      divider: true,
+      label: ''
     },
     {
       id: 'logout',
@@ -47,7 +48,7 @@ export class ChatSidebarComponent {
     private router: Router,
     private keyboardShortcutService: KeyboardShortcutService
   ) {}
-  
+
   // Generate skeleton items with progressive fade opacity
   get skeletonItems(): Array<{index: number, opacity: number}> {
     const items = [];
@@ -57,11 +58,11 @@ export class ChatSidebarComponent {
     }
     return items;
   }
-  
+
   onChatSelect(groupId: string): void {
     this.chatSelect.emit(groupId);
   }
-  
+
   isActivechat(chatId: string): boolean {
     return this.selectedChatId === chatId;
   }
