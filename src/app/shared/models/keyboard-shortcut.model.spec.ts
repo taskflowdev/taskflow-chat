@@ -165,6 +165,31 @@ describe('Keyboard Shortcut Models', () => {
       };
       expect(areKeyBindingsEqual(binding1, binding2)).toBe(false);
     });
+
+    it('should ignore shift flag for shifted characters like ?', () => {
+      // Registry has { key: '?' } (no shift flag)
+      const binding1: ShortcutKeyBinding = { key: '?' };
+      // User presses Shift+/ which produces { key: '?', shift: true }
+      const binding2: ShortcutKeyBinding = { key: '?', shift: true };
+      // Should match because '?' is inherently a shifted character
+      expect(areKeyBindingsEqual(binding1, binding2)).toBe(true);
+    });
+
+    it('should ignore shift flag for other shifted characters', () => {
+      const shiftedChars = ['!', '@', '#', '$', '%', '^', '&', '*', '(', ')'];
+      shiftedChars.forEach(char => {
+        const binding1: ShortcutKeyBinding = { key: char };
+        const binding2: ShortcutKeyBinding = { key: char, shift: true };
+        expect(areKeyBindingsEqual(binding1, binding2)).toBe(true);
+      });
+    });
+
+    it('should not ignore shift flag for regular letters', () => {
+      const binding1: ShortcutKeyBinding = { key: 'a' };
+      const binding2: ShortcutKeyBinding = { key: 'a', shift: true };
+      // For regular letters, shift should matter
+      expect(areKeyBindingsEqual(binding1, binding2)).toBe(false);
+    });
   });
 
   describe('doesEventMatchBinding', () => {

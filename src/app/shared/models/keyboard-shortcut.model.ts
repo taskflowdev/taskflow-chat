@@ -163,16 +163,24 @@ export function getKeyBindingDisplay(binding: ShortcutKeyBinding): string {
 
 /**
  * Helper to check if two key bindings are equal
+ * Handles special shifted characters (?, !, @, etc.) by ignoring shift flag
  */
 export function areKeyBindingsEqual(
   binding1: ShortcutKeyBinding,
   binding2: ShortcutKeyBinding
 ): boolean {
+  // Keys that inherently include shift (US keyboard layout)
+  const shiftedChars = ['?', '!', '@', '#', '$', '%', '^', '&', '*', '(', ')', '_', '+', '{', '}', '|', ':', '"', '<', '>', '~'];
+  const isShiftedChar = shiftedChars.includes(binding1.key) || shiftedChars.includes(binding2.key);
+  
+  // For shifted characters, ignore the shift flag in comparison
+  const shiftMatch = isShiftedChar ? true : (!!binding1.shift === !!binding2.shift);
+  
   return (
     binding1.key === binding2.key &&
     !!binding1.ctrl === !!binding2.ctrl &&
     !!binding1.alt === !!binding2.alt &&
-    !!binding1.shift === !!binding2.shift &&
+    shiftMatch &&
     !!binding1.meta === !!binding2.meta
   );
 }
