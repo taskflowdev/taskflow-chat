@@ -1,7 +1,19 @@
 import { Injectable, PLATFORM_ID, Inject } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
-import { Subject } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
+import { ShortcutRegistryService } from './shortcut-registry.service';
+import { ShortcutHandlerService } from './shortcut-handler.service';
+import {
+  ShortcutActionTypes,
+  ShortcutKeyBinding,
+  ShortcutContext,
+  doesEventMatchBinding
+} from '../models/keyboard-shortcut.model';
 
+/**
+ * Legacy interfaces for backward compatibility
+ * @deprecated Use models from keyboard-shortcut.model.ts instead
+ */
 export interface KeyboardShortcut {
   key: string;
   ctrl?: boolean;
@@ -17,36 +29,60 @@ export interface ShortcutCategory {
   shortcuts: KeyboardShortcut[];
 }
 
+/**
+ * KeyboardShortcutService (Refactored)
+ * 
+ * Core service for capturing global keyboard events and emitting standardized actions.
+ * This service has been refactored to follow enterprise-level architecture with
+ * clear separation of concerns.
+ * 
+ * Responsibilities (FOCUSED):
+ * - Capture global keydown events in browser environment
+ * - Match keyboard events to registered shortcuts
+ * - Emit shortcut actions via RxJS Subject
+ * - Handle input field detection to avoid conflicts
+ * - Integrate with ShortcutRegistryService for shortcut lookup
+ * - Integrate with ShortcutHandlerService for action execution
+ * 
+ * What this service DOES NOT do anymore:
+ * - Store shortcut metadata (delegated to ShortcutRegistryService)
+ * - Handle action routing (delegated to ShortcutHandlerService)
+ * - Manage UI display logic
+ * 
+ * @example
+ * ```typescript
+ * // Subscribe to shortcut events
+ * keyboardService.shortcutTriggered$.subscribe(action => {
+ *   console.log('Shortcut triggered:', action);
+ * });
+ * ```
+ */
 @Injectable({
   providedIn: 'root'
 })
 export class KeyboardShortcutService {
-  private shortcutTriggered = new Subject<string>();
-  public shortcutTriggered$ = this.shortcutTriggered.asObservable();
+  /**
+   * Subject for broadcasting triggered shortcuts
+   * @deprecated Use ShortcutHandlerService.actionRequested$ instead
+   */
+  private readonly shortcutTriggered = new Subject<string>();
+  
+  /**
+   * Observable stream of triggered shortcuts
+   * @deprecated Use ShortcutHandlerService.actionRequested$ instead
+   */
+  public readonly shortcutTriggered$: Observable<string> = this.shortcutTriggered.asObservable();
 
-  private shortcuts: KeyboardShortcut[] = [
-    // General
-    { key: '?', shift: true, description: 'Show keyboard shortcuts', category: 'General', action: 'SHOW_SHORTCUTS' },
-    { key: 'Esc', description: 'Close dialog/modal', category: 'General', action: 'CLOSE_DIALOG' },
+  /**
+   * Current active context for context-aware shortcuts
+   */
+  private currentContext: ShortcutContext = ShortcutContext.GLOBAL;
 
-    // Navigation
-    { key: 'K', ctrl: true, description: 'Search groups', category: 'Navigation', action: 'OPEN_SEARCH' },
-    { key: 'N', ctrl: true, description: 'Create new group', category: 'Navigation', action: 'CREATE_GROUP' },
-    { key: 'I', ctrl: true, description: 'Group info', category: 'Navigation', action: 'GROUP_INFO' },
-    { key: '/', description: 'Focus search', category: 'Navigation', action: 'FOCUS_SEARCH' },
-
-    // Chat Navigation
-    { key: 'ArrowUp', alt: true, description: 'Previous chat', category: 'Chat Navigation', action: 'PREV_CHAT' },
-    { key: 'ArrowDown', alt: true, description: 'Next chat', category: 'Chat Navigation', action: 'NEXT_CHAT' },
-    { key: 'B', ctrl: true, description: 'Back to chat list', category: 'Chat Navigation', action: 'BACK_TO_LIST' },
-
-    // Actions
-    { key: 'M', ctrl: true, description: 'New message', category: 'Actions', action: 'NEW_MESSAGE' },
-    { key: 'Enter', ctrl: true, description: 'Send message', category: 'Actions', action: 'SEND_MESSAGE' },
-    { key: 'S', ctrl: true, description: 'Save changes', category: 'Actions', action: 'SAVE_CHANGES' },
-  ];
-
-  constructor(@Inject(PLATFORM_ID) private platformId: Object) {
+  constructor(
+    @Inject(PLATFORM_ID) private platformId: Object,
+    private registryService: ShortcutRegistryService,
+    private handlerService: ShortcutHandlerService
+  ) {
     // Initialize listener only in browser environment
     if (isPlatformBrowser(this.platformId)) {
       this.initializeGlobalListener();
@@ -56,88 +92,127 @@ export class KeyboardShortcutService {
   /**
    * Initialize global keyboard event listener
    * Only runs in browser environment (not SSR)
+   * 
+   * This is the core event capture mechanism that listens for all keydown events
+   * and routes them through the shortcut system.
    */
   private initializeGlobalListener(): void {
     document.addEventListener('keydown', (event: KeyboardEvent) => {
       // Don't trigger shortcuts when typing in input fields (except specific cases)
       if (this.isTypingInInput(event)) {
-        // Allow Ctrl+K even in input fields for search
+        // Allow Ctrl+K even in input fields for search (enterprise apps like Slack do this)
         if (event.ctrlKey && event.key.toLowerCase() === 'k') {
           event.preventDefault();
-          this.shortcutTriggered.next('OPEN_SEARCH');
+          this.triggerAction(ShortcutActionTypes.OPEN_SEARCH);
+          return;
+        }
+        // Allow Escape in input fields to close dialogs
+        if (event.key === 'Escape') {
+          this.triggerAction(ShortcutActionTypes.CLOSE_DIALOG);
           return;
         }
         return;
       }
 
-      const shortcut = this.findMatchingShortcut(event);
+      // Find matching shortcut from registry
+      const binding = this.createBindingFromEvent(event);
+      const shortcut = this.registryService.findMatchingShortcut(binding, this.currentContext);
+      
       if (shortcut) {
         event.preventDefault();
-        this.shortcutTriggered.next(shortcut.action);
+        this.triggerAction(shortcut.action);
       }
     });
   }
 
   /**
    * Check if user is typing in an input field
+   * Prevents shortcuts from interfering with normal typing
    */
   private isTypingInInput(event: KeyboardEvent): boolean {
     const target = event.target as HTMLElement;
     const tagName = target.tagName.toLowerCase();
 
-    // Allow shortcuts in certain cases
-    if (event.ctrlKey || event.altKey) {
+    // Allow shortcuts with modifier keys even in input fields
+    if (event.ctrlKey || event.altKey || event.metaKey) {
       return false;
     }
 
     return tagName === 'input' ||
-      tagName === 'textarea' ||
+           tagName === 'textarea' ||
            target.isContentEditable;
   }
 
   /**
-   * Find matching shortcut for keyboard event
+   * Create a ShortcutKeyBinding from a keyboard event
    */
-  private findMatchingShortcut(event: KeyboardEvent): KeyboardShortcut | undefined {
-    return this.shortcuts.find(shortcut => {
-      const keyMatch = shortcut.key === event.key;
-      const ctrlMatch = (shortcut.ctrl === true) ? event.ctrlKey : true;
-      const altMatch = (shortcut.alt === true) ? event.altKey : true;
-      const shiftMatch = (shortcut.shift === true) ? event.shiftKey : true;
+  private createBindingFromEvent(event: KeyboardEvent): ShortcutKeyBinding {
+    return {
+      key: event.key,
+      ctrl: event.ctrlKey,
+      alt: event.altKey,
+      shift: event.shiftKey,
+      meta: event.metaKey
+    };
+  }
 
-      // Ensure modifier keys are not pressed when not required
-      const noExtraCtrl = !shortcut.ctrl ? !event.ctrlKey : true;
-      const noExtraAlt = !shortcut.alt ? !event.altKey : true;
-      const noExtraShift = !shortcut.shift ? !event.shiftKey : true;
+  /**
+   * Trigger an action through the handler service
+   * This is the integration point between event capture and action execution
+   */
+  private triggerAction(action: ShortcutActionTypes): void {
+    // Emit on legacy observable for backward compatibility
+    this.shortcutTriggered.next(action);
+    
+    // Execute through handler service (new architecture)
+    this.handlerService.executeAction(action, this.currentContext);
+  }
 
-      return keyMatch && ctrlMatch && altMatch && shiftMatch &&
-        (shortcut.ctrl || noExtraCtrl) &&
-        (shortcut.alt || noExtraAlt) &&
-             (shortcut.shift || noExtraShift);
-    });
+  /**
+   * Set current context for context-aware shortcuts
+   * Components should call this when their context changes
+   */
+  setContext(context: ShortcutContext): void {
+    this.currentContext = context;
+    this.handlerService.setContext(context);
+  }
+
+  /**
+   * Get current context
+   */
+  getContext(): ShortcutContext {
+    return this.currentContext;
   }
 
   /**
    * Get all shortcuts grouped by category
+   * @deprecated Use ShortcutRegistryService.getShortcutsGroupedByCategory() instead
    */
   getShortcutsByCategory(): ShortcutCategory[] {
-    const categories: { [key: string]: KeyboardShortcut[] } = {};
+    const grouped = this.registryService.getShortcutsGroupedByCategory();
+    const categories: ShortcutCategory[] = [];
 
-    this.shortcuts.forEach(shortcut => {
-      if (!categories[shortcut.category]) {
-        categories[shortcut.category] = [];
-      }
-      categories[shortcut.category].push(shortcut);
+    grouped.forEach((shortcuts, categoryName) => {
+      categories.push({
+        name: categoryName,
+        shortcuts: shortcuts.map(s => ({
+          key: s.binding.key,
+          ctrl: s.binding.ctrl,
+          alt: s.binding.alt,
+          shift: s.binding.shift,
+          description: s.description,
+          category: s.category,
+          action: s.action
+        }))
+      });
     });
 
-    return Object.keys(categories).map(categoryName => ({
-      name: categoryName,
-      shortcuts: categories[categoryName]
-    }));
+    return categories;
   }
 
   /**
    * Get formatted shortcut string for display
+   * @deprecated Use ShortcutRegistryService.getShortcutDisplay() instead
    */
   getShortcutDisplay(shortcut: KeyboardShortcut): string {
     const parts: string[] = [];
@@ -158,8 +233,14 @@ export class KeyboardShortcutService {
 
   /**
    * Manually trigger a shortcut action
+   * @deprecated Use ShortcutHandlerService.executeAction() instead
    */
   triggerShortcut(action: string): void {
-    this.shortcutTriggered.next(action);
+    if (Object.values(ShortcutActionTypes).includes(action as ShortcutActionTypes)) {
+      this.triggerAction(action as ShortcutActionTypes);
+    } else {
+      // Fallback for legacy string actions
+      this.shortcutTriggered.next(action);
+    }
   }
 }

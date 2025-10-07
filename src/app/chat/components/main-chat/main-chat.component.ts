@@ -12,7 +12,8 @@ import { MessageDto } from '../../../api/models/message-dto';
 import { CreateGroupDialogComponent } from '../create-group-dialog/create-group-dialog.component';
 import { GroupSearchDialogComponent } from '../group-search-dialog/group-search-dialog.component';
 import { KeyboardShortcutsDialogComponent } from '../keyboard-shortcuts-dialog/keyboard-shortcuts-dialog.component';
-import { KeyboardShortcutService } from '../../../shared/services/keyboard-shortcut.service';
+import { ShortcutHandlerService } from '../../../shared/services/shortcut-handler.service';
+import { ShortcutActionTypes, ShortcutContext } from '../../../shared/models/keyboard-shortcut.model';
 import { Subscription } from 'rxjs';
 
 @Component({
@@ -55,7 +56,7 @@ export class MainChatComponent implements OnInit, OnDestroy {
     private route: ActivatedRoute,
     private groupsServiceProxy: GroupsServiceProxy,
     private messageFactoryService: MessageFactoryServiceProxy,
-    private keyboardShortcutService: KeyboardShortcutService,
+    private shortcutHandlerService: ShortcutHandlerService,
     @Inject(PLATFORM_ID) private platformId: Object
   ) { }
 
@@ -104,9 +105,12 @@ export class MainChatComponent implements OnInit, OnDestroy {
       });
 
       // Subscribe to keyboard shortcuts
-      this.shortcutSubscription = this.keyboardShortcutService.shortcutTriggered$.subscribe(action => {
+      this.shortcutSubscription = this.shortcutHandlerService.actionRequested$.subscribe(action => {
         this.handleShortcutAction(action);
       });
+
+      // Set context to chat view
+      this.shortcutHandlerService.setContext(ShortcutContext.CHAT_VIEW);
     }
   }
 
@@ -119,39 +123,26 @@ export class MainChatComponent implements OnInit, OnDestroy {
 
   /**
    * Handle keyboard shortcut actions
+   * Now only handles actions that are specific to this component
+   * General navigation actions are handled by ShortcutHandlerService
    */
-  private handleShortcutAction(action: string): void {
+  private handleShortcutAction(action: ShortcutActionTypes): void {
     switch (action) {
-      case 'SHOW_SHORTCUTS':
-        this.router.navigate([], { fragment: 'keyboard-shortcuts', queryParamsHandling: 'preserve' });
-        break;
-      case 'OPEN_SEARCH':
-        this.router.navigate([], { fragment: 'search-groups', queryParamsHandling: 'preserve' });
-        break;
-      case 'CREATE_GROUP':
-        this.router.navigate([], { fragment: 'new-group', queryParamsHandling: 'preserve' });
-        break;
-      case 'GROUP_INFO':
-        if (this.selectedChatId) {
-          this.router.navigate([], { fragment: 'group-info', queryParamsHandling: 'preserve' });
-        }
-        break;
-      case 'BACK_TO_LIST':
-        if (this.isMobileView) {
-          this.onBackToChats();
-        } else {
-          this.router.navigate(['/chats']);
-        }
-        break;
-      case 'PREV_CHAT':
+      case ShortcutActionTypes.PREV_CHAT:
         this.navigateToPreviousChat();
         break;
-      case 'NEXT_CHAT':
+      case ShortcutActionTypes.NEXT_CHAT:
         this.navigateToNextChat();
         break;
-      case 'CLOSE_DIALOG':
+      case ShortcutActionTypes.BACK_TO_LIST:
+        if (this.isMobileView) {
+          this.onBackToChats();
+        }
+        break;
+      case ShortcutActionTypes.CLOSE_DIALOG:
         this.closeAllDialogs();
         break;
+      // Other actions are handled by ShortcutHandlerService
     }
   }
 
