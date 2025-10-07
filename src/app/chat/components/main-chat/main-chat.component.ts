@@ -90,6 +90,9 @@ export class MainChatComponent implements OnInit, OnDestroy {
         this.showCreateGroupDialog = fragment === 'new-group';
         this.showSearchGroupDialog = fragment === 'search-groups';
         this.showKeyboardShortcutsDialog = fragment === 'keyboard-shortcuts';
+        
+        // Update shortcut context based on dialog state
+        this.updateShortcutContext();
       });
 
       // Listen to route parameters for group selection
@@ -109,8 +112,8 @@ export class MainChatComponent implements OnInit, OnDestroy {
         this.handleShortcutAction(action);
       });
 
-      // Set context to chat view
-      this.shortcutHandlerService.setContext(ShortcutContext.CHAT_VIEW);
+      // Set initial context
+      this.updateShortcutContext();
     }
   }
 
@@ -118,6 +121,20 @@ export class MainChatComponent implements OnInit, OnDestroy {
     // Clean up subscription
     if (this.shortcutSubscription) {
       this.shortcutSubscription.unsubscribe();
+    }
+  }
+
+  /**
+   * Update shortcut context based on current UI state
+   * This ensures shortcuts work correctly in different contexts
+   */
+  private updateShortcutContext(): void {
+    if (this.showCreateGroupDialog || this.showSearchGroupDialog || this.showKeyboardShortcutsDialog) {
+      this.shortcutHandlerService.setContext(ShortcutContext.DIALOG_OPEN);
+    } else if (this.selectedChatId) {
+      this.shortcutHandlerService.setContext(ShortcutContext.CHAT_VIEW);
+    } else {
+      this.shortcutHandlerService.setContext(ShortcutContext.GLOBAL);
     }
   }
 
@@ -276,6 +293,9 @@ export class MainChatComponent implements OnInit, OnDestroy {
     if (chat) {
       chat.unreadCount = 0;
     }
+    
+    // Update shortcut context
+    this.updateShortcutContext();
   }
 
   /**
@@ -288,6 +308,9 @@ export class MainChatComponent implements OnInit, OnDestroy {
       this.currentConversation = null;
       // Navigate back to chats list
       this.router.navigate(['/chats']);
+      
+      // Update shortcut context
+      this.updateShortcutContext();
     }
   }
 

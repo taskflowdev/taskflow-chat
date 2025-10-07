@@ -59,7 +59,7 @@ export class ShortcutRegistryService {
       // General shortcuts
       {
         action: ShortcutActionTypes.SHOW_SHORTCUTS,
-        binding: { key: '?', shift: true },
+        binding: { key: '?' },
         description: 'Show keyboard shortcuts',
         category: ShortcutCategory.GENERAL,
         context: ShortcutContext.GLOBAL,
@@ -294,6 +294,7 @@ export class ShortcutRegistryService {
   /**
    * Find the best matching shortcut for a key binding
    * Considers context and priority for conflict resolution
+   * Prioritizes context-specific shortcuts over global shortcuts
    */
   findMatchingShortcut(
     binding: ShortcutKeyBinding,
@@ -310,8 +311,18 @@ export class ShortcutRegistryService {
       return undefined;
     }
 
-    // Sort by priority (higher priority first)
-    matchingShortcuts.sort((a, b) => (b.priority || 0) - (a.priority || 0));
+    // Sort by context specificity first (context-specific before global), then by priority
+    matchingShortcuts.sort((a, b) => {
+      // Prioritize context-specific shortcuts
+      if (a.context === currentContext && b.context === ShortcutContext.GLOBAL) {
+        return -1; // a comes first
+      }
+      if (a.context === ShortcutContext.GLOBAL && b.context === currentContext) {
+        return 1; // b comes first
+      }
+      // If same context specificity, sort by priority
+      return (b.priority || 0) - (a.priority || 0);
+    });
 
     return matchingShortcuts[0];
   }

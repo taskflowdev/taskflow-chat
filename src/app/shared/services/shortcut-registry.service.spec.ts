@@ -31,7 +31,8 @@ describe('ShortcutRegistryService', () => {
       const shortcut = service.getShortcutByAction(ShortcutActionTypes.SHOW_SHORTCUTS);
       expect(shortcut).toBeDefined();
       expect(shortcut?.binding.key).toBe('?');
-      expect(shortcut?.binding.shift).toBe(true);
+      // Browser automatically converts Shift+/ to '?' so no shift flag needed
+      expect(shortcut?.binding.shift).toBeFalsy();
     });
 
     it('should have OPEN_SEARCH shortcut', () => {
