@@ -1,8 +1,18 @@
-import { Component, OnInit, Output, EventEmitter, HostListener } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { KeyboardShortcutService, ShortcutCategory } from '../../../shared/services/keyboard-shortcut.service';
-import { CommonButtonComponent } from '../../../shared/components/common-form-controls/common-button.component';
+import { ShortcutRegistryService } from '../../../shared/services/shortcut-registry.service';
+import { ShortcutMetadata, ShortcutCategory } from '../../../shared/models/keyboard-shortcut.model';
 import { Router } from '@angular/router';
+
+interface CategoryDisplay {
+  name: string;
+  shortcuts: ShortcutDisplay[];
+}
+
+interface ShortcutDisplay {
+  description: string;
+  keys: string;
+}
 
 @Component({
   selector: 'app-keyboard-shortcuts-dialog',
@@ -12,22 +22,34 @@ import { Router } from '@angular/router';
   styleUrl: './keyboard-shortcuts-dialog.component.scss'
 })
 export class KeyboardShortcutsDialogComponent implements OnInit {
-  @Output() closeDialog = new EventEmitter<void>();
+  categories: CategoryDisplay[] = [];
 
-  categories: ShortcutCategory[] = [];
-
-  constructor(private keyboardShortcutService: KeyboardShortcutService, private router: Router) { }
+  constructor(
+    private registryService: ShortcutRegistryService,
+    private router: Router
+  ) { }
 
   ngOnInit(): void {
-    this.categories = this.keyboardShortcutService.getShortcutsByCategory();
+    this.loadShortcuts();
   }
 
   /**
-   * Close dialog on ESC key
+   * Load shortcuts from registry and format for display
    */
-  @HostListener('document:keydown.escape')
-  onEscapeKey(): void {
-    this.onClose();
+  private loadShortcuts(): void {
+    const groupedShortcuts = this.registryService.getShortcutsGroupedByCategory();
+    
+    this.categories = [];
+    groupedShortcuts.forEach((shortcuts, categoryName) => {
+      const categoryDisplay: CategoryDisplay = {
+        name: categoryName,
+        shortcuts: shortcuts.map(shortcut => ({
+          description: shortcut.description,
+          keys: this.registryService.getShortcutDisplay(shortcut)
+        }))
+      };
+      this.categories.push(categoryDisplay);
+    });
   }
 
   /**
@@ -36,10 +58,8 @@ export class KeyboardShortcutsDialogComponent implements OnInit {
   onClose(): void {
     this.router.navigate([], {
       fragment: undefined,
-      queryParamsHandling: 'preserve',
-      replaceUrl: false
+      queryParamsHandling: 'preserve'
     });
-    this.closeDialog.emit();
   }
 
   /**
@@ -49,12 +69,5 @@ export class KeyboardShortcutsDialogComponent implements OnInit {
     if ((event.target as HTMLElement).classList.contains('dialog-overlay')) {
       this.onClose();
     }
-  }
-
-  /**
-   * Get formatted shortcut display string
-   */
-  getShortcutDisplay(shortcut: any): string {
-    return this.keyboardShortcutService.getShortcutDisplay(shortcut);
   }
 }

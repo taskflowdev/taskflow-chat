@@ -22,7 +22,7 @@
             <div *ngFor="let shortcut of category.shortcuts" class="shortcut-item">
               <span class="shortcut-description">{{ shortcut.description }}</span>
               <div class="shortcut-keys">
-                <span class="shortcut-key">{{ getShortcutDisplay(shortcut) }}</span>
+                <span class="shortcut-key">{{ shortcut.keys }}</span>
               </div>
             </div>
           </div>

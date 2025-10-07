@@ -98,17 +98,19 @@ export class KeyboardShortcutService {
    */
   private initializeGlobalListener(): void {
     document.addEventListener('keydown', (event: KeyboardEvent) => {
+      // Special handling for Escape - always allow it to work for closing dialogs
+      if (event.key === 'Escape') {
+        event.preventDefault();
+        this.triggerAction(ShortcutActionTypes.CLOSE_DIALOG);
+        return;
+      }
+
       // Don't trigger shortcuts when typing in input fields (except specific cases)
       if (this.isTypingInInput(event)) {
         // Allow Ctrl+K even in input fields for search (enterprise apps like Slack do this)
         if (event.ctrlKey && event.key.toLowerCase() === 'k') {
           event.preventDefault();
           this.triggerAction(ShortcutActionTypes.OPEN_SEARCH);
-          return;
-        }
-        // Allow Escape in input fields to close dialogs
-        if (event.key === 'Escape') {
-          this.triggerAction(ShortcutActionTypes.CLOSE_DIALOG);
           return;
         }
         return;
@@ -147,8 +149,16 @@ export class KeyboardShortcutService {
    * Create a ShortcutKeyBinding from a keyboard event
    */
   private createBindingFromEvent(event: KeyboardEvent): ShortcutKeyBinding {
+    // Normalize the key to lowercase for consistent matching
+    let key = event.key;
+    
+    // For letter keys with modifiers, use lowercase
+    if (key.length === 1 && (event.ctrlKey || event.altKey || event.metaKey)) {
+      key = key.toLowerCase();
+    }
+    
     return {
-      key: event.key,
+      key: key,
       ctrl: event.ctrlKey,
       alt: event.altKey,
       shift: event.shiftKey,
