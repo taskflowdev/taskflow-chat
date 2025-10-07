@@ -27,23 +27,23 @@ export class KeyboardShortcutService {
   private shortcuts: KeyboardShortcut[] = [
     // General
     { key: '?', shift: true, description: 'Show keyboard shortcuts', category: 'General', action: 'SHOW_SHORTCUTS' },
-    { key: 'Escape', description: 'Close dialog/modal', category: 'General', action: 'CLOSE_DIALOG' },
-    
+    { key: 'Esc', description: 'Close dialog/modal', category: 'General', action: 'CLOSE_DIALOG' },
+
     // Navigation
-    { key: 'k', ctrl: true, description: 'Search groups', category: 'Navigation', action: 'OPEN_SEARCH' },
-    { key: 'n', ctrl: true, description: 'Create new group', category: 'Navigation', action: 'CREATE_GROUP' },
-    { key: 'i', ctrl: true, description: 'Group info', category: 'Navigation', action: 'GROUP_INFO' },
+    { key: 'K', ctrl: true, description: 'Search groups', category: 'Navigation', action: 'OPEN_SEARCH' },
+    { key: 'N', ctrl: true, description: 'Create new group', category: 'Navigation', action: 'CREATE_GROUP' },
+    { key: 'I', ctrl: true, description: 'Group info', category: 'Navigation', action: 'GROUP_INFO' },
     { key: '/', description: 'Focus search', category: 'Navigation', action: 'FOCUS_SEARCH' },
-    
+
     // Chat Navigation
     { key: 'ArrowUp', alt: true, description: 'Previous chat', category: 'Chat Navigation', action: 'PREV_CHAT' },
     { key: 'ArrowDown', alt: true, description: 'Next chat', category: 'Chat Navigation', action: 'NEXT_CHAT' },
-    { key: 'b', ctrl: true, description: 'Back to chat list', category: 'Chat Navigation', action: 'BACK_TO_LIST' },
-    
+    { key: 'B', ctrl: true, description: 'Back to chat list', category: 'Chat Navigation', action: 'BACK_TO_LIST' },
+
     // Actions
-    { key: 'm', ctrl: true, description: 'New message', category: 'Actions', action: 'NEW_MESSAGE' },
+    { key: 'M', ctrl: true, description: 'New message', category: 'Actions', action: 'NEW_MESSAGE' },
     { key: 'Enter', ctrl: true, description: 'Send message', category: 'Actions', action: 'SEND_MESSAGE' },
-    { key: 's', ctrl: true, description: 'Save changes', category: 'Actions', action: 'SAVE_CHANGES' },
+    { key: 'S', ctrl: true, description: 'Save changes', category: 'Actions', action: 'SAVE_CHANGES' },
   ];
 
   constructor(@Inject(PLATFORM_ID) private platformId: Object) {
@@ -84,14 +84,14 @@ export class KeyboardShortcutService {
   private isTypingInInput(event: KeyboardEvent): boolean {
     const target = event.target as HTMLElement;
     const tagName = target.tagName.toLowerCase();
-    
+
     // Allow shortcuts in certain cases
     if (event.ctrlKey || event.altKey) {
       return false;
     }
 
-    return tagName === 'input' || 
-           tagName === 'textarea' || 
+    return tagName === 'input' ||
+      tagName === 'textarea' ||
            target.isContentEditable;
   }
 
@@ -110,9 +110,9 @@ export class KeyboardShortcutService {
       const noExtraAlt = !shortcut.alt ? !event.altKey : true;
       const noExtraShift = !shortcut.shift ? !event.shiftKey : true;
 
-      return keyMatch && ctrlMatch && altMatch && shiftMatch && 
-             (shortcut.ctrl || noExtraCtrl) && 
-             (shortcut.alt || noExtraAlt) && 
+      return keyMatch && ctrlMatch && altMatch && shiftMatch &&
+        (shortcut.ctrl || noExtraCtrl) &&
+        (shortcut.alt || noExtraAlt) &&
              (shortcut.shift || noExtraShift);
     });
   }
@@ -145,12 +145,12 @@ export class KeyboardShortcutService {
     if (shortcut.ctrl) parts.push('Ctrl');
     if (shortcut.alt) parts.push('Alt');
     if (shortcut.shift) parts.push('Shift');
-    
+
     // Format key name
     let keyName = shortcut.key;
     if (keyName === ' ') keyName = 'Space';
     if (keyName.startsWith('Arrow')) keyName = keyName.replace('Arrow', '');
-    
+
     parts.push(keyName);
 
     return parts.join(' + ');

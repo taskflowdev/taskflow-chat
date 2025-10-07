@@ -2,11 +2,12 @@ import { Component, OnInit, Output, EventEmitter, HostListener } from '@angular/
 import { CommonModule } from '@angular/common';
 import { KeyboardShortcutService, ShortcutCategory } from '../../../shared/services/keyboard-shortcut.service';
 import { CommonButtonComponent } from '../../../shared/components/common-form-controls/common-button.component';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-keyboard-shortcuts-dialog',
   standalone: true,
-  imports: [CommonModule, CommonButtonComponent],
+  imports: [CommonModule],
   templateUrl: './keyboard-shortcuts-dialog.component.html',
   styleUrl: './keyboard-shortcuts-dialog.component.scss'
 })
@@ -15,7 +16,7 @@ export class KeyboardShortcutsDialogComponent implements OnInit {
 
   categories: ShortcutCategory[] = [];
 
-  constructor(private keyboardShortcutService: KeyboardShortcutService) {}
+  constructor(private keyboardShortcutService: KeyboardShortcutService, private router: Router) { }
 
   ngOnInit(): void {
     this.categories = this.keyboardShortcutService.getShortcutsByCategory();
@@ -33,6 +34,11 @@ export class KeyboardShortcutsDialogComponent implements OnInit {
    * Close dialog
    */
   onClose(): void {
+    this.router.navigate([], {
+      fragment: undefined,
+      queryParamsHandling: 'preserve',
+      replaceUrl: false
+    });
     this.closeDialog.emit();
   }
 

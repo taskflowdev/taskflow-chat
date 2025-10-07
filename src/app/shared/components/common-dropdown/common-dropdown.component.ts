@@ -1,5 +1,6 @@
 import { Component, Input, Output, EventEmitter, HostListener, ElementRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { CommonTooltipDirective } from "../common-tooltip/common-tooltip.component";
 
 export interface DropdownItem {
   id: string;

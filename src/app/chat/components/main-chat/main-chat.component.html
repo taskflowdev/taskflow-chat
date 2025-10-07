@@ -24,7 +24,7 @@
   </div>
 
   <!-- Create Group Dialog -->
-  <app-create-group-dialog 
+  <app-create-group-dialog
     *ngIf="showCreateGroupDialog"
     (groupCreated)="onGroupCreated()">
   </app-create-group-dialog>
@@ -37,7 +37,6 @@
 
   <!-- Keyboard Shortcuts Dialog -->
   <app-keyboard-shortcuts-dialog
-    *ngIf="showKeyboardShortcutsDialog"
-    (closeDialog)="onKeyboardShortcutsClosed()">
+    *ngIf="showKeyboardShortcutsDialog">
   </app-keyboard-shortcuts-dialog>
 </div>

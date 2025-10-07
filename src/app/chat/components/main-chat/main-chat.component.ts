@@ -49,8 +49,6 @@ export class MainChatComponent implements OnInit, OnDestroy {
   // Subscriptions
   private shortcutSubscription?: Subscription;
 
-
-
   constructor(
     private authService: AuthService,
     private router: Router,
@@ -125,7 +123,7 @@ export class MainChatComponent implements OnInit, OnDestroy {
   private handleShortcutAction(action: string): void {
     switch (action) {
       case 'SHOW_SHORTCUTS':
-        this.showKeyboardShortcutsDialog = true;
+        this.router.navigate([], { fragment: 'keyboard-shortcuts', queryParamsHandling: 'preserve' });
         break;
       case 'OPEN_SEARCH':
         this.router.navigate([], { fragment: 'search-groups', queryParamsHandling: 'preserve' });
@@ -162,11 +160,11 @@ export class MainChatComponent implements OnInit, OnDestroy {
    */
   private navigateToPreviousChat(): void {
     if (this.chats.length === 0) return;
-    
+
     const currentIndex = this.chats.findIndex(chat => chat.groupId === this.selectedChatId);
     const prevIndex = currentIndex > 0 ? currentIndex - 1 : this.chats.length - 1;
     const prevChat = this.chats[prevIndex];
-    
+
     if (prevChat) {
       this.onChatSelect(prevChat.groupId);
     }
@@ -177,11 +175,11 @@ export class MainChatComponent implements OnInit, OnDestroy {
    */
   private navigateToNextChat(): void {
     if (this.chats.length === 0) return;
-    
+
     const currentIndex = this.chats.findIndex(chat => chat.groupId === this.selectedChatId);
     const nextIndex = currentIndex < this.chats.length - 1 ? currentIndex + 1 : 0;
     const nextChat = this.chats[nextIndex];
-    
+
     if (nextChat) {
       this.onChatSelect(nextChat.groupId);
     }
@@ -229,7 +227,7 @@ export class MainChatComponent implements OnInit, OnDestroy {
       next: (groups: GroupWithMessages[]) => {
         this.chats = groups.map(group => this.mapGroupToChatItem(group));
         this.loading = false;
-        
+
         // After loading groups, check if there's a groupId in the route
         if (isPlatformBrowser(this.platformId)) {
           const groupId = this.route.snapshot.params['groupId'];
@@ -263,10 +261,10 @@ export class MainChatComponent implements OnInit, OnDestroy {
 
   onChatSelect(groupId: string): void {
     // Navigate to the group URL
-    this.router.navigate(['/chats/group', groupId], { 
-      queryParamsHandling: 'preserve' 
+    this.router.navigate(['/chats/group', groupId], {
+      queryParamsHandling: 'preserve'
     });
-    
+
     this.selectChatById(groupId);
   }
 

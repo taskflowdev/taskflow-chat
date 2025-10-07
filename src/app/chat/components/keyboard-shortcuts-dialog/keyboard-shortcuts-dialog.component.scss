@@ -48,7 +48,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 1.5rem;
+  padding: 1rem;
   border-bottom: 1px solid #444444;
 
   .header-content {
@@ -137,7 +137,7 @@
 .shortcuts-list {
   display: flex;
   flex-direction: column;
-  gap: 0.75rem;
+  gap: 0.7rem;
 }
 
 // Shortcut item
@@ -146,7 +146,7 @@
   align-items: center;
   justify-content: space-between;
   gap: 1rem;
-  padding: 0.75rem 1rem;
+  padding: 0.5rem 0.8rem;
   background: #111111;
   border: 1px solid #333333;
   border-radius: 6px;
@@ -166,28 +166,7 @@
   .shortcut-keys {
     display: flex;
     align-items: center;
-    gap: 0.25rem;
   }
-}
-
-// Key badge
-.key {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  min-width: 2rem;
-  height: 2rem;
-  padding: 0 0.5rem;
-  background: #1a1a1a;
-  border: 1px solid #444444;
-  border-bottom-width: 2px;
-  border-radius: 4px;
-  font-family: 'Courier New', monospace;
-  font-size: 0.75rem;
-  font-weight: 600;
-  color: white;
-  text-transform: uppercase;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
 }
 
 // Footer
@@ -195,12 +174,13 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 1.5rem;
+  padding: 0.8rem;
   border-top: 1px solid #444444;
   gap: 1rem;
 
   .footer-hint {
     display: flex;
+    margin-left: 0.5rem;
     align-items: center;
     gap: 0.5rem;
     font-size: 0.875rem;
@@ -249,7 +229,6 @@
   .dialog-footer {
     flex-direction: column;
     align-items: stretch;
-    padding: 1rem;
 
     .footer-hint {
       font-size: 0.8125rem;
