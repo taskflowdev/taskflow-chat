@@ -100,7 +100,7 @@ export class ShortcutRegistryService {
         binding: { key: 'i', ctrl: true },
         description: 'Group info',
         category: ShortcutCategory.NAVIGATION,
-        context: ShortcutContext.CHAT_VIEW,
+        context: ShortcutContext.CHAT_SELECTED, // Only works when chat is selected
         enabled: true,
         priority: 90
       },
@@ -109,18 +109,18 @@ export class ShortcutRegistryService {
         binding: { key: '/' },
         description: 'Focus search',
         category: ShortcutCategory.NAVIGATION,
-        context: ShortcutContext.GLOBAL,
+        context: ShortcutContext.SEARCH_DIALOG, // Only works in search dialog
         enabled: true,
         priority: 80
       },
 
-      // Chat navigation shortcuts
+      // Chat navigation shortcuts - only active when a chat is selected
       {
         action: ShortcutActionTypes.PREV_CHAT,
         binding: { key: 'ArrowUp', alt: true },
         description: 'Previous chat',
         category: ShortcutCategory.CHAT_NAVIGATION,
-        context: ShortcutContext.CHAT_VIEW,
+        context: ShortcutContext.CHAT_VIEW, // Active in chat view (with or without selected chat)
         enabled: true,
         priority: 100
       },
@@ -129,7 +129,7 @@ export class ShortcutRegistryService {
         binding: { key: 'ArrowDown', alt: true },
         description: 'Next chat',
         category: ShortcutCategory.CHAT_NAVIGATION,
-        context: ShortcutContext.CHAT_VIEW,
+        context: ShortcutContext.CHAT_VIEW, // Active in chat view (with or without selected chat)
         enabled: true,
         priority: 100
       },
@@ -138,7 +138,7 @@ export class ShortcutRegistryService {
         binding: { key: 'b', ctrl: true },
         description: 'Back to chat list',
         category: ShortcutCategory.CHAT_NAVIGATION,
-        context: ShortcutContext.CHAT_VIEW,
+        context: ShortcutContext.CHAT_SELECTED, // Only when chat is selected
         enabled: true,
         priority: 90
       },
@@ -149,7 +149,7 @@ export class ShortcutRegistryService {
         binding: { key: 'm', ctrl: true },
         description: 'New message',
         category: ShortcutCategory.ACTIONS,
-        context: ShortcutContext.CHAT_VIEW,
+        context: ShortcutContext.CHAT_SELECTED, // Only when chat is selected
         enabled: true,
         priority: 100
       },
@@ -295,15 +295,19 @@ export class ShortcutRegistryService {
    * Find the best matching shortcut for a key binding
    * Considers context and priority for conflict resolution
    * Prioritizes context-specific shortcuts over global shortcuts
+   * Supports context hierarchy (e.g., CHAT_SELECTED inherits from CHAT_VIEW)
    */
   findMatchingShortcut(
     binding: ShortcutKeyBinding,
     currentContext: ShortcutContext = ShortcutContext.GLOBAL
   ): ShortcutMetadata | undefined {
+    // Define context hierarchy - CHAT_SELECTED includes CHAT_VIEW shortcuts
+    const compatibleContexts = this.getCompatibleContexts(currentContext);
+    
     const matchingShortcuts = this.getShortcutsByBinding(binding)
       .filter(shortcut => shortcut.enabled !== false)
       .filter(shortcut =>
-        shortcut.context === currentContext ||
+        compatibleContexts.includes(shortcut.context) ||
         shortcut.context === ShortcutContext.GLOBAL
       );
 
@@ -313,18 +317,50 @@ export class ShortcutRegistryService {
 
     // Sort by context specificity first (context-specific before global), then by priority
     matchingShortcuts.sort((a, b) => {
-      // Prioritize context-specific shortcuts
-      if (a.context === currentContext && b.context === ShortcutContext.GLOBAL) {
-        return -1; // a comes first
+      // Exact context match has highest priority
+      if (a.context === currentContext && b.context !== currentContext) {
+        return -1;
       }
-      if (a.context === ShortcutContext.GLOBAL && b.context === currentContext) {
-        return 1; // b comes first
+      if (a.context !== currentContext && b.context === currentContext) {
+        return 1;
       }
+      
+      // Compatible context (from hierarchy) comes before global
+      if (compatibleContexts.includes(a.context) && b.context === ShortcutContext.GLOBAL) {
+        return -1;
+      }
+      if (a.context === ShortcutContext.GLOBAL && compatibleContexts.includes(b.context)) {
+        return 1;
+      }
+      
       // If same context specificity, sort by priority
       return (b.priority || 0) - (a.priority || 0);
     });
 
     return matchingShortcuts[0];
+  }
+
+  /**
+   * Get compatible contexts for a given context (context hierarchy)
+   * Example: CHAT_SELECTED includes shortcuts from CHAT_VIEW
+   */
+  private getCompatibleContexts(context: ShortcutContext): ShortcutContext[] {
+    const contexts: ShortcutContext[] = [context];
+    
+    // Define context inheritance/hierarchy
+    switch (context) {
+      case ShortcutContext.CHAT_SELECTED:
+        // CHAT_SELECTED inherits from CHAT_VIEW
+        contexts.push(ShortcutContext.CHAT_VIEW);
+        break;
+      case ShortcutContext.SEARCH_DIALOG:
+        // SEARCH_DIALOG inherits from DIALOG_OPEN
+        contexts.push(ShortcutContext.DIALOG_OPEN);
+        break;
+      // Add more hierarchies as needed
+    }
+    
+    return contexts;
   }
 
   /**

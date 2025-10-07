@@ -42,12 +42,15 @@ export enum ShortcutActionTypes {
  * Allows shortcuts to be active only in specific UI states
  */
 export enum ShortcutContext {
-  GLOBAL = 'GLOBAL',                    // Active everywhere
-  CHAT_VIEW = 'CHAT_VIEW',             // Active only in chat view
-  DIALOG_OPEN = 'DIALOG_OPEN',         // Active when dialog is open
-  MESSAGE_INPUT = 'MESSAGE_INPUT',      // Active when message input is focused
-  SIDEBAR = 'SIDEBAR',                  // Active in sidebar
-  CONVERSATION = 'CONVERSATION'         // Active in conversation view
+  GLOBAL = 'GLOBAL',                          // Active everywhere (when authenticated)
+  UNAUTHENTICATED = 'UNAUTHENTICATED',        // Active when user is not logged in
+  CHAT_VIEW = 'CHAT_VIEW',                     // Active only in chat view
+  CHAT_SELECTED = 'CHAT_SELECTED',             // Active only when a specific chat is selected
+  DIALOG_OPEN = 'DIALOG_OPEN',                 // Active when dialog is open
+  SEARCH_DIALOG = 'SEARCH_DIALOG',             // Active specifically in search dialog
+  MESSAGE_INPUT = 'MESSAGE_INPUT',             // Active when message input is focused
+  SIDEBAR = 'SIDEBAR',                         // Active in sidebar
+  CONVERSATION = 'CONVERSATION'                // Active in conversation view
 }
 
 /**

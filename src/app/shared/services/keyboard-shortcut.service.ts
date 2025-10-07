@@ -1,6 +1,7 @@
 import { Injectable, PLATFORM_ID, Inject } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { Observable, Subject } from 'rxjs';
+import { AuthService } from '../../auth/services/auth.service';
 import { ShortcutRegistryService } from './shortcut-registry.service';
 import { ShortcutHandlerService } from './shortcut-handler.service';
 import {
@@ -80,6 +81,7 @@ export class KeyboardShortcutService {
 
   constructor(
     @Inject(PLATFORM_ID) private platformId: Object,
+    private authService: AuthService,
     private registryService: ShortcutRegistryService,
     private handlerService: ShortcutHandlerService
   ) {
@@ -98,6 +100,13 @@ export class KeyboardShortcutService {
    */
   private initializeGlobalListener(): void {
     document.addEventListener('keydown', (event: KeyboardEvent) => {
+      // CRITICAL: Check if user is authenticated before processing shortcuts
+      const currentUser = this.authService.getCurrentUser();
+      if (!currentUser) {
+        // User is not logged in - disable all shortcuts
+        return;
+      }
+
       // Special handling for Escape - always allow it to work for closing dialogs
       if (event.key === 'Escape') {
         event.preventDefault();

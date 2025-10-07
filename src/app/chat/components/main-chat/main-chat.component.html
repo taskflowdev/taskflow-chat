@@ -35,6 +35,14 @@
     (groupSelected)="onGroupFromSearchSelected($event)">
   </app-group-search-dialog>
 
+  <!-- Group Info Dialog -->
+  <app-group-info-dialog
+    *ngIf="showGroupInfoDialog && selectedChatId"
+    [groupId]="selectedChatId"
+    (closed)="router.navigate([], { fragment: undefined, queryParamsHandling: 'preserve' })"
+    (groupUpdated)="onGroupUpdated()">
+  </app-group-info-dialog>
+
   <!-- Keyboard Shortcuts Dialog -->
   <app-keyboard-shortcuts-dialog
     *ngIf="showKeyboardShortcutsDialog">
