@@ -62,23 +62,7 @@
   }
 
   .conversation-actions {
-    .action-btn {
-      background: transparent;
-      border: 1px solid #444444;
-      color: white;
-      border-radius: 6px;
-      width: 36px;
-      height: 36px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: all 0.2s ease;
-
-      &:hover {
-        background: #333333;
-        border-color: #666666;
-      }
-    }
+    // Styles for common dropdown are in the common component
   }
 }
 

@@ -1,8 +1,13 @@
-import { Component, Input, Output, EventEmitter, ViewChild, ElementRef, AfterViewChecked } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component, Input, Output, EventEmitter, ViewChild, ElementRef, AfterViewChecked, OnInit, OnDestroy, PLATFORM_ID, Inject } from '@angular/core';
+import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { Router, ActivatedRoute } from '@angular/router';
+import { Subscription } from 'rxjs';
 import { ChatMessageComponent, ChatMessageData } from '../chat-message/chat-message.component';
 import { SkeletonLoaderComponent } from '../../../shared/components/skeleton-loader/skeleton-loader.component';
+import { GroupInfoDialogComponent } from '../group-info-dialog/group-info-dialog.component';
+import { CommonDropdownComponent, DropdownItem } from '../../../shared/components/common-dropdown/common-dropdown.component';
+import { CommonTooltipDirective, TooltipPosition } from '../../../shared/components/common-tooltip';
 
 export interface ConversationData {
   groupId: string;
@@ -13,22 +18,37 @@ export interface ConversationData {
 
 @Component({
   selector: 'app-chat-conversation',
-  imports: [CommonModule, FormsModule, ChatMessageComponent, SkeletonLoaderComponent],
+  imports: [CommonModule, FormsModule, ChatMessageComponent, SkeletonLoaderComponent, GroupInfoDialogComponent, CommonDropdownComponent, CommonTooltipDirective],
   templateUrl: './chat-conversation.component.html',
-  styleUrl: './chat-conversation.component.scss'
+  styleUrls: ['./chat-conversation.component.scss']
 })
-export class ChatConversationComponent implements AfterViewChecked {
+export class ChatConversationComponent implements AfterViewChecked, OnInit, OnDestroy {
   @Input() conversation: ConversationData | null = null;
   @Input() currentUserId: string | null = null;
   @Input() loading: boolean = false;
   @Input() showBackButton: boolean = false; // For mobile back navigation
   @Output() sendMessage = new EventEmitter<string>();
   @Output() backToChats = new EventEmitter<void>(); // Mobile back navigation
+  @Output() groupUpdated = new EventEmitter<void>(); // Group info updated
 
   @ViewChild('messagesContainer') messagesContainer!: ElementRef;
 
   newMessage = '';
   private shouldScrollToBottom = false;
+  showGroupInfoDialog = false;
+  private fragmentSubscription?: Subscription;
+
+  // Export enum for template use
+  TooltipPosition = TooltipPosition;
+
+  // Dropdown items
+  dropdownItems: DropdownItem[] = [
+    {
+      id: 'group-info',
+      label: 'Group Info',
+      icon: 'bi-info-circle'
+    }
+  ];
 
   // Generate varied message skeleton items
   get messageSkeletonItems(): Array<{ index: number }> {
@@ -39,11 +59,57 @@ export class ChatConversationComponent implements AfterViewChecked {
     return items;
   }
 
+  constructor(
+    private router: Router,
+    private route: ActivatedRoute,
+    @Inject(PLATFORM_ID) private platformId: Object
+  ) {}
+
+  ngOnInit(): void {
+    if (isPlatformBrowser(this.platformId)) {
+      this.fragmentSubscription = this.route.fragment.subscribe(fragment => {
+        this.showGroupInfoDialog = fragment === 'group-info';
+      });
+    }
+  }
+
+  ngOnDestroy(): void {
+    this.fragmentSubscription?.unsubscribe();
+  }
+
   ngAfterViewChecked(): void {
     if (this.shouldScrollToBottom) {
       this.scrollToBottom();
       this.shouldScrollToBottom = false;
     }
+  }
+
+  onDropdownItemSelected(itemId: string): void {
+    if (itemId === 'group-info') {
+      this.openGroupInfo();
+    }
+  }
+
+  openGroupInfo(): void {
+    // Update URL fragment to show dialog
+    this.router.navigate([], {
+      fragment: 'group-info',
+      queryParamsHandling: 'preserve',
+      replaceUrl: false
+    });
+  }
+
+  onGroupInfoClosed(): void {
+    // Remove URL fragment when dialog closes
+    this.router.navigate([], {
+      fragment: undefined,
+      queryParamsHandling: 'preserve',
+      replaceUrl: false
+    });
+  }
+
+  onGroupInfoUpdated(): void {
+    this.groupUpdated.emit();
   }
 
   onSendMessage(): void {

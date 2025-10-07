@@ -4,9 +4,7 @@ import { MainChatComponent } from './components/main-chat/main-chat.component';
 
 const routes: Routes = [
   { path: '', component: MainChatComponent },
-  // Future chat routes can be added here
-  // { path: 'room/:id', component: ChatRoomComponent },
-  // { path: 'settings', component: ChatSettingsComponent },
+  { path: 'group/:groupId', component: MainChatComponent },
 ];
 
 @NgModule({

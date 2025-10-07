@@ -18,7 +18,25 @@
       [showBackButton]="isMobileView"
       [class.mobile-hidden]="isMobileView && showSidebar"
       (sendMessage)="onSendMessage($event)"
-      (backToChats)="onBackToChats()">
+      (backToChats)="onBackToChats()"
+      (groupUpdated)="onGroupUpdated()">
     </app-chat-conversation>
   </div>
+
+  <!-- Create Group Dialog -->
+  <app-create-group-dialog
+    *ngIf="showCreateGroupDialog"
+    (groupCreated)="onGroupCreated()">
+  </app-create-group-dialog>
+
+  <!-- Search Group Dialog -->
+  <app-group-search-dialog
+    *ngIf="showSearchGroupDialog"
+    (groupSelected)="onGroupFromSearchSelected($event)">
+  </app-group-search-dialog>
+
+  <!-- Keyboard Shortcuts Dialog -->
+  <app-keyboard-shortcuts-dialog
+    *ngIf="showKeyboardShortcutsDialog">
+  </app-keyboard-shortcuts-dialog>
 </div>

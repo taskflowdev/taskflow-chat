@@ -1,0 +1,182 @@
+/**
+ * Global tooltip styles
+ * This file should be imported in the main styles.scss
+ */
+
+.common-tooltip {
+  position: fixed;
+  z-index: 10000;
+  max-width: 300px;
+  padding: 0.5rem 0.5rem;
+  background: black;
+  color: white;
+  border: 1px solid #444444;
+  border-radius: 6px;
+  font-size: 0.875rem;
+  line-height: 1.4;
+  pointer-events: none;
+  opacity: 0;
+  transform: scale(0.95);
+  transition: opacity 0.2s ease, transform 0.2s ease;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+  word-wrap: break-word;
+
+  /* Show state */
+  &.show {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  /* Arrow styles for different positions */
+  &::before {
+    content: '';
+    position: absolute;
+    width: 0;
+    height: 0;
+    border: 6px solid transparent;
+  }
+
+  /* Top position arrow */
+  &.tooltip-top::before,
+  &.tooltip-top-left::before,
+  &.tooltip-top-right::before {
+    bottom: -12px;
+    border-top-color: #444444;
+  }
+
+  &.tooltip-top::before {
+    left: 50%;
+    transform: translateX(-50%);
+  }
+
+  &.tooltip-top-left::before {
+    left: 12px;
+  }
+
+  &.tooltip-top-right::before {
+    right: 12px;
+  }
+
+  /* Bottom position arrow */
+  &.tooltip-bottom::before,
+  &.tooltip-bottom-left::before,
+  &.tooltip-bottom-right::before {
+    top: -12px;
+    border-bottom-color: #444444;
+  }
+
+  &.tooltip-bottom::before {
+    left: 50%;
+    transform: translateX(-50%);
+  }
+
+  &.tooltip-bottom-left::before {
+    left: 12px;
+  }
+
+  &.tooltip-bottom-right::before {
+    right: 12px;
+  }
+
+  /* Left position arrow */
+  &.tooltip-left::before {
+    right: -12px;
+    top: 50%;
+    transform: translateY(-50%);
+    border-left-color: #444444;
+  }
+
+  /* Right position arrow */
+  &.tooltip-right::before {
+    left: -12px;
+    top: 50%;
+    transform: translateY(-50%);
+    border-right-color: #444444;
+  }
+
+  /* Auto position inherits from determined position */
+  &.tooltip-auto::before {
+    display: none; // Arrow will be added dynamically based on final position
+  }
+
+  /* HTML content support */
+  strong {
+    font-weight: 600;
+    color: white;
+  }
+
+  p {
+    margin: 0.25rem 0 0 0;
+    font-size: 0.8125rem;
+    color: #b3b3b3;
+  }
+
+  ul, ol {
+    margin: 0.25rem 0;
+    padding-left: 1.25rem;
+  }
+
+  li {
+    margin: 0.125rem 0;
+  }
+
+  a {
+    color: #66b3ff;
+    text-decoration: none;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+
+  code {
+    background: rgba(255, 255, 255, 0.1);
+    padding: 0.125rem 0.25rem;
+    border-radius: 3px;
+    font-family: monospace;
+    font-size: 0.8125rem;
+  }
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .common-tooltip {
+    max-width: 250px;
+    font-size: 0.8125rem;
+    padding: 0.4rem 0.6rem;
+  }
+}
+
+/* Dark theme variant (default is already dark) */
+.theme-dark .common-tooltip {
+  background: #1a1a1a;
+  border-color: #444444;
+  color: white;
+}
+
+/* Light theme variant (if needed in future) */
+.theme-light .common-tooltip {
+  background: white;
+  border-color: #e0e0e0;
+  color: #333333;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+
+  &::before {
+    border-top-color: #e0e0e0;
+    border-bottom-color: #e0e0e0;
+    border-left-color: #e0e0e0;
+    border-right-color: #e0e0e0;
+  }
+
+  strong {
+    color: #333333;
+  }
+
+  p {
+    color: #666666;
+  }
+
+  code {
+    background: rgba(0, 0, 0, 0.05);
+  }
+}
