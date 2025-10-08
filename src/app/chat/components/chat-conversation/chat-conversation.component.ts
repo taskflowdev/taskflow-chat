@@ -8,7 +8,6 @@ import { SkeletonLoaderComponent } from '../../../shared/components/skeleton-loa
 import { GroupInfoDialogComponent } from '../group-info-dialog/group-info-dialog.component';
 import { CommonDropdownComponent, DropdownItem } from '../../../shared/components/common-dropdown/common-dropdown.component';
 import { CommonTooltipDirective, TooltipPosition } from '../../../shared/components/common-tooltip';
-import { ConfirmationDialogComponent } from '../../../shared/components/confirmation-dialog/confirmation-dialog.component';
 
 export interface ConversationData {
   groupId: string;
@@ -19,7 +18,7 @@ export interface ConversationData {
 
 @Component({
   selector: 'app-chat-conversation',
-  imports: [CommonModule, FormsModule, ChatMessageComponent, SkeletonLoaderComponent, GroupInfoDialogComponent, CommonDropdownComponent, CommonTooltipDirective, ConfirmationDialogComponent],
+  imports: [CommonModule, FormsModule, ChatMessageComponent, SkeletonLoaderComponent, GroupInfoDialogComponent, CommonDropdownComponent, CommonTooltipDirective],
   templateUrl: './chat-conversation.component.html',
   styleUrls: ['./chat-conversation.component.scss']
 })
@@ -38,7 +37,7 @@ export class ChatConversationComponent implements AfterViewChecked, OnInit, OnDe
   newMessage = '';
   private shouldScrollToBottom = false;
   showGroupInfoDialog = false;
-  showDeleteConfirmDialog = false;
+  openGroupInfoForDeletion = false; // Flag to indicate deletion flow
   private fragmentSubscription?: Subscription;
 
   // Export enum for template use
@@ -95,9 +94,12 @@ export class ChatConversationComponent implements AfterViewChecked, OnInit, OnDe
 
   onDropdownItemSelected(itemId: string): void {
     if (itemId === 'group-info') {
+      this.openGroupInfoForDeletion = false;
       this.openGroupInfo();
     } else if (itemId === 'delete-group') {
-      this.showDeleteConfirmDialog = true;
+      // Open group info dialog but trigger delete immediately
+      this.openGroupInfoForDeletion = true;
+      this.openGroupInfo();
     }
   }
 
@@ -111,6 +113,9 @@ export class ChatConversationComponent implements AfterViewChecked, OnInit, OnDe
   }
 
   onGroupInfoClosed(): void {
+    // Reset deletion flag
+    this.openGroupInfoForDeletion = false;
+    
     // Remove URL fragment when dialog closes
     this.router.navigate([], {
       fragment: undefined,
@@ -123,15 +128,13 @@ export class ChatConversationComponent implements AfterViewChecked, OnInit, OnDe
     this.groupUpdated.emit();
   }
 
-  onDeleteConfirmed(): void {
-    if (this.conversation) {
-      this.groupDeleted.emit(this.conversation.groupId);
-      this.showDeleteConfirmDialog = false;
-    }
-  }
-
-  onDeleteCancelled(): void {
-    this.showDeleteConfirmDialog = false;
+  /**
+   * Handle group deletion from GroupInfoDialog
+   * This is the centralized deletion handler - all delete operations
+   * (from dropdown or from dialog button) go through GroupInfoDialog
+   */
+  onGroupDeleted(groupId: string): void {
+    this.groupDeleted.emit(groupId);
   }
 
   onSendMessage(): void {

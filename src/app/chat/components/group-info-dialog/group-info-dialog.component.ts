@@ -44,6 +44,7 @@ export interface GroupInfo {
 })
 export class GroupInfoDialogComponent implements OnInit {
   @Input() groupId!: string;
+  @Input() triggerDelete = false; // Auto-trigger delete confirmation when true
   @Output() closed = new EventEmitter<void>();
   @Output() groupUpdated = new EventEmitter<void>();
   @Output() groupDeleted = new EventEmitter<string>();
@@ -69,6 +70,14 @@ export class GroupInfoDialogComponent implements OnInit {
     });
 
     this.loadGroupDetails();
+    
+    // Auto-trigger delete confirmation if requested
+    if (this.triggerDelete) {
+      // Use setTimeout to ensure dialog is rendered first
+      setTimeout(() => {
+        this.showDeleteDialog();
+      }, 100);
+    }
   }
 
   private loadGroupDetails(): void {
