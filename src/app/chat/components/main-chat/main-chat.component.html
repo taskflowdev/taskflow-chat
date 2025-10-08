@@ -19,7 +19,8 @@
       [class.mobile-hidden]="isMobileView && showSidebar"
       (sendMessage)="onSendMessage($event)"
       (backToChats)="onBackToChats()"
-      (groupUpdated)="onGroupUpdated()">
+      (groupUpdated)="onGroupUpdated()"
+      (groupDeleted)="onGroupDeleted($event)">
     </app-chat-conversation>
   </div>
 
@@ -34,6 +35,15 @@
     *ngIf="showSearchGroupDialog"
     (groupSelected)="onGroupFromSearchSelected($event)">
   </app-group-search-dialog>
+
+  <!-- Group Info Dialog -->
+  <app-group-info-dialog
+    *ngIf="showGroupInfoDialog && selectedChatId"
+    [groupId]="selectedChatId"
+    (closed)="router.navigate([], { fragment: undefined, queryParamsHandling: 'preserve' })"
+    (groupUpdated)="onGroupUpdated()"
+    (groupDeleted)="onGroupDeleted($event)">
+  </app-group-info-dialog>
 
   <!-- Keyboard Shortcuts Dialog -->
   <app-keyboard-shortcuts-dialog

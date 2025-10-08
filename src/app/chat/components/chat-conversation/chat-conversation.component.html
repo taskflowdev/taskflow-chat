@@ -80,17 +80,29 @@
       <i class="bi bi-chat-quote placeholder-icon"></i>
       <h3 class="placeholder-title">No Chat Selected</h3>
       <p class="placeholder-subtitle">Pick a chat to continue</p>
-      <p class="placeholder-footer">
+      <p class="placeholder-footer" [appCommonTooltip]="encryptionTooltip" [tooltipPosition]="TooltipPosition.BOTTOM">
         <i class="bi bi-lock"></i> Messages are end-to-end encrypted
       </p>
     </div>
   </div>
+  <ng-template #encryptionTooltip>
+    <div class="p-1">
+      <strong class="fs-6">
+        <i class="bi bi-lock-fill"></i>
+        End-to-End Encryption
+      </strong>
+      <p>Only you and the recipient can read these messages. Data is encrypted on your device and decrypted on the
+        recipient’s device.</p>
+    </div>
+  </ng-template>
 </ng-template>
 
 <!-- Group Info Dialog -->
 <app-group-info-dialog
   *ngIf="showGroupInfoDialog && conversation"
   [groupId]="conversation.groupId"
+  [triggerDelete]="openGroupInfoForDeletion"
   (closed)="onGroupInfoClosed()"
-  (groupUpdated)="onGroupInfoUpdated()">
+  (groupUpdated)="onGroupInfoUpdated()"
+  (groupDeleted)="onGroupDeleted($event)">
 </app-group-info-dialog>

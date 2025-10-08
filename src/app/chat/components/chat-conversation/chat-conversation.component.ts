@@ -30,12 +30,14 @@ export class ChatConversationComponent implements AfterViewChecked, OnInit, OnDe
   @Output() sendMessage = new EventEmitter<string>();
   @Output() backToChats = new EventEmitter<void>(); // Mobile back navigation
   @Output() groupUpdated = new EventEmitter<void>(); // Group info updated
+  @Output() groupDeleted = new EventEmitter<string>(); // Group deleted - emits group ID
 
   @ViewChild('messagesContainer') messagesContainer!: ElementRef;
 
   newMessage = '';
   private shouldScrollToBottom = false;
   showGroupInfoDialog = false;
+  openGroupInfoForDeletion = false; // Flag to indicate deletion flow
   private fragmentSubscription?: Subscription;
 
   // Export enum for template use
@@ -46,7 +48,20 @@ export class ChatConversationComponent implements AfterViewChecked, OnInit, OnDe
     {
       id: 'group-info',
       label: 'Group Info',
-      icon: 'bi-info-circle'
+      icon: 'bi-info-circle',
+      shortcutKey: 'Ctrl + i'
+    },
+    {
+      id: '',
+      label: '',
+      divider: true
+    },
+    {
+      id: 'delete-group',
+      label: 'Delete Group',
+      icon: 'bi-trash',
+      variant: 'danger',
+      isQuick: true
     }
   ];
 
@@ -86,6 +101,11 @@ export class ChatConversationComponent implements AfterViewChecked, OnInit, OnDe
 
   onDropdownItemSelected(itemId: string): void {
     if (itemId === 'group-info') {
+      this.openGroupInfoForDeletion = false;
+      this.openGroupInfo();
+    } else if (itemId === 'delete-group') {
+      // Open group info dialog but trigger delete immediately
+      this.openGroupInfoForDeletion = true;
       this.openGroupInfo();
     }
   }
@@ -100,6 +120,9 @@ export class ChatConversationComponent implements AfterViewChecked, OnInit, OnDe
   }
 
   onGroupInfoClosed(): void {
+    // Reset deletion flag
+    this.openGroupInfoForDeletion = false;
+
     // Remove URL fragment when dialog closes
     this.router.navigate([], {
       fragment: undefined,
@@ -110,6 +133,15 @@ export class ChatConversationComponent implements AfterViewChecked, OnInit, OnDe
 
   onGroupInfoUpdated(): void {
     this.groupUpdated.emit();
+  }
+
+  /**
+   * Handle group deletion from GroupInfoDialog
+   * This is the centralized deletion handler - all delete operations
+   * (from dropdown or from dialog button) go through GroupInfoDialog
+   */
+  onGroupDeleted(groupId: string): void {
+    this.groupDeleted.emit(groupId);
   }
 
   onSendMessage(): void {

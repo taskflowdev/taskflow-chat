@@ -12,8 +12,11 @@ import { MessageDto } from '../../../api/models/message-dto';
 import { CreateGroupDialogComponent } from '../create-group-dialog/create-group-dialog.component';
 import { GroupSearchDialogComponent } from '../group-search-dialog/group-search-dialog.component';
 import { KeyboardShortcutsDialogComponent } from '../keyboard-shortcuts-dialog/keyboard-shortcuts-dialog.component';
-import { KeyboardShortcutService } from '../../../shared/services/keyboard-shortcut.service';
+import { GroupInfoDialogComponent } from '../group-info-dialog/group-info-dialog.component';
+import { ShortcutHandlerService } from '../../../shared/services/shortcut-handler.service';
+import { ShortcutActionTypes, ShortcutContext } from '../../../shared/models/keyboard-shortcut.model';
 import { Subscription } from 'rxjs';
+import { KeyboardShortcutService } from '../../../shared/services/keyboard-shortcut.service';
 
 @Component({
   selector: 'app-main-chat',
@@ -24,7 +27,8 @@ import { Subscription } from 'rxjs';
     ChatConversationComponent,
     CreateGroupDialogComponent,
     GroupSearchDialogComponent,
-    KeyboardShortcutsDialogComponent
+    KeyboardShortcutsDialogComponent,
+    GroupInfoDialogComponent
   ],
   templateUrl: './main-chat.component.html',
   styleUrl: './main-chat.component.scss'
@@ -45,17 +49,19 @@ export class MainChatComponent implements OnInit, OnDestroy {
   showCreateGroupDialog: boolean = false;
   showSearchGroupDialog: boolean = false;
   showKeyboardShortcutsDialog: boolean = false;
+  showGroupInfoDialog: boolean = false;
 
   // Subscriptions
   private shortcutSubscription?: Subscription;
 
   constructor(
     private authService: AuthService,
-    private router: Router,
+    public router: Router,
     private route: ActivatedRoute,
     private groupsServiceProxy: GroupsServiceProxy,
     private messageFactoryService: MessageFactoryServiceProxy,
     private keyboardShortcutService: KeyboardShortcutService,
+    private shortcutHandlerService: ShortcutHandlerService,
     @Inject(PLATFORM_ID) private platformId: Object
   ) { }
 
@@ -89,6 +95,10 @@ export class MainChatComponent implements OnInit, OnDestroy {
         this.showCreateGroupDialog = fragment === 'new-group';
         this.showSearchGroupDialog = fragment === 'search-groups';
         this.showKeyboardShortcutsDialog = fragment === 'keyboard-shortcuts';
+        this.showGroupInfoDialog = fragment === 'group-info';
+
+        // Update shortcut context based on dialog state
+        this.updateShortcutContext();
       });
 
       // Listen to route parameters for group selection
@@ -104,9 +114,12 @@ export class MainChatComponent implements OnInit, OnDestroy {
       });
 
       // Subscribe to keyboard shortcuts
-      this.shortcutSubscription = this.keyboardShortcutService.shortcutTriggered$.subscribe(action => {
+      this.shortcutSubscription = this.shortcutHandlerService.actionRequested$.subscribe(action => {
         this.handleShortcutAction(action);
       });
+
+      // Set initial context
+      this.updateShortcutContext();
     }
   }
 
@@ -118,50 +131,98 @@ export class MainChatComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Handle keyboard shortcut actions
+   * Update shortcut context based on current UI state
+   * This ensures shortcuts work correctly in different contexts
+   * Enterprise-level context management with granular control
    */
-  private handleShortcutAction(action: string): void {
+  private updateShortcutContext(): void {
+    // Priority 1: Dialog contexts (most specific)
+    if (this.showSearchGroupDialog) {
+      // In search dialog - enable search-specific shortcuts
+      this.keyboardShortcutService.setContext(ShortcutContext.SEARCH_DIALOG);
+      return;
+    }
+
+    if (this.showCreateGroupDialog || this.showKeyboardShortcutsDialog || this.showGroupInfoDialog) {
+      // In other dialogs - general dialog context
+      this.keyboardShortcutService.setContext(ShortcutContext.DIALOG_OPEN);
+      return;
+    }
+
+    // Priority 2: Chat-related contexts
+    if (this.selectedChatId) {
+      // A specific chat is selected - enable chat-specific shortcuts
+      this.keyboardShortcutService.setContext(ShortcutContext.CHAT_SELECTED);
+      return;
+    }
+
+    // Priority 3: Check if we're in chat view but no chat selected
+    // This allows navigation shortcuts (Alt+Up/Down) to work
+    if (this.chats.length > 0) {
+      this.keyboardShortcutService.setContext(ShortcutContext.CHAT_VIEW);
+      return;
+    }
+
+    // Priority 4: Global context (fallback)
+    this.keyboardShortcutService.setContext(ShortcutContext.GLOBAL);
+  }
+
+  /**
+   * Handle keyboard shortcut actions
+   * Now only handles actions that are specific to this component
+   * General navigation actions are handled by ShortcutHandlerService
+   */
+  private handleShortcutAction(action: ShortcutActionTypes): void {
     switch (action) {
-      case 'SHOW_SHORTCUTS':
-        this.router.navigate([], { fragment: 'keyboard-shortcuts', queryParamsHandling: 'preserve' });
-        break;
-      case 'OPEN_SEARCH':
-        this.router.navigate([], { fragment: 'search-groups', queryParamsHandling: 'preserve' });
-        break;
-      case 'CREATE_GROUP':
-        this.router.navigate([], { fragment: 'new-group', queryParamsHandling: 'preserve' });
-        break;
-      case 'GROUP_INFO':
-        if (this.selectedChatId) {
-          this.router.navigate([], { fragment: 'group-info', queryParamsHandling: 'preserve' });
-        }
-        break;
-      case 'BACK_TO_LIST':
-        if (this.isMobileView) {
-          this.onBackToChats();
-        } else {
-          this.router.navigate(['/chats']);
-        }
-        break;
-      case 'PREV_CHAT':
+      case ShortcutActionTypes.PREV_CHAT:
         this.navigateToPreviousChat();
         break;
-      case 'NEXT_CHAT':
+      case ShortcutActionTypes.NEXT_CHAT:
         this.navigateToNextChat();
         break;
-      case 'CLOSE_DIALOG':
+      case ShortcutActionTypes.BACK_TO_LIST:
+        if (this.isMobileView) {
+          this.onBackToChats();
+        }
+        break;
+      case ShortcutActionTypes.GROUP_INFO:
+        // Only open if a chat is selected
+        if (this.selectedChatId) {
+          this.openGroupInfo();
+        }
+        break;
+      case ShortcutActionTypes.FOCUS_SEARCH:
+        // Only focus search input if in search dialog
+        if (this.showSearchGroupDialog) {
+          this.focusSearchInput();
+        }
+        break;
+      case ShortcutActionTypes.CLOSE_DIALOG:
         this.closeAllDialogs();
         break;
+      // Other actions are handled by ShortcutHandlerService
     }
   }
 
   /**
    * Navigate to previous chat
+   * Enterprise-level navigation with edge case handling
    */
   private navigateToPreviousChat(): void {
     if (this.chats.length === 0) return;
 
+    // If no chat is selected, select the last chat
+    if (!this.selectedChatId) {
+      const lastChat = this.chats[this.chats.length - 1];
+      if (lastChat) {
+        this.onChatSelect(lastChat.groupId);
+      }
+      return;
+    }
+
     const currentIndex = this.chats.findIndex(chat => chat.groupId === this.selectedChatId);
+    if (currentIndex === -1) return;
+
     const prevIndex = currentIndex > 0 ? currentIndex - 1 : this.chats.length - 1;
     const prevChat = this.chats[prevIndex];
 
@@ -172,11 +233,23 @@ export class MainChatComponent implements OnInit, OnDestroy {
 
   /**
    * Navigate to next chat
+   * Enterprise-level navigation with edge case handling
    */
   private navigateToNextChat(): void {
     if (this.chats.length === 0) return;
 
+    // If no chat is selected, select the first chat
+    if (!this.selectedChatId) {
+      const firstChat = this.chats[0];
+      if (firstChat) {
+        this.onChatSelect(firstChat.groupId);
+      }
+      return;
+    }
+
     const currentIndex = this.chats.findIndex(chat => chat.groupId === this.selectedChatId);
+    if (currentIndex === -1) return;
+
     const nextIndex = currentIndex < this.chats.length - 1 ? currentIndex + 1 : 0;
     const nextChat = this.chats[nextIndex];
 
@@ -189,12 +262,65 @@ export class MainChatComponent implements OnInit, OnDestroy {
    * Close all open dialogs
    */
   private closeAllDialogs(): void {
-    if (this.showCreateGroupDialog || this.showSearchGroupDialog) {
+    if (this.showCreateGroupDialog || this.showSearchGroupDialog || this.showGroupInfoDialog) {
       this.router.navigate([], { fragment: undefined, queryParamsHandling: 'preserve' });
     }
     if (this.showKeyboardShortcutsDialog) {
       this.showKeyboardShortcutsDialog = false;
     }
+  }
+
+  /**
+   * Open group info dialog for the currently selected chat
+   * Only works when a chat is selected (CHAT_SELECTED context)
+   */
+  private openGroupInfo(): void {
+    if (this.selectedChatId) {
+      this.router.navigate([], { fragment: 'group-info', queryParamsHandling: 'preserve' });
+    }
+  }
+
+  /**
+   * Focus the search input in the search dialog
+   * Only works in SEARCH_DIALOG context
+   */
+  private focusSearchInput(): void {
+    // This method can be enhanced to actually focus the search input
+    // For now, it's handled by the search dialog component itself
+    // The shortcut ensures it's only triggered in the right context
+  }
+
+  /**
+   * Handle group deletion
+   * 
+   * This method:
+   * 1. Removes the deleted group from the chat list
+   * 2. Clears the selected chat
+   * 3. Navigates back to the chat list
+   * 4. Updates the UI state
+   * 
+   * @param deletedGroupId - ID of the deleted group
+   */
+  onGroupDeleted(deletedGroupId: string): void {
+    // Remove the deleted group from the chats list using groupId property
+    this.chats = this.chats.filter(chat => chat.groupId !== deletedGroupId);
+    
+    // Clear selected chat and conversation
+    this.selectedChatId = null;
+    this.currentConversation = null;
+    
+    // Show sidebar in mobile view
+    if (this.isMobileView) {
+      this.showSidebar = true;
+    }
+    
+    // Update context to CHAT_VIEW
+    this.updateShortcutContext();
+    
+    // Navigate to chat list (clear fragment)
+    this.router.navigate(['/chat'], {
+      queryParamsHandling: 'preserve'
+    });
   }
 
   /**
@@ -285,6 +411,9 @@ export class MainChatComponent implements OnInit, OnDestroy {
     if (chat) {
       chat.unreadCount = 0;
     }
+
+    // Update shortcut context
+    this.updateShortcutContext();
   }
 
   /**
@@ -297,6 +426,9 @@ export class MainChatComponent implements OnInit, OnDestroy {
       this.currentConversation = null;
       // Navigate back to chats list
       this.router.navigate(['/chats']);
+
+      // Update shortcut context
+      this.updateShortcutContext();
     }
   }
 

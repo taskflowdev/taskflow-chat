@@ -8,12 +8,15 @@ export interface DropdownItem {
   icon?: string;
   divider?: boolean;
   disabled?: boolean;
+  isQuick?: boolean;
+  shortcutKey?: string;
+  variant?: 'default' | 'danger' | 'warning' | 'primary';
 }
 
 @Component({
   selector: 'app-common-dropdown',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, CommonTooltipDirective],
   templateUrl: './common-dropdown.component.html',
   styleUrls: ['./common-dropdown.component.scss']
 })

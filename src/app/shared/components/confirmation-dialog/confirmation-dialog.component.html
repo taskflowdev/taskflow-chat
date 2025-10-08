@@ -1,0 +1,36 @@
+<div class="dialog-overlay" *ngIf="isVisible" (click)="onCancel()">
+  <div class="dialog-container confirmation-dialog" (click)="$event.stopPropagation()">
+    <!-- Header -->
+    <div class="dialog-header">
+      <div class="header-content">
+        <!-- <i class="bi" [ngClass]="getDefaultIcon()"></i> -->
+        <h2 class="dialog-title">{{ title }}</h2>
+        </div>
+        <button class="close-btn" (click)="onCancel()" aria-label="Close dialog">
+          <i class="bi bi-x-lg"></i>
+        </button>
+    </div>
+
+    <!-- Content -->
+    <div class="dialog-content">
+      <i class="bi" [ngClass]="getDefaultIcon()"></i>
+      <p class="dialog-message">{{ message }}</p>
+      <p class="dialog-secondary-message" *ngIf="secondaryMessage">{{ secondaryMessage }}</p>
+    </div>
+
+    <!-- Footer -->
+    <div class="dialog-footer">
+      <div class="button-group">
+        <app-common-button type="button" size="small" [variant]="variant" [fullWidth]="false" [loading]="loading"
+          [disabled]="loading" (clicked)="onConfirm()">
+          {{ loading ? 'Processing...' : confirmText }}
+        </app-common-button>
+
+        <app-common-button type="button" size="small" variant="secondary" [fullWidth]="false" [disabled]="loading"
+          (clicked)="onCancel()">
+          {{ cancelText }}
+        </app-common-button>
+      </div>
+    </div>
+  </div>
+</div>
