@@ -8,6 +8,7 @@ export interface DropdownItem {
   icon?: string;
   divider?: boolean;
   disabled?: boolean;
+  variant?: 'default' | 'danger' | 'warning' | 'primary';
 }
 
 @Component({

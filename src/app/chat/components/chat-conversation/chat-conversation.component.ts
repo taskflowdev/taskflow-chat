@@ -8,6 +8,7 @@ import { SkeletonLoaderComponent } from '../../../shared/components/skeleton-loa
 import { GroupInfoDialogComponent } from '../group-info-dialog/group-info-dialog.component';
 import { CommonDropdownComponent, DropdownItem } from '../../../shared/components/common-dropdown/common-dropdown.component';
 import { CommonTooltipDirective, TooltipPosition } from '../../../shared/components/common-tooltip';
+import { ConfirmationDialogComponent } from '../../../shared/components/confirmation-dialog/confirmation-dialog.component';
 
 export interface ConversationData {
   groupId: string;
@@ -18,7 +19,7 @@ export interface ConversationData {
 
 @Component({
   selector: 'app-chat-conversation',
-  imports: [CommonModule, FormsModule, ChatMessageComponent, SkeletonLoaderComponent, GroupInfoDialogComponent, CommonDropdownComponent, CommonTooltipDirective],
+  imports: [CommonModule, FormsModule, ChatMessageComponent, SkeletonLoaderComponent, GroupInfoDialogComponent, CommonDropdownComponent, CommonTooltipDirective, ConfirmationDialogComponent],
   templateUrl: './chat-conversation.component.html',
   styleUrls: ['./chat-conversation.component.scss']
 })
@@ -30,12 +31,14 @@ export class ChatConversationComponent implements AfterViewChecked, OnInit, OnDe
   @Output() sendMessage = new EventEmitter<string>();
   @Output() backToChats = new EventEmitter<void>(); // Mobile back navigation
   @Output() groupUpdated = new EventEmitter<void>(); // Group info updated
+  @Output() groupDeleted = new EventEmitter<string>(); // Group deleted - emits group ID
 
   @ViewChild('messagesContainer') messagesContainer!: ElementRef;
 
   newMessage = '';
   private shouldScrollToBottom = false;
   showGroupInfoDialog = false;
+  showDeleteConfirmDialog = false;
   private fragmentSubscription?: Subscription;
 
   // Export enum for template use
@@ -47,6 +50,12 @@ export class ChatConversationComponent implements AfterViewChecked, OnInit, OnDe
       id: 'group-info',
       label: 'Group Info',
       icon: 'bi-info-circle'
+    },
+    {
+      id: 'delete-group',
+      label: 'Delete Group',
+      icon: 'bi-trash',
+      variant: 'danger'
     }
   ];
 
@@ -87,6 +96,8 @@ export class ChatConversationComponent implements AfterViewChecked, OnInit, OnDe
   onDropdownItemSelected(itemId: string): void {
     if (itemId === 'group-info') {
       this.openGroupInfo();
+    } else if (itemId === 'delete-group') {
+      this.showDeleteConfirmDialog = true;
     }
   }
 
@@ -110,6 +121,17 @@ export class ChatConversationComponent implements AfterViewChecked, OnInit, OnDe
 
   onGroupInfoUpdated(): void {
     this.groupUpdated.emit();
+  }
+
+  onDeleteConfirmed(): void {
+    if (this.conversation) {
+      this.groupDeleted.emit(this.conversation.groupId);
+      this.showDeleteConfirmDialog = false;
+    }
+  }
+
+  onDeleteCancelled(): void {
+    this.showDeleteConfirmDialog = false;
   }
 
   onSendMessage(): void {

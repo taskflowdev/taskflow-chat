@@ -94,3 +94,17 @@
   (closed)="onGroupInfoClosed()"
   (groupUpdated)="onGroupInfoUpdated()">
 </app-group-info-dialog>
+
+<!-- Delete Group Confirmation Dialog -->
+<app-confirmation-dialog
+  [isVisible]="showDeleteConfirmDialog"
+  [title]="'Delete Group?'"
+  [message]="'This action cannot be undone. All messages, files, and group data will be permanently deleted.'"
+  [secondaryMessage]="'All members will lose access to this group immediately.'"
+  [confirmText]="'Delete Group'"
+  [cancelText]="'Cancel'"
+  [variant]="'danger'"
+  [icon]="'bi-trash'"
+  (confirmed)="onDeleteConfirmed()"
+  (cancelled)="onDeleteCancelled()">
+</app-confirmation-dialog>

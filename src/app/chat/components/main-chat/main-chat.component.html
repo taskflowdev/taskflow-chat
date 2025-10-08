@@ -19,7 +19,8 @@
       [class.mobile-hidden]="isMobileView && showSidebar"
       (sendMessage)="onSendMessage($event)"
       (backToChats)="onBackToChats()"
-      (groupUpdated)="onGroupUpdated()">
+      (groupUpdated)="onGroupUpdated()"
+      (groupDeleted)="onGroupDeleted($event)">
     </app-chat-conversation>
   </div>
 
