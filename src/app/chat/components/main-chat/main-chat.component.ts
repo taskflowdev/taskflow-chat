@@ -16,6 +16,7 @@ import { GroupInfoDialogComponent } from '../group-info-dialog/group-info-dialog
 import { ShortcutHandlerService } from '../../../shared/services/shortcut-handler.service';
 import { ShortcutActionTypes, ShortcutContext } from '../../../shared/models/keyboard-shortcut.model';
 import { Subscription } from 'rxjs';
+import { KeyboardShortcutService } from '../../../shared/services/keyboard-shortcut.service';
 
 @Component({
   selector: 'app-main-chat',
@@ -59,6 +60,7 @@ export class MainChatComponent implements OnInit, OnDestroy {
     private route: ActivatedRoute,
     private groupsServiceProxy: GroupsServiceProxy,
     private messageFactoryService: MessageFactoryServiceProxy,
+    private keyboardShortcutService: KeyboardShortcutService,
     private shortcutHandlerService: ShortcutHandlerService,
     @Inject(PLATFORM_ID) private platformId: Object
   ) { }
@@ -94,7 +96,7 @@ export class MainChatComponent implements OnInit, OnDestroy {
         this.showSearchGroupDialog = fragment === 'search-groups';
         this.showKeyboardShortcutsDialog = fragment === 'keyboard-shortcuts';
         this.showGroupInfoDialog = fragment === 'group-info';
-        
+
         // Update shortcut context based on dialog state
         this.updateShortcutContext();
       });
@@ -137,32 +139,32 @@ export class MainChatComponent implements OnInit, OnDestroy {
     // Priority 1: Dialog contexts (most specific)
     if (this.showSearchGroupDialog) {
       // In search dialog - enable search-specific shortcuts
-      this.shortcutHandlerService.setContext(ShortcutContext.SEARCH_DIALOG);
+      this.keyboardShortcutService.setContext(ShortcutContext.SEARCH_DIALOG);
       return;
     }
-    
+
     if (this.showCreateGroupDialog || this.showKeyboardShortcutsDialog || this.showGroupInfoDialog) {
       // In other dialogs - general dialog context
-      this.shortcutHandlerService.setContext(ShortcutContext.DIALOG_OPEN);
+      this.keyboardShortcutService.setContext(ShortcutContext.DIALOG_OPEN);
       return;
     }
-    
+
     // Priority 2: Chat-related contexts
     if (this.selectedChatId) {
       // A specific chat is selected - enable chat-specific shortcuts
-      this.shortcutHandlerService.setContext(ShortcutContext.CHAT_SELECTED);
+      this.keyboardShortcutService.setContext(ShortcutContext.CHAT_SELECTED);
       return;
     }
-    
+
     // Priority 3: Check if we're in chat view but no chat selected
     // This allows navigation shortcuts (Alt+Up/Down) to work
     if (this.chats.length > 0) {
-      this.shortcutHandlerService.setContext(ShortcutContext.CHAT_VIEW);
+      this.keyboardShortcutService.setContext(ShortcutContext.CHAT_VIEW);
       return;
     }
-    
+
     // Priority 4: Global context (fallback)
-    this.shortcutHandlerService.setContext(ShortcutContext.GLOBAL);
+    this.keyboardShortcutService.setContext(ShortcutContext.GLOBAL);
   }
 
   /**
@@ -376,7 +378,7 @@ export class MainChatComponent implements OnInit, OnDestroy {
     if (chat) {
       chat.unreadCount = 0;
     }
-    
+
     // Update shortcut context
     this.updateShortcutContext();
   }
@@ -391,7 +393,7 @@ export class MainChatComponent implements OnInit, OnDestroy {
       this.currentConversation = null;
       // Navigate back to chats list
       this.router.navigate(['/chats']);
-      
+
       // Update shortcut context
       this.updateShortcutContext();
     }
