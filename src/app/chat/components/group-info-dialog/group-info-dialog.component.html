@@ -101,6 +101,17 @@
             {{ isLoading ? 'Updating...' : 'Update Group' }}
           </app-common-button>
 
+          <!-- Delete Group Button -->
+          <app-common-button
+            type="button"
+            variant="danger"
+            [fullWidth]="true"
+            [disabled]="isLoading || isDeleting"
+            (clicked)="showDeleteDialog()"
+          >
+            <i class="bi bi-trash me-2"></i>Delete Group
+          </app-common-button>
+
           <!-- Cancel Button -->
           <app-common-button
             type="button"
@@ -116,3 +127,18 @@
     </div>
   </div>
 </div>
+
+<!-- Delete Confirmation Dialog -->
+<app-confirmation-dialog
+  [isVisible]="showDeleteConfirmation"
+  [title]="'Delete Group?'"
+  [message]="'This action cannot be undone. All messages, files, and group data will be permanently deleted.'"
+  [secondaryMessage]="'All members will lose access to this group immediately.'"
+  [confirmText]="'Delete Group'"
+  [cancelText]="'Keep Group'"
+  [variant]="'danger'"
+  [icon]="'bi-trash'"
+  [loading]="isDeleting"
+  (confirmed)="confirmDelete()"
+  (cancelled)="cancelDelete()">
+</app-confirmation-dialog>

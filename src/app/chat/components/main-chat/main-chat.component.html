@@ -40,7 +40,8 @@
     *ngIf="showGroupInfoDialog && selectedChatId"
     [groupId]="selectedChatId"
     (closed)="router.navigate([], { fragment: undefined, queryParamsHandling: 'preserve' })"
-    (groupUpdated)="onGroupUpdated()">
+    (groupUpdated)="onGroupUpdated()"
+    (groupDeleted)="onGroupDeleted($event)">
   </app-group-info-dialog>
 
   <!-- Keyboard Shortcuts Dialog -->

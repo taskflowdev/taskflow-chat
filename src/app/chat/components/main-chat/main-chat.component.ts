@@ -291,6 +291,39 @@ export class MainChatComponent implements OnInit, OnDestroy {
   }
 
   /**
+   * Handle group deletion
+   * 
+   * This method:
+   * 1. Removes the deleted group from the chat list
+   * 2. Clears the selected chat
+   * 3. Navigates back to the chat list
+   * 4. Updates the UI state
+   * 
+   * @param deletedGroupId - ID of the deleted group
+   */
+  onGroupDeleted(deletedGroupId: string): void {
+    // Remove the deleted group from the chats list using groupId property
+    this.chats = this.chats.filter(chat => chat.groupId !== deletedGroupId);
+    
+    // Clear selected chat and conversation
+    this.selectedChatId = null;
+    this.currentConversation = null;
+    
+    // Show sidebar in mobile view
+    if (this.isMobileView) {
+      this.showSidebar = true;
+    }
+    
+    // Update context to CHAT_VIEW
+    this.updateShortcutContext();
+    
+    // Navigate to chat list (clear fragment)
+    this.router.navigate(['/chat'], {
+      queryParamsHandling: 'preserve'
+    });
+  }
+
+  /**
    * Close keyboard shortcuts dialog
    */
   onKeyboardShortcutsClosed(): void {

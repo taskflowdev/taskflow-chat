@@ -1,7 +1,7 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
-export type ButtonVariant = 'primary' | 'secondary' | 'danger' | 'success';
+export type ButtonVariant = 'primary' | 'secondary' | 'danger' | 'success' | 'warning';
 export type ButtonSize = 'small' | 'medium' | 'large';
 
 @Component({
@@ -119,6 +119,23 @@ export type ButtonSize = 'small' | 'medium' | 'large';
 
     .btn-success:disabled {
       background: #166534;
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    /* Warning variant */
+    .btn-warning {
+      background: #f59e0b;
+      border: none;
+      color: white;
+    }
+
+    .btn-warning:hover:not(:disabled) {
+      background: #d97706;
+    }
+
+    .btn-warning:disabled {
+      background: #b45309;
       opacity: 0.5;
       cursor: not-allowed;
     }

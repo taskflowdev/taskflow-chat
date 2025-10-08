@@ -1,12 +1,14 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
 import { GroupsService } from '../../../api/services/groups.service';
 import { ToastService } from '../../../shared/services/toast.service';
 import { CommonInputComponent } from '../../../shared/components/common-form-controls/common-input.component';
 import { CommonButtonComponent } from '../../../shared/components/common-form-controls/common-button.component';
 import { CommonToggleComponent } from '../../../shared/components/common-form-controls/common-toggle.component';
 import { SkeletonLoaderComponent } from '../../../shared/components/skeleton-loader/skeleton-loader.component';
+import { ConfirmationDialogComponent } from '../../../shared/components/confirmation-dialog/confirmation-dialog.component';
 
 export interface GroupInfo {
   groupId: string;
@@ -16,6 +18,15 @@ export interface GroupInfo {
   createdAt?: string;
 }
 
+/**
+ * Enterprise-level Group Info Dialog Component
+ * 
+ * Features:
+ * - View and edit group information
+ * - Delete group with confirmation
+ * - Update group settings (name, visibility)
+ * - Real-time validation and error handling
+ */
 @Component({
   selector: 'app-group-info-dialog',
   standalone: true,
@@ -25,7 +36,8 @@ export interface GroupInfo {
     CommonInputComponent,
     CommonButtonComponent,
     CommonToggleComponent,
-    SkeletonLoaderComponent
+    SkeletonLoaderComponent,
+    ConfirmationDialogComponent
   ],
   templateUrl: './group-info-dialog.component.html',
   styleUrls: ['./group-info-dialog.component.scss']
@@ -34,16 +46,20 @@ export class GroupInfoDialogComponent implements OnInit {
   @Input() groupId!: string;
   @Output() closed = new EventEmitter<void>();
   @Output() groupUpdated = new EventEmitter<void>();
+  @Output() groupDeleted = new EventEmitter<string>();
 
   groupInfoForm!: FormGroup;
   isLoading = false;
   isLoadingDetails = true;
+  isDeleting = false;
+  showDeleteConfirmation = false;
   groupInfo: GroupInfo | null = null;
 
   constructor(
     private fb: FormBuilder,
     private groupsService: GroupsService,
-    private toastService: ToastService
+    private toastService: ToastService,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
@@ -146,5 +162,75 @@ export class GroupInfoDialogComponent implements OnInit {
 
   closeDialog(): void {
     this.closed.emit();
+  }
+
+  /**
+   * Show delete confirmation dialog
+   */
+  showDeleteDialog(): void {
+    this.showDeleteConfirmation = true;
+  }
+
+  /**
+   * Cancel delete operation
+   */
+  cancelDelete(): void {
+    this.showDeleteConfirmation = false;
+  }
+
+  /**
+   * Confirm and execute group deletion
+   * 
+   * This method:
+   * 1. Calls the API to delete the group
+   * 2. Shows success/error toast
+   * 3. Emits groupDeleted event
+   * 4. Closes the dialog
+   * 5. Navigates back to chat list
+   */
+  confirmDelete(): void {
+    if (this.isDeleting || !this.groupId) {
+      return;
+    }
+
+    this.isDeleting = true;
+
+    this.groupsService.apiGroupsIdDelete$Json({ id: this.groupId }).subscribe({
+      next: (response) => {
+        this.isDeleting = false;
+        this.showDeleteConfirmation = false;
+
+        if (response.success) {
+          this.toastService.showSuccess(
+            'Group and all associated data have been permanently deleted.',
+            'Group Deleted'
+          );
+          
+          // Emit event to parent component
+          this.groupDeleted.emit(this.groupId);
+          
+          // Close the dialog
+          this.closeDialog();
+          
+          // Navigate to chat list
+          this.router.navigate(['/chat']);
+        } else {
+          this.toastService.showError(
+            response.message || 'Failed to delete group',
+            'Delete Failed'
+          );
+        }
+      },
+      error: (error) => {
+        this.isDeleting = false;
+        this.showDeleteConfirmation = false;
+        
+        const errorMessage = error?.error?.message 
+          || error?.message 
+          || 'Failed to delete group. Please try again.';
+        
+        this.toastService.showError(errorMessage, 'Delete Failed');
+      }
+    });
   }
 }
