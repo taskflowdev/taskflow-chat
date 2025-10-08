@@ -1,45 +1,32 @@
 <div class="dialog-overlay" *ngIf="isVisible" (click)="onCancel()">
   <div class="dialog-container confirmation-dialog" (click)="$event.stopPropagation()">
-    <!-- Dialog Content -->
-    <div class="dialog-content">
-      <!-- Icon Header -->
-      <div class="dialog-icon" [ngClass]="'icon-' + variant">
+    <!-- Header -->
+    <div class="dialog-header">
+      <div class="header-content">
         <i class="bi" [ngClass]="getDefaultIcon()"></i>
+        <h2 class="dialog-title">{{ title }}</h2>
+        </div>
+        <button class="close-btn" (click)="onCancel()" aria-label="Close dialog">
+          <i class="bi bi-x-lg"></i>
+        </button>
+    </div>
+
+    <!-- Content -->
+    <div class="dialog-content">
+      <p class="dialog-message">{{ message }}</p>
+      <p class="dialog-secondary-message" *ngIf="secondaryMessage">{{ secondaryMessage }}</p>
       </div>
 
-      <!-- Title -->
-      <h2 class="dialog-title">{{ title }}</h2>
-
-      <!-- Message -->
-      <p class="dialog-message">{{ message }}</p>
-
-      <!-- Secondary Message (if provided) -->
-      <p class="dialog-secondary-message" *ngIf="secondaryMessage">
-        {{ secondaryMessage }}
-      </p>
-
-      <!-- Action Buttons -->
+    <!-- Footer -->
+    <div class="dialog-footer">
       <div class="button-group">
-        <!-- Confirm Button -->
-        <app-common-button
-          type="button"
-          [variant]="variant"
-          [fullWidth]="true"
-          [loading]="loading"
-          [disabled]="loading"
-          (clicked)="onConfirm()"
-        >
+        <app-common-button type="button" size="small" [variant]="variant" [fullWidth]="false" [loading]="loading"
+          [disabled]="loading" (clicked)="onConfirm()">
           {{ loading ? 'Processing...' : confirmText }}
         </app-common-button>
 
-        <!-- Cancel Button -->
-        <app-common-button
-          type="button"
-          variant="secondary"
-          [fullWidth]="true"
-          [disabled]="loading"
-          (clicked)="onCancel()"
-        >
+        <app-common-button type="button" size="small" variant="secondary" [fullWidth]="false" [disabled]="loading"
+          (clicked)="onCancel()">
           {{ cancelText }}
         </app-common-button>
       </div>

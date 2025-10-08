@@ -33,6 +33,8 @@ export type ButtonSize = 'small' | 'medium' | 'large';
       justify-content: center;
       gap: 0.5rem;
       position: relative;
+      box-sizing: border-box;
+      line-height: 1.5;
     }
 
     /* Sizes */
@@ -58,8 +60,8 @@ export type ButtonSize = 'small' | 'medium' | 'large';
     /* Primary variant - white background */
     .btn-primary {
       background: white;
-      border: none;
       color: black;
+      border-color: transparent;
     }
 
     .btn-primary:hover:not(:disabled) {
@@ -138,6 +140,22 @@ export type ButtonSize = 'small' | 'medium' | 'large';
       background: #b45309;
       opacity: 0.5;
       cursor: not-allowed;
+    }
+
+    /* All button variants have consistent border */
+    .btn-primary,
+    .btn-secondary,
+    .btn-danger,
+    .btn-success,
+    .btn-warning {
+      border-width: 1px;
+      border-style: solid;
+    }
+
+    .btn-danger,
+    .btn-success,
+    .btn-warning {
+      border-color: transparent;
     }
 
     /* Loading state */
