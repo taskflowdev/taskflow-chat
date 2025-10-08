@@ -227,6 +227,94 @@ describe('ShortcutRegistryService', () => {
       
       expect(shortcut).toBeUndefined();
     });
+
+    // ===== Context Hierarchy Tests =====
+
+    it('should find context-specific shortcut over global shortcut', () => {
+      const binding: ShortcutKeyBinding = { key: 'ArrowUp', alt: true };
+      
+      // This shortcut already exists in CHAT_VIEW context from defaults
+      const result = service.findMatchingShortcut(binding, ShortcutContext.CHAT_VIEW);
+      
+      expect(result).toBeDefined();
+      expect(result?.action).toBe(ShortcutActionTypes.PREV_CHAT);
+      expect(result?.context).toBe(ShortcutContext.CHAT_VIEW);
+    });
+
+    it('should inherit shortcuts from parent context (CHAT_SELECTED inherits from CHAT_VIEW)', () => {
+      const binding: ShortcutKeyBinding = { key: 'ArrowUp', alt: true };
+      
+      // PREV_CHAT is registered in CHAT_VIEW context
+      // It should also work in CHAT_SELECTED context due to inheritance
+      const result = service.findMatchingShortcut(binding, ShortcutContext.CHAT_SELECTED);
+      
+      expect(result).toBeDefined();
+      expect(result?.action).toBe(ShortcutActionTypes.PREV_CHAT);
+      expect(result?.context).toBe(ShortcutContext.CHAT_VIEW); // Original context is CHAT_VIEW
+    });
+
+    it('should prioritize exact context match over inherited context', () => {
+      const binding: ShortcutKeyBinding = { key: 'i', ctrl: true };
+      
+      // GROUP_INFO is registered in CHAT_SELECTED context
+      // Should be found in CHAT_SELECTED but not in CHAT_VIEW
+      const resultSelected = service.findMatchingShortcut(binding, ShortcutContext.CHAT_SELECTED);
+      const resultView = service.findMatchingShortcut(binding, ShortcutContext.CHAT_VIEW);
+      
+      expect(resultSelected).toBeDefined();
+      expect(resultSelected?.action).toBe(ShortcutActionTypes.GROUP_INFO);
+      
+      expect(resultView).toBeUndefined(); // Not available in parent context
+    });
+
+    it('should find GLOBAL shortcuts in any context', () => {
+      const binding: ShortcutKeyBinding = { key: 'k', ctrl: true };
+      
+      // OPEN_SEARCH is registered in GLOBAL context
+      // Should work in all contexts
+      const contexts = [
+        ShortcutContext.GLOBAL,
+        ShortcutContext.CHAT_VIEW,
+        ShortcutContext.CHAT_SELECTED,
+        ShortcutContext.DIALOG_OPEN,
+        ShortcutContext.SEARCH_DIALOG
+      ];
+      
+      contexts.forEach(context => {
+        const result = service.findMatchingShortcut(binding, context);
+        expect(result).toBeDefined();
+        expect(result?.action).toBe(ShortcutActionTypes.OPEN_SEARCH);
+      });
+    });
+
+    it('should inherit from DIALOG_OPEN when in SEARCH_DIALOG context', () => {
+      const binding: ShortcutKeyBinding = { key: 'Escape' };
+      
+      // CLOSE_DIALOG is registered in DIALOG_OPEN context
+      // Should also work in SEARCH_DIALOG due to inheritance
+      const result = service.findMatchingShortcut(binding, ShortcutContext.SEARCH_DIALOG);
+      
+      expect(result).toBeDefined();
+      expect(result?.action).toBe(ShortcutActionTypes.CLOSE_DIALOG);
+      expect(result?.context).toBe(ShortcutContext.DIALOG_OPEN);
+    });
+
+    it('should not find context-specific shortcuts in wrong context without inheritance', () => {
+      const binding: ShortcutKeyBinding = { key: '/' };
+      
+      // FOCUS_SEARCH is registered in SEARCH_DIALOG context only
+      // Should NOT work in other contexts
+      const resultGlobal = service.findMatchingShortcut(binding, ShortcutContext.GLOBAL);
+      const resultChatView = service.findMatchingShortcut(binding, ShortcutContext.CHAT_VIEW);
+      
+      expect(resultGlobal).toBeUndefined();
+      expect(resultChatView).toBeUndefined();
+      
+      // But should work in SEARCH_DIALOG
+      const resultSearch = service.findMatchingShortcut(binding, ShortcutContext.SEARCH_DIALOG);
+      expect(resultSearch).toBeDefined();
+      expect(resultSearch?.action).toBe(ShortcutActionTypes.FOCUS_SEARCH);
+    });
   });
 
   describe('Enable/Disable', () => {

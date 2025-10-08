@@ -202,7 +202,13 @@ export class ShortcutRegistryService {
 
   /**
    * Get all shortcuts matching a specific key binding
-   * Useful for conflict detection
+   * Uses areKeyBindingsEqual() for comparison which handles:
+   * - Shifted characters (?, !, @, etc.)
+   * - Undefined vs false for modifier keys
+   * - Case-insensitive key matching
+   * 
+   * @param binding - The key binding to match
+   * @returns Array of shortcuts that match the binding
    */
   getShortcutsByBinding(binding: ShortcutKeyBinding): ShortcutMetadata[] {
     return Array.from(this.registry.values()).filter(shortcut =>
@@ -292,72 +298,147 @@ export class ShortcutRegistryService {
   }
 
   /**
-   * Find the best matching shortcut for a key binding
-   * Considers context and priority for conflict resolution
-   * Prioritizes context-specific shortcuts over global shortcuts
-   * Supports context hierarchy (e.g., CHAT_SELECTED inherits from CHAT_VIEW)
+   * Find the best matching shortcut for a key binding and current context
+   * 
+   * Enterprise-level matching algorithm with context hierarchy support:
+   * 1. Checks all enabled shortcuts that match the key binding
+   * 2. Filters by compatible contexts (current, inherited, or GLOBAL)
+   * 3. Prioritizes exact context match > inherited context > GLOBAL
+   * 4. Within same context level, prioritizes higher priority value
+   * 
+   * Context Hierarchy Examples:
+   * - CHAT_SELECTED inherits from CHAT_VIEW (so CHAT_VIEW shortcuts work)
+   * - SEARCH_DIALOG inherits from DIALOG_OPEN
+   * 
+   * @param binding - The key binding to match
+   * @param currentContext - The current UI context
+   * @returns The best matching shortcut, or undefined if none found
    */
   findMatchingShortcut(
     binding: ShortcutKeyBinding,
     currentContext: ShortcutContext = ShortcutContext.GLOBAL
   ): ShortcutMetadata | undefined {
-    // Define context hierarchy - CHAT_SELECTED includes CHAT_VIEW shortcuts
+    // Step 1: Get compatible contexts (includes current + inherited contexts)
     const compatibleContexts = this.getCompatibleContexts(currentContext);
     
+    // Step 2: Find all shortcuts matching the key binding
     const matchingShortcuts = this.getShortcutsByBinding(binding)
       .filter(shortcut => shortcut.enabled !== false)
-      .filter(shortcut =>
-        compatibleContexts.includes(shortcut.context) ||
-        shortcut.context === ShortcutContext.GLOBAL
-      );
+      .filter(shortcut => {
+        // A shortcut matches if it's in:
+        // - The exact current context
+        // - Any inherited/compatible context
+        // - GLOBAL context (always available)
+        return compatibleContexts.includes(shortcut.context) ||
+               shortcut.context === ShortcutContext.GLOBAL;
+      });
 
     if (matchingShortcuts.length === 0) {
       return undefined;
     }
 
-    // Sort by context specificity first (context-specific before global), then by priority
+    // Step 3: Sort by context specificity (most specific first), then priority
     matchingShortcuts.sort((a, b) => {
-      // Exact context match has highest priority
-      if (a.context === currentContext && b.context !== currentContext) {
-        return -1;
-      }
-      if (a.context !== currentContext && b.context === currentContext) {
-        return 1;
+      // Calculate context specificity score (higher = more specific)
+      const getContextScore = (shortcut: ShortcutMetadata): number => {
+        if (shortcut.context === currentContext) {
+          return 1000; // Exact match is highest priority
+        }
+        if (compatibleContexts.includes(shortcut.context)) {
+          // Inherited context - score by position in hierarchy
+          const index = compatibleContexts.indexOf(shortcut.context);
+          return 500 - (index * 100); // Closer to current context = higher score
+        }
+        if (shortcut.context === ShortcutContext.GLOBAL) {
+          return 0; // Global is lowest specificity
+        }
+        return -1; // Should never happen due to filter above
+      };
+      
+      const scoreA = getContextScore(a);
+      const scoreB = getContextScore(b);
+      
+      // First, sort by context specificity
+      if (scoreA !== scoreB) {
+        return scoreB - scoreA; // Higher score first
       }
       
-      // Compatible context (from hierarchy) comes before global
-      if (compatibleContexts.includes(a.context) && b.context === ShortcutContext.GLOBAL) {
-        return -1;
-      }
-      if (a.context === ShortcutContext.GLOBAL && compatibleContexts.includes(b.context)) {
-        return 1;
-      }
-      
-      // If same context specificity, sort by priority
+      // If same context level, sort by priority value
       return (b.priority || 0) - (a.priority || 0);
     });
 
+    // Return the best match (first after sorting)
     return matchingShortcuts[0];
   }
 
   /**
    * Get compatible contexts for a given context (context hierarchy)
-   * Example: CHAT_SELECTED includes shortcuts from CHAT_VIEW
+   * 
+   * Implements context inheritance pattern similar to CSS specificity.
+   * More specific contexts inherit shortcuts from less specific ones.
+   * 
+   * Context Hierarchy Tree:
+   * ```
+   * GLOBAL (root - always accessible)
+   *   ├── CHAT_VIEW
+   *   │     └── CHAT_SELECTED (inherits CHAT_VIEW shortcuts)
+   *   ├── DIALOG_OPEN
+   *   │     └── SEARCH_DIALOG (inherits DIALOG_OPEN shortcuts)
+   *   ├── CONVERSATION
+   *   ├── SIDEBAR
+   *   └── MESSAGE_INPUT
+   * ```
+   * 
+   * @param context - The current context
+   * @returns Array of contexts in order: [current, parent, grandparent, ...]
+   * 
+   * @example
+   * ```typescript
+   * getCompatibleContexts(CHAT_SELECTED)
+   * // Returns: [CHAT_SELECTED, CHAT_VIEW]
+   * 
+   * getCompatibleContexts(SEARCH_DIALOG)
+   * // Returns: [SEARCH_DIALOG, DIALOG_OPEN]
+   * ```
    */
   private getCompatibleContexts(context: ShortcutContext): ShortcutContext[] {
     const contexts: ShortcutContext[] = [context];
     
     // Define context inheritance/hierarchy
+    // Each case adds parent contexts in order of inheritance
     switch (context) {
       case ShortcutContext.CHAT_SELECTED:
         // CHAT_SELECTED inherits from CHAT_VIEW
+        // This allows chat navigation shortcuts to work whether chat is selected or not
         contexts.push(ShortcutContext.CHAT_VIEW);
         break;
+        
       case ShortcutContext.SEARCH_DIALOG:
         // SEARCH_DIALOG inherits from DIALOG_OPEN
+        // This allows general dialog shortcuts (like Escape) to work in search
         contexts.push(ShortcutContext.DIALOG_OPEN);
         break;
-      // Add more hierarchies as needed
+        
+      case ShortcutContext.MESSAGE_INPUT:
+        // MESSAGE_INPUT could inherit from CHAT_SELECTED if needed
+        // contexts.push(ShortcutContext.CHAT_SELECTED);
+        break;
+        
+      // Add more hierarchies as needed for future contexts
+      case ShortcutContext.CONVERSATION:
+        // CONVERSATION could inherit from CHAT_VIEW
+        // contexts.push(ShortcutContext.CHAT_VIEW);
+        break;
+        
+      // Contexts with no parent just contain themselves
+      case ShortcutContext.GLOBAL:
+      case ShortcutContext.UNAUTHENTICATED:
+      case ShortcutContext.CHAT_VIEW:
+      case ShortcutContext.DIALOG_OPEN:
+      case ShortcutContext.SIDEBAR:
+      default:
+        // No additional inheritance
+        break;
     }
     
     return contexts;

@@ -96,7 +96,7 @@ export class KeyboardShortcutService {
    * Only runs in browser environment (not SSR)
    * 
    * This is the core event capture mechanism that listens for all keydown events
-   * and routes them through the shortcut system.
+   * and routes them through the shortcut system with enterprise-level context matching.
    */
   private initializeGlobalListener(): void {
     document.addEventListener('keydown', (event: KeyboardEvent) => {
@@ -125,13 +125,35 @@ export class KeyboardShortcutService {
         return;
       }
 
-      // Find matching shortcut from registry
+      // Create binding from event
       const binding = this.createBindingFromEvent(event);
+      
+      // Find matching shortcut from registry using current context
       const shortcut = this.registryService.findMatchingShortcut(binding, this.currentContext);
       
+      // Debug logging (can be enabled/disabled)
       if (shortcut) {
+        console.log('[KeyboardShortcut] Match found:', {
+          binding,
+          context: this.currentContext,
+          action: shortcut.action,
+          shortcutContext: shortcut.context
+        });
         event.preventDefault();
         this.triggerAction(shortcut.action);
+      } else {
+        // Log when no match found (helps debug context issues)
+        console.log('[KeyboardShortcut] No match found:', {
+          binding,
+          context: this.currentContext,
+          key: event.key,
+          modifiers: {
+            ctrl: event.ctrlKey,
+            alt: event.altKey,
+            shift: event.shiftKey,
+            meta: event.metaKey
+          }
+        });
       }
     });
   }
