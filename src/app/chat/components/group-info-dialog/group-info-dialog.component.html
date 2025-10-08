@@ -9,9 +9,9 @@
         </div> -->
         <!-- <h1 class="main-title">Group Information</h1>
         <p class="subtitle">View and edit group details</p> -->
-        <button type="button" class="btn-close" (click)="closeDialog()" aria-label="Close">
+        <!-- <button type="button" class="btn-close" (click)="closeDialog()" aria-label="Close">
           <i class="bi bi-x"></i>
-        </button>
+        </button> -->
       </div>
 
       <!-- Loading State -->
@@ -50,7 +50,7 @@
             <i class="bi bi-people"></i>
           </div>
           <h5 class="avatar-group-name">
-            {{ groupInfo?.name }} 
+            {{ groupInfo?.name }}
           </h5>
           <p class="avatar-hint">
             Make changes to your group's details and settings right here.
@@ -132,7 +132,7 @@
 <app-confirmation-dialog
   [isVisible]="showDeleteConfirmation"
   [title]="'Delete Group?'"
-  [message]="'This action cannot be undone. All messages, files, and group data will be permanently deleted.'"
+  [message]="'This action cannot be undone. all messages, files, and group data will be permanently deleted.'"
   [secondaryMessage]="'All members will lose access to this group immediately.'"
   [confirmText]="'Delete Group'"
   [cancelText]="'Keep Group'"

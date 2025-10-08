@@ -67,6 +67,7 @@
 
     .dialog-title {
       margin: 0;
+      margin-left: 10px;
       font-size: 1.25rem;
       font-weight: 600;
       color: white;
@@ -99,6 +100,19 @@
   padding: 1.2rem;
   color: #ccc;
   text-align: start;
+
+  i {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 3.5rem;
+    height: 3.5rem;
+    border-radius: 50%;
+    background-color: rgba(255, 255, 255, 0.1);
+    color: white;
+    font-size: 1.8rem;
+    margin-bottom: 1rem;
+  }
 
   .dialog-message {
     font-size: 1.1rem;

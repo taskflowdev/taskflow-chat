@@ -3,7 +3,7 @@
     <!-- Header -->
     <div class="dialog-header">
       <div class="header-content">
-        <i class="bi" [ngClass]="getDefaultIcon()"></i>
+        <!-- <i class="bi" [ngClass]="getDefaultIcon()"></i> -->
         <h2 class="dialog-title">{{ title }}</h2>
         </div>
         <button class="close-btn" (click)="onCancel()" aria-label="Close dialog">
@@ -13,9 +13,10 @@
 
     <!-- Content -->
     <div class="dialog-content">
+      <i class="bi" [ngClass]="getDefaultIcon()"></i>
       <p class="dialog-message">{{ message }}</p>
       <p class="dialog-secondary-message" *ngIf="secondaryMessage">{{ secondaryMessage }}</p>
-      </div>
+    </div>
 
     <!-- Footer -->
     <div class="dialog-footer">

@@ -48,13 +48,20 @@ export class ChatConversationComponent implements AfterViewChecked, OnInit, OnDe
     {
       id: 'group-info',
       label: 'Group Info',
-      icon: 'bi-info-circle'
+      icon: 'bi-info-circle',
+      shortcutKey: 'Ctrl + i'
+    },
+    {
+      id: '',
+      label: '',
+      divider: true
     },
     {
       id: 'delete-group',
       label: 'Delete Group',
       icon: 'bi-trash',
-      variant: 'danger'
+      variant: 'danger',
+      isQuick: true
     }
   ];
 
@@ -115,7 +122,7 @@ export class ChatConversationComponent implements AfterViewChecked, OnInit, OnDe
   onGroupInfoClosed(): void {
     // Reset deletion flag
     this.openGroupInfoForDeletion = false;
-    
+
     // Remove URL fragment when dialog closes
     this.router.navigate([], {
       fragment: undefined,
