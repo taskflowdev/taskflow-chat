@@ -55,7 +55,8 @@ export class NavbarComponent implements OnInit, OnDestroy {
     {
       label: 'Keyboard Shortcuts',
       icon: 'bi-keyboard',
-      action: 'keyboard-shortcuts'
+      action: 'keyboard-shortcuts',
+      shortcutKey: 'Shift + ?'
     },
     {
       divider: true,
@@ -65,7 +66,8 @@ export class NavbarComponent implements OnInit, OnDestroy {
     {
       label: 'Logout',
       icon: 'bi-box-arrow-right',
-      action: 'logout'
+      action: 'logout',
+      isBold: true
     }
   ];
 
