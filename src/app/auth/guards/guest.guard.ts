@@ -37,8 +37,7 @@ export class GuestGuard implements CanActivate {
       return of(true);
     }
 
-    // If we have both token and user data, redirect to chats immediately
-    // Return Observable to ensure route activation is blocked
+    // If we have user data in memory, redirect to chats
     if (currentUser) {
       return of(false).pipe(
         tap(() => {
@@ -47,19 +46,17 @@ export class GuestGuard implements CanActivate {
       );
     }
 
-    // Token exists but no user data in memory
-    // Verify authentication with server before deciding
-    // This Observable blocks route activation until verification completes
-    return this.authService.verifyAuthentication().pipe(
-      map(isAuthenticated => {
-        if (isAuthenticated) {
-          // User is authenticated, redirect to chats
+    // Have token but no user in memory - try to restore from localStorage
+    const restoredUser = this.authService.restoreUserFromStorage();
+    if (restoredUser) {
+      return of(false).pipe(
+        tap(() => {
           this.router.navigate(['/chats'], { replaceUrl: true });
-          return false;
-        }
-        // Authentication failed, allow access to guest pages
-        return true;
-      })
-    );
+        })
+      );
+    }
+
+    // No stored user data, allow access to guest pages
+    return of(true);
   }
 }

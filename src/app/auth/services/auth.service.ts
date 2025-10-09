@@ -157,6 +157,28 @@ export class AuthService {
     return this.currentUserSubject.value;
   }
 
+  /**
+   * Restore user from localStorage and update the BehaviorSubject.
+   * Used by guards on page refresh to restore auth state.
+   * @returns The restored user or null
+   */
+  restoreUserFromStorage(): AuthUser | null {
+    if (!isPlatformBrowser(this.platformId)) return null;
+
+    const userData = this.localStorageService.getItem(this.USER_KEY);
+    if (userData) {
+      try {
+        const user = JSON.parse(userData) as AuthUser;
+        this.currentUserSubject.next(user);
+        return user;
+      } catch (error) {
+        console.error('Error parsing stored user data:', error);
+        this.localStorageService.removeItem(this.USER_KEY);
+      }
+    }
+    return null;
+  }
+
   private getUserProfile(): Observable<AuthUser | null> {
     return this.apiAuthService.apiAuthMeGet().pipe(
       map(response => {
@@ -202,9 +224,12 @@ export class AuthService {
     if (!isPlatformBrowser(this.platformId)) return;
 
     const token = this.getToken();
-    if (token && !this.getCurrentUser()) {
-      // Have token but no user data, try to fetch user profile
-      this.getUserProfile().subscribe();
+    const currentUser = this.getCurrentUser();
+    
+    // If we have a token but no user in memory, restore from localStorage
+    // Don't make HTTP calls here to avoid circular dependency on init
+    if (token && !currentUser) {
+      this.restoreUserFromStorage();
     }
   }
 
@@ -257,8 +282,8 @@ export class AuthService {
   }
 
   /**
-   * Verify current authentication status with the server.
-   * This is called during app initialization and by guards.
+   * Verify current authentication status.
+   * This method checks localStorage first and only makes server calls when necessary.
    * @returns Observable<boolean> indicating if user is authenticated
    */
   verifyAuthentication(): Observable<boolean> {
@@ -271,21 +296,19 @@ export class AuthService {
       return of(false);
     }
 
-    // If we already have user data, consider authenticated
+    // If we already have user data in memory, consider authenticated
     if (this.getCurrentUser()) {
       return of(true);
     }
 
-    // Verify with the server by calling /api/auth/me
-    return this.getUserProfile().pipe(
-      map(user => !!user),
-      catchError(error => {
-        console.error('Authentication verification failed:', error);
-        this.toastService.showError('Authentication failed. Please login again.', 'Session Error');
-        this.logout(); // Clear invalid tokens
-        return of(false);
-      })
-    );
+    // Try to restore from localStorage first (avoids HTTP call)
+    const restoredUser = this.restoreUserFromStorage();
+    if (restoredUser) {
+      return of(true);
+    }
+
+    // No stored user data, user needs to login again
+    return of(false);
   }
 
   /**
