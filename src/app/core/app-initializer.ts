@@ -4,10 +4,14 @@ import { AuthService } from '../auth/services/auth.service';
 
 /**
  * APP_INITIALIZER factory function.
- * Verifies authentication before the app starts.
- * This ensures that protected routes don't flash before auth verification completes.
+ * Initializes authentication state before the app starts.
+ * This ensures that protected routes don't flash before auth state is ready.
  * 
  * Only runs in browser environment - skips during SSR.
+ * 
+ * IMPORTANT: Does NOT make HTTP requests during initialization to avoid
+ * circular dependency with AuthInterceptor. Instead, it restores user state
+ * from localStorage if available.
  */
 export function appInitializerFactory(
   authService: AuthService,
@@ -22,28 +26,27 @@ export function appInitializerFactory(
         return;
       }
 
-      // In browser, verify authentication if token exists
+      // In browser, check if we have stored authentication data
       const token = authService.getToken();
-      if (!token) {
-        // No token, user is not logged in - resolve immediately
+      const currentUser = authService.getCurrentUser();
+      
+      // If we have both token and user data, consider initialized
+      // The guards will verify with the server if needed
+      if (token && currentUser) {
         authService.setInitialized();
         resolve();
         return;
       }
-
-      // Token exists, verify with server
-      authService.verifyAuthentication().subscribe({
-        next: () => {
-          // Verification complete (success or failure)
-          authService.setInitialized();
-          resolve();
-        },
-        error: () => {
-          // Verification failed
-          authService.setInitialized();
-          resolve();
-        }
-      });
+      
+      // If we have a token but no user data, clear the token
+      // This handles the case where user data was cleared but token wasn't
+      if (token && !currentUser) {
+        authService.logout();
+      }
+      
+      // No valid auth state, user is not logged in
+      authService.setInitialized();
+      resolve();
     });
   };
 }
