@@ -2,9 +2,7 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 /**
- * LoadingScreenComponent provides a full-screen loading splash screen
- * with the app logo (Bootstrap chat-quote icon) centered and a spinner below it.
- * This is shown during app initialization and critical loading operations.
+ * Full-screen loading splash screen with app logo and elegant white bar loader
  */
 @Component({
   selector: 'app-loading-screen',
@@ -14,12 +12,9 @@ import { CommonModule } from '@angular/common';
     <div class="loading-screen" role="status" aria-live="polite" aria-label="Loading application">
       <div class="loading-content">
         <div class="logo-container">
-          <!-- App logo using Bootstrap icon bi-chat-quote -->
           <i class="bi bi-chat-quote app-logo"></i>
         </div>
-        <div class="spinner-container">
-          <div class="spinner"></div>
-        </div>
+        <div class="loader"></div>
         <span class="visually-hidden">Loading, please wait...</span>
       </div>
     </div>
@@ -27,10 +22,7 @@ import { CommonModule } from '@angular/common';
   styles: [`
     .loading-screen {
       position: fixed;
-      top: 0;
-      left: 0;
-      width: 100vw;
-      height: 100vh;
+      inset: 0;
       background-color: #000;
       display: flex;
       align-items: center;
@@ -47,33 +39,48 @@ import { CommonModule } from '@angular/common';
     }
 
     .logo-container {
-      animation: pulse 2s ease-in-out infinite;
+      // animation: pulse 2s ease-in-out infinite;
     }
 
     .app-logo {
-      font-size: 120px;
-      color: white;
-      filter: drop-shadow(0 0 20px rgba(255, 255, 255, 0.3));
+      font-size: 80px;
+      color: #fff;
+      // filter: drop-shadow(0 0 20px rgba(255, 255, 255, 0.3));
     }
 
-    .spinner-container {
-      width: 48px;
-      height: 48px;
+    /* Loader bar */
+    .loader {
+      display: block;
+      --height-of-loader: 4.5px;
+      --loader-color: #fff;
+      width: 120px;
+      height: var(--height-of-loader);
+      border-radius: 30px;
+      background-color: rgba(255, 255, 255, 0.1);
       position: relative;
+      overflow: hidden;
     }
 
-    .spinner {
-      width: 48px;
-      height: 48px;
-      border: 4px solid rgba(255, 255, 255, 0.1);
-      border-top-color: #fff;
-      border-radius: 50%;
-      animation: spin 1s linear infinite;
+    .loader::before {
+      content: "";
+      position: absolute;
+      background: var(--loader-color);
+      top: 0;
+      left: 0;
+      width: 0%;
+      height: 100%;
+      border-radius: 30px;
+      animation: moving 1.2s ease-in-out infinite;
     }
 
-    @keyframes spin {
-      to {
-        transform: rotate(360deg);
+    @keyframes moving {
+      50% {
+        width: 100%;
+      }
+      100% {
+        width: 0;
+        right: 0;
+        left: unset;
       }
     }
 
@@ -101,4 +108,4 @@ import { CommonModule } from '@angular/common';
     }
   `]
 })
-export class LoadingScreenComponent {}
+export class LoadingScreenComponent { }
