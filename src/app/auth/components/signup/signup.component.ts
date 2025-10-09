@@ -33,9 +33,10 @@ export class SignupComponent implements OnInit {
 
   ngOnInit() {
     // Redirect if already logged in
-    // if (this.authService.isAuthenticated()) {
-    //   this.router.navigate(['/chat']);
-    // }
+    const currentUser = this.authService.getCurrentUser();
+    if (this.authService.isAuthenticated() && currentUser) {
+      this.router.navigate(['/chats'], { replaceUrl: true });
+    }
   }
 
   passwordMatchValidator(form: FormGroup) {
@@ -101,12 +102,19 @@ export class SignupComponent implements OnInit {
 
     this.authService.register({ fullName, userName, email, password }).subscribe({
       next: (result) => {
-        this.isLoading = false;
         if (result.success) {
-          // Successful registration, show success toast and redirect to chat
-          this.toastService.showSuccess('Account created successfully! Welcome to ChatFlow.');
-          this.router.navigate(['/chat']);
+          // Wait for currentUser$ to emit before navigating
+          // This ensures the user data is loaded before redirecting
+          this.authService.currentUser$.subscribe(user => {
+            if (user) {
+              this.isLoading = false;
+              this.toastService.showSuccess('Account created successfully! Welcome to TaskFlow Chat.', 'Registration Successful');
+              // Use replaceUrl to prevent back button returning to signup
+              this.router.navigate(['/chats'], { replaceUrl: true });
+            }
+          });
         } else {
+          this.isLoading = false;
           this.toastService.showError(result.error || 'Registration failed');
         }
       },

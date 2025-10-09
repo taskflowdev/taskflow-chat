@@ -1,9 +1,10 @@
 import { Injectable, Inject, PLATFORM_ID } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
-import { BehaviorSubject, Observable, catchError, map, of, tap } from 'rxjs';
+import { BehaviorSubject, Observable, catchError, map, of, tap, shareReplay, finalize } from 'rxjs';
 import { AuthService as ApiAuthService } from '../../api/services/auth.service';
 import { LoginDto, RegisterDto, UserDto } from '../../api/models';
 import { LocalStorageService } from './local-storage.service';
+import { ToastService } from '../../shared/services/toast.service';
 
 export interface AuthUser {
   id: string;
@@ -23,17 +24,30 @@ export class AuthService {
   private currentUserSubject = new BehaviorSubject<AuthUser | null>(this.getUserFromStorage());
   public currentUser$ = this.currentUserSubject.asObservable();
 
+  // Track if app is initializing (verifying authentication)
+  private authInitializingSubject = new BehaviorSubject<boolean>(true);
+  public authInitializing$ = this.authInitializingSubject.asObservable();
+
+  // In-flight refresh token request to prevent multiple parallel refreshes
+  private refreshTokenInProgress$: Observable<boolean> | null = null;
+
   constructor(
     private apiAuthService: ApiAuthService,
     private localStorageService: LocalStorageService,
+    private toastService: ToastService,
     @Inject(PLATFORM_ID) private platformId: Object
   ) {
     // Check if user is logged in on service initialization (only in browser)
+    // Note: Full verification is handled by APP_INITIALIZER
     if (isPlatformBrowser(this.platformId)) {
       this.checkAuthStatus();
     }
   }
 
+  /**
+   * Login with username and password.
+   * Stores tokens and fetches user profile on success.
+   */
   login(credentials: LoginDto): Observable<{ success: boolean; user?: AuthUser; error?: string }> {
     return this.apiAuthService.apiAuthLoginPost({ body: credentials }).pipe(
       tap(response => {
@@ -57,14 +71,20 @@ export class AuthService {
       })),
       catchError(error => {
         console.error('Login error:', error);
+        const errorMessage = error.error?.message || 'Login failed. Please try again.';
+        this.toastService.showError(errorMessage, 'Login Failed');
         return of({
           success: false,
-          error: error.error?.message || 'Login failed. Please try again.'
+          error: errorMessage
         });
       })
     );
   }
 
+  /**
+   * Register a new user account.
+   * Stores tokens and fetches user profile on success.
+   */
   register(userData: RegisterDto): Observable<{ success: boolean; user?: AuthUser; error?: string }> {
     return this.apiAuthService.apiAuthRegisterPost({ body: userData }).pipe(
       tap(response => {
@@ -88,9 +108,11 @@ export class AuthService {
       })),
       catchError(error => {
         console.error('Registration error:', error);
+        const errorMessage = error.error?.message || 'Registration failed. Please try again.';
+        this.toastService.showError(errorMessage, 'Registration Failed');
         return of({
           success: false,
-          error: error.error?.message || 'Registration failed. Please try again.'
+          error: errorMessage
         });
       })
     );
@@ -186,11 +208,24 @@ export class AuthService {
     }
   }
 
-  refreshToken(): Observable<boolean> {
-    const refreshToken = this.getRefreshToken();
-    if (!refreshToken) return of(false);
+  /**
+   * Refresh the access token using the refresh token.
+   * Prevents multiple simultaneous refresh attempts.
+   * @returns Observable<boolean> indicating success
+   */
+  refreshAccessToken(): Observable<boolean> {
+    // If a refresh is already in progress, return that observable
+    if (this.refreshTokenInProgress$) {
+      return this.refreshTokenInProgress$;
+    }
 
-    return this.apiAuthService.apiAuthRefreshPost({ 
+    const refreshToken = this.getRefreshToken();
+    if (!refreshToken) {
+      return of(false);
+    }
+
+    // Create and cache the refresh request
+    this.refreshTokenInProgress$ = this.apiAuthService.apiAuthRefreshPost({ 
       body: { refreshToken } 
     }).pipe(
       tap(response => {
@@ -207,12 +242,25 @@ export class AuthService {
       map(response => response.success || false),
       catchError(error => {
         console.error('Token refresh error:', error);
+        this.toastService.showError('Session expired. Please login again.', 'Authentication Error');
         this.logout(); // Clear invalid tokens
         return of(false);
-      })
+      }),
+      finalize(() => {
+        // Clear the in-flight request after completion
+        this.refreshTokenInProgress$ = null;
+      }),
+      shareReplay(1) // Share the result with multiple subscribers
     );
+
+    return this.refreshTokenInProgress$;
   }
 
+  /**
+   * Verify current authentication status with the server.
+   * This is called during app initialization and by guards.
+   * @returns Observable<boolean> indicating if user is authenticated
+   */
   verifyAuthentication(): Observable<boolean> {
     if (!isPlatformBrowser(this.platformId)) {
       return of(false);
@@ -233,9 +281,18 @@ export class AuthService {
       map(user => !!user),
       catchError(error => {
         console.error('Authentication verification failed:', error);
+        this.toastService.showError('Authentication failed. Please login again.', 'Session Error');
         this.logout(); // Clear invalid tokens
         return of(false);
       })
     );
+  }
+
+  /**
+   * Set the auth initialization state.
+   * Called by APP_INITIALIZER after verification completes.
+   */
+  setInitialized(): void {
+    this.authInitializingSubject.next(false);
   }
 }
