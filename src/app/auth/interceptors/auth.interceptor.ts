@@ -1,4 +1,4 @@
-import { Injectable, Inject, PLATFORM_ID } from '@angular/core';
+import { Injectable, Inject, PLATFORM_ID, Injector } from '@angular/core';
 import { HttpRequest, HttpHandler, HttpEvent, HttpInterceptor, HttpErrorResponse } from '@angular/common/http';
 import { Observable, throwError, BehaviorSubject } from 'rxjs';
 import { catchError, switchMap, filter, take } from 'rxjs/operators';
@@ -12,6 +12,9 @@ import { AuthService } from '../services/auth.service';
  * 2. Handling 401 errors by attempting to refresh the access token
  * 3. Retrying the original request after token refresh
  * 4. Redirecting to login if refresh fails
+ * 
+ * Note: Uses Injector to lazily inject AuthService to avoid circular dependency
+ * (AuthService -> HttpClient -> HTTP_INTERCEPTORS -> AuthInterceptor -> AuthService)
  */
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {
@@ -20,9 +23,16 @@ export class AuthInterceptor implements HttpInterceptor {
 
   constructor(
     @Inject(PLATFORM_ID) private platformId: Object,
-    private authService: AuthService,
+    private injector: Injector,
     private router: Router
   ) {}
+
+  /**
+   * Lazily get AuthService to avoid circular dependency
+   */
+  private get authService(): AuthService {
+    return this.injector.get(AuthService);
+  }
 
   intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     // Only process in browser environment
