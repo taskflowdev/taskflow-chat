@@ -7,6 +7,7 @@ import { AuthService } from '../auth/services/auth.service';
  * Initializes authentication state before the app starts.
  * This ensures that protected routes don't flash before auth state is ready.
  * 
+ * Shows a loading screen for a minimum duration to provide smooth UX.
  * Only runs in browser environment - skips during SSR.
  * 
  * IMPORTANT: Does NOT make HTTP requests during initialization to avoid
@@ -26,15 +27,29 @@ export function appInitializerFactory(
         return;
       }
 
+      // Minimum time to show loading screen (in ms) for smooth UX
+      const MIN_LOADING_TIME = 800;
+      const startTime = Date.now();
+
       // In browser, check if we have stored authentication data
       const token = authService.getToken();
       const currentUser = authService.getCurrentUser();
       
+      // Function to complete initialization with minimum delay
+      const completeInitialization = () => {
+        const elapsedTime = Date.now() - startTime;
+        const remainingTime = Math.max(0, MIN_LOADING_TIME - elapsedTime);
+        
+        setTimeout(() => {
+          authService.setInitialized();
+          resolve();
+        }, remainingTime);
+      };
+
       // If we have both token and user data, consider initialized
       // The guards will verify with the server if needed
       if (token && currentUser) {
-        authService.setInitialized();
-        resolve();
+        completeInitialization();
         return;
       }
       
@@ -45,8 +60,7 @@ export function appInitializerFactory(
       }
       
       // No valid auth state, user is not logged in
-      authService.setInitialized();
-      resolve();
+      completeInitialization();
     });
   };
 }
