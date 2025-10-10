@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
 import { Subscription } from 'rxjs';
@@ -21,6 +21,8 @@ import { UserDropdownComponent, DropdownItem } from './components/user-dropdown/
 export class NavbarComponent implements OnInit, OnDestroy {
   user: AuthUser | null = null;
   private userSubscription: Subscription | null = null;
+
+  @Output() showKeyboardShortcuts = new EventEmitter<void>();
 
   // Configuration for nav links
   navLinks: NavLink[] = [
@@ -51,6 +53,12 @@ export class NavbarComponent implements OnInit, OnDestroy {
       href: '#'
     },
     {
+      label: 'Keyboard Shortcuts',
+      icon: 'bi-keyboard',
+      action: 'keyboard-shortcuts',
+      shortcutKey: 'Shift + ?'
+    },
+    {
       divider: true,
       label: '',
       icon: ''
@@ -58,7 +66,8 @@ export class NavbarComponent implements OnInit, OnDestroy {
     {
       label: 'Logout',
       icon: 'bi-box-arrow-right',
-      action: 'logout'
+      action: 'logout',
+      isBold: true
     }
   ];
 
@@ -87,6 +96,9 @@ export class NavbarComponent implements OnInit, OnDestroy {
     switch (item.action) {
       case 'logout':
         this.onLogout();
+        break;
+      case 'keyboard-shortcuts':
+        this.showKeyboardShortcuts.emit();
         break;
       default:
         // Handle other actions as needed

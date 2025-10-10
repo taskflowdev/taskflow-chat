@@ -1,0 +1,136 @@
+<div class="dialog-overlay" (click)="onBackdropClick($event)" (keydown)="onEscapePress($event)" tabindex="0">
+  <div class="dialog-container">
+    <!-- Dialog Header -->
+    <div class="dialog-header">
+      <div class="header-content">
+        <i class="bi bi-search header-icon"></i>
+        <div class="header-text">
+          <h2 class="dialog-title">Search</h2>
+          <p class="dialog-subtitle">Explore groups and collaborate with peers.</p>
+        </div>
+      </div>
+      <button type="button" class="close-btn" (click)="closeDialog()" aria-label="Close dialog">
+        <i class="bi bi-x-lg"></i>
+      </button>
+    </div>
+
+    <!-- Dialog Body -->
+    <div class="dialog-body">
+      <!-- Search Input -->
+      <form [formGroup]="searchForm" class="search-form">
+        <div class="search-input-wrapper">
+          <i class="bi bi-search search-icon"></i>
+          <input
+            #searchInput
+            type="text"
+            class="search-input"
+            formControlName="searchQuery"
+            placeholder="Search for groups by name..."
+            autocomplete="off"
+          />
+          <i *ngIf="isSearching" class="bi bi-arrow-repeat spin-icon"></i>
+        </div>
+      </form>
+
+      <!-- Recent Searches -->
+      <div *ngIf="!hasSearched && recentSearches.length > 0" class="recent-searches">
+        <div class="section-header">
+          <i class="bi bi-clock-history"></i>
+          <span>Recent Searches</span>
+        </div>
+        <div class="recent-list">
+          <div
+            *ngFor="let item of recentSearches; trackBy: trackByQuery"
+            class="recent-item"
+          >
+            <button
+              type="button"
+              class="recent-query-btn"
+              (click)="onRecentSearchClick(item.query)"
+            >
+              <i class="bi bi-box-arrow-up-right"></i>
+              <span class="recent-query">{{ item.query }}</span>
+            </button>
+            <button
+              type="button"
+              class="remove-recent-btn"
+              (click)="removeRecentSearch($event, item.query)"
+              aria-label="Remove recent search"
+            >
+              <i class="bi bi-x-lg"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Loading State -->
+      <div *ngIf="isSearching" class="search-results">
+        <div class="skeleton-list">
+          <app-skeleton-loader
+            *ngFor="let i of [1,2]"
+            type="rectangle"
+            width="100%"
+            height="72px"
+            class="result-skeleton"
+          ></app-skeleton-loader>
+        </div>
+      </div>
+
+      <!-- Search Results -->
+      <div *ngIf="!isSearching && hasSearched && searchResults.length > 0" class="search-results">
+        <div class="section-header">
+          <i class="bi bi-view-list"></i>
+          <span>Search Results ({{ searchResults.length }})</span>
+        </div>
+        <div class="results-list">
+          <div
+            *ngFor="let result of searchResults; trackBy: trackByGroupId"
+            class="result-item"
+            (click)="onResultClick(result.groupId)"
+          >
+            <div class="result-avatar">
+              <div class="avatar-circle">
+                <span class="avatar-initials">{{ getGroupInitials(result.name) }}</span>
+              </div>
+            </div>
+            <div class="result-info">
+              <div class="result-name">{{ result.name }}</div>
+              <div class="result-description">
+                <i class="bi bi-people-fill"></i>
+                <span>{{ result.memberCount }} {{ result.memberCount === 1 ? 'member' : 'members' }}</span>
+                <!-- <span *ngIf="result.isPublic" class="public-badge">
+                  <i class="bi bi-globe"></i>
+                  Public
+                </span> -->
+              </div>
+            </div>
+            <div class="result-action">
+              <app-common-button
+                variant="primary"
+                size="small"
+                (click)="onJoinGroup($event, result.groupId)"
+              >
+                Join
+              </app-common-button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- No Results -->
+      <div *ngIf="!isSearching && showNoResults" class="no-results">
+        <i class="bi bi-box-seam-fill"></i>
+        <p class="no-results-title">No results found</p>
+        <p class="no-results-text">Try searching with different keywords</p>
+      </div>
+
+      <!-- Initial State -->
+      <div *ngIf="!hasSearched && recentSearches.length === 0 && !showNoResults" class="initial-state">
+        <i class="bi bi-binoculars-fill"></i>
+        <p class="initial-text">
+          Start typing to search for groups.
+        </p>
+      </div>
+    </div>
+  </div>
+</div>

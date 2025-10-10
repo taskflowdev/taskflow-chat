@@ -1,0 +1,144 @@
+<div class="dialog-overlay" (click)="closeDialog()">
+  <div class="dialog-container" (click)="$event.stopPropagation()">
+    <!-- Dialog Content -->
+    <div class="dialog-content">
+      <!-- Header -->
+      <div class="dialog-header">
+        <!-- <div class="fs-1 mb-2">
+          <i class="bi bi-info-circle"></i>
+        </div> -->
+        <!-- <h1 class="main-title">Group Information</h1>
+        <p class="subtitle">View and edit group details</p> -->
+        <!-- <button type="button" class="btn-close" (click)="closeDialog()" aria-label="Close">
+          <i class="bi bi-x"></i>
+        </button> -->
+      </div>
+
+      <!-- Loading State -->
+      <div *ngIf="isLoadingDetails" class="loading-content">
+        <div class="form-group-skeleton">
+          <app-skeleton-loader type="text" width="80px" height="14px"></app-skeleton-loader>
+          <app-skeleton-loader type="rectangle" width="100%" height="44px"></app-skeleton-loader>
+        </div>
+
+        <div class="form-group-skeleton">
+          <app-skeleton-loader type="text" width="100px" height="14px"></app-skeleton-loader>
+          <div class="toggle-skeleton">
+            <app-skeleton-loader type="rectangle" width="44px" height="24px"></app-skeleton-loader>
+          </div>
+          <app-skeleton-loader type="text" width="200px" height="12px"></app-skeleton-loader>
+        </div>
+
+        <div class="info-section-skeleton">
+          <app-skeleton-loader type="text" width="120px" height="14px"></app-skeleton-loader>
+          <app-skeleton-loader type="text" width="180px" height="12px"></app-skeleton-loader>
+        </div>
+
+        <div class="button-skeleton">
+          <app-skeleton-loader type="rectangle" width="100%" height="44px"></app-skeleton-loader>
+        </div>
+        <div class="button-skeleton">
+          <app-skeleton-loader type="rectangle" width="100%" height="44px"></app-skeleton-loader>
+        </div>
+      </div>
+
+      <!-- Loaded Form -->
+      <form *ngIf="!isLoadingDetails" [formGroup]="groupInfoForm" (ngSubmit)="onSubmit()" novalidate class="group-info-form">
+        <!-- Group Avatar Placeholder -->
+        <div class="group-avatar-section">
+          <div class="avatar-circle">
+            <i class="bi bi-people"></i>
+          </div>
+          <h5 class="avatar-group-name">
+            {{ groupInfo?.name }}
+          </h5>
+          <p class="avatar-hint">
+            Make changes to your group's details and settings right here.
+          </p>
+        </div>
+
+        <hr class="border-2" />
+
+        <!-- Group Name Field -->
+        <app-common-input
+          label="Group Name"
+          placeholder="Enter group name"
+          formControlName="groupName"
+          [isInvalid]="getFieldError('groupName')"
+          [errorMessage]="getErrorMessage('groupName')"
+        ></app-common-input>
+
+        <!-- Public/Private Toggle -->
+        <app-common-toggle
+          [label]="'Group Visibility'"
+          [description]="'Allow anyone to view and join this group.'"
+          [onText]="'Public'"
+          [offText]="'Private'"
+          formControlName="isPublic"
+        ></app-common-toggle>
+
+        <!-- Other Info Display -->
+        <div class="info-section-card">
+          <span class="info-item" title="Number of Group Members">
+            <i class="bi bi-people-fill me-1"></i>
+            {{ groupInfo?.memberCount || 0 }} {{ groupInfo?.memberCount === 1 ? 'Member' : 'Members' }}
+          </span>
+          <span class="info-item" title="Group Created at Date">
+            <i class="bi bi-clock-history me-1"></i>
+            Created at {{ groupInfo?.createdAt | date: 'short' }}
+          </span>
+        </div>
+
+        <div class="button-group">
+          <!-- Update Button -->
+          <app-common-button
+            type="submit"
+            variant="primary"
+            [fullWidth]="true"
+            [loading]="isLoading"
+            [disabled]="groupInfoForm.invalid || groupInfoForm.pristine"
+          >
+            {{ isLoading ? 'Updating...' : 'Update Group' }}
+          </app-common-button>
+
+          <!-- Delete Group Button -->
+          <app-common-button
+            type="button"
+            variant="danger"
+            [fullWidth]="true"
+            [disabled]="isLoading || isDeleting"
+            (clicked)="showDeleteDialog()"
+          >
+            <i class="bi bi-trash me-2"></i>Delete Group
+          </app-common-button>
+
+          <!-- Cancel Button -->
+          <app-common-button
+            type="button"
+            variant="secondary"
+            [fullWidth]="true"
+            [disabled]="isLoading"
+            (clicked)="closeDialog()"
+          >
+            Cancel
+          </app-common-button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- Delete Confirmation Dialog -->
+<app-confirmation-dialog
+  [isVisible]="showDeleteConfirmation"
+  [title]="'Delete Group?'"
+  [message]="'This action cannot be undone. all messages, files, and group data will be permanently deleted.'"
+  [secondaryMessage]="'All members will lose access to this group immediately.'"
+  [confirmText]="'Delete Group'"
+  [cancelText]="'Keep Group'"
+  [variant]="'danger'"
+  [icon]="'bi-trash'"
+  [loading]="isDeleting"
+  (confirmed)="confirmDelete()"
+  (cancelled)="cancelDelete()">
+</app-confirmation-dialog>

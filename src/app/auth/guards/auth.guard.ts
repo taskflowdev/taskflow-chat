@@ -29,21 +29,22 @@ export class AuthGuard implements CanActivate {
     }
 
     // If we have user data in memory, allow access immediately
-    if (this.authService.getCurrentUser()) {
+    // The interceptor will handle 401 errors if the token is actually invalid
+    const currentUser = this.authService.getCurrentUser();
+    if (currentUser) {
       return true;
     }
 
-    // Verify token validity with server
-    return this.authService.verifyAuthentication().pipe(
-      tap(isValid => {
-        if (!isValid) {
-          this.router.navigate(['/auth/login']);
-        }
-      }),
-      catchError(() => {
-        this.router.navigate(['/auth/login']);
-        return of(false);
-      })
-    );
+    // Have token but no user data - try to restore from localStorage
+    // This happens on page refresh
+    const storedUser = this.authService.restoreUserFromStorage();
+    if (storedUser) {
+      return true;
+    }
+
+    // No stored user data, redirect to login
+    // Don't make HTTP calls here to avoid circular dependency
+    this.router.navigate(['/auth/login']);
+    return false;
   }
 }

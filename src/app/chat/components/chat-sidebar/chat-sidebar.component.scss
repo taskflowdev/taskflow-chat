@@ -26,6 +26,13 @@
     margin: 0;
   }
 
+  .header-actions {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .search-btn,
   .new-chat-btn {
     background: transparent;
     border: 1px solid #444444;
@@ -44,7 +51,7 @@
     }
 
     i {
-      font-size: 0.9rem;
+      font-size: 1.25rem;
     }
   }
 }

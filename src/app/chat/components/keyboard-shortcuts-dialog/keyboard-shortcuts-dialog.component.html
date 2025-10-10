@@ -1,0 +1,41 @@
+<div class="dialog-overlay" (click)="onOverlayClick($event)">
+  <div class="dialog-container">
+    <!-- Header -->
+    <div class="dialog-header">
+      <div class="header-content">
+        <i class="bi bi-keyboard"></i>
+        <h2 class="dialog-title">
+          Keyboard Shortcuts
+        </h2>
+      </div>
+      <button class="close-btn" (click)="onClose()" aria-label="Close dialog">
+        <i class="bi bi-x-lg"></i>
+      </button>
+    </div>
+
+    <!-- Content -->
+    <div class="dialog-content">
+      <div class="shortcuts-grid">
+        <div *ngFor="let category of categories" class="shortcut-category">
+          <h3 class="category-title">{{ category.name }}</h3>
+          <div class="shortcuts-list">
+            <div *ngFor="let shortcut of category.shortcuts" class="shortcut-item">
+              <span class="shortcut-description">{{ shortcut.description }}</span>
+              <div class="shortcut-keys">
+                <span class="shortcut-key">{{ shortcut.keys }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="dialog-footer">
+      <div class="footer-hint">
+        <i class="bi bi-info-circle"></i>
+        Press <span class="shortcut-key-dialog-footer">Shift + ?</span> anytime to view the keyboard shortcuts.
+      </div>
+    </div>
+  </div>
+</div>

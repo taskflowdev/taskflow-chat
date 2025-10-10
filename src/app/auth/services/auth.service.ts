@@ -1,9 +1,10 @@
 import { Injectable, Inject, PLATFORM_ID } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
-import { BehaviorSubject, Observable, catchError, map, of, tap } from 'rxjs';
+import { BehaviorSubject, Observable, catchError, map, of, tap, shareReplay, finalize } from 'rxjs';
 import { AuthService as ApiAuthService } from '../../api/services/auth.service';
 import { LoginDto, RegisterDto, UserDto } from '../../api/models';
 import { LocalStorageService } from './local-storage.service';
+import { ToastService } from '../../shared/services/toast.service';
 
 export interface AuthUser {
   id: string;
@@ -23,17 +24,30 @@ export class AuthService {
   private currentUserSubject = new BehaviorSubject<AuthUser | null>(this.getUserFromStorage());
   public currentUser$ = this.currentUserSubject.asObservable();
 
+  // Track if app is initializing (verifying authentication)
+  private authInitializingSubject = new BehaviorSubject<boolean>(true);
+  public authInitializing$ = this.authInitializingSubject.asObservable();
+
+  // In-flight refresh token request to prevent multiple parallel refreshes
+  private refreshTokenInProgress$: Observable<boolean> | null = null;
+
   constructor(
     private apiAuthService: ApiAuthService,
     private localStorageService: LocalStorageService,
+    private toastService: ToastService,
     @Inject(PLATFORM_ID) private platformId: Object
   ) {
     // Check if user is logged in on service initialization (only in browser)
+    // Note: Full verification is handled by APP_INITIALIZER
     if (isPlatformBrowser(this.platformId)) {
       this.checkAuthStatus();
     }
   }
 
+  /**
+   * Login with username and password.
+   * Stores tokens and fetches user profile on success.
+   */
   login(credentials: LoginDto): Observable<{ success: boolean; user?: AuthUser; error?: string }> {
     return this.apiAuthService.apiAuthLoginPost({ body: credentials }).pipe(
       tap(response => {
@@ -57,14 +71,20 @@ export class AuthService {
       })),
       catchError(error => {
         console.error('Login error:', error);
+        const errorMessage = error.error?.message || 'Login failed. Please try again.';
+        this.toastService.showError(errorMessage, 'Login Failed');
         return of({
           success: false,
-          error: error.error?.message || 'Login failed. Please try again.'
+          error: errorMessage
         });
       })
     );
   }
 
+  /**
+   * Register a new user account.
+   * Stores tokens and fetches user profile on success.
+   */
   register(userData: RegisterDto): Observable<{ success: boolean; user?: AuthUser; error?: string }> {
     return this.apiAuthService.apiAuthRegisterPost({ body: userData }).pipe(
       tap(response => {
@@ -88,9 +108,11 @@ export class AuthService {
       })),
       catchError(error => {
         console.error('Registration error:', error);
+        const errorMessage = error.error?.message || 'Registration failed. Please try again.';
+        this.toastService.showError(errorMessage, 'Registration Failed');
         return of({
           success: false,
-          error: error.error?.message || 'Registration failed. Please try again.'
+          error: errorMessage
         });
       })
     );
@@ -133,6 +155,28 @@ export class AuthService {
 
   getCurrentUser(): AuthUser | null {
     return this.currentUserSubject.value;
+  }
+
+  /**
+   * Restore user from localStorage and update the BehaviorSubject.
+   * Used by guards on page refresh to restore auth state.
+   * @returns The restored user or null
+   */
+  restoreUserFromStorage(): AuthUser | null {
+    if (!isPlatformBrowser(this.platformId)) return null;
+
+    const userData = this.localStorageService.getItem(this.USER_KEY);
+    if (userData) {
+      try {
+        const user = JSON.parse(userData) as AuthUser;
+        this.currentUserSubject.next(user);
+        return user;
+      } catch (error) {
+        console.error('Error parsing stored user data:', error);
+        this.localStorageService.removeItem(this.USER_KEY);
+      }
+    }
+    return null;
   }
 
   private getUserProfile(): Observable<AuthUser | null> {
@@ -180,17 +224,33 @@ export class AuthService {
     if (!isPlatformBrowser(this.platformId)) return;
 
     const token = this.getToken();
-    if (token && !this.getCurrentUser()) {
-      // Have token but no user data, try to fetch user profile
-      this.getUserProfile().subscribe();
+    const currentUser = this.getCurrentUser();
+    
+    // If we have a token but no user in memory, restore from localStorage
+    // Don't make HTTP calls here to avoid circular dependency on init
+    if (token && !currentUser) {
+      this.restoreUserFromStorage();
     }
   }
 
-  refreshToken(): Observable<boolean> {
-    const refreshToken = this.getRefreshToken();
-    if (!refreshToken) return of(false);
+  /**
+   * Refresh the access token using the refresh token.
+   * Prevents multiple simultaneous refresh attempts.
+   * @returns Observable<boolean> indicating success
+   */
+  refreshAccessToken(): Observable<boolean> {
+    // If a refresh is already in progress, return that observable
+    if (this.refreshTokenInProgress$) {
+      return this.refreshTokenInProgress$;
+    }
 
-    return this.apiAuthService.apiAuthRefreshPost({ 
+    const refreshToken = this.getRefreshToken();
+    if (!refreshToken) {
+      return of(false);
+    }
+
+    // Create and cache the refresh request
+    this.refreshTokenInProgress$ = this.apiAuthService.apiAuthRefreshPost({ 
       body: { refreshToken } 
     }).pipe(
       tap(response => {
@@ -207,12 +267,25 @@ export class AuthService {
       map(response => response.success || false),
       catchError(error => {
         console.error('Token refresh error:', error);
+        this.toastService.showError('Session expired. Please login again.', 'Authentication Error');
         this.logout(); // Clear invalid tokens
         return of(false);
-      })
+      }),
+      finalize(() => {
+        // Clear the in-flight request after completion
+        this.refreshTokenInProgress$ = null;
+      }),
+      shareReplay(1) // Share the result with multiple subscribers
     );
+
+    return this.refreshTokenInProgress$;
   }
 
+  /**
+   * Verify current authentication status.
+   * This method checks localStorage first and only makes server calls when necessary.
+   * @returns Observable<boolean> indicating if user is authenticated
+   */
   verifyAuthentication(): Observable<boolean> {
     if (!isPlatformBrowser(this.platformId)) {
       return of(false);
@@ -223,19 +296,26 @@ export class AuthService {
       return of(false);
     }
 
-    // If we already have user data, consider authenticated
+    // If we already have user data in memory, consider authenticated
     if (this.getCurrentUser()) {
       return of(true);
     }
 
-    // Verify with the server by calling /api/auth/me
-    return this.getUserProfile().pipe(
-      map(user => !!user),
-      catchError(error => {
-        console.error('Authentication verification failed:', error);
-        this.logout(); // Clear invalid tokens
-        return of(false);
-      })
-    );
+    // Try to restore from localStorage first (avoids HTTP call)
+    const restoredUser = this.restoreUserFromStorage();
+    if (restoredUser) {
+      return of(true);
+    }
+
+    // No stored user data, user needs to login again
+    return of(false);
+  }
+
+  /**
+   * Set the auth initialization state.
+   * Called by APP_INITIALIZER after verification completes.
+   */
+  setInitialized(): void {
+    this.authInitializingSubject.next(false);
   }
 }

@@ -1,6 +1,7 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { AuthUser } from '../../../../../auth/services/auth.service';
+import { CommonTooltipDirective } from "../../../common-tooltip/common-tooltip.component";
 
 export interface DropdownItem {
   label: string;
@@ -8,6 +9,8 @@ export interface DropdownItem {
   action?: string;
   href?: string;
   divider?: boolean;
+  shortcutKey?: string;
+  isBold?: boolean;
 }
 
 /**
@@ -17,7 +20,7 @@ export interface DropdownItem {
 @Component({
   selector: 'app-user-dropdown',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, CommonTooltipDirective],
   template: `
     <div class="user-section" *ngIf="user">
       <div class="dropdown">
@@ -29,24 +32,37 @@ export interface DropdownItem {
           <span class="user-name">{{ user.fullName }}</span>
           <i class="bi bi-chevron-down dropdown-icon"></i>
         </button>
+
         <ul class="dropdown-menu dropdown-menu-end">
           <ng-container *ngFor="let item of dropdownItems; trackBy: trackByLabel">
             <li *ngIf="!item.divider">
+              <!-- For link items -->
               <a
                 *ngIf="item.href"
-                class="dropdown-item"
+                class="dropdown-item d-flex align-items-center justify-content-between"
                 [href]="item.href"
-                [title]="item.label">
-                <i class="bi me-2" [ngClass]="item.icon"></i>{{ item.label }}
+                [appCommonTooltip]="item.label">
+                <div class="d-flex align-items-center">
+                  <i class="bi me-2" [ngClass]="item.icon"></i>
+                  <span [class.bold-label]="item.isBold">{{ item.label }}</span>
+                </div>
+                <span *ngIf="item.shortcutKey" class="shortcut-key">{{ item.shortcutKey }}</span>
               </a>
+
+              <!-- For button items -->
               <button
                 *ngIf="!item.href"
-                class="dropdown-item"
+                class="dropdown-item d-flex align-items-center justify-content-between"
                 (click)="onItemClick(item)"
-                [title]="item.label">
-                <i class="bi me-2" [ngClass]="item.icon"></i>{{ item.label }}
+                [appCommonTooltip]="item.label">
+                <div class="d-flex align-items-center">
+                  <i class="bi me-2" [ngClass]="item.icon"></i>
+                  <span [class.bold-label]="item.isBold">{{ item.label }}</span>
+                </div>
+                <span *ngIf="item.shortcutKey" class="shortcut-key-dropdown">{{ item.shortcutKey }}</span>
               </button>
             </li>
+
             <li *ngIf="item.divider">
               <hr class="dropdown-divider">
             </li>

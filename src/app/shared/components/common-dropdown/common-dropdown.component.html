@@ -1,0 +1,31 @@
+<div class="dropdown">
+  <button [class]="'btn ' + buttonClass" type="button" (click)="toggleDropdown($event)" [attr.aria-expanded]="isOpen">
+    <i [class]="'bi ' + buttonIcon"></i>
+  </button>
+
+  <ul class="dropdown-menu" [class.show]="isOpen">
+    <ng-container *ngFor="let item of items; trackBy: trackByItemId">
+      <li *ngIf="item.divider" class="dropdown-divider"></li>
+      <li *ngIf="!item.divider">
+        <button class="dropdown-item d-flex align-items-center justify-content-between" [class.disabled]="item.disabled"
+          [class.text-danger]="item.variant === 'danger'" [class.text-warning]="item.variant === 'warning'"
+          [class.text-primary]="item.variant === 'primary'" [disabled]="item.disabled" type="button"
+          (click)="onItemClick(item, $event)">
+          <div class="d-flex align-items-center">
+            <i *ngIf="item.icon" [class]="'bi ' + item.icon + ' me-2'"></i>
+            <span>{{ item.label }}</span>
+          </div>
+
+          <div class="dropdown-option-meta-info">
+            <!-- Shortcut key display -->
+            <span *ngIf="item.shortcutKey" class="shortcut-key-dropdown">
+              {{ item.shortcutKey }}
+            </span>
+            <!-- IsQuick display -->
+            <i *ngIf="item.isQuick" [appCommonTooltip]="'Quick action'" class="bi bi-lightning-fill"></i>
+          </div>
+        </button>
+      </li>
+    </ng-container>
+  </ul>
+</div>

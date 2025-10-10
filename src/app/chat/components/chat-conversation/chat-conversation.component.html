@@ -2,7 +2,10 @@
   <!-- Conversation Header -->
   <div class="conversation-header" *ngIf="conversation && !loading">
     <!-- Mobile Back Button -->
-    <button *ngIf="showBackButton" class="back-button" (click)="onBackClick()" title="Back to chats">
+    <button *ngIf="showBackButton" class="back-button"
+      [appCommonTooltip]="'Back to chats'"
+      [tooltipPosition]="TooltipPosition.BOTTOM"
+      (click)="onBackClick()">
       <i class="bi bi-arrow-left"></i>
     </button>
 
@@ -14,9 +17,13 @@
     </div>
 
     <div class="conversation-actions">
-      <button class="btn action-btn" title="More options">
-        <i class="bi bi-three-dots-vertical"></i>
-      </button>
+      <app-common-dropdown
+        [items]="dropdownItems"
+        buttonIcon="bi-three-dots-vertical"
+        buttonClass="action-btn"
+        [appCommonTooltip]="'More options'"
+        (itemSelected)="onDropdownItemSelected($event)">
+      </app-common-dropdown>
     </div>
   </div>
 
@@ -57,9 +64,12 @@
         [disabled]="loading">
       </textarea>
       <button class="btn send-btn" (click)="onSendMessage()" [disabled]="!newMessage.trim() || loading"
-        title="Send message">
+        [appCommonTooltip]="btnSendTooltip">
         <i class="bi" [ngClass]="newMessage.trim() && !loading ? 'bi-send-check' : 'bi-send'"></i>
       </button>
+      <ng-template #btnSendTooltip>
+        Send <span class="shortcut-key-tooltip">Enter</span>
+      </ng-template>
     </div>
   </div>
 </div>
@@ -70,9 +80,29 @@
       <i class="bi bi-chat-quote placeholder-icon"></i>
       <h3 class="placeholder-title">No Chat Selected</h3>
       <p class="placeholder-subtitle">Pick a chat to continue</p>
-      <p class="placeholder-footer">
+      <p class="placeholder-footer" [appCommonTooltip]="encryptionTooltip" [tooltipPosition]="TooltipPosition.BOTTOM">
         <i class="bi bi-lock"></i> Messages are end-to-end encrypted
       </p>
     </div>
   </div>
+  <ng-template #encryptionTooltip>
+    <div class="p-1">
+      <strong class="fs-6">
+        <i class="bi bi-lock-fill"></i>
+        End-to-End Encryption
+      </strong>
+      <p>Only you and the recipient can read these messages. Data is encrypted on your device and decrypted on the
+        recipient’s device.</p>
+    </div>
+  </ng-template>
 </ng-template>
+
+<!-- Group Info Dialog -->
+<app-group-info-dialog
+  *ngIf="showGroupInfoDialog && conversation"
+  [groupId]="conversation.groupId"
+  [triggerDelete]="openGroupInfoForDeletion"
+  (closed)="onGroupInfoClosed()"
+  (groupUpdated)="onGroupInfoUpdated()"
+  (groupDeleted)="onGroupDeleted($event)">
+</app-group-info-dialog>

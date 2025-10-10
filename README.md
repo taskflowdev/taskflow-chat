@@ -1,6 +1,30 @@
 # TaskflowChat
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 19.2.13.
+A modern, feature-rich chat application built with Angular 19, featuring an enterprise-level keyboard shortcut system.
+
+## Features
+
+- 💬 Real-time group messaging
+- ⚡ Enterprise-level keyboard shortcuts
+- 🎨 Modern, responsive UI
+- 🔐 Secure authentication
+- 📱 Mobile-friendly design
+
+## Keyboard Shortcuts
+
+The application includes a comprehensive keyboard shortcut system designed for power users. See [Keyboard Shortcuts Documentation](docs/KEYBOARD_SHORTCUTS.md) for details.
+
+### Quick Reference
+
+| Shortcut | Action |
+|----------|--------|
+| `Shift + ?` | Show all keyboard shortcuts |
+| `Ctrl + K` | Search groups |
+| `Ctrl + N` | Create new group |
+| `Alt + ↑/↓` | Navigate between chats |
+| `Escape` | Close dialog |
+
+[View all shortcuts →](docs/KEYBOARD_SHORTCUTS.md)
 
 ## Development server
 
@@ -44,6 +68,12 @@ To execute unit tests with the [Karma](https://karma-runner.github.io) test runn
 ng test
 ```
 
+To run only keyboard shortcut tests:
+
+```bash
+npm test -- --include='**/shortcut*.spec.ts' --watch=false
+```
+
 ## Running end-to-end tests
 
 For end-to-end (e2e) testing, run:
@@ -53,6 +83,23 @@ ng e2e
 ```
 
 Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
+
+## Architecture
+
+### Keyboard Shortcut System
+
+The application uses a three-layer service architecture for keyboard shortcuts:
+
+1. **KeyboardShortcutService** - Captures keyboard events
+2. **ShortcutRegistryService** - Manages shortcut metadata
+3. **ShortcutHandlerService** - Routes and executes actions
+
+For detailed architecture and usage guide, see [Keyboard Shortcuts Documentation](docs/KEYBOARD_SHORTCUTS.md).
+
+## Documentation
+
+- [Keyboard Shortcuts Guide](docs/KEYBOARD_SHORTCUTS.md) - Complete guide to the keyboard shortcut system
+- [Implementation Summary](docs/KEYBOARD_SHORTCUTS_SUMMARY.md) - Technical implementation details
 
 ## Additional Resources
 
