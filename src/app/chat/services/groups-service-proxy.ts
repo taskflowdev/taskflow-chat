@@ -164,12 +164,12 @@ export class GroupsServiceProxy {
    * Creates a new group with the specified name.
    * 
    * @param name - Name of the new group
-   * @param isPublic - Whether the group should be publicly visible (default: false)
+   * @param visibility - Visibility setting for the group ('Public' or 'Private', default: 'Private')
    * @returns Observable<GroupDto | null> Created group or null if failed
    */
-  createGroup(name: string, isPublic: boolean = false): Observable<GroupDto | null> {
+  createGroup(name: string, visibility: string = 'Private'): Observable<GroupDto | null> {
     return this.groupsService.apiGroupsPost$Json({
-      body: { name, isPublic }
+      body: { name, visibility }
     }).pipe(
       map(response => {
         if (response.success && response.data) {

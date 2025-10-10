@@ -19,7 +19,7 @@ export interface SearchResultItem {
   name: string;
   description?: string;
   memberCount: number;
-  isPublic: boolean;
+  visibility: string;
   avatar?: string;
 }
 
@@ -176,7 +176,7 @@ export class GroupSearchDialogComponent implements OnInit, OnDestroy, OnChanges,
       name: group.name || 'Unnamed Group',
       description: group.description || `${group.memberCount || 0} members`,
       memberCount: group.memberCount || 0,
-      isPublic: group.isPublic || false,
+      visibility: group.visibility || 'Private',
       avatar: group.avatar || undefined
     };
   }

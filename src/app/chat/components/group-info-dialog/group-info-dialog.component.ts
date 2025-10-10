@@ -2,6 +2,8 @@ import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
+import { forkJoin, of } from 'rxjs';
+import { switchMap, catchError } from 'rxjs/operators';
 import { GroupsService } from '../../../api/services/groups.service';
 import { ToastService } from '../../../shared/services/toast.service';
 import { CommonInputComponent } from '../../../shared/components/common-form-controls/common-input.component';
@@ -13,7 +15,7 @@ import { ConfirmationDialogComponent } from '../../../shared/components/confirma
 export interface GroupInfo {
   groupId: string;
   name: string;
-  isPublic: boolean;
+  visibility: string;
   memberCount?: number;
   createdAt?: string;
 }
@@ -90,7 +92,7 @@ export class GroupInfoDialogComponent implements OnInit {
           this.groupInfo = {
             groupId: response.data.groupId || '',
             name: response.data.name || '',
-            isPublic: response.data.isPublic || false,
+            visibility: response.data.visibility || 'Private',
             memberCount: response.data.memberCount,
             createdAt: response.data.createdAt
           };
@@ -98,7 +100,7 @@ export class GroupInfoDialogComponent implements OnInit {
           // Populate form with current values
           this.groupInfoForm.patchValue({
             groupName: this.groupInfo.name,
-            isPublic: this.groupInfo.isPublic
+            isPublic: this.groupInfo.visibility === 'Public'
           });
         } else {
           this.toastService.showError('Failed to load group details', 'Error');
@@ -136,29 +138,76 @@ export class GroupInfoDialogComponent implements OnInit {
   }
 
   onSubmit(): void {
-    if (this.groupInfoForm.invalid || this.isLoading) {
+    if (this.groupInfoForm.invalid || this.isLoading || !this.groupInfo) {
       return;
     }
 
     this.isLoading = true;
     const formValue = this.groupInfoForm.value;
     const groupName = formValue.groupName.trim();
+    const isPublic = formValue.isPublic;
+    const newVisibility = isPublic ? 'Public' : 'Private';
 
-    // Update group name
-    this.groupsService.apiGroupsIdNamePut$Json({
-      id: this.groupId,
-      body: {
-        name: groupName
-      }
-    }).subscribe({
-      next: (response) => {
+    // Check what changed
+    const nameChanged = groupName !== this.groupInfo.name;
+    const visibilityChanged = newVisibility !== this.groupInfo.visibility;
+
+    if (!nameChanged && !visibilityChanged) {
+      // Nothing to update
+      this.isLoading = false;
+      this.toastService.showInfo('No changes to save.', 'Info');
+      return;
+    }
+
+    // Prepare update requests
+    const updates = [];
+    
+    if (nameChanged) {
+      updates.push(
+        this.groupsService.apiGroupsIdNamePut$Json({
+          id: this.groupId,
+          body: { name: groupName }
+        }).pipe(
+          catchError(error => {
+            console.error('Name update failed:', error);
+            return of({ success: false, message: 'Failed to update name', data: null });
+          })
+        )
+      );
+    }
+
+    if (visibilityChanged) {
+      updates.push(
+        this.groupsService.apiGroupsIdVisibilityPut$Json({
+          id: this.groupId,
+          body: { visibility: newVisibility }
+        }).pipe(
+          catchError(error => {
+            console.error('Visibility update failed:', error);
+            return of({ success: false, message: 'Failed to update visibility', data: null });
+          })
+        )
+      );
+    }
+
+    // Execute all updates
+    forkJoin(updates).subscribe({
+      next: (responses) => {
         this.isLoading = false;
-        if (response.success) {
+        
+        // Check if all updates succeeded
+        const allSucceeded = responses.every(r => r.success);
+        
+        if (allSucceeded) {
           this.toastService.showSuccess('Group information updated.', 'Success');
           this.groupUpdated.emit();
           this.closeDialog();
         } else {
-          this.toastService.showError(response.message || 'Failed to update group', 'Error');
+          const failedUpdates = responses
+            .filter(r => !r.success)
+            .map(r => r.message)
+            .join(', ');
+          this.toastService.showError(failedUpdates || 'Some updates failed', 'Error');
         }
       },
       error: (error) => {

@@ -77,7 +77,7 @@ export class CreateGroupDialogComponent implements OnInit {
     this.groupsService.apiGroupsPost$Json({
       body: {
         name: groupName,
-        isPublic: isPublic
+        visibility: isPublic ? 'Public' : 'Private'
       }
     }).subscribe({
       next: (response) => {
