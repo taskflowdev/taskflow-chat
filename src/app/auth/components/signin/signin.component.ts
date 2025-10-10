@@ -31,8 +31,9 @@ export class SigninComponent implements OnInit {
 
   ngOnInit() {
     // Redirect if already logged in
-    if (this.authService.isAuthenticated()) {
-      this.router.navigate(['/chats']);
+    const currentUser = this.authService.getCurrentUser();
+    if (this.authService.isAuthenticated() && currentUser) {
+      this.router.navigate(['/chats'], { replaceUrl: true });
     }
   }
 
@@ -75,10 +76,19 @@ export class SigninComponent implements OnInit {
 
     this.authService.login({ userName, password }).subscribe({
       next: (result) => {
-        this.isLoading = false;
         if (result.success) {
-          this.router.navigate(['/chat']);
+          // Wait for currentUser$ to emit before navigating
+          // This ensures the user data is loaded before redirecting
+          this.authService.currentUser$.subscribe(user => {
+            if (user) {
+              this.isLoading = false;
+              this.toastService.showSuccess('Welcome back!', 'Login Successful');
+              // Use replaceUrl to prevent back button returning to login
+              this.router.navigate(['/chats'], { replaceUrl: true });
+            }
+          });
         } else {
+          this.isLoading = false;
           this.toastService.showError(result.error || 'Login failed');
         }
       },
