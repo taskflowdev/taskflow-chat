@@ -9,7 +9,14 @@
 export interface CreateGroupDto {
 
   /**
-   * Whether the group is publicly visible
+   * Description of the group
+   */
+  description?: string;
+
+  /**
+   * Whether the group is publicly visible (for backward compatibility)
+   *
+   * @deprecated
    */
   isPublic?: boolean;
 
@@ -17,4 +24,9 @@ export interface CreateGroupDto {
    * Name of the group
    */
   name?: string;
+
+  /**
+   * Visibility setting for the group ("Public" or "Private")
+   */
+  visibility?: string;
 }
