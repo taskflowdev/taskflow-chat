@@ -31,18 +31,30 @@ import { apiGroupsIdMembersGet$Json } from '../fn/groups/api-groups-id-members-g
 import { ApiGroupsIdMembersGet$Json$Params } from '../fn/groups/api-groups-id-members-get-json';
 import { apiGroupsIdMembersGet$Plain } from '../fn/groups/api-groups-id-members-get-plain';
 import { ApiGroupsIdMembersGet$Plain$Params } from '../fn/groups/api-groups-id-members-get-plain';
-import { apiGroupsIdMembersUserIdMakeAdminPost$Json } from '../fn/groups/api-groups-id-members-user-id-make-admin-post-json';
-import { ApiGroupsIdMembersUserIdMakeAdminPost$Json$Params } from '../fn/groups/api-groups-id-members-user-id-make-admin-post-json';
-import { apiGroupsIdMembersUserIdMakeAdminPost$Plain } from '../fn/groups/api-groups-id-members-user-id-make-admin-post-plain';
-import { ApiGroupsIdMembersUserIdMakeAdminPost$Plain$Params } from '../fn/groups/api-groups-id-members-user-id-make-admin-post-plain';
 import { apiGroupsIdNamePut$Json } from '../fn/groups/api-groups-id-name-put-json';
 import { ApiGroupsIdNamePut$Json$Params } from '../fn/groups/api-groups-id-name-put-json';
 import { apiGroupsIdNamePut$Plain } from '../fn/groups/api-groups-id-name-put-plain';
 import { ApiGroupsIdNamePut$Plain$Params } from '../fn/groups/api-groups-id-name-put-plain';
+import { apiGroupsIdPromoteTargetUserIdPost$Json } from '../fn/groups/api-groups-id-promote-target-user-id-post-json';
+import { ApiGroupsIdPromoteTargetUserIdPost$Json$Params } from '../fn/groups/api-groups-id-promote-target-user-id-post-json';
+import { apiGroupsIdPromoteTargetUserIdPost$Plain } from '../fn/groups/api-groups-id-promote-target-user-id-post-plain';
+import { ApiGroupsIdPromoteTargetUserIdPost$Plain$Params } from '../fn/groups/api-groups-id-promote-target-user-id-post-plain';
 import { apiGroupsIdRegenerateInvitePost$Json } from '../fn/groups/api-groups-id-regenerate-invite-post-json';
 import { ApiGroupsIdRegenerateInvitePost$Json$Params } from '../fn/groups/api-groups-id-regenerate-invite-post-json';
 import { apiGroupsIdRegenerateInvitePost$Plain } from '../fn/groups/api-groups-id-regenerate-invite-post-plain';
 import { ApiGroupsIdRegenerateInvitePost$Plain$Params } from '../fn/groups/api-groups-id-regenerate-invite-post-plain';
+import { apiGroupsIdSummaryGet$Json } from '../fn/groups/api-groups-id-summary-get-json';
+import { ApiGroupsIdSummaryGet$Json$Params } from '../fn/groups/api-groups-id-summary-get-json';
+import { apiGroupsIdSummaryGet$Plain } from '../fn/groups/api-groups-id-summary-get-plain';
+import { ApiGroupsIdSummaryGet$Plain$Params } from '../fn/groups/api-groups-id-summary-get-plain';
+import { apiGroupsIdVisibilityPut$Json } from '../fn/groups/api-groups-id-visibility-put-json';
+import { ApiGroupsIdVisibilityPut$Json$Params } from '../fn/groups/api-groups-id-visibility-put-json';
+import { apiGroupsIdVisibilityPut$Plain } from '../fn/groups/api-groups-id-visibility-put-plain';
+import { ApiGroupsIdVisibilityPut$Plain$Params } from '../fn/groups/api-groups-id-visibility-put-plain';
+import { apiGroupsJoinInviteCodePost$Json } from '../fn/groups/api-groups-join-invite-code-post-json';
+import { ApiGroupsJoinInviteCodePost$Json$Params } from '../fn/groups/api-groups-join-invite-code-post-json';
+import { apiGroupsJoinInviteCodePost$Plain } from '../fn/groups/api-groups-join-invite-code-post-plain';
+import { ApiGroupsJoinInviteCodePost$Plain$Params } from '../fn/groups/api-groups-join-invite-code-post-plain';
 import { apiGroupsJoinPost$Json } from '../fn/groups/api-groups-join-post-json';
 import { ApiGroupsJoinPost$Json$Params } from '../fn/groups/api-groups-join-post-json';
 import { apiGroupsJoinPost$Plain } from '../fn/groups/api-groups-join-post-plain';
@@ -51,6 +63,10 @@ import { apiGroupsPost$Json } from '../fn/groups/api-groups-post-json';
 import { ApiGroupsPost$Json$Params } from '../fn/groups/api-groups-post-json';
 import { apiGroupsPost$Plain } from '../fn/groups/api-groups-post-plain';
 import { ApiGroupsPost$Plain$Params } from '../fn/groups/api-groups-post-plain';
+import { apiGroupsRecentGet$Json } from '../fn/groups/api-groups-recent-get-json';
+import { ApiGroupsRecentGet$Json$Params } from '../fn/groups/api-groups-recent-get-json';
+import { apiGroupsRecentGet$Plain } from '../fn/groups/api-groups-recent-get-plain';
+import { ApiGroupsRecentGet$Plain$Params } from '../fn/groups/api-groups-recent-get-plain';
 import { apiGroupsSearchGet$Json } from '../fn/groups/api-groups-search-get-json';
 import { ApiGroupsSearchGet$Json$Params } from '../fn/groups/api-groups-search-get-json';
 import { apiGroupsSearchGet$Plain } from '../fn/groups/api-groups-search-get-plain';
@@ -508,8 +524,8 @@ export class GroupsService extends BaseService {
     );
   }
 
-  /** Path part for operation `apiGroupsIdMembersUserIdMakeAdminPost()` */
-  static readonly ApiGroupsIdMembersUserIdMakeAdminPostPath = '/api/Groups/{id}/members/{userId}/make-admin';
+  /** Path part for operation `apiGroupsIdPromoteTargetUserIdPost()` */
+  static readonly ApiGroupsIdPromoteTargetUserIdPostPath = '/api/Groups/{id}/promote/{targetUserId}';
 
   /**
    * Promotes a member to admin role.
@@ -517,12 +533,12 @@ export class GroupsService extends BaseService {
    *
    *
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
-   * To access only the response body, use `apiGroupsIdMembersUserIdMakeAdminPost$Plain()` instead.
+   * To access only the response body, use `apiGroupsIdPromoteTargetUserIdPost$Plain()` instead.
    *
    * This method doesn't expect any request body.
    */
-  apiGroupsIdMembersUserIdMakeAdminPost$Plain$Response(params: ApiGroupsIdMembersUserIdMakeAdminPost$Plain$Params, context?: HttpContext): Observable<StrictHttpResponse<(ObjectApiResponse | ApiResponse)>> {
-    return apiGroupsIdMembersUserIdMakeAdminPost$Plain(this.http, this.rootUrl, params, context);
+  apiGroupsIdPromoteTargetUserIdPost$Plain$Response(params: ApiGroupsIdPromoteTargetUserIdPost$Plain$Params, context?: HttpContext): Observable<StrictHttpResponse<(ObjectApiResponse | ApiResponse)>> {
+    return apiGroupsIdPromoteTargetUserIdPost$Plain(this.http, this.rootUrl, params, context);
   }
 
   /**
@@ -531,12 +547,12 @@ export class GroupsService extends BaseService {
    *
    *
    * This method provides access only to the response body.
-   * To access the full response (for headers, for example), `apiGroupsIdMembersUserIdMakeAdminPost$Plain$Response()` instead.
+   * To access the full response (for headers, for example), `apiGroupsIdPromoteTargetUserIdPost$Plain$Response()` instead.
    *
    * This method doesn't expect any request body.
    */
-  apiGroupsIdMembersUserIdMakeAdminPost$Plain(params: ApiGroupsIdMembersUserIdMakeAdminPost$Plain$Params, context?: HttpContext): Observable<(ObjectApiResponse | ApiResponse)> {
-    return this.apiGroupsIdMembersUserIdMakeAdminPost$Plain$Response(params, context).pipe(
+  apiGroupsIdPromoteTargetUserIdPost$Plain(params: ApiGroupsIdPromoteTargetUserIdPost$Plain$Params, context?: HttpContext): Observable<(ObjectApiResponse | ApiResponse)> {
+    return this.apiGroupsIdPromoteTargetUserIdPost$Plain$Response(params, context).pipe(
       map((r: StrictHttpResponse<(ObjectApiResponse | ApiResponse)>): (ObjectApiResponse | ApiResponse) => r.body)
     );
   }
@@ -547,12 +563,12 @@ export class GroupsService extends BaseService {
    *
    *
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
-   * To access only the response body, use `apiGroupsIdMembersUserIdMakeAdminPost$Json()` instead.
+   * To access only the response body, use `apiGroupsIdPromoteTargetUserIdPost$Json()` instead.
    *
    * This method doesn't expect any request body.
    */
-  apiGroupsIdMembersUserIdMakeAdminPost$Json$Response(params: ApiGroupsIdMembersUserIdMakeAdminPost$Json$Params, context?: HttpContext): Observable<StrictHttpResponse<(ObjectApiResponse | ApiResponse)>> {
-    return apiGroupsIdMembersUserIdMakeAdminPost$Json(this.http, this.rootUrl, params, context);
+  apiGroupsIdPromoteTargetUserIdPost$Json$Response(params: ApiGroupsIdPromoteTargetUserIdPost$Json$Params, context?: HttpContext): Observable<StrictHttpResponse<(ObjectApiResponse | ApiResponse)>> {
+    return apiGroupsIdPromoteTargetUserIdPost$Json(this.http, this.rootUrl, params, context);
   }
 
   /**
@@ -561,12 +577,12 @@ export class GroupsService extends BaseService {
    *
    *
    * This method provides access only to the response body.
-   * To access the full response (for headers, for example), `apiGroupsIdMembersUserIdMakeAdminPost$Json$Response()` instead.
+   * To access the full response (for headers, for example), `apiGroupsIdPromoteTargetUserIdPost$Json$Response()` instead.
    *
    * This method doesn't expect any request body.
    */
-  apiGroupsIdMembersUserIdMakeAdminPost$Json(params: ApiGroupsIdMembersUserIdMakeAdminPost$Json$Params, context?: HttpContext): Observable<(ObjectApiResponse | ApiResponse)> {
-    return this.apiGroupsIdMembersUserIdMakeAdminPost$Json$Response(params, context).pipe(
+  apiGroupsIdPromoteTargetUserIdPost$Json(params: ApiGroupsIdPromoteTargetUserIdPost$Json$Params, context?: HttpContext): Observable<(ObjectApiResponse | ApiResponse)> {
+    return this.apiGroupsIdPromoteTargetUserIdPost$Json$Response(params, context).pipe(
       map((r: StrictHttpResponse<(ObjectApiResponse | ApiResponse)>): (ObjectApiResponse | ApiResponse) => r.body)
     );
   }
@@ -575,7 +591,7 @@ export class GroupsService extends BaseService {
   static readonly ApiGroupsSearchGetPath = '/api/Groups/search';
 
   /**
-   * Searches for public groups.
+   * Searches for groups (both public and joined groups).
    *
    *
    *
@@ -589,7 +605,7 @@ export class GroupsService extends BaseService {
   }
 
   /**
-   * Searches for public groups.
+   * Searches for groups (both public and joined groups).
    *
    *
    *
@@ -605,7 +621,7 @@ export class GroupsService extends BaseService {
   }
 
   /**
-   * Searches for public groups.
+   * Searches for groups (both public and joined groups).
    *
    *
    *
@@ -619,7 +635,7 @@ export class GroupsService extends BaseService {
   }
 
   /**
-   * Searches for public groups.
+   * Searches for groups (both public and joined groups).
    *
    *
    *
@@ -756,6 +772,258 @@ export class GroupsService extends BaseService {
    */
   apiGroupsIdRegenerateInvitePost$Json(params: ApiGroupsIdRegenerateInvitePost$Json$Params, context?: HttpContext): Observable<GroupDtoApiResponse> {
     return this.apiGroupsIdRegenerateInvitePost$Json$Response(params, context).pipe(
+      map((r: StrictHttpResponse<GroupDtoApiResponse>): GroupDtoApiResponse => r.body)
+    );
+  }
+
+  /** Path part for operation `apiGroupsIdVisibilityPut()` */
+  static readonly ApiGroupsIdVisibilityPutPath = '/api/Groups/{id}/visibility';
+
+  /**
+   * Updates a group's visibility (admin only).
+   *
+   *
+   *
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `apiGroupsIdVisibilityPut$Plain()` instead.
+   *
+   * This method sends `application/*+json` and handles request body of type `application/*+json`.
+   */
+  apiGroupsIdVisibilityPut$Plain$Response(params: ApiGroupsIdVisibilityPut$Plain$Params, context?: HttpContext): Observable<StrictHttpResponse<GroupDtoApiResponse>> {
+    return apiGroupsIdVisibilityPut$Plain(this.http, this.rootUrl, params, context);
+  }
+
+  /**
+   * Updates a group's visibility (admin only).
+   *
+   *
+   *
+   * This method provides access only to the response body.
+   * To access the full response (for headers, for example), `apiGroupsIdVisibilityPut$Plain$Response()` instead.
+   *
+   * This method sends `application/*+json` and handles request body of type `application/*+json`.
+   */
+  apiGroupsIdVisibilityPut$Plain(params: ApiGroupsIdVisibilityPut$Plain$Params, context?: HttpContext): Observable<GroupDtoApiResponse> {
+    return this.apiGroupsIdVisibilityPut$Plain$Response(params, context).pipe(
+      map((r: StrictHttpResponse<GroupDtoApiResponse>): GroupDtoApiResponse => r.body)
+    );
+  }
+
+  /**
+   * Updates a group's visibility (admin only).
+   *
+   *
+   *
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `apiGroupsIdVisibilityPut$Json()` instead.
+   *
+   * This method sends `application/*+json` and handles request body of type `application/*+json`.
+   */
+  apiGroupsIdVisibilityPut$Json$Response(params: ApiGroupsIdVisibilityPut$Json$Params, context?: HttpContext): Observable<StrictHttpResponse<GroupDtoApiResponse>> {
+    return apiGroupsIdVisibilityPut$Json(this.http, this.rootUrl, params, context);
+  }
+
+  /**
+   * Updates a group's visibility (admin only).
+   *
+   *
+   *
+   * This method provides access only to the response body.
+   * To access the full response (for headers, for example), `apiGroupsIdVisibilityPut$Json$Response()` instead.
+   *
+   * This method sends `application/*+json` and handles request body of type `application/*+json`.
+   */
+  apiGroupsIdVisibilityPut$Json(params: ApiGroupsIdVisibilityPut$Json$Params, context?: HttpContext): Observable<GroupDtoApiResponse> {
+    return this.apiGroupsIdVisibilityPut$Json$Response(params, context).pipe(
+      map((r: StrictHttpResponse<GroupDtoApiResponse>): GroupDtoApiResponse => r.body)
+    );
+  }
+
+  /** Path part for operation `apiGroupsIdSummaryGet()` */
+  static readonly ApiGroupsIdSummaryGetPath = '/api/Groups/{id}/summary';
+
+  /**
+   * Gets a group summary with membership information.
+   *
+   *
+   *
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `apiGroupsIdSummaryGet$Plain()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  apiGroupsIdSummaryGet$Plain$Response(params: ApiGroupsIdSummaryGet$Plain$Params, context?: HttpContext): Observable<StrictHttpResponse<GroupDtoApiResponse>> {
+    return apiGroupsIdSummaryGet$Plain(this.http, this.rootUrl, params, context);
+  }
+
+  /**
+   * Gets a group summary with membership information.
+   *
+   *
+   *
+   * This method provides access only to the response body.
+   * To access the full response (for headers, for example), `apiGroupsIdSummaryGet$Plain$Response()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  apiGroupsIdSummaryGet$Plain(params: ApiGroupsIdSummaryGet$Plain$Params, context?: HttpContext): Observable<GroupDtoApiResponse> {
+    return this.apiGroupsIdSummaryGet$Plain$Response(params, context).pipe(
+      map((r: StrictHttpResponse<GroupDtoApiResponse>): GroupDtoApiResponse => r.body)
+    );
+  }
+
+  /**
+   * Gets a group summary with membership information.
+   *
+   *
+   *
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `apiGroupsIdSummaryGet$Json()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  apiGroupsIdSummaryGet$Json$Response(params: ApiGroupsIdSummaryGet$Json$Params, context?: HttpContext): Observable<StrictHttpResponse<GroupDtoApiResponse>> {
+    return apiGroupsIdSummaryGet$Json(this.http, this.rootUrl, params, context);
+  }
+
+  /**
+   * Gets a group summary with membership information.
+   *
+   *
+   *
+   * This method provides access only to the response body.
+   * To access the full response (for headers, for example), `apiGroupsIdSummaryGet$Json$Response()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  apiGroupsIdSummaryGet$Json(params: ApiGroupsIdSummaryGet$Json$Params, context?: HttpContext): Observable<GroupDtoApiResponse> {
+    return this.apiGroupsIdSummaryGet$Json$Response(params, context).pipe(
+      map((r: StrictHttpResponse<GroupDtoApiResponse>): GroupDtoApiResponse => r.body)
+    );
+  }
+
+  /** Path part for operation `apiGroupsRecentGet()` */
+  static readonly ApiGroupsRecentGetPath = '/api/Groups/recent';
+
+  /**
+   * Gets recent groups for the current user.
+   *
+   *
+   *
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `apiGroupsRecentGet$Plain()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  apiGroupsRecentGet$Plain$Response(params?: ApiGroupsRecentGet$Plain$Params, context?: HttpContext): Observable<StrictHttpResponse<GroupDtoIEnumerableApiResponse>> {
+    return apiGroupsRecentGet$Plain(this.http, this.rootUrl, params, context);
+  }
+
+  /**
+   * Gets recent groups for the current user.
+   *
+   *
+   *
+   * This method provides access only to the response body.
+   * To access the full response (for headers, for example), `apiGroupsRecentGet$Plain$Response()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  apiGroupsRecentGet$Plain(params?: ApiGroupsRecentGet$Plain$Params, context?: HttpContext): Observable<GroupDtoIEnumerableApiResponse> {
+    return this.apiGroupsRecentGet$Plain$Response(params, context).pipe(
+      map((r: StrictHttpResponse<GroupDtoIEnumerableApiResponse>): GroupDtoIEnumerableApiResponse => r.body)
+    );
+  }
+
+  /**
+   * Gets recent groups for the current user.
+   *
+   *
+   *
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `apiGroupsRecentGet$Json()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  apiGroupsRecentGet$Json$Response(params?: ApiGroupsRecentGet$Json$Params, context?: HttpContext): Observable<StrictHttpResponse<GroupDtoIEnumerableApiResponse>> {
+    return apiGroupsRecentGet$Json(this.http, this.rootUrl, params, context);
+  }
+
+  /**
+   * Gets recent groups for the current user.
+   *
+   *
+   *
+   * This method provides access only to the response body.
+   * To access the full response (for headers, for example), `apiGroupsRecentGet$Json$Response()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  apiGroupsRecentGet$Json(params?: ApiGroupsRecentGet$Json$Params, context?: HttpContext): Observable<GroupDtoIEnumerableApiResponse> {
+    return this.apiGroupsRecentGet$Json$Response(params, context).pipe(
+      map((r: StrictHttpResponse<GroupDtoIEnumerableApiResponse>): GroupDtoIEnumerableApiResponse => r.body)
+    );
+  }
+
+  /** Path part for operation `apiGroupsJoinInviteCodePost()` */
+  static readonly ApiGroupsJoinInviteCodePostPath = '/api/Groups/join/{inviteCode}';
+
+  /**
+   * Joins a group using invite code.
+   *
+   *
+   *
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `apiGroupsJoinInviteCodePost$Plain()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  apiGroupsJoinInviteCodePost$Plain$Response(params: ApiGroupsJoinInviteCodePost$Plain$Params, context?: HttpContext): Observable<StrictHttpResponse<GroupDtoApiResponse>> {
+    return apiGroupsJoinInviteCodePost$Plain(this.http, this.rootUrl, params, context);
+  }
+
+  /**
+   * Joins a group using invite code.
+   *
+   *
+   *
+   * This method provides access only to the response body.
+   * To access the full response (for headers, for example), `apiGroupsJoinInviteCodePost$Plain$Response()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  apiGroupsJoinInviteCodePost$Plain(params: ApiGroupsJoinInviteCodePost$Plain$Params, context?: HttpContext): Observable<GroupDtoApiResponse> {
+    return this.apiGroupsJoinInviteCodePost$Plain$Response(params, context).pipe(
+      map((r: StrictHttpResponse<GroupDtoApiResponse>): GroupDtoApiResponse => r.body)
+    );
+  }
+
+  /**
+   * Joins a group using invite code.
+   *
+   *
+   *
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `apiGroupsJoinInviteCodePost$Json()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  apiGroupsJoinInviteCodePost$Json$Response(params: ApiGroupsJoinInviteCodePost$Json$Params, context?: HttpContext): Observable<StrictHttpResponse<GroupDtoApiResponse>> {
+    return apiGroupsJoinInviteCodePost$Json(this.http, this.rootUrl, params, context);
+  }
+
+  /**
+   * Joins a group using invite code.
+   *
+   *
+   *
+   * This method provides access only to the response body.
+   * To access the full response (for headers, for example), `apiGroupsJoinInviteCodePost$Json$Response()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  apiGroupsJoinInviteCodePost$Json(params: ApiGroupsJoinInviteCodePost$Json$Params, context?: HttpContext): Observable<GroupDtoApiResponse> {
+    return this.apiGroupsJoinInviteCodePost$Json$Response(params, context).pipe(
       map((r: StrictHttpResponse<GroupDtoApiResponse>): GroupDtoApiResponse => r.body)
     );
   }

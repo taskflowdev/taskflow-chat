@@ -11,7 +11,7 @@ import { RequestBuilder } from '../../request-builder';
 import { ApiResponse } from '../../models/api-response';
 import { ObjectApiResponse } from '../../models/object-api-response';
 
-export interface ApiGroupsIdMembersUserIdMakeAdminPost$Json$Params {
+export interface ApiGroupsIdPromoteTargetUserIdPost$Plain$Params {
 
 /**
  * Group ID
@@ -21,18 +21,18 @@ export interface ApiGroupsIdMembersUserIdMakeAdminPost$Json$Params {
 /**
  * User ID to promote
  */
-  userId: string;
+  targetUserId: string;
 }
 
-export function apiGroupsIdMembersUserIdMakeAdminPost$Json(http: HttpClient, rootUrl: string, params: ApiGroupsIdMembersUserIdMakeAdminPost$Json$Params, context?: HttpContext): Observable<StrictHttpResponse<(ObjectApiResponse | ApiResponse)>> {
-  const rb = new RequestBuilder(rootUrl, apiGroupsIdMembersUserIdMakeAdminPost$Json.PATH, 'post');
+export function apiGroupsIdPromoteTargetUserIdPost$Plain(http: HttpClient, rootUrl: string, params: ApiGroupsIdPromoteTargetUserIdPost$Plain$Params, context?: HttpContext): Observable<StrictHttpResponse<(ObjectApiResponse | ApiResponse)>> {
+  const rb = new RequestBuilder(rootUrl, apiGroupsIdPromoteTargetUserIdPost$Plain.PATH, 'post');
   if (params) {
     rb.path('id', params.id, {});
-    rb.path('userId', params.userId, {});
+    rb.path('targetUserId', params.targetUserId, {});
   }
 
   return http.request(
-    rb.build({ responseType: 'json', accept: 'text/json', context })
+    rb.build({ responseType: 'text', accept: 'text/plain', context })
   ).pipe(
     filter((r: any): r is HttpResponse<any> => r instanceof HttpResponse),
     map((r: HttpResponse<any>) => {
@@ -41,4 +41,4 @@ export function apiGroupsIdMembersUserIdMakeAdminPost$Json(http: HttpClient, roo
   );
 }
 
-apiGroupsIdMembersUserIdMakeAdminPost$Json.PATH = '/api/Groups/{id}/members/{userId}/make-admin';
+apiGroupsIdPromoteTargetUserIdPost$Plain.PATH = '/api/Groups/{id}/promote/{targetUserId}';
