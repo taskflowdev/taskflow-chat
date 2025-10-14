@@ -114,7 +114,15 @@ export class LocalStorageService {
    * @returns The encrypted value
    */
   private encrypt(value: string): string {
-    return CryptoJS.AES.encrypt(value, this.appConfigService.getEncryptionKey()).toString();
+    const encryptionKey = this.appConfigService.getEncryptionKey();
+    
+    // Ensure we have a valid key
+    if (!encryptionKey) {
+      console.error('LocalStorageService: Encryption key is null/undefined, using fallback');
+      return CryptoJS.AES.encrypt(value, 'default-key-change-me').toString();
+    }
+    
+    return CryptoJS.AES.encrypt(value, encryptionKey).toString();
   }
 
   /**
@@ -123,7 +131,16 @@ export class LocalStorageService {
    * @returns The decrypted value
    */
   private decrypt(encryptedValue: string): string {
-    const bytes = CryptoJS.AES.decrypt(encryptedValue, this.appConfigService.getEncryptionKey());
+    const encryptionKey = this.appConfigService.getEncryptionKey();
+    
+    // Ensure we have a valid key
+    if (!encryptionKey) {
+      console.error('LocalStorageService: Encryption key is null/undefined, using fallback');
+      const bytes = CryptoJS.AES.decrypt(encryptedValue, 'default-key-change-me');
+      return bytes.toString(CryptoJS.enc.Utf8);
+    }
+    
+    const bytes = CryptoJS.AES.decrypt(encryptedValue, encryptionKey);
     return bytes.toString(CryptoJS.enc.Utf8);
   }
 }
