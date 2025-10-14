@@ -19,9 +19,22 @@ export class ApiConfiguration {
   /**
    * Returns the root url for API operations.
    * Uses runtime configuration from AppConfigService if not explicitly set.
+   * Always returns a valid URL, never undefined.
    */
   get rootUrl(): string {
-    return this._rootUrl || this.appConfigService.getApiUrl();
+    if (this._rootUrl) {
+      return this._rootUrl;
+    }
+    
+    const apiUrl = this.appConfigService.getApiUrl();
+    
+    // Double-check we have a valid URL
+    if (!apiUrl) {
+      console.error('ApiConfiguration: getApiUrl returned null/undefined, using fallback');
+      return 'https://localhost:44347';
+    }
+    
+    return apiUrl;
   }
 
   /**
