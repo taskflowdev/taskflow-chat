@@ -8,6 +8,8 @@ import { ApiConfiguration } from './api/api-configuration';
 import { AuthInterceptor } from './auth/interceptors/auth.interceptor';
 import { AuthService } from './auth/services/auth.service';
 import { appInitializerFactory } from './core/app-initializer';
+import { AppConfigService } from './core/services/app-config.service';
+import { appConfigInitializerFactory } from './core/config-initializer';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -16,7 +18,14 @@ export const appConfig: ApplicationConfig = {
     provideClientHydration(withEventReplay()),
     provideHttpClient(withInterceptorsFromDi()),
     ApiConfiguration,
+    AppConfigService,
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
+    {
+      provide: APP_INITIALIZER,
+      useFactory: appConfigInitializerFactory,
+      deps: [AppConfigService],
+      multi: true
+    },
     {
       provide: APP_INITIALIZER,
       useFactory: appInitializerFactory,

@@ -1,14 +1,16 @@
 import { Injectable, Inject, PLATFORM_ID } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import * as CryptoJS from 'crypto-js';
+import { AppConfigService } from '../../core/services/app-config.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class LocalStorageService {
-  private readonly ENCRYPTION_KEY = 'taskflow-chat-secure-key-2024';
-
-  constructor(@Inject(PLATFORM_ID) private platformId: Object) {}
+  constructor(
+    @Inject(PLATFORM_ID) private platformId: Object,
+    private appConfigService: AppConfigService
+  ) {}
 
   /**
    * Set an item in localStorage with encryption
@@ -112,7 +114,7 @@ export class LocalStorageService {
    * @returns The encrypted value
    */
   private encrypt(value: string): string {
-    return CryptoJS.AES.encrypt(value, this.ENCRYPTION_KEY).toString();
+    return CryptoJS.AES.encrypt(value, this.appConfigService.getEncryptionKey()).toString();
   }
 
   /**
@@ -121,7 +123,7 @@ export class LocalStorageService {
    * @returns The decrypted value
    */
   private decrypt(encryptedValue: string): string {
-    const bytes = CryptoJS.AES.decrypt(encryptedValue, this.ENCRYPTION_KEY);
+    const bytes = CryptoJS.AES.decrypt(encryptedValue, this.appConfigService.getEncryptionKey());
     return bytes.toString(CryptoJS.enc.Utf8);
   }
 }

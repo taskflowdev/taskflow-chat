@@ -36,16 +36,19 @@ describe('GuestGuard', () => {
     expect(guard).toBeTruthy();
   });
 
-  it('should allow access when user is not authenticated', () => {
+  it('should allow access when user is not authenticated', (done) => {
     authService.getToken.and.returnValue(null);
     
-    const result = guard.canActivate();
+    const result$ = guard.canActivate();
     
-    expect(result).toBe(true);
-    expect(router.navigate).not.toHaveBeenCalled();
+    result$.subscribe(result => {
+      expect(result).toBe(true);
+      expect(router.navigate).not.toHaveBeenCalled();
+      done();
+    });
   });
 
-  it('should redirect to /chats when user is authenticated with token and user data', () => {
+  it('should redirect to /chats when user is authenticated with token and user data', (done) => {
     authService.getToken.and.returnValue('fake-token');
     authService.getCurrentUser.and.returnValue({ 
       id: '1', 
@@ -54,10 +57,13 @@ describe('GuestGuard', () => {
       fullName: 'Test User'
     });
     
-    const result = guard.canActivate();
+    const result$ = guard.canActivate();
     
-    expect(result).toBe(false);
-    expect(router.navigate).toHaveBeenCalledWith(['/chats'], { replaceUrl: true });
+    result$.subscribe(result => {
+      expect(result).toBe(false);
+      expect(router.navigate).toHaveBeenCalledWith(['/chats'], { replaceUrl: true });
+      done();
+    });
   });
 
   it('should verify authentication when token exists but no user data', (done) => {
