@@ -28,13 +28,23 @@ The application includes a comprehensive keyboard shortcut system designed for p
 
 ## Development server
 
-To start a local development server, run:
+### Setup
 
-```bash
-ng serve
-```
+1. Copy the environment file and configure your settings:
+   ```bash
+   cp .env.local.example .env.local
+   ```
+   
+2. Edit `.env.local` with your API URL and encryption key (see [Runtime Configuration](RUNTIME_CONFIG.md) for details)
+
+3. Start the development server:
+   ```bash
+   npm start
+   ```
 
 Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+
+For more details on configuration, see [Runtime Configuration Guide](RUNTIME_CONFIG.md).
 
 ## Code scaffolding
 
@@ -52,13 +62,15 @@ ng generate --help
 
 ## Building
 
-To build the project run:
+To build the project, run:
 
 ```bash
-ng build
+npm run build
 ```
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
+This will compile your project and store the build artifacts in the `dist/` directory. The build process automatically generates the runtime configuration from environment variables.
+
+For production deployment, see [Vercel Deployment Guide](VERCEL_DEPLOYMENT.md).
 
 ## Running unit tests
 
@@ -98,8 +110,11 @@ For detailed architecture and usage guide, see [Keyboard Shortcuts Documentation
 
 ## Documentation
 
+- [Runtime Configuration Guide](RUNTIME_CONFIG.md) - Configure the app with environment variables
+- [Vercel Deployment Guide](VERCEL_DEPLOYMENT.md) - Deploy to Vercel with runtime config
 - [Keyboard Shortcuts Guide](docs/KEYBOARD_SHORTCUTS.md) - Complete guide to the keyboard shortcut system
 - [Implementation Summary](docs/KEYBOARD_SHORTCUTS_SUMMARY.md) - Technical implementation details
+- [Authentication System](docs/AUTHENTICATION.md) - Authentication system documentation
 
 ## Additional Resources
 
