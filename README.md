@@ -110,8 +110,13 @@ For detailed architecture and usage guide, see [Keyboard Shortcuts Documentation
 
 ## Documentation
 
+### Configuration & Deployment
 - [Runtime Configuration Guide](RUNTIME_CONFIG.md) - Configure the app with environment variables
-- [Vercel Deployment Guide](VERCEL_DEPLOYMENT.md) - Deploy to Vercel with runtime config
+- [Vercel Deployment Guide](VERCEL_DEPLOYMENT.md) - Complete deployment guide with security best practices
+- [Vercel Quick Start](VERCEL_QUICK_START.md) - Step-by-step checklist for quick deployment
+- [Vercel Fix Summary](VERCEL_FIX_SUMMARY.md) - Technical details of routing and security improvements
+
+### Features & Architecture
 - [Keyboard Shortcuts Guide](docs/KEYBOARD_SHORTCUTS.md) - Complete guide to the keyboard shortcut system
 - [Implementation Summary](docs/KEYBOARD_SHORTCUTS_SUMMARY.md) - Technical implementation details
 - [Authentication System](docs/AUTHENTICATION.md) - Authentication system documentation
