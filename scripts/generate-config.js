@@ -9,8 +9,10 @@
  * 
  * Environment variables (with defaults):
  * - API_URL: API base URL (default: https://localhost:44347)
- * - ENCRYPTION_KEY: Encryption key for local storage (default: taskflow-chat-secure-key-2024)
  * - PRODUCTION: Production mode flag (default: false)
+ * 
+ * SECURITY NOTE: This config.json is publicly accessible. DO NOT include sensitive
+ * values like encryption keys or API secrets here.
  * 
  * For local development, create a .env.local file with your configuration.
  * For production/Vercel, set these as environment variables in your deployment platform.
@@ -39,20 +41,16 @@ if (fs.existsSync(envLocalPath)) {
 }
 
 // Get environment variables with defaults
+// SECURITY: Only include non-sensitive configuration values
+// The encryption key is NOT included here as it would be publicly accessible
 const config = {
   apiUrl: process.env.API_URL || 'https://localhost:44347',
-  encryptionKey: process.env.ENCRYPTION_KEY || 'taskflow-chat-secure-key-2024',
   production: process.env.PRODUCTION === 'true' || process.env.NODE_ENV === 'production'
 };
 
 // Validate required fields
 if (!config.apiUrl) {
   console.error('ERROR: API_URL environment variable is required');
-  process.exit(1);
-}
-
-if (!config.encryptionKey) {
-  console.error('ERROR: ENCRYPTION_KEY environment variable is required');
   process.exit(1);
 }
 
@@ -75,6 +73,8 @@ fs.writeFileSync(
 console.log('✅ Generated config.json successfully');
 console.log('Configuration:');
 console.log(`  - API URL: ${config.apiUrl}`);
-console.log(`  - Encryption Key: ${config.encryptionKey.substring(0, 10)}...`);
 console.log(`  - Production: ${config.production}`);
 console.log(`  - Output: ${outputPath}`);
+console.log('');
+console.log('⚠️  SECURITY: config.json does NOT contain sensitive values like encryption keys.');
+console.log('   Encryption key must be set at build time via ENCRYPTION_KEY environment variable.');

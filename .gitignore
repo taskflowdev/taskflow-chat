@@ -48,3 +48,6 @@ Thumbs.db
 # Generated runtime config
 /public/config.json
 /src/assets/config.json
+
+# Generated build config (contains sensitive keys)
+/src/app/core/config/build-config.ts

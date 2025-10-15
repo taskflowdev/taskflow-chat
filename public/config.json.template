@@ -1,5 +1,4 @@
 {
   "apiUrl": "${API_URL}",
-  "encryptionKey": "${ENCRYPTION_KEY}",
   "production": ${PRODUCTION}
 }

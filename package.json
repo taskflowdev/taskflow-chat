@@ -4,9 +4,10 @@
   "scripts": {
     "ng": "ng",
     "config": "node scripts/generate-config.js",
-    "prestart": "npm run config",
+    "build-config": "node scripts/generate-build-config.js",
+    "prestart": "npm run config && npm run build-config",
     "start": "ng serve",
-    "prebuild": "npm run config",
+    "prebuild": "npm run config && npm run build-config",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",

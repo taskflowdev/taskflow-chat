@@ -2,26 +2,19 @@ import { TestBed } from '@angular/core/testing';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { PLATFORM_ID } from '@angular/core';
 import { LocalStorageService } from './local-storage.service';
-import { AppConfigService } from '../../core/services/app-config.service';
 
 describe('LocalStorageService', () => {
   let service: LocalStorageService;
-  let appConfigService: AppConfigService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [HttpClientTestingModule],
       providers: [
         LocalStorageService,
-        AppConfigService,
         { provide: PLATFORM_ID, useValue: 'browser' }
       ]
     });
     service = TestBed.inject(LocalStorageService);
-    appConfigService = TestBed.inject(AppConfigService);
-    
-    // Mock the config service to return a test encryption key
-    spyOn(appConfigService, 'getEncryptionKey').and.returnValue('test-encryption-key-for-testing');
   });
 
   it('should be created', () => {

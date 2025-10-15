@@ -5,10 +5,12 @@ import { firstValueFrom } from 'rxjs';
 
 /**
  * Interface for the runtime configuration loaded from assets/config.json
+ * 
+ * SECURITY NOTE: This config is served publicly as a static file.
+ * DO NOT include sensitive values like encryption keys or API secrets.
  */
 export interface AppConfig {
   apiUrl: string;
-  encryptionKey: string;
   production: boolean;
 }
 
@@ -26,6 +28,10 @@ enum ConfigState {
  * Service to load and provide runtime configuration from assets/config.json
  * This allows configuration to be set via environment variables at deployment time
  * without rebuilding the application.
+ * 
+ * SECURITY NOTE: Only non-sensitive configuration values should be in config.json
+ * as it is publicly accessible. Sensitive values like encryption keys should be
+ * embedded at build time using environment variables and file replacement.
  * 
  * Features:
  * - Loads config once during APP_INITIALIZER
@@ -116,8 +122,7 @@ export class AppConfigService {
           
           console.log('AppConfig: Successfully loaded and cached', {
             apiUrl: this.config.apiUrl,
-            production: this.config.production,
-            hasEncryptionKey: !!this.config.encryptionKey
+            production: this.config.production
           });
           return;
         } else {
@@ -152,11 +157,6 @@ export class AppConfigService {
     
     if (!config.apiUrl || typeof config.apiUrl !== 'string') {
       console.error('AppConfig: Missing or invalid apiUrl');
-      return false;
-    }
-    
-    if (!config.encryptionKey || typeof config.encryptionKey !== 'string') {
-      console.error('AppConfig: Missing or invalid encryptionKey');
       return false;
     }
     
@@ -251,18 +251,6 @@ export class AppConfigService {
   }
 
   /**
-   * Get the encryption key for local storage
-   * Always returns a valid key, never undefined
-   */
-  getEncryptionKey(): string {
-    if (!this.config) {
-      console.warn('AppConfig: Config not loaded yet, using default encryption key');
-      return this.getDefaultConfig().encryptionKey;
-    }
-    return this.config.encryptionKey;
-  }
-
-  /**
    * Check if the app is running in production mode
    */
   isProduction(): boolean {
@@ -332,7 +320,6 @@ export class AppConfigService {
   private getDefaultConfig(): AppConfig {
     return {
       apiUrl: 'https://localhost:44347',
-      encryptionKey: 'default-key-change-me',
       production: false
     };
   }

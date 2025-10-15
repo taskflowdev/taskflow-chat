@@ -1,15 +1,14 @@
 import { Injectable, Inject, PLATFORM_ID } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import * as CryptoJS from 'crypto-js';
-import { AppConfigService } from '../../core/services/app-config.service';
+import { BUILD_CONFIG } from '../../core/config/build-config';
 
 @Injectable({
   providedIn: 'root'
 })
 export class LocalStorageService {
   constructor(
-    @Inject(PLATFORM_ID) private platformId: Object,
-    private appConfigService: AppConfigService
+    @Inject(PLATFORM_ID) private platformId: Object
   ) {}
 
   /**
@@ -114,15 +113,8 @@ export class LocalStorageService {
    * @returns The encrypted value
    */
   private encrypt(value: string): string {
-    const encryptionKey = this.appConfigService.getEncryptionKey();
-    
-    // Ensure we have a valid key
-    if (!encryptionKey) {
-      console.error('LocalStorageService: Encryption key is null/undefined, using fallback');
-      return CryptoJS.AES.encrypt(value, 'default-key-change-me').toString();
-    }
-    
-    return CryptoJS.AES.encrypt(value, encryptionKey).toString();
+    // Use the build-time encryption key (embedded during build, not in config.json)
+    return CryptoJS.AES.encrypt(value, BUILD_CONFIG.ENCRYPTION_KEY).toString();
   }
 
   /**
@@ -131,16 +123,8 @@ export class LocalStorageService {
    * @returns The decrypted value
    */
   private decrypt(encryptedValue: string): string {
-    const encryptionKey = this.appConfigService.getEncryptionKey();
-    
-    // Ensure we have a valid key
-    if (!encryptionKey) {
-      console.error('LocalStorageService: Encryption key is null/undefined, using fallback');
-      const bytes = CryptoJS.AES.decrypt(encryptedValue, 'default-key-change-me');
-      return bytes.toString(CryptoJS.enc.Utf8);
-    }
-    
-    const bytes = CryptoJS.AES.decrypt(encryptedValue, encryptionKey);
+    // Use the build-time encryption key (embedded during build, not in config.json)
+    const bytes = CryptoJS.AES.decrypt(encryptedValue, BUILD_CONFIG.ENCRYPTION_KEY);
     return bytes.toString(CryptoJS.enc.Utf8);
   }
 }
