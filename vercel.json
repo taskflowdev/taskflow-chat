@@ -10,10 +10,10 @@
       "use": "@vercel/static"
     }
   ],
-  "routes": [
+  "rewrites": [
     {
-      "src": "/(.*)",
-      "dest": "dist/taskflow-chat/server/server.mjs"
+      "source": "/(.*)",
+      "destination": "dist/taskflow-chat/server/server.mjs"
     }
   ],
   "headers": [
