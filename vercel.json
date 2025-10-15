@@ -6,7 +6,7 @@
   "rewrites": [
     {
       "source": "/(.*)",
-      "destination": "/index.html"
+      "destination": "dist/taskflow-chat/browser/index.html"
     }
   ],
   "headers": [
