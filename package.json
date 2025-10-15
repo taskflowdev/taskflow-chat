@@ -8,6 +8,7 @@
     "start": "ng serve",
     "prebuild": "npm run config",
     "build": "ng build",
+    "build:ssr": "ng build && ng run taskflow-chat:server",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "serve:ssr:taskflow-chat": "node dist/taskflow-chat/server/server.mjs",

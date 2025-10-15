@@ -1,27 +1,24 @@
 {
-  "version": 2,
-  "buildCommand": "npm run build",
-  "outputDirectory": "dist/taskflow-chat",
+  "version": 3,
   "framework": "angular",
-  "rewrites": [
+  "buildCommand": "npm run build:ssr",
+  "outputDirectory": "dist/taskflow-chat",
+  "functions": {
+    "api/server.mjs": {
+      "runtime": "nodejs20.x"
+    }
+  },
+  "routes": [
     {
-      "source": "/(.*)",
-      "destination": "/index.html"
+      "src": "/(.*)",
+      "dest": "api/server.mjs"
     }
   ],
   "headers": [
     {
-      "source": "/config.json",
-      "headers": [
-        {
-          "key": "Cache-Control",
-          "value": "no-cache, no-store, must-revalidate"
-        }
-      ]
-    },
-    {
       "source": "/(.*)",
       "headers": [
+        { "key": "Cache-Control", "value": "no-cache" },
         { "key": "X-Content-Type-Options", "value": "nosniff" },
         { "key": "X-Frame-Options", "value": "DENY" },
         { "key": "X-XSS-Protection", "value": "1; mode=block" }
