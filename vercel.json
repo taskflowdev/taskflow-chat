@@ -1,19 +1,13 @@
 {
   "version": 2,
   "builds": [
-    {
-      "src": "dist/taskflow-chat/server/server.mjs",
-      "use": "@vercel/node"
-    },
-    {
-      "src": "dist/taskflow-chat/browser/**",
-      "use": "@vercel/static"
-    }
+    { "src": "dist/taskflow-chat/server/server.mjs", "use": "@vercel/node" },
+    { "src": "dist/taskflow-chat/browser/(.*)", "use": "@vercel/static" }
   ],
   "rewrites": [
     {
       "source": "/(.*)",
-      "destination": "dist/taskflow-chat/server/server.mjs"
+      "destination": "/dist/taskflow-chat/server/server.mjs"
     }
   ],
   "headers": [
