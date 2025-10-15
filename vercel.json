@@ -1,17 +1,19 @@
 {
-  "version": 3,
-  "framework": "angular",
-  "buildCommand": "npm run build:ssr",
-  "outputDirectory": "dist/taskflow-chat",
-  "functions": {
-    "api/server.mjs": {
-      "runtime": "nodejs20.x"
+  "version": 2,
+  "builds": [
+    {
+      "src": "dist/taskflow-chat/server/server.mjs",
+      "use": "@vercel/node"
+    },
+    {
+      "src": "dist/taskflow-chat/browser/**",
+      "use": "@vercel/static"
     }
-  },
+  ],
   "routes": [
     {
       "src": "/(.*)",
-      "dest": "api/server.mjs"
+      "dest": "dist/taskflow-chat/server/server.mjs"
     }
   ],
   "headers": [
