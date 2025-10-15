@@ -18,8 +18,10 @@ This guide explains how to deploy the TaskFlow Chat application to Vercel with r
 | Variable Name | Description | Example Value |
 |--------------|-------------|---------------|
 | `API_URL` | Your backend API URL | `https://api.yourdomain.com` |
-| `ENCRYPTION_KEY` | Encryption key for localStorage | Generate a secure random string |
+| `ENCRYPTION_KEY` | Encryption key for localStorage (build-time only) | Generate a secure random string |
 | `PRODUCTION` | Production mode flag | `true` |
+
+**IMPORTANT SECURITY NOTE:** The `ENCRYPTION_KEY` is embedded at build time and is NOT exposed in the publicly accessible `config.json` file. Only `API_URL` and `PRODUCTION` flag are included in the runtime config.
 
 ### How to Generate a Secure Encryption Key
 
@@ -49,7 +51,11 @@ Vercel should auto-detect your Angular project. Verify these settings:
 - **Output Directory**: `dist/taskflow-chat/browser`
 - **Install Command**: `npm install`
 
-The `prebuild` script will automatically run before building, generating the `config.json` file from your environment variables.
+The `prebuild` script will automatically run before building, generating both the `config.json` file (with non-sensitive runtime config) and `build-config.ts` (with sensitive build-time values like encryption key) from your environment variables.
+
+### SPA Routing Configuration
+
+The `vercel.json` file in the repository root handles Single Page Application (SPA) routing by rewriting all routes to `/index.html`. This ensures that deep links (e.g., `/chats/group/:groupId`) work correctly when accessed directly or refreshed.
 
 ### Deploy
 
@@ -112,12 +118,24 @@ To update configuration values:
 - Set different encryption keys for each environment
 - Use HTTPS for your API
 - Regularly rotate your encryption keys
+- Keep sensitive values as build-time environment variables
 
 ❌ **DON'T:**
-- Commit `.env.local` or `config.json` to your repository
+- Commit `.env.local`, `config.json`, or `build-config.ts` to your repository
 - Use the same encryption key as in the examples
 - Share your production environment variables
-- Store actual secrets in `config.json` (it's publicly accessible)
+- Include sensitive values in `config.json` (it's publicly accessible)
+
+### What's Public vs. Private
+
+**Publicly Accessible (in config.json):**
+- `apiUrl` - The backend API URL (not sensitive)
+- `production` - Boolean flag for production mode
+
+**Build-Time Only (embedded in compiled code):**
+- `encryptionKey` - Used for localStorage encryption, embedded at build time and not in config.json
+
+While the encryption key is embedded in the compiled JavaScript, it's much harder to extract than if it were in a plain JSON file accessible via network requests.
 
 ## Advanced: Multiple API Environments
 

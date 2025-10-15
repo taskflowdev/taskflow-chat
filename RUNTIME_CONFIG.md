@@ -1,14 +1,22 @@
 # Runtime Configuration Setup
 
-This application uses runtime configuration loaded from `config.json` at startup. This allows you to configure the application using environment variables without rebuilding the app.
+This application uses a hybrid configuration approach:
+
+1. **Runtime Configuration** (`config.json`) - Loaded at app startup, contains non-sensitive public configuration
+2. **Build-Time Configuration** (`build-config.ts`) - Embedded during build, contains sensitive values
 
 ## Configuration Values
 
-The following configuration values are loaded at runtime:
+The following configuration values are available:
 
+### Runtime Config (Public - in config.json)
 - **API_URL**: The base URL for the backend API (default: `https://localhost:44347`)
-- **ENCRYPTION_KEY**: The encryption key used to secure data in localStorage (default: `taskflow-chat-secure-key-2024`)
 - **PRODUCTION**: Whether the app is running in production mode (default: `false`)
+
+### Build-Time Config (Private - embedded in code)
+- **ENCRYPTION_KEY**: The encryption key used to secure data in localStorage (default: `taskflow-chat-secure-key-2024`)
+
+**SECURITY:** The encryption key is embedded at build time and is NOT served in the publicly accessible `config.json` file.
 
 ## Local Development
 
@@ -70,25 +78,31 @@ For other deployment platforms:
 
 ## How It Works
 
-1. **Build Time**: The `scripts/generate-config.js` script runs before building and generates `public/config.json` from environment variables.
+1. **Build Time**: 
+   - The `scripts/generate-config.js` script runs before building and generates `public/config.json` from environment variables (API_URL, PRODUCTION only)
+   - The `scripts/generate-build-config.js` script runs before building and generates `src/app/core/config/build-config.ts` from environment variables (ENCRYPTION_KEY)
 
-2. **App Startup**: Angular's `APP_INITIALIZER` loads the configuration from `/config.json` using the `AppConfigService` before the app starts.
+2. **App Startup**: Angular's `APP_INITIALIZER` loads the runtime configuration from `/config.json` using the `AppConfigService` before the app starts.
 
-3. **Runtime**: All services access configuration values through `AppConfigService` instead of hardcoded values.
+3. **Runtime**: 
+   - Services access the API URL through `AppConfigService.getApiUrl()`
+   - The encryption key is accessed directly from the build-time config (`BUILD_CONFIG.ENCRYPTION_KEY`)
 
-## Services Using Runtime Config
+## Services Using Configuration
 
 - **ApiConfiguration**: Gets the API base URL from `AppConfigService.getApiUrl()`
-- **LocalStorageService**: Gets the encryption key from `AppConfigService.getEncryptionKey()`
+- **LocalStorageService**: Gets the encryption key from build-time `BUILD_CONFIG.ENCRYPTION_KEY`
 
 ## Security Notes
 
 ⚠️ **IMPORTANT**: 
 
-- Never commit `.env.local` or `public/config.json` to version control (they are git-ignored)
+- Never commit `.env.local`, `public/config.json`, or `src/app/core/config/build-config.ts` to version control (they are git-ignored)
 - Always use a strong, randomly generated encryption key in production
-- Store sensitive configuration values as environment variables in your deployment platform
-- The `config.json` file is served publicly, so never include secrets that shouldn't be exposed to the client
+- Store all configuration values as environment variables in your deployment platform
+- The `config.json` file is served publicly and should ONLY contain non-sensitive values (API URL, production flag)
+- Sensitive values like encryption keys are embedded at build time in `build-config.ts` and compiled into the application code
+- While embedded values are harder to extract than config.json values, true secrets should still be handled server-side
 
 ## Troubleshooting
 
