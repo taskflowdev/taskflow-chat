@@ -169,16 +169,12 @@
 @media (max-width: 768px) {
   .chat-sidebar {
     width: 100%;
-    position: relative; // Change from absolute to relative
+    position: relative;
     top: 0;
     transform: none;
-    transition: none;
-    height: auto;
-    min-height: calc(100vh - 60px);
-
-    &.mobile-open {
-      transform: none;
-    }
+    height: 100vh; /* Ensure it takes the full height */
+    min-height: calc(100vh - 60px); /* Adjust for the header */
+    overflow-y: auto; /* Enable scrolling if content overflows */
   }
 
   .sidebar-header {
@@ -186,30 +182,84 @@
 
     .sidebar-title {
       font-size: 1rem;
+      /* Ensure title scales down on smaller screens */
+    }
+
+    .search-btn {
+      width: 32px;
+      height: 32px;
+      /* Adjust button size for mobile */
     }
 
     .new-chat-btn {
       width: 32px;
       height: 32px;
+      /* Adjust button size for mobile */
     }
-  }
-}
-
-@media (max-width: 480px) {
-  .sidebar-header {
-    padding: 0.6rem;
   }
 
   .no-chats {
-    padding: 1.5rem 0.75rem;
+    padding: 1rem;
+    /* Reduce padding to save space on small screens */
 
     .empty-icon {
       font-size: 2.5rem;
+      /* Smaller icon size */
     }
 
     .start-chat-btn {
       padding: 0.4rem 0.8rem;
       font-size: 0.8rem;
+      /* Button font size adjustment */
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .chat-sidebar {
+    width: 100%;
+    position: relative;
+    top: 0;
+    transform: none;
+    height: 100vh; /* Ensure it takes the full height */
+    min-height: calc(100vh - 60px); /* Adjust for the header */
+    overflow-y: auto; /* Enable scrolling if content overflows */
+  }
+
+  .sidebar-header {
+    padding: 0.70rem;
+
+    .sidebar-title {
+      font-size: 1rem;
+      /* Ensure title scales down on smaller screens */
+    }
+
+    .search-btn {
+      width: 32px;
+      height: 32px;
+      /* Adjust button size for mobile */
+    }
+
+    .new-chat-btn {
+      width: 32px;
+      height: 32px;
+      /* Adjust button size for mobile */
+    }
+  }
+
+  .no-chats {
+    padding: 1rem;
+    /* Reduce padding to save space on small screens */
+
+    .empty-icon {
+      font-size: 2.5rem;
+      /* Smaller icon size */
+    }
+
+    .start-chat-btn {
+      padding: 0.4rem 0.8rem;
+      font-size: 0.8rem;
+      /* Button font size adjustment */
     }
   }
 }

@@ -148,3 +148,27 @@
     font-size: 0.813rem;
   }
 }
+
+@media (max-width: 480px) {
+  .dropdown-menu {
+    min-width: 180px;
+  }
+
+  .dropdown-item {
+    padding: 0.5rem 0.75rem;
+    font-size: 0.75rem;
+
+    .shortcut-key-dropdown {
+      display: none;
+    }
+  }
+
+  .action-btn {
+    width: 32px;
+    height: 32px;
+
+    i {
+      font-size: 1rem;
+    }
+  }
+}
