@@ -12,7 +12,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 1rem 1.5rem;
+  padding: 0.75rem 1rem;
   border-bottom: 1px solid #444444;
   background: black;
 
@@ -279,6 +279,7 @@
   .chat-conversation,
   .no-conversation {
     margin-left: 0;
+    padding-top: 5px;
   }
 
   .conversation-header {
@@ -292,16 +293,13 @@
     .conversation-info {
       .conversation-title {
         font-size: 1rem;
+        text-align: center;
       }
 
       .conversation-subtitle {
         font-size: 0.75rem;
+        text-align: center;
       }
-    }
-
-    .conversation-actions .action-btn {
-      width: 32px;
-      height: 32px;
     }
   }
 
@@ -345,6 +343,12 @@
 }
 
 @media (max-width: 480px) {
+  .chat-conversation,
+  .no-conversation {
+    margin-left: 0;
+    padding-top: 5px;
+  }
+
   .conversation-header {
     padding: 0.6rem 0.75rem;
 
@@ -354,7 +358,19 @@
       margin-right: 0.5rem;
 
       i {
-        font-size: 0.9rem;
+        font-size: 1rem;
+      }
+    }
+
+    .conversation-info {
+      .conversation-title {
+        font-size: 1rem;
+        text-align: center;
+      }
+
+      .conversation-subtitle {
+        font-size: 0.75rem;
+        text-align: center;
       }
     }
   }

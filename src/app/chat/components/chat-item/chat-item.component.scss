@@ -172,7 +172,8 @@
       }
 
       .chat-preview .last-message {
-        max-width: 100px;
+        max-width: 120px;
+        word-wrap: break-word;
       }
     }
   }
