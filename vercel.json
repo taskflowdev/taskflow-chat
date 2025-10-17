@@ -2,5 +2,11 @@
   "buildCommand": "npm run build",
   "installCommand": "npm install",
   "framework": null,
-  "outputDirectory": "dist/taskflow-chat/browser"
+  "outputDirectory": "dist/taskflow-chat/browser",
+  "rewrites": [
+    {
+      "source": "/(.*)",
+      "destination": "/index.html"
+    }
+  ]
 }
