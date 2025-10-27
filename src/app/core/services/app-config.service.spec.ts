@@ -8,9 +8,9 @@ describe('AppConfigService', () => {
   let httpMock: HttpTestingController;
 
   beforeEach(() => {
-    // Clear sessionStorage before each test
-    if (typeof sessionStorage !== 'undefined') {
-      sessionStorage.clear();
+    // Clear localStorage before each test
+    if (typeof localStorage !== 'undefined') {
+      localStorage.clear();
     }
 
     TestBed.configureTestingModule({
@@ -26,8 +26,8 @@ describe('AppConfigService', () => {
 
   afterEach(() => {
     httpMock.verify();
-    if (typeof sessionStorage !== 'undefined') {
-      sessionStorage.clear();
+    if (typeof localStorage !== 'undefined') {
+      localStorage.clear();
     }
   });
 
@@ -57,7 +57,7 @@ describe('AppConfigService', () => {
     expect(service.getConfigState()).toBe('LOADED');
   });
 
-  it('should cache config in sessionStorage after successful load', async () => {
+  it('should cache config in localStorage after successful load', async () => {
     const mockConfig: AppConfig = {
       apiUrl: 'https://api.example.com',
       encryptionKey: 'test-key-123',
@@ -69,21 +69,21 @@ describe('AppConfigService', () => {
     req.flush(mockConfig);
     await loadPromise;
 
-    // Check sessionStorage
-    const cached = sessionStorage.getItem('taskflow_app_config');
+    // Check localStorage
+    const cached = localStorage.getItem('taskflow_app_config');
     expect(cached).toBeTruthy();
     const parsedCached = JSON.parse(cached!);
     expect(parsedCached.apiUrl).toBe('https://api.example.com');
   });
 
-  it('should restore config from sessionStorage if available', async () => {
-    // Pre-populate sessionStorage
+  it('should restore config from localStorage if available', async () => {
+    // Pre-populate localStorage
     const cachedConfig: AppConfig = {
       apiUrl: 'https://cached.example.com',
       encryptionKey: 'cached-key',
       production: false
     };
-    sessionStorage.setItem('taskflow_app_config', JSON.stringify(cachedConfig));
+    localStorage.setItem('taskflow_app_config', JSON.stringify(cachedConfig));
 
     // Create new service instance (should restore from cache)
     const newService = TestBed.inject(AppConfigService);
@@ -321,8 +321,8 @@ describe('AppConfigService', () => {
 
     expect(service.getApiUrl()).toBe('https://api1.test.com');
 
-    // Clear sessionStorage before reload to ensure fresh load
-    sessionStorage.clear();
+    // Clear localStorage before reload to ensure fresh load
+    localStorage.clear();
 
     // Force reload
     const reloadPromise = service.reloadConfig();
