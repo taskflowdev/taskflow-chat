@@ -46,17 +46,8 @@ export class LocalStorageService {
         return null;
       }
 
-      const decrypted = this.decrypt(encryptedValue);
-      
-      // If decrypted successfully with fallback key, re-encrypt with current key
-      // This auto-migrates data encrypted with old keys
-      const currentKey = this.appConfigService.getEncryptionKey();
-      if (currentKey && currentKey !== 'default-key-change-me' && decrypted) {
-        // Re-encrypt to ensure consistency
-        this.setItem(key, decrypted);
-      }
-      
-      return decrypted;
+      const result = this.decrypt(encryptedValue);
+      return result.decrypted;
     } catch (error) {
       console.error('Error getting localStorage item:', error);
       // If decryption fails completely, remove the corrupted item
@@ -140,31 +131,35 @@ export class LocalStorageService {
    * Decrypt a value using AES decryption
    * Tries with configured key first, then fallback key if that fails
    * @param encryptedValue The encrypted value to decrypt
-   * @returns The decrypted value
+   * @returns Object containing decrypted value and whether it was successfully decrypted
+   * @throws Error if decryption fails with all keys
    */
-  private decrypt(encryptedValue: string): string {
+  private decrypt(encryptedValue: string): { decrypted: string | null } {
     const encryptionKey = this.appConfigService.getEncryptionKey();
     
     // Try with configured key first
-    try {
-      if (encryptionKey && encryptionKey !== 'default-key-change-me') {
+    if (encryptionKey && encryptionKey !== 'default-key-change-me') {
+      try {
         const bytes = CryptoJS.AES.decrypt(encryptedValue, encryptionKey);
         const decrypted = bytes.toString(CryptoJS.enc.Utf8);
-        if (decrypted) {
-          return decrypted;
+        // Check if decryption was successful by verifying we got valid UTF-8 string
+        // Empty string is valid, but if we got nothing or invalid UTF-8, bytes.toString returns ''
+        // We can check by attempting to decrypt and seeing if bytes has wordArray data
+        if (bytes.sigBytes > 0) {
+          return { decrypted };
         }
+      } catch (error) {
+        console.warn('LocalStorageService: Decryption with configured key failed, trying fallback');
       }
-    } catch (error) {
-      console.warn('LocalStorageService: Decryption with configured key failed, trying fallback');
     }
     
     // If configured key failed or is not set, try fallback key
     try {
       const bytes = CryptoJS.AES.decrypt(encryptedValue, 'default-key-change-me');
       const decrypted = bytes.toString(CryptoJS.enc.Utf8);
-      if (decrypted) {
-        console.warn('LocalStorageService: Decrypted with fallback key, consider re-encrypting');
-        return decrypted;
+      if (bytes.sigBytes > 0) {
+        console.warn('LocalStorageService: Decrypted with fallback key');
+        return { decrypted };
       }
     } catch (error) {
       console.error('LocalStorageService: Decryption with fallback key also failed');
