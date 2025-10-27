@@ -29,7 +29,7 @@ enum ConfigState {
  * 
  * Features:
  * - Loads config once during APP_INITIALIZER
- * - Caches config in memory and sessionStorage for redundancy
+ * - Caches config in memory and localStorage for redundancy and cross-tab sharing
  * - Falls back to safe defaults if loading fails
  * - SSR-safe (uses defaults during server-side rendering)
  * - Never returns undefined - always has valid config
@@ -48,8 +48,9 @@ export class AppConfigService {
     private http: HttpClient,
     @Inject(PLATFORM_ID) private platformId: Object
   ) {
-    // Try to restore config from sessionStorage immediately
+    // Try to restore config from localStorage immediately
     // This helps handle cases where service might be recreated
+    // Using localStorage (not sessionStorage) ensures config is shared across tabs
     if (isPlatformBrowser(this.platformId)) {
       this.restoreConfigFromStorage();
     }
@@ -82,9 +83,9 @@ export class AppConfigService {
       return;
     }
 
-    // Try to restore from sessionStorage first
+    // Try to restore from localStorage first
     if (this.restoreConfigFromStorage()) {
-      console.log('AppConfig: Restored from sessionStorage');
+      console.log('AppConfig: Restored from localStorage');
       return;
     }
 
@@ -111,7 +112,7 @@ export class AppConfigService {
           this.config = loadedConfig;
           this.configState = ConfigState.LOADED;
           
-          // Cache in sessionStorage for redundancy
+          // Cache in localStorage for redundancy and cross-tab sharing
           this.saveConfigToStorage();
           
           console.log('AppConfig: Successfully loaded and cached', {
@@ -189,7 +190,8 @@ export class AppConfigService {
   }
 
   /**
-   * Restore configuration from sessionStorage
+   * Restore configuration from localStorage
+   * Using localStorage instead of sessionStorage ensures config is shared across tabs
    * @returns true if successfully restored
    */
   private restoreConfigFromStorage(): boolean {
@@ -198,26 +200,27 @@ export class AppConfigService {
     }
 
     try {
-      const stored = sessionStorage.getItem(this.CONFIG_STORAGE_KEY);
+      const stored = localStorage.getItem(this.CONFIG_STORAGE_KEY);
       if (stored) {
         const parsedConfig = JSON.parse(stored);
         if (this.validateConfig(parsedConfig)) {
           this.config = parsedConfig;
           this.configState = ConfigState.LOADED;
-          console.log('AppConfig: Successfully restored from sessionStorage');
+          console.log('AppConfig: Successfully restored from localStorage');
           return true;
         }
       }
     } catch (error) {
-      console.error('AppConfig: Failed to restore from sessionStorage:', error);
-      sessionStorage.removeItem(this.CONFIG_STORAGE_KEY);
+      console.error('AppConfig: Failed to restore from localStorage:', error);
+      localStorage.removeItem(this.CONFIG_STORAGE_KEY);
     }
     
     return false;
   }
 
   /**
-   * Save configuration to sessionStorage for redundancy
+   * Save configuration to localStorage for redundancy and cross-tab sharing
+   * Using localStorage instead of sessionStorage ensures config is shared across tabs
    */
   private saveConfigToStorage(): void {
     if (!isPlatformBrowser(this.platformId) || !this.config) {
@@ -225,9 +228,9 @@ export class AppConfigService {
     }
 
     try {
-      sessionStorage.setItem(this.CONFIG_STORAGE_KEY, JSON.stringify(this.config));
+      localStorage.setItem(this.CONFIG_STORAGE_KEY, JSON.stringify(this.config));
     } catch (error) {
-      console.error('AppConfig: Failed to save to sessionStorage:', error);
+      console.error('AppConfig: Failed to save to localStorage:', error);
     }
   }
 
