@@ -1,4 +1,12 @@
-<div class="message-wrapper" [class.own-message]="message.isOwn">
+<!-- System Message - Centered -->
+<div class="system-message" *ngIf="message.isSystemMessage">
+  <div class="system-message-content">
+    {{ message.content }}
+  </div>
+</div>
+
+<!-- Regular Message -->
+<div class="message-wrapper" [class.own-message]="message.isOwn" *ngIf="!message.isSystemMessage">
   <div class="message-bubble">
     <div class="message-header" *ngIf="!message.isOwn">
       <span class="sender-name">{{ message.senderName || 'Unknown User' }}</span>
@@ -6,7 +14,56 @@
     </div>
 
     <div class="message-content">
-      {{ message.content }}
+      <!-- Text content -->
+      <ng-container *ngIf="!message.contentType || message.contentType === 'text'">
+        {{ message.content }}
+      </ng-container>
+
+      <!-- Image content -->
+      <ng-container *ngIf="message.contentType === 'image'">
+        <div class="media-message">
+          <i class="bi bi-image"></i>
+          <span>{{ message.content }}</span>
+        </div>
+      </ng-container>
+
+      <!-- Video content -->
+      <ng-container *ngIf="message.contentType === 'video'">
+        <div class="media-message">
+          <i class="bi bi-play-circle"></i>
+          <span>{{ message.content }}</span>
+          <span *ngIf="message.contentData?.duration" class="duration">
+            ({{ formatDuration(message.contentData.duration) }})
+          </span>
+        </div>
+      </ng-container>
+
+      <!-- Poll content -->
+      <ng-container *ngIf="message.contentType === 'poll'">
+        <div class="poll-message">
+          <div class="poll-header">
+            <i class="bi bi-bar-chart"></i>
+            <strong>Poll</strong>
+          </div>
+          <div class="poll-question">{{ message.content }}</div>
+          <div class="poll-options" *ngIf="message.contentData?.options">
+            <div class="poll-option" *ngFor="let option of message.contentData.options">
+              <i class="bi bi-circle"></i> {{ option }}
+            </div>
+          </div>
+        </div>
+      </ng-container>
+
+      <!-- File content -->
+      <ng-container *ngIf="message.contentType === 'file'">
+        <div class="file-message">
+          <i class="bi bi-file-earmark"></i>
+          <span>{{ message.content }}</span>
+          <span *ngIf="message.contentData?.fileSize" class="file-size">
+            ({{ formatFileSize(message.contentData.fileSize) }})
+          </span>
+        </div>
+      </ng-container>
     </div>
 
     <div class="message-footer" *ngIf="message.isOwn">

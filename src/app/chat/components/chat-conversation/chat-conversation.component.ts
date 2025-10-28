@@ -166,12 +166,79 @@ export class ChatConversationComponent implements AfterViewChecked, OnInit, OnDe
     }
   }
 
+  /**
+   * Groups messages by date for display with date separators
+   */
+  getGroupedMessages(): Array<{ date: string; dateLabel: string; messages: ChatMessageData[] }> {
+    if (!this.conversation?.messages) {
+      return [];
+    }
+
+    const groups: Map<string, ChatMessageData[]> = new Map();
+
+    this.conversation.messages.forEach(message => {
+      const messageDate = new Date(message.createdAt);
+      const dateKey = messageDate.toDateString();
+
+      if (!groups.has(dateKey)) {
+        groups.set(dateKey, []);
+      }
+      groups.get(dateKey)!.push(message);
+    });
+
+    // Convert map to array and sort by date ascending (oldest first)
+    return Array.from(groups.entries())
+      .map(([dateKey, messages]) => {
+        const date = new Date(dateKey);
+        return {
+          date: dateKey,
+          dateLabel: this.getDateLabel(date),
+          messages: messages.sort(
+            (a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
+          )
+        };
+      })
+      .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
+  }
+
+  /**
+   * Gets a user-friendly date label (Today, Yesterday, or day name)
+   */
+  private getDateLabel(date: Date): string {
+    const now = new Date();
+    const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    const messageDate = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+
+    const diffTime = today.getTime() - messageDate.getTime();
+    const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+
+    if (diffDays === 0) {
+      return 'Today';
+    } else if (diffDays === 1) {
+      return 'Yesterday';
+    } else if (diffDays < 7) {
+      // Return day name for last week
+      return date.toLocaleDateString([], { weekday: 'long' });
+    } else {
+      // Return formatted date for older messages
+      return date.toLocaleDateString([], {
+        month: 'short',
+        day: 'numeric',
+        year: date.getFullYear() !== now.getFullYear() ? 'numeric' : undefined
+      });
+    }
+  }
+
   trackByMessageId(index: number, message: ChatMessageData): string {
     return message.messageId;
   }
 
   trackByMessageIndex(index: number, item: { index: number }): number {
     return item.index;
+  }
+
+  trackByDate(index: number, group: { date: string; dateLabel: string; messages: ChatMessageData[] }): string {
+    return group.date;
   }
 
   /**
