@@ -95,6 +95,47 @@
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
+
+  // Date separator (WhatsApp-style)
+  .date-separator {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 1rem 0;
+    position: relative;
+    text-align: center;
+
+    .date-label {
+      color: #9ca3af;
+      background: black;
+      // padding: 0 0.75rem;
+      font-size: 0.9rem;
+      font-weight: 500;
+      letter-spacing: 0.3px;
+      position: relative;
+      z-index: 1;
+    }
+
+    // Inverse gradient — fades near "Today", solid at ends
+    &::before,
+    &::after {
+      content: "";
+      flex: 1;
+      height: 1px;
+      margin: 0 10px;
+      background: linear-gradient(
+        to right,
+        rgba(255, 255, 255, 0) 50%,   /* fade longer near label */
+        rgba(255, 255, 255, 0.1) 65%, /* soft middle transition */
+        rgba(255, 255, 255, 0.25) 80%,/* stronger but short */
+        rgba(255, 255, 255, 0.3) 100% /* solid near the far edge */
+      );
+    }
+
+    &::after {
+      transform: scaleX(-1); // mirror on right side
+    }
+  }
 }
 
 .message-input-container {

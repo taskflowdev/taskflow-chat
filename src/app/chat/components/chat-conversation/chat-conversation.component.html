@@ -49,8 +49,18 @@
 
     <!-- Loaded Messages -->
     <div class="messages-list" *ngIf="conversation && !loading">
-      <app-chat-message *ngFor="let message of conversation.messages; trackBy: trackByMessageId" [message]="message">
-      </app-chat-message>
+      <ng-container *ngFor="let group of getGroupedMessages(); trackBy: trackByDate">
+        <!-- Date Separator -->
+        <div class="date-separator">
+          <span class="date-label">{{ group.dateLabel }}</span>
+        </div>
+        
+        <!-- Messages for this date -->
+        <app-chat-message 
+          *ngFor="let message of group.messages; trackBy: trackByMessageId" 
+          [message]="message">
+        </app-chat-message>
+      </ng-container>
     </div>
   </div>
 

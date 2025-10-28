@@ -7,8 +7,12 @@ export interface ChatMessageData {
   senderId?: string;
   senderName?: string;
   content: string;
+  contentType?: 'text' | 'image' | 'video' | 'poll' | 'file';
+  contentData?: any; // Raw content object for rendering different types
   createdAt: string;
   isOwn: boolean;
+  isSystemMessage?: boolean; // Flag to identify system messages
+  messageType?: string; // Type of system message (e.g., 'groupCreated', 'userJoined')
 }
 
 @Component({
@@ -44,5 +48,24 @@ export class ChatMessageComponent {
         year: 'numeric'
       });
     }
+  }
+
+  /**
+   * Formats duration in seconds to MM:SS format
+   */
+  formatDuration(seconds: number): string {
+    const minutes = Math.floor(seconds / 60);
+    const remainingSeconds = Math.floor(seconds % 60);
+    return `${minutes}:${remainingSeconds.toString().padStart(2, '0')}`;
+  }
+
+  /**
+   * Formats file size in bytes to human-readable format
+   */
+  formatFileSize(bytes: number): string {
+    if (bytes < 1024) return `${bytes} B`;
+    if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`;
+    if (bytes < 1024 * 1024 * 1024) return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
+    return `${(bytes / (1024 * 1024 * 1024)).toFixed(1)} GB`;
   }
 }
