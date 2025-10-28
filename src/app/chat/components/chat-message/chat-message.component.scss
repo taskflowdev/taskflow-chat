@@ -5,19 +5,19 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  margin: 0.75rem 0;
+  margin: 0.65rem 0;
   padding: 0 1rem;
-  
+
   .system-message-content {
     background: rgba(255, 255, 255, 0.08);
     color: #9ca3af;
-    font-size: 0.75rem;
+    font-size: 0.8rem;
     padding: 0.4rem 0.75rem;
     border-radius: 8px;
     text-align: center;
     max-width: 80%;
-    line-height: 1.3;
-    border: 1px solid rgba(255, 255, 255, 0.05);
+    // line-height: 1.3;
+    // border: 1px solid rgba(255, 255, 255, 0.05);
   }
 }
 
@@ -25,7 +25,7 @@
   display: flex;
   margin-bottom: 0.75rem;
   padding: 0 1rem;
-  
+
   .message-bubble {
     max-width: 70%;
     background: #333333;
@@ -34,43 +34,43 @@
     padding: 0.75rem;
     position: relative;
     word-wrap: break-word;
-    
+
     .message-header {
       display: flex;
       justify-content: space-between;
       align-items: center;
       margin-bottom: 0.25rem;
-      
+
       .sender-name {
         font-weight: 500;
         font-size: 0.8rem;
         color: white;
       }
-      
+
       .message-time {
         font-size: 0.7rem;
         color: #9ca3af;
         margin-left: 0.5rem;
       }
     }
-    
+
     .message-content {
       color: white;
       font-size: 0.9rem;
       line-height: 1.4;
       white-space: pre-wrap;
-      
+
       // Media message styles (image, video, file)
       .media-message,
       .file-message {
         display: flex;
         align-items: center;
         gap: 0.5rem;
-        
+
         i {
           font-size: 1.2rem;
         }
-        
+
         .duration,
         .file-size {
           color: #9ca3af;
@@ -78,7 +78,7 @@
           margin-left: 0.25rem;
         }
       }
-      
+
       // Poll message styles
       .poll-message {
         .poll-header {
@@ -87,24 +87,24 @@
           gap: 0.5rem;
           margin-bottom: 0.5rem;
           color: #60a5fa;
-          
+
           i {
             font-size: 1.1rem;
           }
-          
+
           strong {
             font-size: 0.85rem;
           }
         }
-        
+
         .poll-question {
           font-weight: 500;
           margin-bottom: 0.5rem;
         }
-        
+
         .poll-options {
           margin-top: 0.5rem;
-          
+
           .poll-option {
             display: flex;
             align-items: center;
@@ -112,7 +112,7 @@
             padding: 0.25rem 0;
             font-size: 0.85rem;
             color: #d1d5db;
-            
+
             i {
               font-size: 0.7rem;
             }
@@ -120,27 +120,27 @@
         }
       }
     }
-    
+
     .message-footer {
       display: flex;
       justify-content: flex-end;
       margin-top: 0.25rem;
-      
+
       .message-time {
         font-size: 0.7rem;
         color: #9ca3af;
       }
     }
   }
-  
+
   // Default message (from others) - left aligned
   &:not(.own-message) {
     justify-content: flex-start;
-    
+
     .message-bubble {
       background: #333333;
       border: 1px solid #444444;
-      
+
       &::before {
         content: "";
         position: absolute;
@@ -152,7 +152,7 @@
         border-bottom: 8px solid transparent;
         border-right: 8px solid #444444;
       }
-      
+
       &::after {
         content: "";
         position: absolute;
@@ -166,19 +166,19 @@
       }
     }
   }
-  
+
   // Own message - right aligned
   &.own-message {
     justify-content: flex-end;
-    
+
     .message-bubble {
       background: white;
       color: black;
       border: 1px solid #e5e5e5;
-      
+
       .message-content {
         color: black;
-        
+
         // Override colors for own messages
         .media-message,
         .file-message {
@@ -187,22 +187,22 @@
             color: #666666;
           }
         }
-        
+
         .poll-message {
           .poll-header {
             color: #2563eb;
           }
-          
+
           .poll-options .poll-option {
             color: #4b5563;
           }
         }
       }
-      
+
       .message-footer .message-time {
         color: #666666;
       }
-      
+
       &::before {
         content: "";
         position: absolute;
@@ -214,7 +214,7 @@
         border-bottom: 8px solid transparent;
         border-left: 8px solid #e5e5e5;
       }
-      
+
       &::after {
         content: "";
         position: absolute;
@@ -244,7 +244,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  
+
   .date-label {
     background: rgba(255, 255, 255, 0.08);
     color: #9ca3af;
@@ -262,25 +262,25 @@
   .message-wrapper {
     padding: 0 0.75rem;
     margin-bottom: 0.6rem;
-    
+
     .message-bubble {
       max-width: 85%;
       padding: 0.6rem;
-      
+
       .message-content {
         font-size: 0.85rem;
       }
-      
+
       .message-header {
         .sender-name {
           font-size: 0.75rem;
         }
-        
+
         .message-time {
           font-size: 0.65rem;
         }
       }
-      
+
       .message-footer .message-time {
         font-size: 0.65rem;
       }
@@ -291,11 +291,11 @@
 @media (max-width: 480px) {
   .message-wrapper {
     padding: 0 0.5rem;
-    
+
     .message-bubble {
       max-width: 90%;
       padding: 0.5rem;
-      
+
       .message-content {
         font-size: 0.8rem;
       }

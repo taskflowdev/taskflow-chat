@@ -98,21 +98,32 @@
 
   // Date separator (WhatsApp-style)
   .date-separator {
-    text-align: center;
-    margin: 0.75rem 0;
     display: flex;
-    justify-content: center;
     align-items: center;
-    
+    justify-content: center;
+    margin: 1rem 0;
+    position: relative;
+    text-align: center;
+
     .date-label {
-      background: rgba(255, 255, 255, 0.08);
       color: #9ca3af;
-      padding: 0.35rem 0.75rem;
-      border-radius: 8px;
-      font-size: 0.7rem;
-      border: 1px solid rgba(255, 255, 255, 0.05);
+      background: black;
+      // padding: 0 0.75rem;
+      font-size: 0.9rem;
       font-weight: 500;
       letter-spacing: 0.3px;
+      position: relative;
+      z-index: 1;
+    }
+
+    // horizontal lines on both sides
+    &::before,
+    &::after {
+      content: "";
+      flex: 1;
+      height: 1px;
+      background: #333;
+      margin: 0 10px;
     }
   }
 }
