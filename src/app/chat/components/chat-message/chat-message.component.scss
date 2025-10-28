@@ -37,6 +37,66 @@
       font-size: 0.9rem;
       line-height: 1.4;
       white-space: pre-wrap;
+      
+      // Media message styles (image, video, file)
+      .media-message,
+      .file-message {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        
+        i {
+          font-size: 1.2rem;
+        }
+        
+        .duration,
+        .file-size {
+          color: #9ca3af;
+          font-size: 0.8rem;
+          margin-left: 0.25rem;
+        }
+      }
+      
+      // Poll message styles
+      .poll-message {
+        .poll-header {
+          display: flex;
+          align-items: center;
+          gap: 0.5rem;
+          margin-bottom: 0.5rem;
+          color: #60a5fa;
+          
+          i {
+            font-size: 1.1rem;
+          }
+          
+          strong {
+            font-size: 0.85rem;
+          }
+        }
+        
+        .poll-question {
+          font-weight: 500;
+          margin-bottom: 0.5rem;
+        }
+        
+        .poll-options {
+          margin-top: 0.5rem;
+          
+          .poll-option {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.25rem 0;
+            font-size: 0.85rem;
+            color: #d1d5db;
+            
+            i {
+              font-size: 0.7rem;
+            }
+          }
+        }
+      }
     }
     
     .message-footer {
@@ -96,6 +156,25 @@
       
       .message-content {
         color: black;
+        
+        // Override colors for own messages
+        .media-message,
+        .file-message {
+          .duration,
+          .file-size {
+            color: #666666;
+          }
+        }
+        
+        .poll-message {
+          .poll-header {
+            color: #2563eb;
+          }
+          
+          .poll-options .poll-option {
+            color: #4b5563;
+          }
+        }
       }
       
       .message-footer .message-time {

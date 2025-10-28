@@ -491,6 +491,33 @@ export class MainChatComponent implements OnInit, OnDestroy {
   }
 
   /**
+   * Extracts displayable text from message content based on content type
+   */
+  private extractContentText(content: any, contentType?: string): string {
+    if (!content) return '';
+    
+    // If content is already a string, return it
+    if (typeof content === 'string') return content;
+    
+    // Extract based on content type
+    switch (contentType) {
+      case 'text':
+        return content.text || '';
+      case 'image':
+        return content.fileName || 'Image';
+      case 'video':
+        return content.fileName || 'Video';
+      case 'poll':
+        return content.question || 'Poll';
+      case 'file':
+        return content.fileName || 'File';
+      default:
+        // Fallback: try common properties
+        return content.text || content.fileName || content.question || '';
+    }
+  }
+
+  /**
    * Maps a MessageDto to ChatMessageData format
    */
   private mapMessageToChatMessage(message: MessageDto): ChatMessageData {
@@ -498,7 +525,9 @@ export class MainChatComponent implements OnInit, OnDestroy {
       messageId: message.messageId || '',
       senderId: message.senderId || '',
       senderName: message.senderName || 'Unknown',
-      content: message.content?.toString() || '',
+      content: this.extractContentText(message.content, message.contentType),
+      contentType: message.contentType,
+      contentData: message.content,
       createdAt: message.createdAt || new Date().toISOString(),
       isOwn: message.senderId === this.user?.id
     };
