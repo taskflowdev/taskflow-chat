@@ -175,4 +175,26 @@ describe('ChatMessageComponent', () => {
     const compiled = fixture.nativeElement;
     expect(compiled.querySelector('.sender-name')).toBeFalsy();
   });
+
+  it('should display system messages centered without sender name', () => {
+    const testMessage: ChatMessageData = {
+      messageId: '8',
+      senderId: 'system',
+      senderName: 'System',
+      content: 'Group was created by John Doe',
+      createdAt: new Date().toISOString(),
+      isOwn: false,
+      isSystemMessage: true,
+      messageType: 'groupCreated'
+    };
+    
+    component.message = testMessage;
+    fixture.detectChanges();
+    
+    const compiled = fixture.nativeElement;
+    expect(compiled.querySelector('.system-message')).toBeTruthy();
+    expect(compiled.querySelector('.system-message-content').textContent).toContain('Group was created by John Doe');
+    expect(compiled.querySelector('.message-wrapper')).toBeFalsy();
+    expect(compiled.querySelector('.sender-name')).toBeFalsy();
+  });
 });

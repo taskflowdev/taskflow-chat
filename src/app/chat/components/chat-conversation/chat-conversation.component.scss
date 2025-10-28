@@ -95,6 +95,26 @@
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
+
+  // Date separator (WhatsApp-style)
+  .date-separator {
+    text-align: center;
+    margin: 0.75rem 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    
+    .date-label {
+      background: rgba(255, 255, 255, 0.08);
+      color: #9ca3af;
+      padding: 0.35rem 0.75rem;
+      border-radius: 8px;
+      font-size: 0.7rem;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      font-weight: 500;
+      letter-spacing: 0.3px;
+    }
+  }
 }
 
 .message-input-container {

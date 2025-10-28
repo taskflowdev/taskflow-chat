@@ -1,4 +1,12 @@
-<div class="message-wrapper" [class.own-message]="message.isOwn">
+<!-- System Message - Centered -->
+<div class="system-message" *ngIf="message.isSystemMessage">
+  <div class="system-message-content">
+    {{ message.content }}
+  </div>
+</div>
+
+<!-- Regular Message -->
+<div class="message-wrapper" [class.own-message]="message.isOwn" *ngIf="!message.isSystemMessage">
   <div class="message-bubble">
     <div class="message-header" *ngIf="!message.isOwn">
       <span class="sender-name">{{ message.senderName || 'Unknown User' }}</span>

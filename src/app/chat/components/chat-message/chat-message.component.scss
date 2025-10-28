@@ -1,4 +1,26 @@
 // Chat message component styles - black and white theme
+
+// System message styles - WhatsApp-like centered messages
+.system-message {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0.75rem 0;
+  padding: 0 1rem;
+  
+  .system-message-content {
+    background: rgba(255, 255, 255, 0.08);
+    color: #9ca3af;
+    font-size: 0.75rem;
+    padding: 0.4rem 0.75rem;
+    border-radius: 8px;
+    text-align: center;
+    max-width: 80%;
+    line-height: 1.3;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+  }
+}
+
 .message-wrapper {
   display: flex;
   margin-bottom: 0.75rem;
@@ -215,18 +237,23 @@
   }
 }
 
-// Date separator (can be added later)
+// Date separator (WhatsApp-style)
 .date-separator {
   text-align: center;
-  margin: 1rem 0;
+  margin: 0.75rem 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   
-  span {
-    background: #222222;
+  .date-label {
+    background: rgba(255, 255, 255, 0.08);
     color: #9ca3af;
-    padding: 0.25rem 0.75rem;
-    border-radius: 12px;
+    padding: 0.35rem 0.75rem;
+    border-radius: 8px;
     font-size: 0.7rem;
-    border: 1px solid #444444;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    font-weight: 500;
+    letter-spacing: 0.3px;
   }
 }
 

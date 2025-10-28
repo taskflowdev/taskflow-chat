@@ -11,6 +11,8 @@ export interface ChatMessageData {
   contentData?: any; // Raw content object for rendering different types
   createdAt: string;
   isOwn: boolean;
+  isSystemMessage?: boolean; // Flag to identify system messages
+  messageType?: string; // Type of system message (e.g., 'groupCreated', 'userJoined')
 }
 
 @Component({
