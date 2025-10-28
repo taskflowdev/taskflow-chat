@@ -116,14 +116,24 @@
       z-index: 1;
     }
 
-    // horizontal lines on both sides
+    // Inverse gradient — fades near "Today", solid at ends
     &::before,
     &::after {
       content: "";
       flex: 1;
       height: 1px;
-      background: #333;
       margin: 0 10px;
+      background: linear-gradient(
+        to right,
+        rgba(255, 255, 255, 0) 50%,   /* fade longer near label */
+        rgba(255, 255, 255, 0.1) 65%, /* soft middle transition */
+        rgba(255, 255, 255, 0.25) 80%,/* stronger but short */
+        rgba(255, 255, 255, 0.3) 100% /* solid near the far edge */
+      );
+    }
+
+    &::after {
+      transform: scaleX(-1); // mirror on right side
     }
   }
 }
