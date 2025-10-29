@@ -1,6 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { MessageDto } from '../../../api/models/message-dto';
+import { CommonTooltipDirective } from "../../../shared/components/common-tooltip";
 
 export interface ChatMessageData {
   messageId: string;
@@ -17,7 +17,7 @@ export interface ChatMessageData {
 
 @Component({
   selector: 'app-chat-message',
-  imports: [CommonModule],
+  imports: [CommonModule, CommonTooltipDirective],
   templateUrl: './chat-message.component.html',
   styleUrl: './chat-message.component.scss'
 })
@@ -28,8 +28,11 @@ export class ChatMessageComponent {
     const messageTime = new Date(timeString);
     return messageTime.toLocaleTimeString([], {
       hour: '2-digit',
-      minute: '2-digit'
-    });
+      minute: '2-digit',
+      hour12: true
+    })
+      .replace('am', 'AM')
+      .replace('pm', 'PM');
   }
 
   getDateDisplay(timeString: string): string {

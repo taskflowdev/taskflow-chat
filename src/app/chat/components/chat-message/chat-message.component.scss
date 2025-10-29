@@ -31,7 +31,7 @@
     background: #333333;
     border: 1px solid #444444;
     border-radius: 12px;
-    padding: 0.75rem;
+    padding: 0.55rem;
     position: relative;
     word-wrap: break-word;
 
@@ -43,14 +43,14 @@
 
       .sender-name {
         font-weight: 500;
-        font-size: 0.8rem;
+        font-size: 0.9rem;
         color: white;
       }
 
       .message-time {
-        font-size: 0.7rem;
+        font-size: 0.75rem;
         color: #9ca3af;
-        margin-left: 0.5rem;
+        margin-left: 0.8rem;
       }
     }
 
@@ -127,8 +127,9 @@
       margin-top: 0.25rem;
 
       .message-time {
-        font-size: 0.7rem;
+        font-size: 0.75rem;
         color: #9ca3af;
+        margin-left: 0.8rem;
       }
     }
   }
@@ -277,7 +278,7 @@
         }
 
         .message-time {
-          font-size: 0.65rem;
+          font-size: 0.75rem;
         }
       }
 
