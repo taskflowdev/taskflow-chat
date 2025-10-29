@@ -708,6 +708,14 @@ export class MainChatComponent implements OnInit, OnDestroy {
    */
   onGroupFromSearchSelected(groupId: string): void {
     // Navigate to the selected group
-    this.router.navigate(['/chats/group', groupId]);
+    this.router.navigate(['/chat/group', groupId]);
+  }
+
+  /**
+   * Handle when a user joins a group from search dialog
+   * Reload the groups list to include the newly joined group
+   */
+  onGroupJoined(): void {
+    this.loadUserGroups();
   }
 }

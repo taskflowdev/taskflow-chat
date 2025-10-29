@@ -22,6 +22,7 @@ export interface SearchResultItem {
   isPublic: boolean;
   hasJoined: boolean;
   avatar?: string;
+  inviteCode?: string;
 }
 
 /**
@@ -51,6 +52,7 @@ export interface RecentSearchItem {
 export class GroupSearchDialogComponent implements OnInit, OnDestroy, OnChanges, AfterViewInit {
   @Output() dialogClosed = new EventEmitter<void>();
   @Output() groupSelected = new EventEmitter<string>();
+  @Output() groupJoined = new EventEmitter<void>();
   @ViewChild('searchInput') searchInput!: ElementRef<HTMLInputElement>;
 
   searchForm: FormGroup;
@@ -59,6 +61,7 @@ export class GroupSearchDialogComponent implements OnInit, OnDestroy, OnChanges,
   isSearching: boolean = false;
   hasSearched: boolean = false;
   showNoResults: boolean = false;
+  joiningGroupId: string | null = null;
 
   private searchSubject = new Subject<string>();
   private searchSubscription?: Subscription;
@@ -179,7 +182,8 @@ export class GroupSearchDialogComponent implements OnInit, OnDestroy, OnChanges,
       memberCount: group.memberCount || 0,
       isPublic: group.isPublic || false,
       hasJoined: group.hasJoined,
-      avatar: group.avatar || undefined
+      avatar: group.avatar || undefined,
+      inviteCode: group.inviteCode
     };
   }
 
@@ -239,32 +243,91 @@ export class GroupSearchDialogComponent implements OnInit, OnDestroy, OnChanges,
   /**
    * Click on a search result item
    */
-  onResultClick(groupId: string): void {
+  onResultClick(result: SearchResultItem): void {
     const searchQuery = this.searchForm.get('searchQuery')?.value;
     if (searchQuery) {
       this.saveRecentSearch(searchQuery);
     }
 
-    this.groupSelected.emit(groupId);
-    this.closeDialog();
+    // If user has already joined, directly open the group
+    if (result.hasJoined) {
+      this.groupSelected.emit(result.groupId);
+      this.closeDialog();
+    } else {
+      // If not joined, trigger join action
+      this.onJoinGroup(new Event('click'), result);
+    }
   }
 
   /**
    * Handle join group action
    */
-  onJoinGroup(event: Event, groupId: string): void {
+  onJoinGroup(event: Event, result: SearchResultItem): void {
     event.stopPropagation(); // Prevent result click
 
-    // TODO: Implement join group functionality
-    // For now, just navigate to the group
-    const searchQuery = this.searchForm.get('searchQuery')?.value;
-    if (searchQuery) {
-      this.saveRecentSearch(searchQuery);
+    // Check if already joining
+    if (this.joiningGroupId) {
+      return;
     }
 
-    this.toastService.showInfo('Join group functionality coming soon!', 'Info');
-    this.groupSelected.emit(groupId);
-    this.closeDialog();
+    // Check if invite code is available
+    if (!result.inviteCode) {
+      this.toastService.showError('Unable to join group: invite code not available', 'Join Error');
+      return;
+    }
+
+    // Set joining state
+    this.joiningGroupId = result.groupId;
+
+    // Call join group API
+    this.groupsService.apiGroupsJoinPost$Json({
+      body: { inviteCode: result.inviteCode }
+    }).subscribe({
+      next: (response) => {
+        this.joiningGroupId = null;
+
+        if (response.success && response.data) {
+          // Save search query
+          const searchQuery = this.searchForm.get('searchQuery')?.value;
+          if (searchQuery) {
+            this.saveRecentSearch(searchQuery);
+          }
+
+          // Update the result to show as joined
+          const resultIndex = this.searchResults.findIndex(r => r.groupId === result.groupId);
+          if (resultIndex !== -1) {
+            this.searchResults[resultIndex].hasJoined = true;
+          }
+
+          // Show success message
+          this.toastService.showSuccess(`Successfully joined "${result.name}"!`, 'Group Joined');
+
+          // Emit event to notify parent to reload groups
+          this.groupJoined.emit();
+
+          // Navigate to the group and close dialog
+          this.groupSelected.emit(result.groupId);
+          this.closeDialog();
+        } else {
+          const errorMessage = response.message || 'Failed to join group';
+          this.toastService.showError(errorMessage, 'Join Error');
+        }
+      },
+      error: (error) => {
+        this.joiningGroupId = null;
+        console.error('Failed to join group:', error);
+
+        const errorMessage = error?.error?.message || 'Failed to join group. Please try again.';
+        this.toastService.showError(errorMessage, 'Join Error');
+      }
+    });
+  }
+
+  /**
+   * Check if a group is currently being joined
+   */
+  isJoiningGroup(groupId: string): boolean {
+    return this.joiningGroupId === groupId;
   }
 
   /**
