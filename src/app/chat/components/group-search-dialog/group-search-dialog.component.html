@@ -109,13 +109,14 @@
               <app-common-button
                 *ngIf="!result.hasJoined"
                 variant="primary"
-                size="small"
+                size="medium"
                 [disabled]="isJoiningGroup(result.groupId)"
                 (click)="onJoinGroup($event, result)"
               >
-                <span *ngIf="!isJoiningGroup(result.groupId)">Join</span>
+                <span *ngIf="!isJoiningGroup(result.groupId)">
+                  Join Group
+                </span>
                 <span *ngIf="isJoiningGroup(result.groupId)">
-                  <i class="bi bi-arrow-repeat spin-icon"></i>
                   Joining...
                 </span>
               </app-common-button>
