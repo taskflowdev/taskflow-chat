@@ -293,10 +293,14 @@ export class GroupSearchDialogComponent implements OnInit, OnDestroy, OnChanges,
             this.saveRecentSearch(searchQuery);
           }
 
-          // Update the result to show as joined
+          // Update the result to show as joined using immutable pattern
           const resultIndex = this.searchResults.findIndex(r => r.groupId === result.groupId);
           if (resultIndex !== -1) {
-            this.searchResults[resultIndex].hasJoined = true;
+            this.searchResults = [
+              ...this.searchResults.slice(0, resultIndex),
+              { ...this.searchResults[resultIndex], hasJoined: true },
+              ...this.searchResults.slice(resultIndex + 1)
+            ];
           }
 
           // Show success message
