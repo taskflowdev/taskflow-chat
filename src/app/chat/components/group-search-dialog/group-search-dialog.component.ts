@@ -20,6 +20,7 @@ export interface SearchResultItem {
   description?: string;
   memberCount: number;
   isPublic: boolean;
+  hasJoined: boolean;
   avatar?: string;
 }
 
@@ -101,7 +102,7 @@ export class GroupSearchDialogComponent implements OnInit, OnDestroy, OnChanges,
     }
   }
 
-  /** 
+  /**
    * Focus the search input field
    */
   private focusSearchInput(): void {
@@ -121,7 +122,7 @@ export class GroupSearchDialogComponent implements OnInit, OnDestroy, OnChanges,
         distinctUntilChanged(), // Only emit if value changed
         switchMap(query => {
           const trimmedQuery = query?.trim();
-          
+
           if (!trimmedQuery || trimmedQuery.length < 2) {
             this.searchResults = [];
             this.hasSearched = false;
@@ -132,7 +133,7 @@ export class GroupSearchDialogComponent implements OnInit, OnDestroy, OnChanges,
 
           this.isSearching = true;
           this.hasSearched = true;
-          
+
           // Call search API
           return this.groupsService.apiGroupsSearchGet$Json({
             search: trimmedQuery,
@@ -144,7 +145,7 @@ export class GroupSearchDialogComponent implements OnInit, OnDestroy, OnChanges,
       .subscribe({
         next: (response) => {
           this.isSearching = false;
-          
+
           if (response && response.success && response.data) {
             // Parse the data array
             const groups = Array.isArray(response.data.groups) ? response.data.groups : [];
@@ -160,7 +161,7 @@ export class GroupSearchDialogComponent implements OnInit, OnDestroy, OnChanges,
           this.searchResults = [];
           this.showNoResults = true;
           console.error('Search error:', error);
-          
+
           const errorMessage = error?.error?.message || 'Failed to search groups. Please try again.';
           this.toastService.showError(errorMessage, 'Search Error');
         }
@@ -177,6 +178,7 @@ export class GroupSearchDialogComponent implements OnInit, OnDestroy, OnChanges,
       description: group.description || `${group.memberCount || 0} members`,
       memberCount: group.memberCount || 0,
       isPublic: group.isPublic || false,
+      hasJoined: group.hasJoined,
       avatar: group.avatar || undefined
     };
   }
@@ -206,19 +208,19 @@ export class GroupSearchDialogComponent implements OnInit, OnDestroy, OnChanges,
 
     try {
       const trimmedQuery = query.trim();
-      
+
       // Remove existing entry with same query
       this.recentSearches = this.recentSearches.filter(item => item.query !== trimmedQuery);
-      
+
       // Add new entry at the beginning
       this.recentSearches.unshift({
         query: trimmedQuery,
         timestamp: Date.now()
       });
-      
+
       // Keep only MAX_RECENT_SEARCHES items
       this.recentSearches = this.recentSearches.slice(0, this.MAX_RECENT_SEARCHES);
-      
+
       // Save to localStorage
       localStorage.setItem(this.RECENT_SEARCHES_KEY, JSON.stringify(this.recentSearches));
     } catch (error) {
@@ -242,7 +244,7 @@ export class GroupSearchDialogComponent implements OnInit, OnDestroy, OnChanges,
     if (searchQuery) {
       this.saveRecentSearch(searchQuery);
     }
-    
+
     this.groupSelected.emit(groupId);
     this.closeDialog();
   }
@@ -252,14 +254,14 @@ export class GroupSearchDialogComponent implements OnInit, OnDestroy, OnChanges,
    */
   onJoinGroup(event: Event, groupId: string): void {
     event.stopPropagation(); // Prevent result click
-    
+
     // TODO: Implement join group functionality
     // For now, just navigate to the group
     const searchQuery = this.searchForm.get('searchQuery')?.value;
     if (searchQuery) {
       this.saveRecentSearch(searchQuery);
     }
-    
+
     this.toastService.showInfo('Join group functionality coming soon!', 'Info');
     this.groupSelected.emit(groupId);
     this.closeDialog();
@@ -270,7 +272,7 @@ export class GroupSearchDialogComponent implements OnInit, OnDestroy, OnChanges,
    */
   getGroupInitials(name: string): string {
     if (!name) return 'GR';
-    
+
     const words = name.trim().split(/\s+/);
     if (words.length >= 2) {
       return (words[0][0] + words[1][0]).toUpperCase();
@@ -326,7 +328,7 @@ export class GroupSearchDialogComponent implements OnInit, OnDestroy, OnChanges,
     event.stopPropagation();
 
     this.recentSearches = this.recentSearches.filter(item => item.query !== query);
-    
+
     // Update localStorage
     try {
       localStorage.setItem(this.RECENT_SEARCHES_KEY, JSON.stringify(this.recentSearches));

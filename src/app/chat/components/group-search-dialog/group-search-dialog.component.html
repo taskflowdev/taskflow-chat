@@ -106,6 +106,7 @@
             </div>
             <div class="result-action">
               <app-common-button
+                *ngIf="!result.hasJoined"
                 variant="primary"
                 size="small"
                 (click)="onJoinGroup($event, result.groupId)"

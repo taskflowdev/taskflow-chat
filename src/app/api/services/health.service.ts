@@ -13,6 +13,8 @@ import { StrictHttpResponse } from '../strict-http-response';
 
 import { apiHealthAliveGet } from '../fn/health/api-health-alive-get';
 import { ApiHealthAliveGet$Params } from '../fn/health/api-health-alive-get';
+import { apiHealthDbGet } from '../fn/health/api-health-db-get';
+import { ApiHealthDbGet$Params } from '../fn/health/api-health-db-get';
 import { apiHealthGet } from '../fn/health/api-health-get';
 import { ApiHealthGet$Params } from '../fn/health/api-health-get';
 import { apiHealthReadyGet } from '../fn/health/api-health-ready-get';
@@ -122,6 +124,39 @@ export class HealthService extends BaseService {
   apiHealthAliveGet(params?: ApiHealthAliveGet$Params, context?: HttpContext): Observable<void> {
     return this.apiHealthAliveGet$Response(params, context).pipe(
       map((r: StrictHttpResponse<void>): void => r.body)
+    );
+  }
+
+  /** Path part for operation `apiHealthDbGet()` */
+  static readonly ApiHealthDbGetPath = '/api/health/db';
+
+  /**
+   * Database health check endpoint with detailed information.
+   *
+   *
+   *
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `apiHealthDbGet()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  apiHealthDbGet$Response(params?: ApiHealthDbGet$Params, context?: HttpContext): Observable<StrictHttpResponse<(ObjectApiResponse | ApiResponse)>> {
+    return apiHealthDbGet(this.http, this.rootUrl, params, context);
+  }
+
+  /**
+   * Database health check endpoint with detailed information.
+   *
+   *
+   *
+   * This method provides access only to the response body.
+   * To access the full response (for headers, for example), `apiHealthDbGet$Response()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  apiHealthDbGet(params?: ApiHealthDbGet$Params, context?: HttpContext): Observable<(ObjectApiResponse | ApiResponse)> {
+    return this.apiHealthDbGet$Response(params, context).pipe(
+      map((r: StrictHttpResponse<(ObjectApiResponse | ApiResponse)>): (ObjectApiResponse | ApiResponse) => r.body)
     );
   }
 
