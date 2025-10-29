@@ -222,7 +222,7 @@ export class ChatConversationComponent implements AfterViewChecked, OnInit, OnDe
     } else {
       // Return formatted date for older messages
       return date.toLocaleDateString([], {
-        month: 'short',
+        month: 'long',
         day: 'numeric',
         year: date.getFullYear() !== now.getFullYear() ? 'numeric' : undefined
       });

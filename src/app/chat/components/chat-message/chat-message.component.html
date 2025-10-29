@@ -1,6 +1,7 @@
 <!-- System Message - Centered -->
 <div class="system-message" *ngIf="message.isSystemMessage">
   <div class="system-message-content">
+    <!-- {{ getDateDisplay(message.createdAt) }}, {{ getTimeDisplay(message.createdAt) }} <br /> -->
     {{ message.content }}
   </div>
 </div>
@@ -10,7 +11,9 @@
   <div class="message-bubble">
     <div class="message-header" *ngIf="!message.isOwn">
       <span class="sender-name">{{ message.senderName || 'Unknown User' }}</span>
-      <span class="message-time">{{ getTimeDisplay(message.createdAt) }}</span>
+      <span class="message-time"
+        appCommonTooltip="{{ getDateDisplay(message.createdAt) }}, {{ getTimeDisplay(message.createdAt) }}">{{
+        getTimeDisplay(message.createdAt) }}</span>
     </div>
 
     <div class="message-content">
@@ -67,7 +70,9 @@
     </div>
 
     <div class="message-footer" *ngIf="message.isOwn">
-      <span class="message-time">{{ getTimeDisplay(message.createdAt) }}</span>
+      <span class="message-time"
+        appCommonTooltip="{{ getDateDisplay(message.createdAt) }}, {{ getTimeDisplay(message.createdAt) }}">{{
+        getTimeDisplay(message.createdAt) }}</span>
     </div>
   </div>
 </div>
