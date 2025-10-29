@@ -33,7 +33,8 @@
   <!-- Search Group Dialog -->
   <app-group-search-dialog
     *ngIf="showSearchGroupDialog"
-    (groupSelected)="onGroupFromSearchSelected($event)">
+    (groupSelected)="onGroupFromSearchSelected($event)"
+    (groupJoined)="onGroupJoined()">
   </app-group-search-dialog>
 
   <!-- Group Info Dialog -->

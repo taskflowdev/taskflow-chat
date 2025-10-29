@@ -25,6 +25,11 @@ export interface GroupDto {
   groupId?: string;
 
   /**
+   * Whether the current user has joined this group
+   */
+  hasJoined?: boolean;
+
+  /**
    * Invite code for joining the group
    */
   inviteCode?: string;

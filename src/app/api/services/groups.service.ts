@@ -575,7 +575,7 @@ export class GroupsService extends BaseService {
   static readonly ApiGroupsSearchGetPath = '/api/Groups/search';
 
   /**
-   * Searches for public groups.
+   * Searches for groups accessible to the user.
    *
    *
    *
@@ -589,7 +589,7 @@ export class GroupsService extends BaseService {
   }
 
   /**
-   * Searches for public groups.
+   * Searches for groups accessible to the user.
    *
    *
    *
@@ -605,7 +605,7 @@ export class GroupsService extends BaseService {
   }
 
   /**
-   * Searches for public groups.
+   * Searches for groups accessible to the user.
    *
    *
    *
@@ -619,7 +619,7 @@ export class GroupsService extends BaseService {
   }
 
   /**
-   * Searches for public groups.
+   * Searches for groups accessible to the user.
    *
    *
    *
