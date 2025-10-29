@@ -86,7 +86,8 @@
           <div
             *ngFor="let result of searchResults; trackBy: trackByGroupId"
             class="result-item"
-            (click)="onResultClick(result.groupId)"
+            [class.has-joined]="result.hasJoined"
+            (click)="onResultClick(result)"
           >
             <div class="result-avatar">
               <div class="avatar-circle">
@@ -108,11 +109,21 @@
               <app-common-button
                 *ngIf="!result.hasJoined"
                 variant="primary"
-                size="small"
-                (click)="onJoinGroup($event, result.groupId)"
+                size="medium"
+                [disabled]="isJoiningGroup(result.groupId)"
+                (click)="onJoinGroup($event, result)"
               >
-                Join
+                <span *ngIf="!isJoiningGroup(result.groupId)">
+                  Join Group
+                </span>
+                <span *ngIf="isJoiningGroup(result.groupId)">
+                  Joining...
+                </span>
               </app-common-button>
+              <div *ngIf="result.hasJoined" class="joined-badge">
+                <i class="bi bi-check-circle-fill"></i>
+                <span>Joined</span>
+              </div>
             </div>
           </div>
         </div>
