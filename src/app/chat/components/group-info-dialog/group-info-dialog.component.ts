@@ -13,6 +13,7 @@ import { TabsComponent, Tab } from '../../../shared/components/tabs/tabs.compone
 import { CompactMemberListComponent } from '../compact-member-list/compact-member-list.component';
 import { GroupDto } from '../../../api/models/group-dto';
 import { GroupMemberDto } from '../../../api/models/group-member-dto';
+import { CommonTooltipDirective } from '../../../shared/components/common-tooltip';
 
 /**
  * Production-ready Group Info Dialog Component with MNC coding standards
@@ -49,7 +50,8 @@ import { GroupMemberDto } from '../../../api/models/group-member-dto';
     SkeletonLoaderComponent,
     ConfirmationDialogComponent,
     TabsComponent,
-    CompactMemberListComponent
+    CompactMemberListComponent,
+    CommonTooltipDirective
   ],
   templateUrl: './group-info-dialog.component.html',
   styleUrls: ['./group-info-dialog.component.scss'],
@@ -389,6 +391,29 @@ export class GroupInfoDialogComponent implements OnInit {
   onMemberClick(userId: string): void {
     // TODO: Implement navigation to user profile or emit event
     console.log('Navigate to user profile:', userId);
+  }
+
+  /**
+ * Tooltip for the Delete Group button
+ */
+  get deleteGroupTooltip(): string {
+    if (this.isDeleting) {
+      return 'Deleting group...';
+    }
+    if (!this.isAdmin) {
+      return 'Only group admins can delete this group';
+    }
+    return 'Permanently delete this group';
+  }
+
+  /**
+   * Handle delete button click
+   */
+  onDeleteClick(): void {
+    if (!this.isAdmin || this.isDeleting) {
+      return;
+    }
+    this.showDeleteDialog();
   }
 
   closeDialog(): void {

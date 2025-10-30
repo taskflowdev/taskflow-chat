@@ -10,7 +10,7 @@
           Update group settings and keep information organized.
         </p>
         </div>
-        
+
         <button type="button" class="close-btn" (click)="closeDialog()" aria-label="Close dialog">
           <i class="bi bi-x-lg"></i>
       </button>
@@ -151,8 +151,9 @@
                     type="button"
                     variant="danger"
                     size="small"
-                    [disabled]="isDeleting"
-                    (clicked)="showDeleteDialog()">
+                    [appCommonTooltip]="deleteGroupTooltip"
+                    [disabled]="!isAdmin || isDeleting"
+                    (clicked)="onDeleteClick()">
                     <i class="bi bi-trash me-2"></i>Delete
                   </app-common-button>
                 </div>
