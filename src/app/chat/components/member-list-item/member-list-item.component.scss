@@ -27,11 +27,11 @@
   cursor: pointer;
   min-width: 0; // Enable text truncation
 
-  &:focus {
-    outline: 2px solid #3b82f6;
-    outline-offset: 2px;
-    border-radius: 4px;
-  }
+  // &:focus {
+  //   outline: 2px solid #3b82f6;
+  //   outline-offset: 2px;
+  //   border-radius: 4px;
+  // }
 }
 
 .member-avatar {
@@ -78,13 +78,13 @@
   align-items: center;
   gap: 0.25rem;
 
-  &.admin-role {
-    color: #3b82f6;
+  // &.admin-role {
+  //   color: #3b82f6;
 
-    i {
-      color: #3b82f6;
-    }
-  }
+  //   i {
+  //     color: #3b82f6;
+  //   }
+  // }
 
   i {
     font-size: 0.75rem;
