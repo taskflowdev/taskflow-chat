@@ -21,17 +21,13 @@
   </div>
 
   <!-- Member List -->
-  <div *ngIf="!isLoading && members.length > 0" class="member-list">
-    <!-- TODO: For >50 members, implement virtual scrolling using @angular/cdk/scrolling
-         Example:
-         <cdk-virtual-scroll-viewport itemSize="64" class="member-list-viewport">
-           <app-member-list-item
-             *cdkVirtualFor="let member of members; trackBy: trackByUserId"
-             [member]="member"
-             ...
-           </app-member-list-item>
-         </cdk-virtual-scroll-viewport>
-    -->
+  <div *ngIf="!isLoading && members.length > 0" class="member-list-scroll">
+    <!-- <cdk-virtual-scroll-viewport itemSize="64" class="member-list-viewport" *ngIf="!isLoading && members.length > 0">
+            <app-member-list-item *cdkVirtualFor="let member of members; trackBy: trackByUserId" [member]="member"
+              [isActionAllowed]="isActionAllowed" [isSelf]="isSelf(member)" [isProcessing]="isProcessing(member)"
+              (makeAdmin)="onMakeAdmin($event)" (remove)="onRemove($event)" (memberClick)="onMemberClick($event)">
+            </app-member-list-item>
+    </cdk-virtual-scroll-viewport> -->
     <app-member-list-item
       *ngFor="let member of members; trackBy: trackByUserId"
       [member]="member"
