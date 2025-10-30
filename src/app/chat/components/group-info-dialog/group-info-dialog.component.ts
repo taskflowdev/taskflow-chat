@@ -16,7 +16,7 @@ import { GroupMemberDto } from '../../../api/models/group-member-dto';
 
 /**
  * Production-ready Group Info Dialog Component with MNC coding standards
- * 
+ *
  * Features:
  * - Tabbed interface (General, Members, Settings)
  * - Member management with admin controls
@@ -25,7 +25,7 @@ import { GroupMemberDto } from '../../../api/models/group-member-dto';
  * - OnPush change detection for performance
  * - Permission-based UI controls
  * - Skeleton loading states
- * 
+ *
  * @example
  * ```typescript
  * <app-group-info-dialog
@@ -104,7 +104,7 @@ export class GroupInfoDialogComponent implements OnInit {
     });
 
     this.loadGroupDetails();
-    
+
     // Auto-trigger delete confirmation if requested
     if (this.triggerDelete) {
       setTimeout(() => {
@@ -176,12 +176,12 @@ export class GroupInfoDialogComponent implements OnInit {
    */
   onTabChange(tabId: string): void {
     this.activeTab = tabId;
-    
+
     // Load members when switching to Members tab
     if (tabId === 'members' && this.members.length === 0) {
       this.loadMembers();
     }
-    
+
     this.cdr.markForCheck();
   }
 
@@ -334,11 +334,11 @@ export class GroupInfoDialogComponent implements OnInit {
     // TODO: API endpoint for removing member doesn't exist yet
     // When available, implement: this.groupsService.apiGroupsIdMembersUserIdDelete$Json(...)
     // For now, show a message that this feature is not yet implemented
-    
+
     this.processingUserId = null;
     this.showRemoveMemberConfirmation = false;
     this.memberToRemove = null;
-    this.toastService.showError('Remove member API endpoint not yet implemented', 'Not Available');
+    this.toastService.showError('Remove member feature is not available yet.', 'Not Available');
     this.cdr.markForCheck();
 
     // Example implementation when API is available:
@@ -432,7 +432,7 @@ export class GroupInfoDialogComponent implements OnInit {
             'Group and all associated data have been permanently deleted.',
             'Group Deleted'
           );
-          
+
           this.deleted.emit(this.groupId);
           this.closeDialog();
           this.router.navigate(['/chat']);
@@ -447,11 +447,11 @@ export class GroupInfoDialogComponent implements OnInit {
       error: (error) => {
         this.isDeleting = false;
         this.showDeleteConfirmation = false;
-        
-        const errorMessage = error?.error?.message 
-          || error?.message 
+
+        const errorMessage = error?.error?.message
+          || error?.message
           || 'Failed to delete group. Please try again.';
-        
+
         this.toastService.showError(errorMessage, 'Delete Failed');
         this.cdr.markForCheck();
       }
