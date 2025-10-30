@@ -39,11 +39,12 @@
 
   <!-- Group Info Dialog -->
   <app-group-info-dialog
-    *ngIf="showGroupInfoDialog && selectedChatId"
+    *ngIf="showGroupInfoDialog && selectedChatId && user"
     [groupId]="selectedChatId"
+    [currentUserId]="user.id"
     (closed)="router.navigate([], { fragment: undefined, queryParamsHandling: 'preserve' })"
-    (groupUpdated)="onGroupUpdated()"
-    (groupDeleted)="onGroupDeleted($event)">
+    (updated)="onGroupUpdated()"
+    (deleted)="onGroupDeleted($event)">
   </app-group-info-dialog>
 
   <!-- Keyboard Shortcuts Dialog -->
