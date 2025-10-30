@@ -1,0 +1,56 @@
+<div class="member-item" [class.processing]="isProcessing">
+  <!-- Member Info (clickable) -->
+  <div class="member-info" (click)="onMemberClickHandler()" role="button" tabindex="0"
+       (keydown.enter)="onMemberClickHandler()" (keydown.space)="onMemberClickHandler()">
+    <!-- Avatar -->
+    <div class="member-avatar" [attr.aria-label]="member.fullName || member.userName">
+      {{ memberInitials }}
+    </div>
+
+    <!-- Name and Role -->
+    <div class="member-details">
+      <div class="member-name">{{ member.fullName || member.userName }}</div>
+      <div class="member-meta">
+        <span class="member-role" [class.admin-role]="isAdmin">
+          <i [class]="isAdmin ? 'bi bi-shield-fill' : 'bi bi-person-fill'"></i>
+          {{ isAdmin ? 'Admin' : 'Member' }}
+        </span>
+        <span *ngIf="member.joinedAt" class="member-joined">
+          • Joined on {{ getDateTimeTooltip(member.joinedAt) }}
+        </span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Action Buttons -->
+  <div class="member-actions">
+    <!-- Make Admin Button -->
+    <button
+      *ngIf="!isAdmin"
+      type="button"
+      class="action-btn"
+      [class.disabled]="isMakeAdminDisabled"
+      [disabled]="isMakeAdminDisabled"
+      [appCommonTooltip]="makeAdminTooltip"
+      [tooltipPosition]="TooltipPosition.AUTO"
+      (click)="onMakeAdminClick()"
+      aria-label="Make admin">
+      <i class="bi bi-shield-plus"></i>
+      <span class="action-label">Make Admin</span>
+    </button>
+
+    <!-- Remove Button -->
+    <button
+      type="button"
+      class="action-btn remove-btn"
+      [class.disabled]="isRemoveDisabled"
+      [disabled]="isRemoveDisabled"
+      [appCommonTooltip]="removeTooltip"
+      [tooltipPosition]="TooltipPosition.AUTO"
+      (click)="onRemoveClick()"
+      aria-label="Remove member">
+      <i class="bi bi-x-circle"></i>
+      <span class="action-label">Remove</span>
+    </button>
+  </div>
+</div>

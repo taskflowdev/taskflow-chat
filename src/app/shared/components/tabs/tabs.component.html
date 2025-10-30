@@ -1,0 +1,25 @@
+<div class="tabs-container" [class.tabs-horizontal]="orientation === 'horizontal'" [class.tabs-vertical]="orientation === 'vertical'">
+  <div 
+    class="tabs-list" 
+    role="tablist" 
+    [attr.aria-orientation]="orientation">
+    <button
+      *ngFor="let tab of tabs; let i = index"
+      type="button"
+      role="tab"
+      class="tab-button"
+      [class.active]="tab.id === activeTabId"
+      [class.disabled]="tab.disabled"
+      [attr.aria-selected]="tab.id === activeTabId"
+      [attr.aria-controls]="'tabpanel-' + tab.id"
+      [attr.aria-disabled]="tab.disabled"
+      [attr.data-tab-index]="i"
+      [attr.tabindex]="tab.id === activeTabId ? 0 : -1"
+      [disabled]="tab.disabled"
+      (click)="selectTab(tab.id)"
+      (keydown)="onKeyDown($event, i)">
+      <i *ngIf="tab.icon" [class]="tab.icon + ' tab-icon'"></i>
+      <span class="tab-label">{{ tab.label }}</span>
+    </button>
+  </div>
+</div>
