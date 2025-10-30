@@ -28,7 +28,7 @@ export interface SendMessageDto {
   /**
    * Represents the type of message (flattened into clear user + system types)
    */
-  messageType?: 'userMessage' | 'userJoined' | 'userLeft' | 'groupCreated' | 'groupUpdated' | 'groupDeleted' | 'memberRoleChanged' | 'inviteCodeRegenerated';
+  messageType?: 'userMessage' | 'userJoined' | 'userLeft' | 'groupCreated' | 'groupUpdated' | 'groupDeleted' | 'memberRoleChanged' | 'inviteCodeRegenerated' | 'userRemoved';
 
   /**
    * Message metadata containing additional information

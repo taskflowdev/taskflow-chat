@@ -31,6 +31,10 @@ import { apiGroupsIdMembersGet$Json } from '../fn/groups/api-groups-id-members-g
 import { ApiGroupsIdMembersGet$Json$Params } from '../fn/groups/api-groups-id-members-get-json';
 import { apiGroupsIdMembersGet$Plain } from '../fn/groups/api-groups-id-members-get-plain';
 import { ApiGroupsIdMembersGet$Plain$Params } from '../fn/groups/api-groups-id-members-get-plain';
+import { apiGroupsIdMembersUserIdDelete$Json } from '../fn/groups/api-groups-id-members-user-id-delete-json';
+import { ApiGroupsIdMembersUserIdDelete$Json$Params } from '../fn/groups/api-groups-id-members-user-id-delete-json';
+import { apiGroupsIdMembersUserIdDelete$Plain } from '../fn/groups/api-groups-id-members-user-id-delete-plain';
+import { ApiGroupsIdMembersUserIdDelete$Plain$Params } from '../fn/groups/api-groups-id-members-user-id-delete-plain';
 import { apiGroupsIdMembersUserIdMakeAdminPost$Json } from '../fn/groups/api-groups-id-members-user-id-make-admin-post-json';
 import { ApiGroupsIdMembersUserIdMakeAdminPost$Json$Params } from '../fn/groups/api-groups-id-members-user-id-make-admin-post-json';
 import { apiGroupsIdMembersUserIdMakeAdminPost$Plain } from '../fn/groups/api-groups-id-members-user-id-make-admin-post-plain';
@@ -757,6 +761,69 @@ export class GroupsService extends BaseService {
   apiGroupsIdRegenerateInvitePost$Json(params: ApiGroupsIdRegenerateInvitePost$Json$Params, context?: HttpContext): Observable<GroupDtoApiResponse> {
     return this.apiGroupsIdRegenerateInvitePost$Json$Response(params, context).pipe(
       map((r: StrictHttpResponse<GroupDtoApiResponse>): GroupDtoApiResponse => r.body)
+    );
+  }
+
+  /** Path part for operation `apiGroupsIdMembersUserIdDelete()` */
+  static readonly ApiGroupsIdMembersUserIdDeletePath = '/api/Groups/{id}/members/{userId}';
+
+  /**
+   * Removes a member from a group (admin only).
+   *
+   *
+   *
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `apiGroupsIdMembersUserIdDelete$Plain()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  apiGroupsIdMembersUserIdDelete$Plain$Response(params: ApiGroupsIdMembersUserIdDelete$Plain$Params, context?: HttpContext): Observable<StrictHttpResponse<(ObjectApiResponse | ApiResponse)>> {
+    return apiGroupsIdMembersUserIdDelete$Plain(this.http, this.rootUrl, params, context);
+  }
+
+  /**
+   * Removes a member from a group (admin only).
+   *
+   *
+   *
+   * This method provides access only to the response body.
+   * To access the full response (for headers, for example), `apiGroupsIdMembersUserIdDelete$Plain$Response()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  apiGroupsIdMembersUserIdDelete$Plain(params: ApiGroupsIdMembersUserIdDelete$Plain$Params, context?: HttpContext): Observable<(ObjectApiResponse | ApiResponse)> {
+    return this.apiGroupsIdMembersUserIdDelete$Plain$Response(params, context).pipe(
+      map((r: StrictHttpResponse<(ObjectApiResponse | ApiResponse)>): (ObjectApiResponse | ApiResponse) => r.body)
+    );
+  }
+
+  /**
+   * Removes a member from a group (admin only).
+   *
+   *
+   *
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `apiGroupsIdMembersUserIdDelete$Json()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  apiGroupsIdMembersUserIdDelete$Json$Response(params: ApiGroupsIdMembersUserIdDelete$Json$Params, context?: HttpContext): Observable<StrictHttpResponse<(ObjectApiResponse | ApiResponse)>> {
+    return apiGroupsIdMembersUserIdDelete$Json(this.http, this.rootUrl, params, context);
+  }
+
+  /**
+   * Removes a member from a group (admin only).
+   *
+   *
+   *
+   * This method provides access only to the response body.
+   * To access the full response (for headers, for example), `apiGroupsIdMembersUserIdDelete$Json$Response()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  apiGroupsIdMembersUserIdDelete$Json(params: ApiGroupsIdMembersUserIdDelete$Json$Params, context?: HttpContext): Observable<(ObjectApiResponse | ApiResponse)> {
+    return this.apiGroupsIdMembersUserIdDelete$Json$Response(params, context).pipe(
+      map((r: StrictHttpResponse<(ObjectApiResponse | ApiResponse)>): (ObjectApiResponse | ApiResponse) => r.body)
     );
   }
 
