@@ -333,18 +333,6 @@ export class GroupInfoDialogComponent implements OnInit {
     this.processingUserId = userId;
     this.cdr.markForCheck();
 
-    // TODO: API endpoint for removing member doesn't exist yet
-    // When available, implement: this.groupsService.apiGroupsIdMembersUserIdDelete$Json(...)
-    // For now, show a message that this feature is not yet implemented
-
-    this.processingUserId = null;
-    this.showRemoveMemberConfirmation = false;
-    this.memberToRemove = null;
-    this.toastService.showError('Remove member feature is not available yet.', 'Not Available');
-    this.cdr.markForCheck();
-
-    // Example implementation when API is available:
-    /*
     this.groupsService.apiGroupsIdMembersUserIdDelete$Json({
       id: this.groupId,
       userId: userId
@@ -373,7 +361,6 @@ export class GroupInfoDialogComponent implements OnInit {
         this.cdr.markForCheck();
       }
     });
-    */
   }
 
   /**

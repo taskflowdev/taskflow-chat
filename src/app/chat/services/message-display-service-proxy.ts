@@ -103,6 +103,12 @@ export class MessageDisplayServiceProxy {
           icon: 'person-dash',
           hasIcon: true
         };
+      case 'userRemoved':
+        return {
+          text: `Someone was removed from the group`,
+          icon: 'person-x',
+          hasIcon: true
+        };
       case 'groupCreated':
         return {
           text: 'Group created',
