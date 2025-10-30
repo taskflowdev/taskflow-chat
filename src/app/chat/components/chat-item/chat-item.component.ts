@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { GroupDto } from '../../../api/models/group-dto';
 import { MessageDisplayServiceProxy } from '../../services';
 import { MessageDto } from '../../../api/models/message-dto';
+import { CommonTooltipDirective } from "../../../shared/components/common-tooltip";
 
 export interface ChatItemData {
   groupId: string;
@@ -15,7 +16,7 @@ export interface ChatItemData {
 
 @Component({
   selector: 'app-chat-item',
-  imports: [CommonModule],
+  imports: [CommonModule, CommonTooltipDirective],
   templateUrl: './chat-item.component.html',
   styleUrl: './chat-item.component.scss'
 })
@@ -60,17 +61,52 @@ export class ChatItemComponent {
     return this.getLastMessageIcon() !== undefined;
   }
 
+  /**
+   * Gets the display text for the message timestamp.
+   */
   getTimeDisplay(timeString?: string): string {
     if (!timeString) return '';
-    
+
     const messageTime = new Date(timeString);
     const now = new Date();
     const diffInHours = Math.abs(now.getTime() - messageTime.getTime()) / (1000 * 60 * 60);
-    
+
     if (diffInHours < 24) {
-      return messageTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+      return messageTime.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit', hour12: true }).replace('am', 'AM').replace('pm', 'PM');
     } else {
-      return messageTime.toLocaleDateString([], { month: 'short', day: 'numeric' });
+      return messageTime.toLocaleDateString([], { month: 'long', day: 'numeric' });
     }
+  }
+
+  /**
+   * Formats a given date-time string into a professional tooltip with:
+   * - Day of the week (e.g., "Monday")
+   * - Day of the month (e.g., 29)
+   * - Full month name (e.g., "October")
+   * - Full year (e.g., 2025)
+   * - Time in 12-hour format with AM/PM in a concise style (e.g., "6:46 PM")
+   *
+   * @param {string} [timeString] - The ISO 8601 date-time string (e.g., "2025-10-29T14:30:00").
+   *                                If no string is provided, returns an empty string.
+   *
+   * @returns {string} A formatted string for display in a tooltip.
+   *                   Example: "Wednesday 29 October 2025 at 6:46 PM"
+   */
+  getDateTimeTooltip(timeString?: string): string {
+    if (!timeString) return '';
+
+    const messageTime = new Date(timeString);
+
+    // Format date components
+    const weekday = messageTime.toLocaleString([], { weekday: 'long' });
+    const day = messageTime.getDate();
+    const month = messageTime.toLocaleString([], { month: 'long' });
+    const year = messageTime.getFullYear();
+
+    // Format time in 12-hour format with concise AM/PM (e.g., "6:46 PM")
+    const time = messageTime.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit', hour12: true });
+
+    // Return formatted string
+    return `${weekday} ${day} ${month} ${year} at ${time}`;
   }
 }

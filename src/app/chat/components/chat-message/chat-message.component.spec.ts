@@ -1,5 +1,4 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { ChatMessageComponent, ChatMessageData } from './chat-message.component';
 
 describe('ChatMessageComponent', () => {
@@ -30,10 +29,10 @@ describe('ChatMessageComponent', () => {
       createdAt: new Date().toISOString(),
       isOwn: false
     };
-    
+
     component.message = testMessage;
     fixture.detectChanges();
-    
+
     const compiled = fixture.nativeElement;
     expect(compiled.querySelector('.message-content').textContent.trim()).toContain('Hello, this is a test message');
   });
@@ -49,10 +48,10 @@ describe('ChatMessageComponent', () => {
       createdAt: new Date().toISOString(),
       isOwn: false
     };
-    
+
     component.message = testMessage;
     fixture.detectChanges();
-    
+
     const compiled = fixture.nativeElement;
     expect(compiled.querySelector('.media-message')).toBeTruthy();
     expect(compiled.querySelector('.bi-image')).toBeTruthy();
@@ -70,10 +69,10 @@ describe('ChatMessageComponent', () => {
       createdAt: new Date().toISOString(),
       isOwn: false
     };
-    
+
     component.message = testMessage;
     fixture.detectChanges();
-    
+
     const compiled = fixture.nativeElement;
     expect(compiled.querySelector('.media-message')).toBeTruthy();
     expect(compiled.querySelector('.bi-play-circle')).toBeTruthy();
@@ -88,7 +87,7 @@ describe('ChatMessageComponent', () => {
       senderName: 'Test User',
       content: 'What is your favorite color?',
       contentType: 'poll',
-      contentData: { 
+      contentData: {
         question: 'What is your favorite color?',
         options: ['Red', 'Blue', 'Green'],
         contentType: 'poll'
@@ -96,10 +95,10 @@ describe('ChatMessageComponent', () => {
       createdAt: new Date().toISOString(),
       isOwn: false
     };
-    
+
     component.message = testMessage;
     fixture.detectChanges();
-    
+
     const compiled = fixture.nativeElement;
     expect(compiled.querySelector('.poll-message')).toBeTruthy();
     expect(compiled.querySelector('.poll-question').textContent).toContain('What is your favorite color?');
@@ -117,10 +116,10 @@ describe('ChatMessageComponent', () => {
       createdAt: new Date().toISOString(),
       isOwn: false
     };
-    
+
     component.message = testMessage;
     fixture.detectChanges();
-    
+
     const compiled = fixture.nativeElement;
     expect(compiled.querySelector('.file-message')).toBeTruthy();
     expect(compiled.querySelector('.bi-file-earmark')).toBeTruthy();
@@ -151,10 +150,10 @@ describe('ChatMessageComponent', () => {
       createdAt: new Date().toISOString(),
       isOwn: false
     };
-    
+
     component.message = testMessage;
     fixture.detectChanges();
-    
+
     const compiled = fixture.nativeElement;
     expect(compiled.querySelector('.sender-name').textContent).toBe('Test User');
   });
@@ -168,10 +167,10 @@ describe('ChatMessageComponent', () => {
       createdAt: new Date().toISOString(),
       isOwn: true
     };
-    
+
     component.message = testMessage;
     fixture.detectChanges();
-    
+
     const compiled = fixture.nativeElement;
     expect(compiled.querySelector('.sender-name')).toBeFalsy();
   });
@@ -187,10 +186,10 @@ describe('ChatMessageComponent', () => {
       isSystemMessage: true,
       messageType: 'groupCreated'
     };
-    
+
     component.message = testMessage;
     fixture.detectChanges();
-    
+
     const compiled = fixture.nativeElement;
     expect(compiled.querySelector('.system-message')).toBeTruthy();
     expect(compiled.querySelector('.system-message-content').textContent).toContain('Group was created by John Doe');
