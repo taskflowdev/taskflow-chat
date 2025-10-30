@@ -65,7 +65,7 @@ export class MessageDisplayServiceProxy {
   /**
    * Generates a WhatsApp-style message preview for chat list display.
    * Returns appropriate text and icon based on message content type.
-   * 
+   *
    * @param message - The message to generate preview for
    * @returns MessagePreview Display information for the message
    */
@@ -85,7 +85,7 @@ export class MessageDisplayServiceProxy {
 
   /**
    * Generates preview for system messages.
-   * 
+   *
    * @param message - The system message
    * @returns MessagePreview System message display information
    */
@@ -93,13 +93,13 @@ export class MessageDisplayServiceProxy {
     switch (message.messageType) {
       case 'userJoined':
         return {
-          text: `${message.senderName || 'Someone'} joined the group`,
+          text: `Someone joined the group`,
           icon: 'person-plus',
           hasIcon: true
         };
       case 'userLeft':
         return {
-          text: `${message.senderName || 'Someone'} left the group`,
+          text: `Someone left the group`,
           icon: 'person-dash',
           hasIcon: true
         };
@@ -144,7 +144,7 @@ export class MessageDisplayServiceProxy {
 
   /**
    * Generates preview for user messages based on content type.
-   * 
+   *
    * @param message - The user message
    * @returns MessagePreview User message display information
    */
@@ -169,27 +169,27 @@ export class MessageDisplayServiceProxy {
 
   /**
    * Generates preview for text content.
-   * 
+   *
    * @param content - The text content
    * @returns MessagePreview Text message display information
    */
   private getTextContentPreview(content: any): MessagePreview {
     // Check if content is our extended TextContent with text property
     if (content && typeof content.text === 'string') {
-      const truncatedText = content.text.length > 50 
-        ? content.text.substring(0, 47) + '...' 
+      const truncatedText = content.text.length > 50
+        ? content.text.substring(0, 47) + '...'
         : content.text;
       return { text: truncatedText, hasIcon: false };
     }
-    
+
     // If content is a string (fallback for legacy data)
     if (typeof content === 'string') {
-      const truncatedText = content.length > 50 
-        ? content.substring(0, 47) + '...' 
+      const truncatedText = content.length > 50
+        ? content.substring(0, 47) + '...'
         : content;
       return { text: truncatedText, hasIcon: false };
     }
-    
+
     // Handle basic TextContent (which only has contentType)
     if (isTextContent(content)) {
       return { text: 'Text message', hasIcon: false };
@@ -200,7 +200,7 @@ export class MessageDisplayServiceProxy {
 
   /**
    * Generates preview for image content.
-   * 
+   *
    * @param content - The image content
    * @returns MessagePreview Image message display information
    */
@@ -213,7 +213,7 @@ export class MessageDisplayServiceProxy {
         hasIcon: true
       };
     }
-    
+
     return {
       text: '📷 Photo',
       icon: 'image',
@@ -223,7 +223,7 @@ export class MessageDisplayServiceProxy {
 
   /**
    * Generates preview for video content.
-   * 
+   *
    * @param content - The video content
    * @returns MessagePreview Video message display information
    */
@@ -236,14 +236,14 @@ export class MessageDisplayServiceProxy {
         const seconds = Math.floor(content.duration % 60);
         previewText += ` (${minutes}:${seconds.toString().padStart(2, '0')})`;
       }
-      
+
       return {
         text: previewText,
         icon: 'play-circle',
         hasIcon: true
       };
     }
-    
+
     return {
       text: '🎥 Video',
       icon: 'play-circle',
@@ -253,7 +253,7 @@ export class MessageDisplayServiceProxy {
 
   /**
    * Generates preview for poll content.
-   * 
+   *
    * @param content - The poll content
    * @returns MessagePreview Poll message display information
    */
@@ -263,14 +263,14 @@ export class MessageDisplayServiceProxy {
       const truncatedQuestion = content.question.length > 30
         ? content.question.substring(0, 27) + '...'
         : content.question;
-        
+
       return {
         text: `📊 Poll: ${truncatedQuestion}`,
         icon: 'bar-chart',
         hasIcon: true
       };
     }
-    
+
     return {
       text: '📊 Poll',
       icon: 'bar-chart',
@@ -280,7 +280,7 @@ export class MessageDisplayServiceProxy {
 
   /**
    * Generates preview for general file content.
-   * 
+   *
    * @param content - The file content
    * @returns MessagePreview File message display information
    */
@@ -293,7 +293,7 @@ export class MessageDisplayServiceProxy {
         hasIcon: true
       };
     }
-    
+
     return {
       text: '📎 File',
       icon: 'file-earmark',
@@ -304,7 +304,7 @@ export class MessageDisplayServiceProxy {
   /**
    * Determines if a message should display the sender's name in the preview.
    * Useful for group chats where sender identification is important.
-   * 
+   *
    * @param message - The message to check
    * @param isGroupChat - Whether this is a group chat context
    * @returns boolean True if sender name should be displayed
@@ -321,24 +321,24 @@ export class MessageDisplayServiceProxy {
 
   /**
    * Gets the complete message preview text including sender name if appropriate.
-   * 
+   *
    * @param message - The message to generate preview for
    * @param isGroupChat - Whether this is a group chat context
    * @returns string Complete preview text
    */
   getCompleteMessagePreview(message: MessageDto, isGroupChat: boolean = true): string {
     const preview = this.getMessagePreview(message);
-    
+
     if (this.shouldDisplaySenderName(message, isGroupChat) && message.senderName) {
       return `${message.senderName}: ${preview.text}`;
     }
-    
+
     return preview.text;
   }
 
   /**
    * Gets the Bootstrap icon class for a message.
-   * 
+   *
    * @param message - The message to get icon for
    * @returns string | undefined Bootstrap icon class or undefined if no icon
    */

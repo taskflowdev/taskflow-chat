@@ -27,7 +27,7 @@ export class ChatMessageComponent {
   getTimeDisplay(timeString: string): string {
     const messageTime = new Date(timeString);
     return messageTime.toLocaleTimeString([], {
-      hour: '2-digit',
+      hour: 'numeric',
       minute: '2-digit',
       hour12: true
     })
@@ -70,5 +70,37 @@ export class ChatMessageComponent {
     if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`;
     if (bytes < 1024 * 1024 * 1024) return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
     return `${(bytes / (1024 * 1024 * 1024)).toFixed(1)} GB`;
+  }
+
+  /**
+   * Formats a given date-time string into a professional tooltip with:
+   * - Day of the week (e.g., "Monday")
+   * - Day of the month (e.g., 29)
+   * - Full month name (e.g., "October")
+   * - Full year (e.g., 2025)
+   * - Time in 12-hour format with AM/PM in a concise style (e.g., "6:46 PM")
+   *
+   * @param {string} [timeString] - The ISO 8601 date-time string (e.g., "2025-10-29T14:30:00").
+   *                                If no string is provided, returns an empty string.
+   *
+   * @returns {string} A formatted string for display in a tooltip.
+   *                   Example: "Wednesday 29 October 2025 at 6:46 PM"
+   */
+  getDateTimeTooltip(timeString?: string): string {
+    if (!timeString) return '';
+
+    const messageTime = new Date(timeString);
+
+    // Format date components
+    const weekday = messageTime.toLocaleString([], { weekday: 'long' });
+    const day = messageTime.getDate();
+    const month = messageTime.toLocaleString([], { month: 'long' });
+    const year = messageTime.getFullYear();
+
+    // Format time in 12-hour format with concise AM/PM (e.g., "6:46 PM")
+    const time = messageTime.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit', hour12: true });
+
+    // Return formatted string
+    return `${weekday} ${day} ${month} ${year} at ${time}`;
   }
 }
