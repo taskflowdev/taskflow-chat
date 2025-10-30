@@ -1,40 +1,26 @@
-<div class="dialog-overlay" (click)="closeDialog()">
+<div class="dialog-overlay" (click)="closeDialog()" role="dialog" aria-labelledby="dialog-title" aria-modal="true">
   <div class="dialog-container" (click)="$event.stopPropagation()">
-    <!-- Dialog Content -->
-    <div class="dialog-content">
-      <!-- Header -->
-      <div class="dialog-header">
-        <!-- <div class="fs-1 mb-2">
-          <i class="bi bi-info-circle"></i>
-        </div> -->
-        <!-- <h1 class="main-title">Group Information</h1>
-        <p class="subtitle">View and edit group details</p> -->
-        <!-- <button type="button" class="btn-close" (click)="closeDialog()" aria-label="Close">
-          <i class="bi bi-x"></i>
-        </button> -->
-      </div>
+    <!-- Dialog Header -->
+    <div class="dialog-header">
+      <h1 id="dialog-title" class="dialog-title">
+        <i class="bi bi-info-circle"></i>
+        Group Information
+      </h1>
+      <button type="button" class="btn-close" (click)="closeDialog()" aria-label="Close dialog">
+        <i class="bi bi-x"></i>
+      </button>
+    </div>
 
+    <!-- Dialog Body with Tabs -->
+    <div class="dialog-body">
       <!-- Loading State -->
-      <div *ngIf="isLoadingDetails" class="loading-content">
+      <div *ngIf="isLoadingGroup" class="loading-content">
         <div class="form-group-skeleton">
           <app-skeleton-loader type="text" width="80px" height="14px"></app-skeleton-loader>
           <app-skeleton-loader type="rectangle" width="100%" height="44px"></app-skeleton-loader>
         </div>
-
         <div class="form-group-skeleton">
           <app-skeleton-loader type="text" width="100px" height="14px"></app-skeleton-loader>
-          <div class="toggle-skeleton">
-            <app-skeleton-loader type="rectangle" width="44px" height="24px"></app-skeleton-loader>
-          </div>
-          <app-skeleton-loader type="text" width="200px" height="12px"></app-skeleton-loader>
-        </div>
-
-        <div class="info-section-skeleton">
-          <app-skeleton-loader type="text" width="120px" height="14px"></app-skeleton-loader>
-          <app-skeleton-loader type="text" width="180px" height="12px"></app-skeleton-loader>
-        </div>
-
-        <div class="button-skeleton">
           <app-skeleton-loader type="rectangle" width="100%" height="44px"></app-skeleton-loader>
         </div>
         <div class="button-skeleton">
@@ -42,97 +28,170 @@
         </div>
       </div>
 
-      <!-- Loaded Form -->
-      <form *ngIf="!isLoadingDetails" [formGroup]="groupInfoForm" (ngSubmit)="onSubmit()" novalidate class="group-info-form">
-        <!-- Group Avatar Placeholder -->
-        <div class="group-avatar-section">
-          <div class="avatar-circle">
-            <i class="bi bi-people"></i>
+      <!-- Loaded Content -->
+      <div *ngIf="!isLoadingGroup" class="dialog-content-grid">
+        <!-- Left Column: Tabs -->
+        <div class="tabs-column">
+          <app-tabs
+            [tabs]="tabs"
+            [activeTabId]="activeTab"
+            [orientation]="'vertical'"
+            (tabChange)="onTabChange($event)">
+          </app-tabs>
+        </div>
+
+        <!-- Right Column: Tab Content -->
+        <div class="content-column">
+          <!-- General Tab -->
+          <div 
+            *ngIf="activeTab === 'general'" 
+            id="tabpanel-general"
+            role="tabpanel"
+            aria-labelledby="tab-general"
+            class="tab-content">
+            <form [formGroup]="groupInfoForm" (ngSubmit)="onSubmit()" novalidate>
+              <!-- Group Avatar -->
+              <div class="group-avatar-section">
+                <div class="avatar-circle">
+                  <i class="bi bi-people"></i>
+                </div>
+                <h5 class="avatar-group-name">{{ group?.name }}</h5>
+              </div>
+
+              <!-- Group Name Field -->
+              <app-common-input
+                label="Group Name"
+                placeholder="Enter group name"
+                formControlName="groupName"
+                [isInvalid]="getFieldError('groupName')"
+                [errorMessage]="getErrorMessage('groupName')">
+              </app-common-input>
+
+              <!-- Public/Private Toggle -->
+              <app-common-toggle
+                [label]="'Group Visibility'"
+                [description]="'Allow anyone to view and join this group.'"
+                [onText]="'Public'"
+                [offText]="'Private'"
+                formControlName="isPublic">
+              </app-common-toggle>
+
+              <!-- Metadata -->
+              <div class="info-section-card">
+                <span class="info-item" title="Number of Group Members">
+                  <i class="bi bi-people-fill me-1"></i>
+                  {{ group?.memberCount || 0 }} {{ group?.memberCount === 1 ? 'Member' : 'Members' }}
+                </span>
+                <span class="info-item" title="Group Created Date">
+                  <i class="bi bi-clock-history me-1"></i>
+                  {{ group?.createdAt | date: 'shortDate' }}
+                </span>
+              </div>
+
+              <!-- Update Button -->
+              <app-common-button
+                type="submit"
+                variant="primary"
+                [fullWidth]="true"
+                [loading]="isUpdating"
+                [disabled]="groupInfoForm.invalid || groupInfoForm.pristine">
+                {{ isUpdating ? 'Updating...' : 'Update Group' }}
+              </app-common-button>
+            </form>
           </div>
-          <h5 class="avatar-group-name">
-            {{ groupInfo?.name }}
-          </h5>
-          <p class="avatar-hint">
-            Make changes to your group's details and settings right here.
-          </p>
+
+          <!-- Members Tab -->
+          <div 
+            *ngIf="activeTab === 'members'" 
+            id="tabpanel-members"
+            role="tabpanel"
+            aria-labelledby="tab-members"
+            class="tab-content">
+            <h3 class="tab-title">Group Members</h3>
+            <p class="tab-description">Manage members and their roles in this group.</p>
+            
+            <app-compact-member-list
+              [members]="members"
+              [isLoading]="isLoadingMembers"
+              [isActionAllowed]="isAdmin"
+              [currentUserId]="currentUserId"
+              [processingUserId]="processingUserId"
+              (makeAdmin)="onMakeAdmin($event)"
+              (removeMember)="onRemoveMember($event)"
+              (memberClick)="onMemberClick($event)">
+            </app-compact-member-list>
+          </div>
+
+          <!-- Settings Tab -->
+          <div 
+            *ngIf="activeTab === 'settings'" 
+            id="tabpanel-settings"
+            role="tabpanel"
+            aria-labelledby="tab-settings"
+            class="tab-content">
+            <h3 class="tab-title">Group Settings</h3>
+            <p class="tab-description">Manage advanced group settings and danger actions.</p>
+            
+            <div class="danger-zone">
+              <div class="danger-zone-header">
+                <i class="bi bi-exclamation-triangle-fill"></i>
+                <span>Danger Zone</span>
+              </div>
+              
+              <div class="danger-zone-content">
+                <div class="danger-action">
+                  <div class="danger-action-info">
+                    <h4>Delete Group</h4>
+                    <p>Permanently delete this group and all its data. This action cannot be undone.</p>
+                  </div>
+                  <app-common-button
+                    type="button"
+                    variant="danger"
+                    [disabled]="isDeleting"
+                    (clicked)="showDeleteDialog()">
+                    <i class="bi bi-trash me-2"></i>Delete Group
+                  </app-common-button>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
+      </div>
+    </div>
 
-        <hr class="border-2" />
-
-        <!-- Group Name Field -->
-        <app-common-input
-          label="Group Name"
-          placeholder="Enter group name"
-          formControlName="groupName"
-          [isInvalid]="getFieldError('groupName')"
-          [errorMessage]="getErrorMessage('groupName')"
-        ></app-common-input>
-
-        <!-- Public/Private Toggle -->
-        <app-common-toggle
-          [label]="'Group Visibility'"
-          [description]="'Allow anyone to view and join this group.'"
-          [onText]="'Public'"
-          [offText]="'Private'"
-          formControlName="isPublic"
-        ></app-common-toggle>
-
-        <!-- Other Info Display -->
-        <div class="info-section-card">
-          <span class="info-item" title="Number of Group Members">
-            <i class="bi bi-people-fill me-1"></i>
-            {{ groupInfo?.memberCount || 0 }} {{ groupInfo?.memberCount === 1 ? 'Member' : 'Members' }}
-          </span>
-          <span class="info-item" title="Group Created at Date">
-            <i class="bi bi-clock-history me-1"></i>
-            Created at {{ groupInfo?.createdAt | date: 'short' }}
-          </span>
-        </div>
-
-        <div class="button-group">
-          <!-- Update Button -->
-          <app-common-button
-            type="submit"
-            variant="primary"
-            [fullWidth]="true"
-            [loading]="isLoading"
-            [disabled]="groupInfoForm.invalid || groupInfoForm.pristine"
-          >
-            {{ isLoading ? 'Updating...' : 'Update Group' }}
-          </app-common-button>
-
-          <!-- Delete Group Button -->
-          <app-common-button
-            type="button"
-            variant="danger"
-            [fullWidth]="true"
-            [disabled]="isLoading || isDeleting"
-            (clicked)="showDeleteDialog()"
-          >
-            <i class="bi bi-trash me-2"></i>Delete Group
-          </app-common-button>
-
-          <!-- Cancel Button -->
-          <app-common-button
-            type="button"
-            variant="secondary"
-            [fullWidth]="true"
-            [disabled]="isLoading"
-            (clicked)="closeDialog()"
-          >
-            Cancel
-          </app-common-button>
-        </div>
-      </form>
+    <!-- Dialog Footer -->
+    <div class="dialog-footer">
+      <app-common-button
+        type="button"
+        variant="secondary"
+        (clicked)="closeDialog()">
+        Close
+      </app-common-button>
     </div>
   </div>
 </div>
 
-<!-- Delete Confirmation Dialog -->
+
+<!-- Remove Member Confirmation Dialog -->
+<app-confirmation-dialog
+  [isVisible]="showRemoveMemberConfirmation"
+  [title]="'Remove Member?'"
+  [message]="'Are you sure you want to remove ' + (memberToRemove?.fullName || memberToRemove?.userName) + ' from this group?'"
+  [secondaryMessage]="'They will lose access to all group messages and content.'"
+  [confirmText]="'Remove Member'"
+  [cancelText]="'Cancel'"
+  [variant]="'danger'"
+  [icon]="'bi-person-x'"
+  [loading]="processingUserId !== null"
+  (confirmed)="confirmRemoveMember()"
+  (cancelled)="cancelRemoveMember()">
+</app-confirmation-dialog>
+
+<!-- Delete Group Confirmation Dialog -->
 <app-confirmation-dialog
   [isVisible]="showDeleteConfirmation"
   [title]="'Delete Group?'"
-  [message]="'This action cannot be undone. all messages, files, and group data will be permanently deleted.'"
+  [message]="'This action cannot be undone. All messages, files, and group data will be permanently deleted.'"
   [secondaryMessage]="'All members will lose access to this group immediately.'"
   [confirmText]="'Delete Group'"
   [cancelText]="'Keep Group'"
@@ -142,3 +201,4 @@
   (confirmed)="confirmDelete()"
   (cancelled)="cancelDelete()">
 </app-confirmation-dialog>
+

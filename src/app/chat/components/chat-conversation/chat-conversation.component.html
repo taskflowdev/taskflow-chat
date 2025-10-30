@@ -111,8 +111,9 @@
 <app-group-info-dialog
   *ngIf="showGroupInfoDialog && conversation"
   [groupId]="conversation.groupId"
+  [currentUserId]="currentUserId || ''"
   [triggerDelete]="openGroupInfoForDeletion"
   (closed)="onGroupInfoClosed()"
-  (groupUpdated)="onGroupInfoUpdated()"
-  (groupDeleted)="onGroupDeleted($event)">
+  (updated)="onGroupInfoUpdated()"
+  (deleted)="onGroupDeleted($event)">
 </app-group-info-dialog>

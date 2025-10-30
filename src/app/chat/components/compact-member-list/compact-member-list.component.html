@@ -1,0 +1,46 @@
+<div class="member-list-container">
+  <!-- Loading State -->
+  <div *ngIf="isLoading" class="loading-state">
+    <div *ngFor="let item of [1, 2, 3, 4, 5]" class="member-skeleton">
+      <app-skeleton-loader type="circle" width="40px" height="40px"></app-skeleton-loader>
+      <div class="skeleton-details">
+        <app-skeleton-loader type="text" width="140px" height="14px"></app-skeleton-loader>
+        <app-skeleton-loader type="text" width="100px" height="12px"></app-skeleton-loader>
+      </div>
+      <div class="skeleton-actions">
+        <app-skeleton-loader type="rectangle" width="90px" height="32px"></app-skeleton-loader>
+        <app-skeleton-loader type="rectangle" width="80px" height="32px"></app-skeleton-loader>
+      </div>
+    </div>
+  </div>
+
+  <!-- Empty State -->
+  <div *ngIf="!isLoading && members.length === 0" class="empty-state">
+    <i class="bi bi-people empty-icon"></i>
+    <p class="empty-message">No members found</p>
+  </div>
+
+  <!-- Member List -->
+  <div *ngIf="!isLoading && members.length > 0" class="member-list">
+    <!-- TODO: For >50 members, implement virtual scrolling using @angular/cdk/scrolling
+         Example:
+         <cdk-virtual-scroll-viewport itemSize="64" class="member-list-viewport">
+           <app-member-list-item
+             *cdkVirtualFor="let member of members; trackBy: trackByUserId"
+             [member]="member"
+             ...
+           </app-member-list-item>
+         </cdk-virtual-scroll-viewport>
+    -->
+    <app-member-list-item
+      *ngFor="let member of members; trackBy: trackByUserId"
+      [member]="member"
+      [isActionAllowed]="isActionAllowed"
+      [isSelf]="isSelf(member)"
+      [isProcessing]="isProcessing(member)"
+      (makeAdmin)="onMakeAdmin($event)"
+      (remove)="onRemove($event)"
+      (memberClick)="onMemberClick($event)">
+    </app-member-list-item>
+  </div>
+</div>
