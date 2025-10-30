@@ -2,12 +2,17 @@
   <div class="dialog-container" (click)="$event.stopPropagation()">
     <!-- Dialog Header -->
     <div class="dialog-header">
-      <h1 id="dialog-title" class="dialog-title">
-        <i class="bi bi-info-circle"></i>
-        Group Information
-      </h1>
-      <button type="button" class="btn-close" (click)="closeDialog()" aria-label="Close dialog">
-        <i class="bi bi-x"></i>
+      <div class="dialog-header-text">
+        <h1 id="dialog-title" class="dialog-title">
+          Group Information
+          </h1>
+        <p id="dialog-subtitle" class="dialog-subtitle">
+          Update group settings and keep information organized.
+        </p>
+        </div>
+        
+        <button type="button" class="close-btn" (click)="closeDialog()" aria-label="Close dialog">
+          <i class="bi bi-x-lg"></i>
       </button>
     </div>
 
@@ -43,8 +48,7 @@
         <!-- Right Column: Tab Content -->
         <div class="content-column">
           <!-- General Tab -->
-          <div 
-            *ngIf="activeTab === 'general'" 
+          <div *ngIf="activeTab === 'general'"
             id="tabpanel-general"
             role="tabpanel"
             aria-labelledby="tab-general"
@@ -92,6 +96,7 @@
               <app-common-button
                 type="submit"
                 variant="primary"
+                size="small"
                 [fullWidth]="true"
                 [loading]="isUpdating"
                 [disabled]="groupInfoForm.invalid || groupInfoForm.pristine">
@@ -101,15 +106,14 @@
           </div>
 
           <!-- Members Tab -->
-          <div 
-            *ngIf="activeTab === 'members'" 
+          <div *ngIf="activeTab === 'members'"
             id="tabpanel-members"
             role="tabpanel"
             aria-labelledby="tab-members"
             class="tab-content">
             <h3 class="tab-title">Group Members</h3>
             <p class="tab-description">Manage members and their roles in this group.</p>
-            
+
             <app-compact-member-list
               [members]="members"
               [isLoading]="isLoadingMembers"
@@ -123,33 +127,33 @@
           </div>
 
           <!-- Settings Tab -->
-          <div 
-            *ngIf="activeTab === 'settings'" 
+          <div *ngIf="activeTab === 'settings'"
             id="tabpanel-settings"
             role="tabpanel"
             aria-labelledby="tab-settings"
             class="tab-content">
             <h3 class="tab-title">Group Settings</h3>
             <p class="tab-description">Manage advanced group settings and danger actions.</p>
-            
+
             <div class="danger-zone">
               <div class="danger-zone-header">
                 <i class="bi bi-exclamation-triangle-fill"></i>
                 <span>Danger Zone</span>
               </div>
-              
+
               <div class="danger-zone-content">
                 <div class="danger-action">
                   <div class="danger-action-info">
                     <h4>Delete Group</h4>
-                    <p>Permanently delete this group and all its data. This action cannot be undone.</p>
+                    <p>Permanently delete this group and all its data.</p>
                   </div>
                   <app-common-button
                     type="button"
                     variant="danger"
+                    size="small"
                     [disabled]="isDeleting"
                     (clicked)="showDeleteDialog()">
-                    <i class="bi bi-trash me-2"></i>Delete Group
+                    <i class="bi bi-trash me-2"></i>Delete
                   </app-common-button>
                 </div>
               </div>

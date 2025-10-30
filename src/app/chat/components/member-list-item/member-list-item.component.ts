@@ -5,7 +5,7 @@ import { CommonTooltipDirective, TooltipPosition } from '../../../shared/compone
 
 /**
  * Member list item component for displaying individual group members
- * 
+ *
  * Features:
  * - Displays member avatar, name, role
  * - Admin management actions (Make Admin, Remove)
@@ -13,7 +13,7 @@ import { CommonTooltipDirective, TooltipPosition } from '../../../shared/compone
  * - Tooltips for disabled actions
  * - OnPush change detection
  * - Accessible markup
- * 
+ *
  * @example
  * ```typescript
  * <app-member-list-item
@@ -172,5 +172,37 @@ export class MemberListItemComponent {
     if (this.member.userId) {
       this.memberClick.emit(this.member.userId);
     }
+  }
+
+  /**
+   * Formats a given date-time string into a professional tooltip with:
+   * - Day of the week (e.g., "Monday")
+   * - Day of the month (e.g., 29)
+   * - Full month name (e.g., "October")
+   * - Full year (e.g., 2025)
+   * - Time in 12-hour format with AM/PM in a concise style (e.g., "6:46 PM")
+   *
+   * @param {string} [timeString] - The ISO 8601 date-time string (e.g., "2025-10-29T14:30:00").
+   *                                If no string is provided, returns an empty string.
+   *
+   * @returns {string} A formatted string for display in a tooltip.
+   *                   Example: "Wednesday 29 October 2025 at 6:46 PM"
+   */
+  getDateTimeTooltip(timeString?: string): string {
+    if (!timeString) return '';
+
+    const messageTime = new Date(timeString);
+
+    // Format date components
+    const weekday = messageTime.toLocaleString([], { weekday: 'long' });
+    const day = messageTime.getDate();
+    const month = messageTime.toLocaleString([], { month: 'long' });
+    const year = messageTime.getFullYear();
+
+    // Format time in 12-hour format with concise AM/PM (e.g., "6:46 PM")
+    const time = messageTime.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit', hour12: true }).replace('am', 'AM').replace('pm', 'PM');
+
+    // Return formatted string
+    return `${day} ${month} ${year}, ${time}`;
   }
 }
