@@ -62,7 +62,7 @@ describe('MemberListItemComponent', () => {
   });
 
   it('should generate initials from username if no full name', () => {
-    component.member = { ...mockMember, fullName: undefined };
+    component.member = { ...mockMember, fullName: null };
     expect(component.memberInitials).toBe('JO');
   });
 
