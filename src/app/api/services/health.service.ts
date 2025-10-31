@@ -13,6 +13,8 @@ import { StrictHttpResponse } from '../strict-http-response';
 
 import { apiHealthAliveGet } from '../fn/health/api-health-alive-get';
 import { ApiHealthAliveGet$Params } from '../fn/health/api-health-alive-get';
+import { apiHealthCacheGet } from '../fn/health/api-health-cache-get';
+import { ApiHealthCacheGet$Params } from '../fn/health/api-health-cache-get';
 import { apiHealthDbGet } from '../fn/health/api-health-db-get';
 import { ApiHealthDbGet$Params } from '../fn/health/api-health-db-get';
 import { apiHealthGet } from '../fn/health/api-health-get';
@@ -156,6 +158,39 @@ export class HealthService extends BaseService {
    */
   apiHealthDbGet(params?: ApiHealthDbGet$Params, context?: HttpContext): Observable<(ObjectApiResponse | ApiResponse)> {
     return this.apiHealthDbGet$Response(params, context).pipe(
+      map((r: StrictHttpResponse<(ObjectApiResponse | ApiResponse)>): (ObjectApiResponse | ApiResponse) => r.body)
+    );
+  }
+
+  /** Path part for operation `apiHealthCacheGet()` */
+  static readonly ApiHealthCacheGetPath = '/api/health/cache';
+
+  /**
+   * Cache health check endpoint with metrics.
+   *
+   *
+   *
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `apiHealthCacheGet()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  apiHealthCacheGet$Response(params?: ApiHealthCacheGet$Params, context?: HttpContext): Observable<StrictHttpResponse<(ObjectApiResponse | ApiResponse)>> {
+    return apiHealthCacheGet(this.http, this.rootUrl, params, context);
+  }
+
+  /**
+   * Cache health check endpoint with metrics.
+   *
+   *
+   *
+   * This method provides access only to the response body.
+   * To access the full response (for headers, for example), `apiHealthCacheGet$Response()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  apiHealthCacheGet(params?: ApiHealthCacheGet$Params, context?: HttpContext): Observable<(ObjectApiResponse | ApiResponse)> {
+    return this.apiHealthCacheGet$Response(params, context).pipe(
       map((r: StrictHttpResponse<(ObjectApiResponse | ApiResponse)>): (ObjectApiResponse | ApiResponse) => r.body)
     );
   }
