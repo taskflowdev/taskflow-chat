@@ -767,11 +767,10 @@ export class MainChatComponent implements OnInit, OnDestroy {
     // Send message via SignalR if connected, otherwise use REST API
     if (this.chatRealtimeService.isConnected) {
       try {
-        await this.chatRealtimeService.sendMessage(this.currentConversation.groupId, {
-          content: { contentType: 'text', text: messageContent.trim() } as any,
-          contentType: 'text',
-          messageType: 'userMessage'
-        });
+        // Use message factory to create properly formatted SendMessageDto
+        const messageDto = this.messageFactoryService.createTextMessageDto(messageContent);
+        
+        await this.chatRealtimeService.sendMessage(this.currentConversation.groupId, messageDto);
         console.log('[MainChat] Message sent via SignalR');
         
         // Real message will arrive via SignalR event and replace optimistic one
