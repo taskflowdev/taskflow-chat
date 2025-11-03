@@ -15,6 +15,95 @@
   --light-gray: #f8fafc;
   --medium-gray: #e2e8f0;
   --dark-gray: #64748b;
+  
+  // Scrollbar CSS variables
+  --scrollbar-width: 6px;
+  --scrollbar-track-light: transparent;
+  --scrollbar-track-dark: transparent;
+  --scrollbar-thumb-light: rgba(0, 0, 0, 0.2);
+  --scrollbar-thumb-dark: rgba(255, 255, 255, 0.2);
+  --scrollbar-thumb-hover-light: rgba(0, 0, 0, 0.4);
+  --scrollbar-thumb-hover-dark: rgba(255, 255, 255, 0.4);
+}
+
+// ==========================================
+// Global Scrollbar Styles - Modern & Minimal
+// ==========================================
+// These styles provide a consistent, thin scrollbar experience
+// across the entire application, similar to modern MNC apps
+// Features:
+// - Thin scrollbar (6px)
+// - No arrows/buttons
+// - Auto-hide behavior (visible only when scrolling)
+// - Smooth transitions
+// - Works on both light and dark themes
+
+* {
+  // Firefox scrollbar styling
+  scrollbar-width: thin;
+  scrollbar-color: var(--scrollbar-thumb-light) var(--scrollbar-track-light);
+}
+
+// Webkit (Chrome, Safari, Edge) scrollbar styling
+*::-webkit-scrollbar {
+  width: var(--scrollbar-width);
+  height: var(--scrollbar-width);
+}
+
+*::-webkit-scrollbar-track {
+  background: var(--scrollbar-track-light);
+  border-radius: 10px;
+}
+
+*::-webkit-scrollbar-thumb {
+  background: var(--scrollbar-thumb-light);
+  border-radius: 10px;
+  transition: background 0.2s ease-in-out, opacity 0.2s ease-in-out;
+}
+
+*::-webkit-scrollbar-thumb:hover {
+  background: var(--scrollbar-thumb-hover-light);
+}
+
+// Remove scrollbar arrows/buttons
+*::-webkit-scrollbar-button {
+  display: none;
+  width: 0;
+  height: 0;
+}
+
+// Auto-hide scrollbar effect - appears only when hovering or scrolling
+*::-webkit-scrollbar-thumb {
+  opacity: 0;
+  transition: opacity 0.3s ease-in-out;
+}
+
+*:hover::-webkit-scrollbar-thumb {
+  opacity: 1;
+}
+
+// For actively scrolling elements, keep scrollbar visible
+*:active::-webkit-scrollbar-thumb,
+*:focus::-webkit-scrollbar-thumb {
+  opacity: 1;
+}
+
+// Dark theme scrollbar adjustments (for dark backgrounds)
+.dark-theme,
+[class*="dark"],
+[style*="background: #000"],
+[style*="background:#000"],
+[style*="background-color: #000"],
+[style*="background-color:#000"] {
+  scrollbar-color: var(--scrollbar-thumb-dark) var(--scrollbar-track-dark);
+  
+  &::-webkit-scrollbar-thumb {
+    background: var(--scrollbar-thumb-dark);
+  }
+  
+  &::-webkit-scrollbar-thumb:hover {
+    background: var(--scrollbar-thumb-hover-dark);
+  }
 }
 
 // Global styles for the app

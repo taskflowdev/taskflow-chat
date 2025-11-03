@@ -66,24 +66,6 @@
 .chats-list {
   flex: 1;
   overflow-y: auto;
-
-  // Custom scrollbar
-  &::-webkit-scrollbar {
-    width: 6px;
-  }
-
-  &::-webkit-scrollbar-track {
-    background: #222222;
-  }
-
-  &::-webkit-scrollbar-thumb {
-    background: #444444;
-    border-radius: 3px;
-
-    &:hover {
-      background: #666666;
-    }
-  }
 }
 
 // .no-chats {
