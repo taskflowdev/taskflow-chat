@@ -38,7 +38,7 @@
   </div>
 
   <!-- Messages Container -->
-  <div class="messages-container" #messagesContainer>
+  <div class="messages-container" #messagesContainer (scroll)="onMessagesScroll()">
     <!-- Loading Messages -->
     <div class="messages-list" *ngIf="loading">
       <app-skeleton-loader
@@ -62,6 +62,12 @@
         </app-chat-message>
       </ng-container>
     </div>
+    
+    <!-- Scroll to Bottom Button -->
+    <app-scroll-to-bottom-button 
+      *ngIf="showScrollButton && conversation && !loading"
+      (scrollClick)="onScrollToBottomClick()">
+    </app-scroll-to-bottom-button>
   </div>
 
   <!-- Message Input - Always visible -->

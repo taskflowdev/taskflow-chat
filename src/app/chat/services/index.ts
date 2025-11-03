@@ -30,3 +30,6 @@ export {
   isPollContent,
   isGeneralFileContent
 } from './message-display-service-proxy';
+
+// Auto-scroll service for WhatsApp-like behavior
+export { AutoScrollService } from './auto-scroll.service';
