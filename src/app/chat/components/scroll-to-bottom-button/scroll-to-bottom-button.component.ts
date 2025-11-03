@@ -1,13 +1,14 @@
 import { Component, EventEmitter, Output, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { trigger, state, style, transition, animate } from '@angular/animations';
+import { CommonTooltipDirective } from "../../../shared/components/common-tooltip";
 
 /**
  * ScrollToBottomButtonComponent
- * 
+ *
  * Floating button that appears when user scrolls up in chat.
  * Provides instant scroll-to-bottom functionality.
- * 
+ *
  * Features:
  * - Smooth fade-in/fade-out animations
  * - Accessible with keyboard support
@@ -17,7 +18,7 @@ import { trigger, state, style, transition, animate } from '@angular/animations'
 @Component({
   selector: 'app-scroll-to-bottom-button',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, CommonTooltipDirective],
   changeDetection: ChangeDetectionStrategy.OnPush,
   animations: [
     trigger('fadeSlide', [
@@ -34,7 +35,7 @@ import { trigger, state, style, transition, animate } from '@angular/animations'
     ])
   ],
   template: `
-    <button 
+    <button
       class="scroll-to-bottom-btn"
       [@fadeSlide]
       (click)="onScrollClick()"
@@ -42,7 +43,7 @@ import { trigger, state, style, transition, animate } from '@angular/animations'
       (keydown.space)="onScrollClick(); $event.preventDefault()"
       type="button"
       aria-label="Scroll to bottom"
-      title="Scroll to bottom">
+      appCommonTooltip="Scroll to bottom">
       <i class="bi bi-arrow-down"></i>
     </button>
   `,
@@ -63,37 +64,37 @@ import { trigger, state, style, transition, animate } from '@angular/animations'
       justify-content: center;
       transition: all 0.2s cubic-bezier(0.4, 0.0, 0.2, 1);
       z-index: 1000;
-      
+
       &:hover {
         background: #ffffff;
         transform: translateY(-2px);
         box-shadow: 0 6px 16px rgba(0, 0, 0, 0.35), 0 3px 6px rgba(0, 0, 0, 0.25);
       }
-      
+
       &:active {
         transform: translateY(0) scale(0.95);
         box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
       }
-      
+
       &:focus-visible {
         outline: 2px solid #22c55e;
         outline-offset: 2px;
       }
-      
+
       i {
-        font-size: 1.25rem;
+        font-size: 1.5rem;
         color: #000;
         font-weight: bold;
       }
     }
-    
+
     @media (max-width: 768px) {
       .scroll-to-bottom-btn {
         bottom: 90px;
         right: 1rem;
         width: 40px;
         height: 40px;
-        
+
         i {
           font-size: 1.1rem;
         }
@@ -103,7 +104,7 @@ import { trigger, state, style, transition, animate } from '@angular/animations'
 })
 export class ScrollToBottomButtonComponent {
   @Output() scrollClick = new EventEmitter<void>();
-  
+
   onScrollClick(): void {
     this.scrollClick.emit();
   }

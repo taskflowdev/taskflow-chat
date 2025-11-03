@@ -15,15 +15,15 @@
   --light-gray: #f8fafc;
   --medium-gray: #e2e8f0;
   --dark-gray: #64748b;
-  
+
   // Scrollbar CSS variables
   --scrollbar-width: 8px;
   --scrollbar-track-light: transparent;
   --scrollbar-track-dark: transparent;
-  --scrollbar-thumb-light: rgba(0, 0, 0, 0.5);
-  --scrollbar-thumb-dark: rgba(255, 255, 255, 0.5);
-  --scrollbar-thumb-hover-light: rgba(0, 0, 0, 0.7);
-  --scrollbar-thumb-hover-dark: rgba(255, 255, 255, 0.7);
+  --scrollbar-thumb-light: rgba(0, 0, 0, 1);
+  --scrollbar-thumb-dark: rgba(255, 255, 255, 1);
+  --scrollbar-thumb-hover-light: rgba(0, 0, 0, 1);
+  --scrollbar-thumb-hover-dark: rgba(255, 255, 255, 1);
 }
 
 // ==========================================
@@ -38,114 +38,42 @@
 // - Smooth transitions
 // - Works on both light and dark themes
 
-* {
-  // Firefox scrollbar styling
-  scrollbar-width: thin;
-  scrollbar-color: var(--scrollbar-thumb-light) var(--scrollbar-track-light);
+:root {
+  --scrollbar-width: 2px;
+  --scrollbar-thumb: #555;
+  --scrollbar-thumb-hover: #777;
+  --scrollbar-track: transparent;
 }
 
-// Webkit (Chrome, Safari, Edge) scrollbar styling
+/* force overlay mode (MOST IMPORTANT) */
+html, body, * {
+  scrollbar-width: thin;
+  scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track);
+}
+
+/* webkit */
 *::-webkit-scrollbar {
   width: var(--scrollbar-width);
   height: var(--scrollbar-width);
 }
 
 *::-webkit-scrollbar-track {
-  background: var(--scrollbar-track-light);
+  background: var(--scrollbar-track);
 }
 
 *::-webkit-scrollbar-thumb {
-  background: var(--scrollbar-thumb-light);
-  border-radius: 4px;
-  border: 2px solid transparent;
-  background-clip: padding-box;
-  transition: background 0.2s ease-in-out;
+  background: var(--scrollbar-thumb);
+  border-radius: 100px;
+  opacity: 1;
 }
 
 *::-webkit-scrollbar-thumb:hover {
-  background: var(--scrollbar-thumb-hover-light);
-  background-clip: padding-box;
+  background: var(--scrollbar-thumb-hover);
 }
 
-// Scrollbar arrows/buttons (always visible)
+/* REMOVE ARROWS COMPLETELY */
 *::-webkit-scrollbar-button {
-  display: block;
-  height: 16px;
-  width: 16px;
-  background-color: transparent;
-  background-repeat: no-repeat;
-  background-position: center;
-}
-
-// Up arrow
-*::-webkit-scrollbar-button:vertical:decrement {
-  background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 12 12"><path fill="rgba(0,0,0,0.8)" d="M6 3l4 4H2z"/></svg>');
-}
-
-// Down arrow
-*::-webkit-scrollbar-button:vertical:increment {
-  background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 12 12"><path fill="rgba(0,0,0,0.8)" d="M6 9L2 5h8z"/></svg>');
-}
-
-// Left arrow
-*::-webkit-scrollbar-button:horizontal:decrement {
-  background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 12 12"><path fill="rgba(0,0,0,0.8)" d="M3 6l4-4v8z"/></svg>');
-}
-
-// Right arrow
-*::-webkit-scrollbar-button:horizontal:increment {
-  background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 12 12"><path fill="rgba(0,0,0,0.8)" d="M9 6l-4 4V2z"/></svg>');
-}
-
-*::-webkit-scrollbar-button:hover {
-  background-color: rgba(0, 0, 0, 0.1);
-}
-
-// Dark theme scrollbar adjustments (for dark backgrounds)
-.dark-theme,
-[class*="dark"],
-[style*="background: #000"],
-[style*="background:#000"],
-[style*="background-color: #000"],
-[style*="background-color:#000"] {
-  scrollbar-color: var(--scrollbar-thumb-dark) var(--scrollbar-track-dark);
-  
-  &::-webkit-scrollbar-track {
-    background: var(--scrollbar-track-dark);
-  }
-  
-  &::-webkit-scrollbar-thumb {
-    background: var(--scrollbar-thumb-dark);
-  }
-  
-  &::-webkit-scrollbar-thumb:hover {
-    background: var(--scrollbar-thumb-hover-dark);
-  }
-  
-  &::-webkit-scrollbar-button {
-    background-color: transparent;
-  }
-  
-  // Dark theme arrows
-  &::-webkit-scrollbar-button:vertical:decrement {
-    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 12 12"><path fill="rgba(255,255,255,0.8)" d="M6 3l4 4H2z"/></svg>');
-  }
-  
-  &::-webkit-scrollbar-button:vertical:increment {
-    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 12 12"><path fill="rgba(255,255,255,0.8)" d="M6 9L2 5h8z"/></svg>');
-  }
-  
-  &::-webkit-scrollbar-button:horizontal:decrement {
-    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 12 12"><path fill="rgba(255,255,255,0.8)" d="M3 6l4-4v8z"/></svg>');
-  }
-  
-  &::-webkit-scrollbar-button:horizontal:increment {
-    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 12 12"><path fill="rgba(255,255,255,0.8)" d="M9 6l-4 4V2z"/></svg>');
-  }
-  
-  &::-webkit-scrollbar-button:hover {
-    background-color: rgba(255, 255, 255, 0.1);
-  }
+  display: none !important;
 }
 
 // Global styles for the app
