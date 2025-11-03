@@ -17,24 +17,24 @@
   --dark-gray: #64748b;
   
   // Scrollbar CSS variables
-  --scrollbar-width: 6px;
-  --scrollbar-track-light: transparent;
-  --scrollbar-track-dark: transparent;
-  --scrollbar-thumb-light: rgba(0, 0, 0, 0.2);
-  --scrollbar-thumb-dark: rgba(255, 255, 255, 0.2);
-  --scrollbar-thumb-hover-light: rgba(0, 0, 0, 0.4);
-  --scrollbar-thumb-hover-dark: rgba(255, 255, 255, 0.4);
+  --scrollbar-width: 8px;
+  --scrollbar-track-light: #f0f0f0;
+  --scrollbar-track-dark: #222222;
+  --scrollbar-thumb-light: rgba(0, 0, 0, 0.3);
+  --scrollbar-thumb-dark: rgba(255, 255, 255, 0.3);
+  --scrollbar-thumb-hover-light: rgba(0, 0, 0, 0.5);
+  --scrollbar-thumb-hover-dark: rgba(255, 255, 255, 0.5);
 }
 
 // ==========================================
-// Global Scrollbar Styles - Modern & Minimal
+// Global Scrollbar Styles - Always Visible
 // ==========================================
-// These styles provide a consistent, thin scrollbar experience
-// across the entire application, similar to modern MNC apps
+// These styles provide a consistent scrollbar experience
+// across the entire application
 // Features:
-// - Thin scrollbar (6px)
-// - No arrows/buttons
-// - Auto-hide behavior (visible only when scrolling)
+// - Always visible scrollbars
+// - Scrollbar arrows/buttons enabled
+// - Thin but visible design (8px)
 // - Smooth transitions
 // - Works on both light and dark themes
 
@@ -52,40 +52,54 @@
 
 *::-webkit-scrollbar-track {
   background: var(--scrollbar-track-light);
-  border-radius: 10px;
+  border-radius: 4px;
 }
 
 *::-webkit-scrollbar-thumb {
   background: var(--scrollbar-thumb-light);
-  border-radius: 10px;
-  transition: background 0.2s ease-in-out, opacity 0.2s ease-in-out;
+  border-radius: 4px;
+  border: 2px solid transparent;
+  background-clip: padding-box;
+  transition: background 0.2s ease-in-out;
 }
 
 *::-webkit-scrollbar-thumb:hover {
   background: var(--scrollbar-thumb-hover-light);
+  background-clip: padding-box;
 }
 
-// Remove scrollbar arrows/buttons
+// Scrollbar arrows/buttons (always visible)
 *::-webkit-scrollbar-button {
-  display: none;
-  width: 0;
-  height: 0;
+  display: block;
+  height: 16px;
+  width: 16px;
+  background-color: var(--scrollbar-track-light);
+  background-repeat: no-repeat;
+  background-position: center;
 }
 
-// Auto-hide scrollbar effect - appears only when hovering or scrolling
-*::-webkit-scrollbar-thumb {
-  opacity: 0;
-  transition: opacity 0.3s ease-in-out;
+// Up arrow
+*::-webkit-scrollbar-button:vertical:decrement {
+  background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 12 12"><path fill="rgba(0,0,0,0.5)" d="M6 3l4 4H2z"/></svg>');
 }
 
-*:hover::-webkit-scrollbar-thumb {
-  opacity: 1;
+// Down arrow
+*::-webkit-scrollbar-button:vertical:increment {
+  background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 12 12"><path fill="rgba(0,0,0,0.5)" d="M6 9L2 5h8z"/></svg>');
 }
 
-// For actively scrolling elements, keep scrollbar visible
-*:active::-webkit-scrollbar-thumb,
-*:focus::-webkit-scrollbar-thumb {
-  opacity: 1;
+// Left arrow
+*::-webkit-scrollbar-button:horizontal:decrement {
+  background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 12 12"><path fill="rgba(0,0,0,0.5)" d="M3 6l4-4v8z"/></svg>');
+}
+
+// Right arrow
+*::-webkit-scrollbar-button:horizontal:increment {
+  background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 12 12"><path fill="rgba(0,0,0,0.5)" d="M9 6l-4 4V2z"/></svg>');
+}
+
+*::-webkit-scrollbar-button:hover {
+  background-color: var(--scrollbar-thumb-light);
 }
 
 // Dark theme scrollbar adjustments (for dark backgrounds)
@@ -97,12 +111,41 @@
 [style*="background-color:#000"] {
   scrollbar-color: var(--scrollbar-thumb-dark) var(--scrollbar-track-dark);
   
+  &::-webkit-scrollbar-track {
+    background: var(--scrollbar-track-dark);
+  }
+  
   &::-webkit-scrollbar-thumb {
     background: var(--scrollbar-thumb-dark);
   }
   
   &::-webkit-scrollbar-thumb:hover {
     background: var(--scrollbar-thumb-hover-dark);
+  }
+  
+  &::-webkit-scrollbar-button {
+    background-color: var(--scrollbar-track-dark);
+  }
+  
+  // Dark theme arrows
+  &::-webkit-scrollbar-button:vertical:decrement {
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 12 12"><path fill="rgba(255,255,255,0.5)" d="M6 3l4 4H2z"/></svg>');
+  }
+  
+  &::-webkit-scrollbar-button:vertical:increment {
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 12 12"><path fill="rgba(255,255,255,0.5)" d="M6 9L2 5h8z"/></svg>');
+  }
+  
+  &::-webkit-scrollbar-button:horizontal:decrement {
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 12 12"><path fill="rgba(255,255,255,0.5)" d="M3 6l4-4v8z"/></svg>');
+  }
+  
+  &::-webkit-scrollbar-button:horizontal:increment {
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 12 12"><path fill="rgba(255,255,255,0.5)" d="M9 6l-4 4V2z"/></svg>');
+  }
+  
+  &::-webkit-scrollbar-button:hover {
+    background-color: var(--scrollbar-thumb-dark);
   }
 }
 
