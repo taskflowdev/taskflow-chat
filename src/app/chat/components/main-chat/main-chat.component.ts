@@ -768,7 +768,7 @@ export class MainChatComponent implements OnInit, OnDestroy {
     if (this.chatRealtimeService.isConnected) {
       try {
         await this.chatRealtimeService.sendMessage(this.currentConversation.groupId, {
-          content: { contentType: 'text' },
+          content: { contentType: 'text', text: messageContent.trim() } as any,
           contentType: 'text',
           messageType: 'userMessage'
         });

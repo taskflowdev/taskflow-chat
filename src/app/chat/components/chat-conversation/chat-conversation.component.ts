@@ -238,9 +238,9 @@ export class ChatConversationComponent implements AfterViewChecked, OnInit, OnDe
     }
     
     // Stop typing after 3 seconds of inactivity
-    this.typingTimeout = window.setTimeout(() => {
+    this.typingTimeout = setTimeout(() => {
       this.userTyping.emit(false);
-    }, 3000);
+    }, 3000) as any;
   }
   
   /**

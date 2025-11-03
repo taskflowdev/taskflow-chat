@@ -143,12 +143,10 @@ export class ChatRealtimeService implements OnDestroy {
     this.hubConnection.on('PresenceUpdate', (presenceList: PresenceDto[]) => {
       console.log('[ChatRealtimeService] Presence updated:', presenceList);
       
-      // Extract groupId from the first presence item (they all belong to same group)
-      if (presenceList && presenceList.length > 0) {
-        // Note: Backend should send groupId with presence data
-        // For now, we emit the event and let components handle it
-        this.presenceUpdated$.next({ groupId: '', presence: presenceList });
-      }
+      // Note: Backend should send groupId with presence updates
+      // For now, we emit the event and let components handle context
+      // Components should call this when they need presence for a specific group
+      this.presenceUpdated$.next({ groupId: '', presence: presenceList });
     });
 
     // Handle typing indicators

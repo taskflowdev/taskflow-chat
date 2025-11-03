@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, OnDestroy } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { MessageDto, GroupDto, PresenceDto } from '../../../api/models';
 import { TypingDto } from '../models';
@@ -28,14 +28,14 @@ export interface RealtimeState {
  * @remarks
  * This store follows enterprise-grade state management patterns:
  * - Immutable state updates
- * - Single source of truth
+ - Single source of truth
  * - Type-safe observable streams
  * - Memory efficient with cleanup methods
  */
 @Injectable({
   providedIn: 'root'
 })
-export class ChatRealtimeStore {
+export class ChatRealtimeStore implements OnDestroy {
   private readonly state$ = new BehaviorSubject<RealtimeState>({
     messages: new Map(),
     presence: new Map(),
