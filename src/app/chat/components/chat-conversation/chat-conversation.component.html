@@ -72,6 +72,16 @@
 
   <!-- Message Input - Always visible -->
   <div class="message-input-container">
+    <!-- Typing Indicator -->
+    <div class="typing-indicator" *ngIf="typingUsersText">
+      <div class="typing-dots">
+        <span class="dot"></span>
+        <span class="dot"></span>
+        <span class="dot"></span>
+      </div>
+      <span class="typing-text">{{ typingUsersText }}</span>
+    </div>
+    
     <div class="input-wrapper">
       <textarea [(ngModel)]="newMessage" (keydown)="onKeyDown($event)"
         placeholder="Type a message..."

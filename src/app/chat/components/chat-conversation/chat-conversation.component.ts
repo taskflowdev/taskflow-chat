@@ -30,10 +30,12 @@ export class ChatConversationComponent implements AfterViewChecked, OnInit, OnDe
   @Input() currentUserId: string | null = null;
   @Input() loading: boolean = false;
   @Input() showBackButton: boolean = false; // For mobile back navigation
+  @Input() typingUsers: string[] = []; // Users currently typing
   @Output() sendMessage = new EventEmitter<string>();
   @Output() backToChats = new EventEmitter<void>(); // Mobile back navigation
   @Output() groupUpdated = new EventEmitter<void>(); // Group info updated
   @Output() groupDeleted = new EventEmitter<string>(); // Group deleted - emits group ID
+  @Output() userTyping = new EventEmitter<boolean>(); // User typing indicator
 
   @ViewChild('messagesContainer') messagesContainer!: ElementRef;
 
@@ -43,6 +45,7 @@ export class ChatConversationComponent implements AfterViewChecked, OnInit, OnDe
   openGroupInfoForDeletion = false; // Flag to indicate deletion flow
   private fragmentSubscription?: Subscription;
   private autoScrollSubscription?: Subscription;
+  private typingTimeout?: number; // Typing indicator timeout
   
   // Auto-scroll state
   showScrollButton = false;
@@ -108,6 +111,11 @@ export class ChatConversationComponent implements AfterViewChecked, OnInit, OnDe
   ngOnDestroy(): void {
     this.fragmentSubscription?.unsubscribe();
     this.autoScrollSubscription?.unsubscribe();
+    
+    // Clear typing timeout
+    if (this.typingTimeout) {
+      clearTimeout(this.typingTimeout);
+    }
   }
 
   ngAfterViewChecked(): void {
@@ -211,6 +219,44 @@ export class ChatConversationComponent implements AfterViewChecked, OnInit, OnDe
     if (event.key === 'Enter' && !event.shiftKey) {
       event.preventDefault();
       this.onSendMessage();
+    } else {
+      // Send typing indicator
+      this.handleTypingIndicator();
+    }
+  }
+  
+  /**
+   * Handle typing indicator when user types
+   */
+  private handleTypingIndicator(): void {
+    // Emit typing started
+    this.userTyping.emit(true);
+    
+    // Clear existing timeout
+    if (this.typingTimeout) {
+      clearTimeout(this.typingTimeout);
+    }
+    
+    // Stop typing after 3 seconds of inactivity
+    this.typingTimeout = window.setTimeout(() => {
+      this.userTyping.emit(false);
+    }, 3000);
+  }
+  
+  /**
+   * Get typing users display text
+   */
+  get typingUsersText(): string {
+    if (!this.typingUsers || this.typingUsers.length === 0) {
+      return '';
+    }
+    
+    if (this.typingUsers.length === 1) {
+      return `${this.typingUsers[0]} is typing...`;
+    } else if (this.typingUsers.length === 2) {
+      return `${this.typingUsers[0]} and ${this.typingUsers[1]} are typing...`;
+    } else {
+      return `${this.typingUsers[0]} and ${this.typingUsers.length - 1} others are typing...`;
     }
   }
   

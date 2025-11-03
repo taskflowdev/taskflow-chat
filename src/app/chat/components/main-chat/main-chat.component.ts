@@ -42,6 +42,7 @@ export class MainChatComponent implements OnInit, OnDestroy {
   chats: ChatItemData[] = [];
   loading: boolean = true;
   loadingMessages: boolean = false;
+  currentTypingUsers: string[] = []; // Users currently typing in the selected group
 
   // Mobile responsiveness state
   isMobileView: boolean = false;
@@ -57,6 +58,7 @@ export class MainChatComponent implements OnInit, OnDestroy {
   private shortcutSubscription?: Subscription;
   private messageReceivedSubscription?: Subscription;
   private systemMessageSubscription?: Subscription;
+  private typingSubscription?: Subscription;
 
   constructor(
     private authService: AuthService,
@@ -143,6 +145,9 @@ export class MainChatComponent implements OnInit, OnDestroy {
     if (this.systemMessageSubscription) {
       this.systemMessageSubscription.unsubscribe();
     }
+    if (this.typingSubscription) {
+      this.typingSubscription.unsubscribe();
+    }
   }
 
   /**
@@ -184,6 +189,11 @@ export class MainChatComponent implements OnInit, OnDestroy {
     this.systemMessageSubscription = this.chatRealtimeService.onSystemMessageReceived.subscribe(message => {
       this.handleRealtimeMessage(message);
     });
+
+    // Subscribe to typing indicators
+    this.typingSubscription = this.chatRealtimeService.onUserTyping.subscribe(typingInfo => {
+      this.handleTypingIndicator(typingInfo);
+    });
   }
 
   /**
@@ -216,6 +226,42 @@ export class MainChatComponent implements OnInit, OnDestroy {
       if (!exists) {
         this.currentConversation.messages.push(chatMessage);
       }
+    }
+  }
+
+  /**
+   * Handle typing indicator from SignalR
+   */
+  private handleTypingIndicator(typingInfo: { groupId: string; userId: string; userName: string; isTyping: boolean }): void {
+    // Only process if it's for the currently selected chat and not from current user
+    if (typingInfo.groupId !== this.selectedChatId || typingInfo.userId === this.user?.id) {
+      return;
+    }
+
+    if (typingInfo.isTyping) {
+      // Add user to typing list if not already present
+      if (!this.currentTypingUsers.includes(typingInfo.userName)) {
+        this.currentTypingUsers = [...this.currentTypingUsers, typingInfo.userName];
+      }
+    } else {
+      // Remove user from typing list
+      this.currentTypingUsers = this.currentTypingUsers.filter(name => name !== typingInfo.userName);
+    }
+  }
+
+  /**
+   * Handle user typing event from chat conversation component
+   */
+  async onUserTyping(isTyping: boolean): Promise<void> {
+    if (!this.selectedChatId || !this.chatRealtimeService.isConnected) {
+      return;
+    }
+
+    try {
+      await this.chatRealtimeService.sendTypingIndicator(this.selectedChatId, isTyping);
+    } catch (error) {
+      // Silently fail - typing indicators are not critical
+      console.debug('[MainChat] Failed to send typing indicator:', error);
     }
   }
 
