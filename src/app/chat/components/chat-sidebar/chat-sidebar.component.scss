@@ -58,6 +58,13 @@
 
 .sidebar-content {
   flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.chats-list {
+  flex: 1;
   overflow-y: auto;
 
   // Custom scrollbar
@@ -77,10 +84,6 @@
       background: #666666;
     }
   }
-}
-
-.chats-list {
-  // Individual chat items are styled in chat-item component
 }
 
 // .no-chats {
