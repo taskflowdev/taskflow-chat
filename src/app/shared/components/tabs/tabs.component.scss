@@ -20,15 +20,6 @@
   border-bottom: 1px solid #333333;
   overflow-x: auto;
   -webkit-overflow-scrolling: touch;
-
-  &::-webkit-scrollbar {
-    height: 4px;
-  }
-
-  &::-webkit-scrollbar-thumb {
-    background: #444444;
-    border-radius: 2px;
-  }
 }
 
 .tab-button {

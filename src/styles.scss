@@ -15,6 +15,65 @@
   --light-gray: #f8fafc;
   --medium-gray: #e2e8f0;
   --dark-gray: #64748b;
+
+  // Scrollbar CSS variables
+  --scrollbar-width: 8px;
+  --scrollbar-track-light: transparent;
+  --scrollbar-track-dark: transparent;
+  --scrollbar-thumb-light: rgba(0, 0, 0, 1);
+  --scrollbar-thumb-dark: rgba(255, 255, 255, 1);
+  --scrollbar-thumb-hover-light: rgba(0, 0, 0, 1);
+  --scrollbar-thumb-hover-dark: rgba(255, 255, 255, 1);
+}
+
+// ==========================================
+// Global Scrollbar Styles - Always Visible
+// ==========================================
+// These styles provide a consistent scrollbar experience
+// across the entire application
+// Features:
+// - Always visible scrollbars
+// - Scrollbar arrows/buttons enabled
+// - Thin but visible design (8px)
+// - Smooth transitions
+// - Works on both light and dark themes
+
+:root {
+  --scrollbar-width: 2px;
+  --scrollbar-thumb: #555;
+  --scrollbar-thumb-hover: #777;
+  --scrollbar-track: transparent;
+}
+
+/* force overlay mode (MOST IMPORTANT) */
+html, body, * {
+  scrollbar-width: thin;
+  scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track);
+}
+
+/* webkit */
+*::-webkit-scrollbar {
+  width: var(--scrollbar-width);
+  height: var(--scrollbar-width);
+}
+
+*::-webkit-scrollbar-track {
+  background: var(--scrollbar-track);
+}
+
+*::-webkit-scrollbar-thumb {
+  background: var(--scrollbar-thumb);
+  border-radius: 100px;
+  opacity: 1;
+}
+
+*::-webkit-scrollbar-thumb:hover {
+  background: var(--scrollbar-thumb-hover);
+}
+
+/* REMOVE ARROWS COMPLETELY */
+*::-webkit-scrollbar-button {
+  display: none !important;
 }
 
 // Global styles for the app

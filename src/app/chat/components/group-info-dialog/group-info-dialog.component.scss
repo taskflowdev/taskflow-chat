@@ -102,9 +102,6 @@
   overflow-y: auto;
   padding: 1.5rem;
 
-  &::-webkit-scrollbar {
-    width: 8px;
-  }
 
   &::-webkit-scrollbar-track {
     background: rgba(255, 255, 255, 0.05);

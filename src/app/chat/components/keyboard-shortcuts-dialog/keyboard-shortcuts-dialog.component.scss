@@ -95,10 +95,6 @@
   overflow-y: auto;
   padding: 1.5rem;
 
-  // Custom scrollbar
-  &::-webkit-scrollbar {
-    width: 8px;
-  }
 
   &::-webkit-scrollbar-track {
     background: #222222;
