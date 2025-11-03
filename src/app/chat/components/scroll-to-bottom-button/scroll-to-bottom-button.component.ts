@@ -48,8 +48,8 @@ import { trigger, state, style, transition, animate } from '@angular/animations'
   `,
   styles: [`
     .scroll-to-bottom-btn {
-      position: absolute;
-      bottom: 90px;
+      position: fixed;
+      bottom: 100px;
       right: 2rem;
       width: 42px;
       height: 42px;
@@ -62,7 +62,7 @@ import { trigger, state, style, transition, animate } from '@angular/animations'
       align-items: center;
       justify-content: center;
       transition: all 0.2s cubic-bezier(0.4, 0.0, 0.2, 1);
-      z-index: 10;
+      z-index: 1000;
       
       &:hover {
         background: #ffffff;
@@ -89,7 +89,7 @@ import { trigger, state, style, transition, animate } from '@angular/animations'
     
     @media (max-width: 768px) {
       .scroll-to-bottom-btn {
-        bottom: 80px;
+        bottom: 90px;
         right: 1rem;
         width: 40px;
         height: 40px;
