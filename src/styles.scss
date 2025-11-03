@@ -20,10 +20,10 @@
   --scrollbar-width: 8px;
   --scrollbar-track-light: transparent;
   --scrollbar-track-dark: transparent;
-  --scrollbar-thumb-light: rgba(0, 0, 0, 0.3);
-  --scrollbar-thumb-dark: rgba(255, 255, 255, 0.3);
-  --scrollbar-thumb-hover-light: rgba(0, 0, 0, 0.5);
-  --scrollbar-thumb-hover-dark: rgba(255, 255, 255, 0.5);
+  --scrollbar-thumb-light: rgba(0, 0, 0, 0.5);
+  --scrollbar-thumb-dark: rgba(255, 255, 255, 0.5);
+  --scrollbar-thumb-hover-light: rgba(0, 0, 0, 0.7);
+  --scrollbar-thumb-hover-dark: rgba(255, 255, 255, 0.7);
 }
 
 // ==========================================
@@ -79,22 +79,22 @@
 
 // Up arrow
 *::-webkit-scrollbar-button:vertical:decrement {
-  background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 12 12"><path fill="rgba(0,0,0,0.5)" d="M6 3l4 4H2z"/></svg>');
+  background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 12 12"><path fill="rgba(0,0,0,0.8)" d="M6 3l4 4H2z"/></svg>');
 }
 
 // Down arrow
 *::-webkit-scrollbar-button:vertical:increment {
-  background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 12 12"><path fill="rgba(0,0,0,0.5)" d="M6 9L2 5h8z"/></svg>');
+  background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 12 12"><path fill="rgba(0,0,0,0.8)" d="M6 9L2 5h8z"/></svg>');
 }
 
 // Left arrow
 *::-webkit-scrollbar-button:horizontal:decrement {
-  background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 12 12"><path fill="rgba(0,0,0,0.5)" d="M3 6l4-4v8z"/></svg>');
+  background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 12 12"><path fill="rgba(0,0,0,0.8)" d="M3 6l4-4v8z"/></svg>');
 }
 
 // Right arrow
 *::-webkit-scrollbar-button:horizontal:increment {
-  background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 12 12"><path fill="rgba(0,0,0,0.5)" d="M9 6l-4 4V2z"/></svg>');
+  background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 12 12"><path fill="rgba(0,0,0,0.8)" d="M9 6l-4 4V2z"/></svg>');
 }
 
 *::-webkit-scrollbar-button:hover {
@@ -128,19 +128,19 @@
   
   // Dark theme arrows
   &::-webkit-scrollbar-button:vertical:decrement {
-    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 12 12"><path fill="rgba(255,255,255,0.5)" d="M6 3l4 4H2z"/></svg>');
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 12 12"><path fill="rgba(255,255,255,0.8)" d="M6 3l4 4H2z"/></svg>');
   }
   
   &::-webkit-scrollbar-button:vertical:increment {
-    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 12 12"><path fill="rgba(255,255,255,0.5)" d="M6 9L2 5h8z"/></svg>');
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 12 12"><path fill="rgba(255,255,255,0.8)" d="M6 9L2 5h8z"/></svg>');
   }
   
   &::-webkit-scrollbar-button:horizontal:decrement {
-    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 12 12"><path fill="rgba(255,255,255,0.5)" d="M3 6l4-4v8z"/></svg>');
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 12 12"><path fill="rgba(255,255,255,0.8)" d="M3 6l4-4v8z"/></svg>');
   }
   
   &::-webkit-scrollbar-button:horizontal:increment {
-    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 12 12"><path fill="rgba(255,255,255,0.5)" d="M9 6l-4 4V2z"/></svg>');
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 12 12"><path fill="rgba(255,255,255,0.8)" d="M9 6l-4 4V2z"/></svg>');
   }
   
   &::-webkit-scrollbar-button:hover {
