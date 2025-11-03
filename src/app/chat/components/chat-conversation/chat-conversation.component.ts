@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter, ViewChild, ElementRef, AfterViewChecked, OnInit, OnDestroy, PLATFORM_ID, Inject } from '@angular/core';
+import { Component, Input, Output, EventEmitter, ViewChild, ElementRef, AfterViewChecked, OnInit, OnDestroy, PLATFORM_ID, Inject, ChangeDetectorRef, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
@@ -8,6 +8,8 @@ import { SkeletonLoaderComponent } from '../../../shared/components/skeleton-loa
 import { GroupInfoDialogComponent } from '../group-info-dialog/group-info-dialog.component';
 import { CommonDropdownComponent, DropdownItem } from '../../../shared/components/common-dropdown/common-dropdown.component';
 import { CommonTooltipDirective, TooltipPosition } from '../../../shared/components/common-tooltip';
+import { ScrollToBottomButtonComponent } from '../scroll-to-bottom-button';
+import { AutoScrollService } from '../../services/auto-scroll.service';
 
 export interface ConversationData {
   groupId: string;
@@ -18,7 +20,8 @@ export interface ConversationData {
 
 @Component({
   selector: 'app-chat-conversation',
-  imports: [CommonModule, FormsModule, ChatMessageComponent, SkeletonLoaderComponent, GroupInfoDialogComponent, CommonDropdownComponent, CommonTooltipDirective],
+  imports: [CommonModule, FormsModule, ChatMessageComponent, SkeletonLoaderComponent, GroupInfoDialogComponent, CommonDropdownComponent, CommonTooltipDirective, ScrollToBottomButtonComponent],
+  providers: [AutoScrollService],
   templateUrl: './chat-conversation.component.html',
   styleUrls: ['./chat-conversation.component.scss']
 })
@@ -39,6 +42,12 @@ export class ChatConversationComponent implements AfterViewChecked, OnInit, OnDe
   showGroupInfoDialog = false;
   openGroupInfoForDeletion = false; // Flag to indicate deletion flow
   private fragmentSubscription?: Subscription;
+  private autoScrollSubscription?: Subscription;
+  
+  // Auto-scroll state
+  showScrollButton = false;
+  private previousMessageCount = 0;
+  private previousConversationId: string | null = null;
 
   // Export enum for template use
   TooltipPosition = TooltipPosition;
@@ -77,6 +86,8 @@ export class ChatConversationComponent implements AfterViewChecked, OnInit, OnDe
   constructor(
     private router: Router,
     private route: ActivatedRoute,
+    private autoScrollService: AutoScrollService,
+    private cdr: ChangeDetectorRef,
     @Inject(PLATFORM_ID) private platformId: Object
   ) {}
 
@@ -85,17 +96,61 @@ export class ChatConversationComponent implements AfterViewChecked, OnInit, OnDe
       this.fragmentSubscription = this.route.fragment.subscribe(fragment => {
         this.showGroupInfoDialog = fragment === 'group-info';
       });
+      
+      // Subscribe to auto-scroll state
+      this.autoScrollSubscription = this.autoScrollService.isNearBottom$.subscribe(isNear => {
+        this.showScrollButton = !isNear;
+        this.cdr.markForCheck();
+      });
     }
   }
 
   ngOnDestroy(): void {
     this.fragmentSubscription?.unsubscribe();
+    this.autoScrollSubscription?.unsubscribe();
   }
 
   ngAfterViewChecked(): void {
-    if (this.shouldScrollToBottom) {
-      this.scrollToBottom();
-      this.shouldScrollToBottom = false;
+    // Initialize auto-scroll service when container is available
+    if (this.messagesContainer && isPlatformBrowser(this.platformId)) {
+      const container = this.messagesContainer.nativeElement;
+      
+      // Initialize service on first render
+      if (container && !this.autoScrollService['scrollContainer']) {
+        this.autoScrollService.initialize(container);
+      }
+      
+      // Handle conversation changes (new chat opened)
+      if (this.conversation && this.conversation.groupId !== this.previousConversationId) {
+        this.previousConversationId = this.conversation.groupId;
+        this.previousMessageCount = this.conversation.messages?.length || 0;
+        // Scroll to bottom when opening a chat
+        setTimeout(() => {
+          this.autoScrollService.scrollToBottom(false);
+        }, 0);
+        return;
+      }
+      
+      // Handle new messages
+      if (this.conversation && this.conversation.messages) {
+        const currentMessageCount = this.conversation.messages.length;
+        if (currentMessageCount > this.previousMessageCount) {
+          // New message arrived
+          if (this.autoScrollService.shouldAutoScroll()) {
+            // Only auto-scroll if user is at bottom
+            setTimeout(() => {
+              this.autoScrollService.scrollToBottom(true);
+            }, 0);
+          }
+          this.previousMessageCount = currentMessageCount;
+        }
+      }
+      
+      // Handle manual scroll flag
+      if (this.shouldScrollToBottom) {
+        this.autoScrollService.scrollToBottom(false);
+        this.shouldScrollToBottom = false;
+      }
     }
   }
 
@@ -157,6 +212,20 @@ export class ChatConversationComponent implements AfterViewChecked, OnInit, OnDe
       event.preventDefault();
       this.onSendMessage();
     }
+  }
+  
+  /**
+   * Handle user scroll to detect manual scrolling
+   */
+  onMessagesScroll(): void {
+    this.autoScrollService.onUserScroll();
+  }
+  
+  /**
+   * Handle scroll-to-bottom button click
+   */
+  onScrollToBottomClick(): void {
+    this.autoScrollService.enableAutoScroll();
   }
 
   private scrollToBottom(): void {
