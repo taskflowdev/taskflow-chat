@@ -18,8 +18,8 @@
   
   // Scrollbar CSS variables
   --scrollbar-width: 8px;
-  --scrollbar-track-light: #f0f0f0;
-  --scrollbar-track-dark: #222222;
+  --scrollbar-track-light: transparent;
+  --scrollbar-track-dark: transparent;
   --scrollbar-thumb-light: rgba(0, 0, 0, 0.3);
   --scrollbar-thumb-dark: rgba(255, 255, 255, 0.3);
   --scrollbar-thumb-hover-light: rgba(0, 0, 0, 0.5);
@@ -52,7 +52,6 @@
 
 *::-webkit-scrollbar-track {
   background: var(--scrollbar-track-light);
-  border-radius: 4px;
 }
 
 *::-webkit-scrollbar-thumb {
@@ -73,7 +72,7 @@
   display: block;
   height: 16px;
   width: 16px;
-  background-color: var(--scrollbar-track-light);
+  background-color: transparent;
   background-repeat: no-repeat;
   background-position: center;
 }
@@ -99,7 +98,7 @@
 }
 
 *::-webkit-scrollbar-button:hover {
-  background-color: var(--scrollbar-thumb-light);
+  background-color: rgba(0, 0, 0, 0.1);
 }
 
 // Dark theme scrollbar adjustments (for dark backgrounds)
@@ -124,7 +123,7 @@
   }
   
   &::-webkit-scrollbar-button {
-    background-color: var(--scrollbar-track-dark);
+    background-color: transparent;
   }
   
   // Dark theme arrows
@@ -145,7 +144,7 @@
   }
   
   &::-webkit-scrollbar-button:hover {
-    background-color: var(--scrollbar-thumb-dark);
+    background-color: rgba(255, 255, 255, 0.1);
   }
 }
 
