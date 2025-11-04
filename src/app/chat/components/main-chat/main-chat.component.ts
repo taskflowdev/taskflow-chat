@@ -124,7 +124,7 @@ export class MainChatComponent implements OnInit, OnDestroy {
           // Only load if we have chats loaded and groupId exists in the list
           // Also check if this is a different chat to avoid reloading the same chat
           const chatExists = this.chats.some(chat => chat.groupId === groupId);
-          if (chatExists && this.selectedChatId !== groupId) {
+          if (chatExists && (!this.selectedChatId || this.selectedChatId !== groupId)) {
             this.selectChatById(groupId);
           }
         }

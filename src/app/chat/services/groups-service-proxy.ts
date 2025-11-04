@@ -68,7 +68,7 @@ export class GroupsServiceProxy {
         }
         return [];
       }),
-      shareReplay(1), // Share the result with all subscribers and cache it
+      shareReplay(1), // Share the result among concurrent subscribers (within same request)
       finalize(() => {
         // Clean up after all subscriptions complete
         this.groupsLoading = false;
@@ -200,7 +200,9 @@ export class GroupsServiceProxy {
     }).pipe(
       map(response => {
         if (response.success && response.data) {
-          // Clear cache after creating a new group
+          // Clear cache after creating a new group to force refresh
+          // Note: We could optimize by adding the new group to cache, but clearing
+          // is simpler and safer, ensuring all group properties are correctly populated
           this.clearCache();
           return response.data;
         }
