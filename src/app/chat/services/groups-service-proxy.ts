@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Observable, map, of, shareReplay } from 'rxjs';
+import { Observable, map, of, shareReplay, finalize } from 'rxjs';
 import { GroupsService } from '../../api/services/groups.service';
 import { MessagesService } from '../../api/services/messages.service';
 import { GroupDto } from '../../api/models/group-dto';
@@ -69,11 +69,10 @@ export class GroupsServiceProxy {
         return [];
       }),
       shareReplay(1), // Share the result with all subscribers and cache it
-      map(groups => {
+      finalize(() => {
         // Clean up after all subscriptions complete
         this.groupsLoading = false;
         this.groupsLoadObservable = null;
-        return groups;
       })
     );
 
@@ -211,11 +210,13 @@ export class GroupsServiceProxy {
   }
 
   /**
-   * Clears the cached groups data.
+   * Clears the cached groups data and resets loading state.
    * Call this when groups are created, updated, or deleted to force a refresh.
    */
   clearCache(): void {
     this.cachedGroups = null;
+    this.groupsLoading = false;
+    this.groupsLoadObservable = null;
   }
 
   /**

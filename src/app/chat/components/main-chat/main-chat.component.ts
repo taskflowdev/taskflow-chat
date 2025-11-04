@@ -101,8 +101,8 @@ export class MainChatComponent implements OnInit, OnDestroy {
       });
 
       // Load initial data if user is already authenticated
-      // Only load if chats haven't been loaded yet
-      if (this.user && !this.groupsLoaded && this.chats.length === 0) {
+      // Only load if groups haven't been loaded yet
+      if (this.user && !this.groupsLoaded) {
         this.loadUserGroups();
       }
 
