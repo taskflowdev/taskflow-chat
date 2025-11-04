@@ -217,13 +217,38 @@ export class MainChatComponent implements OnInit, OnDestroy {
       this.chats = [chat, ...this.chats.filter(c => c.groupId !== message.groupId)];
     }
 
-    // If this message belongs to the currently open conversation, add it
+    // If this message belongs to the currently open conversation, handle it
     if (this.currentConversation && message.groupId === this.currentConversation.groupId) {
       const chatMessage = this.mapMessageToChatMessage(message);
       
-      // Avoid duplicates
-      const exists = this.currentConversation.messages.some(m => m.messageId === chatMessage.messageId);
-      if (!exists) {
+      // Check for exact duplicate by messageId
+      const existsByMessageId = this.currentConversation.messages.some(m => m.messageId === chatMessage.messageId);
+      
+      if (!existsByMessageId) {
+        // Check if this is replacing an optimistic message (own message from this user)
+        if (message.senderId === this.user?.id) {
+          // Find and remove optimistic message that matches this real message
+          // Match by: same sender, similar timestamp (within 5 seconds), and starts with 'temp-'
+          const messageTimestamp = new Date(message.createdAt || '').getTime();
+          const optimisticIndex = this.currentConversation.messages.findIndex(m => {
+            if (!m.messageId.startsWith('temp-')) return false;
+            if (m.senderId !== message.senderId) return false;
+            
+            // Check if timestamps are close (within 5 seconds)
+            const optimisticTimestamp = new Date(m.createdAt).getTime();
+            const timeDiff = Math.abs(messageTimestamp - optimisticTimestamp);
+            return timeDiff < 5000; // 5 seconds tolerance
+          });
+          
+          if (optimisticIndex !== -1) {
+            // Replace optimistic message with real one at the same position to maintain order
+            this.currentConversation.messages[optimisticIndex] = chatMessage;
+            console.log('[MainChat] Replaced optimistic message with real message');
+            return;
+          }
+        }
+        
+        // No optimistic message found, just add the new message
         this.currentConversation.messages.push(chatMessage);
       }
     }
@@ -773,24 +798,8 @@ export class MainChatComponent implements OnInit, OnDestroy {
         await this.chatRealtimeService.sendMessage(this.currentConversation.groupId, messageDto);
         console.log('[MainChat] Message sent via SignalR');
         
-        // Real message will arrive via SignalR event and replace optimistic one
-        // Remove optimistic message after a timeout if real one doesn't arrive
-        setTimeout(() => {
-          if (this.currentConversation) {
-            const exists = this.currentConversation.messages.some(
-              msg => msg.messageId === optimisticMessage.messageId
-            );
-            if (exists) {
-              // Still has optimistic message, something went wrong
-              const index = this.currentConversation.messages.findIndex(
-                msg => msg.messageId === optimisticMessage.messageId
-              );
-              if (index !== -1) {
-                this.currentConversation.messages.splice(index, 1);
-              }
-            }
-          }
-        }, 10000); // 10 second timeout
+        // The real message will arrive via SignalR event and replace the optimistic one
+        // in handleRealtimeMessage() by matching sender and timestamp
       } catch (error) {
         console.error('[MainChat] Failed to send via SignalR, falling back to REST:', error);
         this.sendMessageViaREST(messageContent, optimisticMessage);
