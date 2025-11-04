@@ -17,6 +17,8 @@ import { ShortcutHandlerService } from '../../../shared/services/shortcut-handle
 import { ShortcutActionTypes, ShortcutContext } from '../../../shared/models/keyboard-shortcut.model';
 import { Subscription } from 'rxjs';
 import { KeyboardShortcutService } from '../../../shared/services/keyboard-shortcut.service';
+import { ChatRealtimeService } from '../../../core/realtime';
+import { AppConfigService } from '../../../core/services/app-config.service';
 
 @Component({
   selector: 'app-main-chat',
@@ -40,6 +42,7 @@ export class MainChatComponent implements OnInit, OnDestroy {
   chats: ChatItemData[] = [];
   loading: boolean = true;
   loadingMessages: boolean = false;
+  currentTypingUsers: string[] = []; // Users currently typing in the selected group
 
   // Mobile responsiveness state
   isMobileView: boolean = false;
@@ -53,6 +56,9 @@ export class MainChatComponent implements OnInit, OnDestroy {
 
   // Subscriptions
   private shortcutSubscription?: Subscription;
+  private messageReceivedSubscription?: Subscription;
+  private systemMessageSubscription?: Subscription;
+  private typingSubscription?: Subscription;
 
   constructor(
     private authService: AuthService,
@@ -62,6 +68,8 @@ export class MainChatComponent implements OnInit, OnDestroy {
     private messageFactoryService: MessageFactoryServiceProxy,
     private keyboardShortcutService: KeyboardShortcutService,
     private shortcutHandlerService: ShortcutHandlerService,
+    private chatRealtimeService: ChatRealtimeService,
+    private appConfigService: AppConfigService,
     @Inject(PLATFORM_ID) private platformId: Object
   ) { }
 
@@ -72,6 +80,9 @@ export class MainChatComponent implements OnInit, OnDestroy {
     if (isPlatformBrowser(this.platformId)) {
       this.checkMobileView();
       window.addEventListener('resize', () => this.checkMobileView());
+      
+      // Initialize SignalR connection
+      this.initializeRealtimeConnection();
     }
 
     // Subscribe to user changes only in browser environment
@@ -124,9 +135,158 @@ export class MainChatComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    // Clean up subscription
+    // Clean up subscriptions
     if (this.shortcutSubscription) {
       this.shortcutSubscription.unsubscribe();
+    }
+    if (this.messageReceivedSubscription) {
+      this.messageReceivedSubscription.unsubscribe();
+    }
+    if (this.systemMessageSubscription) {
+      this.systemMessageSubscription.unsubscribe();
+    }
+    if (this.typingSubscription) {
+      this.typingSubscription.unsubscribe();
+    }
+  }
+
+  /**
+   * Initialize SignalR real-time connection
+   * Connects to chat hub and subscribes to real-time events
+   */
+  private async initializeRealtimeConnection(): Promise<void> {
+    try {
+      const apiUrl = this.appConfigService.getApiUrl();
+      const token = this.authService.getToken();
+
+      if (!token) {
+        console.log('[MainChat] No auth token available, skipping SignalR connection');
+        return;
+      }
+
+      console.log('[MainChat] Initializing SignalR connection...');
+      await this.chatRealtimeService.connect(apiUrl, token);
+      console.log('[MainChat] SignalR connected successfully');
+
+      // Subscribe to real-time message events
+      this.subscribeToRealtimeEvents();
+    } catch (error) {
+      console.error('[MainChat] Failed to initialize SignalR:', error);
+      // App continues to work with REST API only
+    }
+  }
+
+  /**
+   * Subscribe to real-time events from SignalR
+   */
+  private subscribeToRealtimeEvents(): void {
+    // Subscribe to new messages
+    this.messageReceivedSubscription = this.chatRealtimeService.onMessageReceived.subscribe(message => {
+      this.handleRealtimeMessage(message);
+    });
+
+    // Subscribe to system messages
+    this.systemMessageSubscription = this.chatRealtimeService.onSystemMessageReceived.subscribe(message => {
+      this.handleRealtimeMessage(message);
+    });
+
+    // Subscribe to typing indicators
+    this.typingSubscription = this.chatRealtimeService.onUserTyping.subscribe(typingInfo => {
+      this.handleTypingIndicator(typingInfo);
+    });
+  }
+
+  /**
+   * Handle real-time message received from SignalR
+   */
+  private handleRealtimeMessage(message: MessageDto): void {
+    if (!message.groupId) return;
+
+    // Update the chat list with the new message
+    const chat = this.chats.find(c => c.groupId === message.groupId);
+    if (chat) {
+      chat.lastMessage = message;
+      chat.lastMessageTime = message.createdAt || new Date().toISOString();
+      
+      // If this is not the currently selected chat, increment unread count
+      if (message.groupId !== this.selectedChatId) {
+        chat.unreadCount = (chat.unreadCount || 0) + 1;
+      }
+      
+      // Move chat to top of list
+      this.chats = [chat, ...this.chats.filter(c => c.groupId !== message.groupId)];
+    }
+
+    // If this message belongs to the currently open conversation, handle it
+    if (this.currentConversation && message.groupId === this.currentConversation.groupId) {
+      const chatMessage = this.mapMessageToChatMessage(message);
+      
+      // Check for exact duplicate by messageId
+      const existsByMessageId = this.currentConversation.messages.some(m => m.messageId === chatMessage.messageId);
+      
+      if (!existsByMessageId) {
+        // Check if this is replacing an optimistic message (own message from this user)
+        if (message.senderId === this.user?.id) {
+          // Find and remove optimistic message that matches this real message
+          // Match by: same sender, similar timestamp (within 5 seconds), and starts with 'temp-'
+          const messageTimestamp = new Date(message.createdAt || '').getTime();
+          const optimisticIndex = this.currentConversation.messages.findIndex(m => {
+            if (!m.messageId.startsWith('temp-')) return false;
+            if (m.senderId !== message.senderId) return false;
+            
+            // Check if timestamps are close (within 5 seconds)
+            const optimisticTimestamp = new Date(m.createdAt).getTime();
+            const timeDiff = Math.abs(messageTimestamp - optimisticTimestamp);
+            return timeDiff < 5000; // 5 seconds tolerance
+          });
+          
+          if (optimisticIndex !== -1) {
+            // Replace optimistic message with real one at the same position to maintain order
+            this.currentConversation.messages[optimisticIndex] = chatMessage;
+            console.log('[MainChat] Replaced optimistic message with real message');
+            return;
+          }
+        }
+        
+        // No optimistic message found, just add the new message
+        this.currentConversation.messages.push(chatMessage);
+      }
+    }
+  }
+
+  /**
+   * Handle typing indicator from SignalR
+   */
+  private handleTypingIndicator(typingInfo: { groupId: string; userId: string; userName: string; isTyping: boolean }): void {
+    // Only process if it's for the currently selected chat and not from current user
+    if (typingInfo.groupId !== this.selectedChatId || typingInfo.userId === this.user?.id) {
+      return;
+    }
+
+    if (typingInfo.isTyping) {
+      // Add user to typing list if not already present
+      if (!this.currentTypingUsers.includes(typingInfo.userName)) {
+        this.currentTypingUsers = [...this.currentTypingUsers, typingInfo.userName];
+      }
+    } else {
+      // Remove user from typing list
+      this.currentTypingUsers = this.currentTypingUsers.filter(name => name !== typingInfo.userName);
+    }
+  }
+
+  /**
+   * Handle user typing event from chat conversation component
+   */
+  async onUserTyping(isTyping: boolean): Promise<void> {
+    if (!this.selectedChatId || !this.chatRealtimeService.isConnected) {
+      return;
+    }
+
+    try {
+      await this.chatRealtimeService.sendTypingIndicator(this.selectedChatId, isTyping);
+    } catch (error) {
+      // Silently fail - typing indicators are not critical
+      console.debug('[MainChat] Failed to send typing indicator:', error);
     }
   }
 
@@ -397,9 +557,20 @@ export class MainChatComponent implements OnInit, OnDestroy {
   /**
    * Selects a chat by ID and loads its messages
    */
-  private selectChatById(groupId: string): void {
+  private async selectChatById(groupId: string): Promise<void> {
     this.selectedChatId = groupId;
     this.loadGroupMessages(groupId);
+
+    // Join SignalR group for real-time updates
+    if (this.chatRealtimeService.isConnected) {
+      try {
+        await this.chatRealtimeService.joinGroup(groupId);
+        console.log('[MainChat] Joined SignalR group:', groupId);
+      } catch (error) {
+        console.error('[MainChat] Failed to join SignalR group:', error);
+        // Continue with REST API only
+      }
+    }
 
     // On mobile, hide sidebar when a chat is selected
     if (this.isMobileView) {
@@ -575,9 +746,10 @@ export class MainChatComponent implements OnInit, OnDestroy {
 
   /**
    * Handles sending messages with proper validation and type handling.
-   * Supports text messages and can be extended for other content types.
+   * Uses SignalR for real-time message delivery.
+   * Falls back to REST API if SignalR is not connected.
    */
-  onSendMessage(messageContent: string): void {
+  async onSendMessage(messageContent: string): Promise<void> {
     if (!this.currentConversation || !this.user || !messageContent.trim()) return;
 
     // Validate message content
@@ -617,8 +789,32 @@ export class MainChatComponent implements OnInit, OnDestroy {
       chat.lastMessageTime = new Date().toISOString();
     }
 
-    // Send message via the message factory service
-    this.messageFactoryService.sendTextMessage(this.currentConversation.groupId, messageContent).subscribe({
+    // Send message via SignalR if connected, otherwise use REST API
+    if (this.chatRealtimeService.isConnected) {
+      try {
+        // Use message factory to create properly formatted SendMessageDto
+        const messageDto = this.messageFactoryService.createTextMessageDto(messageContent);
+        
+        await this.chatRealtimeService.sendMessage(this.currentConversation.groupId, messageDto);
+        console.log('[MainChat] Message sent via SignalR');
+        
+        // The real message will arrive via SignalR event and replace the optimistic one
+        // in handleRealtimeMessage() by matching sender and timestamp
+      } catch (error) {
+        console.error('[MainChat] Failed to send via SignalR, falling back to REST:', error);
+        this.sendMessageViaREST(messageContent, optimisticMessage);
+      }
+    } else {
+      // SignalR not connected, use REST API
+      this.sendMessageViaREST(messageContent, optimisticMessage);
+    }
+  }
+
+  /**
+   * Sends message via REST API (fallback)
+   */
+  private sendMessageViaREST(messageContent: string, optimisticMessage: ChatMessageData): void {
+    this.messageFactoryService.sendTextMessage(this.currentConversation!.groupId, messageContent).subscribe({
       next: (sentMessage) => {
         // Replace optimistic message with real one if API returns it
         if (sentMessage && this.currentConversation) {
@@ -637,7 +833,7 @@ export class MainChatComponent implements OnInit, OnDestroy {
         }
       },
       error: (error) => {
-        console.error('Failed to send message:', error);
+        console.error('Failed to send message via REST:', error);
         // Remove optimistic message on error
         if (this.currentConversation) {
           const index = this.currentConversation.messages.findIndex(

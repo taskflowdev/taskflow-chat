@@ -16,11 +16,13 @@
       [currentUserId]="user?.id || null"
       [loading]="loadingMessages"
       [showBackButton]="isMobileView"
+      [typingUsers]="currentTypingUsers"
       [class.mobile-hidden]="isMobileView && showSidebar"
       (sendMessage)="onSendMessage($event)"
       (backToChats)="onBackToChats()"
       (groupUpdated)="onGroupUpdated()"
-      (groupDeleted)="onGroupDeleted($event)">
+      (groupDeleted)="onGroupDeleted($event)"
+      (userTyping)="onUserTyping($event)">
     </app-chat-conversation>
   </div>
 
