@@ -512,10 +512,11 @@ export class MainChatComponent implements OnInit, OnDestroy {
 
   /**
    * Loads user groups from API
+   * @param forceRefresh - If true, bypasses cache and fetches fresh data
    */
-  private loadUserGroups(): void {
+  private loadUserGroups(forceRefresh: boolean = false): void {
     this.loading = true;
-    this.groupsServiceProxy.getUserGroups().subscribe({
+    this.groupsServiceProxy.getUserGroups(forceRefresh).subscribe({
       next: (groups: GroupWithMessages[]) => {
         this.chats = groups.map(group => this.mapGroupToChatItem(group));
         this.loading = false;
@@ -614,14 +615,14 @@ export class MainChatComponent implements OnInit, OnDestroy {
    * Handles group creation event - refreshes chat list instead of full page reload
    */
   onGroupCreated(): void {
-    this.loadUserGroups();
+    this.loadUserGroups(true); // Force refresh after creating a group
   }
 
   /**
    * Handles group update event - refreshes chat list and current conversation
    */
   onGroupUpdated(): void {
-    this.loadUserGroups();
+    this.loadUserGroups(true); // Force refresh after updating a group
     // Reload current conversation to get updated details
     if (this.selectedChatId) {
       this.loadGroupMessages(this.selectedChatId);
@@ -919,6 +920,6 @@ export class MainChatComponent implements OnInit, OnDestroy {
    * Reload the groups list to include the newly joined group
    */
   onGroupJoined(): void {
-    this.loadUserGroups();
+    this.loadUserGroups(true); // Force refresh after joining a group
   }
 }

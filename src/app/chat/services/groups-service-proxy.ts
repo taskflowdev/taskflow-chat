@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Observable, map, of } from 'rxjs';
+import { Observable, map, of, shareReplay } from 'rxjs';
 import { GroupsService } from '../../api/services/groups.service';
 import { MessagesService } from '../../api/services/messages.service';
 import { GroupDto } from '../../api/models/group-dto';
@@ -22,11 +22,16 @@ export interface GroupWithMessages {
  * Proxy service for Groups API operations.
  * Provides a simplified, application-specific interface over the auto-generated API services.
  * Follows MNC coding standards with comprehensive documentation and error handling.
+ * Includes caching to prevent unnecessary API calls.
  */
 @Injectable({
   providedIn: 'root'
 })
 export class GroupsServiceProxy {
+  // Cache for user groups to prevent unnecessary API calls
+  private cachedGroups: GroupWithMessages[] | null = null;
+  private groupsLoading: boolean = false;
+  private groupsLoadObservable: Observable<GroupWithMessages[]> | null = null;
 
   constructor(
     private groupsService: GroupsService,
@@ -36,20 +41,43 @@ export class GroupsServiceProxy {
   /**
    * Retrieves all groups for the current user with last message information.
    * Combines group data with recent message information for chat list display.
+   * Uses caching to prevent unnecessary API calls.
    * 
+   * @param forceRefresh - If true, bypasses cache and fetches fresh data
    * @returns Observable<GroupWithMessages[]> Array of groups with last message details
    */
-  getUserGroups(): Observable<GroupWithMessages[]> {
-    return this.groupsService.apiGroupsGet$Json().pipe(
+  getUserGroups(forceRefresh: boolean = false): Observable<GroupWithMessages[]> {
+    // Return cached data if available and not forcing refresh
+    if (this.cachedGroups && !forceRefresh) {
+      return of(this.cachedGroups);
+    }
+
+    // If already loading, return the existing observable to prevent duplicate requests
+    if (this.groupsLoading && this.groupsLoadObservable) {
+      return this.groupsLoadObservable;
+    }
+
+    // Mark as loading and create new observable
+    this.groupsLoading = true;
+    this.groupsLoadObservable = this.groupsService.apiGroupsGet$Json().pipe(
       map(response => {
         if (response.success && response.data) {
-          // For now, return groups with placeholder last message
-          // In a real implementation, this would fetch the latest message for each group
-          return response.data.map(group => this.mapGroupToGroupWithMessages(group));
+          const groups = response.data.map(group => this.mapGroupToGroupWithMessages(group));
+          this.cachedGroups = groups;
+          return groups;
         }
         return [];
+      }),
+      shareReplay(1), // Share the result with all subscribers and cache it
+      map(groups => {
+        // Clean up after all subscriptions complete
+        this.groupsLoading = false;
+        this.groupsLoadObservable = null;
+        return groups;
       })
     );
+
+    return this.groupsLoadObservable;
   }
 
   /**
@@ -173,11 +201,21 @@ export class GroupsServiceProxy {
     }).pipe(
       map(response => {
         if (response.success && response.data) {
+          // Clear cache after creating a new group
+          this.clearCache();
           return response.data;
         }
         return null;
       })
     );
+  }
+
+  /**
+   * Clears the cached groups data.
+   * Call this when groups are created, updated, or deleted to force a refresh.
+   */
+  clearCache(): void {
+    this.cachedGroups = null;
   }
 
   /**
