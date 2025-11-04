@@ -3,7 +3,7 @@ import { HubConnection, HubConnectionBuilder, LogLevel, HubConnectionState } fro
 import { BehaviorSubject, Observable, Subject } from 'rxjs';
 import { MessageDto, GroupDto, SendMessageDto, PresenceDto } from '../../../api/models';
 import { GroupsService, MessagesService } from '../../../api/services';
-import { TypingDto, GroupMembershipChangedDto } from '../models';
+import { TypingDto } from '../models';
 import { ChatRealtimeStore } from '../stores/chat-realtime.store';
 
 /**
@@ -44,7 +44,6 @@ export class ChatRealtimeService implements OnDestroy {
   private readonly systemMessageReceived$ = new Subject<MessageDto>();
   private readonly presenceUpdated$ = new Subject<{ groupId: string; presence: PresenceDto[] }>();
   private readonly userTyping$ = new Subject<TypingDto>();
-  private readonly groupMembershipChanged$ = new Subject<GroupMembershipChangedDto>();
   private readonly connectionState$ = new BehaviorSubject<ConnectionState>({ 
     state: HubConnectionState.Disconnected 
   });
@@ -155,12 +154,6 @@ export class ChatRealtimeService implements OnDestroy {
       console.log('[ChatRealtimeService] User typing:', typingInfo);
       this.store.updateTyping(typingInfo);
       this.userTyping$.next(typingInfo);
-    });
-
-    // Handle group membership changes
-    this.hubConnection.on('GroupMembershipChanged', (membershipChange: GroupMembershipChangedDto) => {
-      console.log('[ChatRealtimeService] Group membership changed:', membershipChange);
-      this.groupMembershipChanged$.next(membershipChange);
     });
 
     // Handle reconnection
@@ -414,14 +407,6 @@ export class ChatRealtimeService implements OnDestroy {
   }
 
   /**
-   * Observable for group membership changes
-   * Emitted when users are added, removed, or roles change
-   */
-  get onGroupMembershipChanged(): Observable<GroupMembershipChangedDto> {
-    return this.groupMembershipChanged$.asObservable();
-  }
-
-  /**
    * Observable for connection state changes
    */
   get connectionState(): Observable<ConnectionState> {
@@ -444,7 +429,6 @@ export class ChatRealtimeService implements OnDestroy {
     this.systemMessageReceived$.complete();
     this.presenceUpdated$.complete();
     this.userTyping$.complete();
-    this.groupMembershipChanged$.complete();
     this.connectionState$.complete();
   }
 }
