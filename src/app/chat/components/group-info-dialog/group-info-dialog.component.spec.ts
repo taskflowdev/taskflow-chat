@@ -52,7 +52,8 @@ describe('GroupInfoDialogComponent', () => {
       'apiGroupsIdMembersGet$Json',
       'apiGroupsIdNamePut$Json',
       'apiGroupsIdMembersUserIdMakeAdminPost$Json',
-      'apiGroupsIdDelete$Json'
+      'apiGroupsIdDelete$Json',
+      'apiGroupsIdLeavePost$Json'
     ]);
 
     mockToastService = jasmine.createSpyObj('ToastService', [
@@ -372,5 +373,135 @@ describe('GroupInfoDialogComponent', () => {
       userId: 'user-2',
       action: 'makeAdmin'
     });
+  });
+
+  // Leave Group Tests
+  it('should show leave group confirmation', () => {
+    fixture.detectChanges();
+    component.showLeaveDialog();
+    
+    expect(component.showLeaveConfirmation).toBe(true);
+  });
+
+  it('should cancel leave group confirmation', () => {
+    fixture.detectChanges();
+    component.showLeaveConfirmation = true;
+    component.cancelLeave();
+    
+    expect(component.showLeaveConfirmation).toBe(false);
+  });
+
+  it('should leave group successfully', () => {
+    mockGroupsService.apiGroupsIdLeavePost$Json.and.returnValue(
+      of({ success: true, data: null, message: '' })
+    );
+    
+    fixture.detectChanges();
+    component.members = mockMembers;
+    component.currentUserId = 'user-2'; // Regular member (not last admin)
+    spyOn(component.leftGroup, 'emit');
+    spyOn(component.closed, 'emit');
+    
+    component.confirmLeave();
+    
+    expect(mockGroupsService.apiGroupsIdLeavePost$Json).toHaveBeenCalledWith({ id: 'group-1' });
+    expect(mockToastService.showSuccess).toHaveBeenCalled();
+    expect(component.leftGroup.emit).toHaveBeenCalledWith('group-1');
+    expect(component.closed.emit).toHaveBeenCalled();
+    expect(mockRouter.navigate).toHaveBeenCalledWith(['/chat']);
+  });
+
+  it('should not allow last admin to leave group', () => {
+    fixture.detectChanges();
+    // Set up scenario where current user is the only admin
+    const singleAdminMembers: GroupMemberDto[] = [
+      {
+        userId: 'user-1',
+        fullName: 'Admin User',
+        userName: 'admin',
+        role: 'admin',
+        groupId: 'group-1',
+        memberId: 'member-1',
+        joinedAt: '2024-01-15T10:00:00Z'
+      },
+      {
+        userId: 'user-2',
+        fullName: 'Regular User',
+        userName: 'user',
+        role: 'member',
+        groupId: 'group-1',
+        memberId: 'member-2',
+        joinedAt: '2024-01-16T10:00:00Z'
+      }
+    ];
+    
+    component.members = singleAdminMembers;
+    component.currentUserId = 'user-1';
+    
+    expect(component.isLastAdmin).toBe(true);
+    
+    // Try to leave - should be prevented
+    component.onLeaveClick();
+    
+    expect(mockGroupsService.apiGroupsIdLeavePost$Json).not.toHaveBeenCalled();
+  });
+
+  it('should determine last admin status correctly', () => {
+    fixture.detectChanges();
+    
+    // Test with multiple admins
+    const multipleAdmins: GroupMemberDto[] = [
+      {
+        userId: 'user-1',
+        fullName: 'Admin User 1',
+        userName: 'admin1',
+        role: 'admin',
+        groupId: 'group-1',
+        memberId: 'member-1',
+        joinedAt: '2024-01-15T10:00:00Z'
+      },
+      {
+        userId: 'user-2',
+        fullName: 'Admin User 2',
+        userName: 'admin2',
+        role: 'admin',
+        groupId: 'group-1',
+        memberId: 'member-2',
+        joinedAt: '2024-01-16T10:00:00Z'
+      }
+    ];
+    
+    component.members = multipleAdmins;
+    component.currentUserId = 'user-1';
+    
+    expect(component.isLastAdmin).toBe(false);
+  });
+
+  it('should handle leave group error', () => {
+    mockGroupsService.apiGroupsIdLeavePost$Json.and.returnValue(
+      throwError(() => ({ error: { message: 'Leave failed' } }))
+    );
+    
+    fixture.detectChanges();
+    component.members = mockMembers;
+    component.currentUserId = 'user-2';
+    component.confirmLeave();
+    
+    expect(mockToastService.showError).toHaveBeenCalled();
+  });
+
+  it('should emit leftGroup event on successful leave', () => {
+    mockGroupsService.apiGroupsIdLeavePost$Json.and.returnValue(
+      of({ success: true, data: null, message: '' })
+    );
+    
+    fixture.detectChanges();
+    component.members = mockMembers;
+    component.currentUserId = 'user-2';
+    spyOn(component.leftGroup, 'emit');
+    
+    component.confirmLeave();
+    
+    expect(component.leftGroup.emit).toHaveBeenCalledWith('group-1');
   });
 });

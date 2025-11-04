@@ -64,6 +64,7 @@ export class GroupInfoDialogComponent implements OnInit {
   @Output() closed = new EventEmitter<void>();
   @Output() updated = new EventEmitter<GroupDto>();
   @Output() deleted = new EventEmitter<string>();
+  @Output() leftGroup = new EventEmitter<string>();
   @Output() membershipChange = new EventEmitter<{ userId: string; action: 'remove' | 'makeAdmin' }>();
 
   // Tabs configuration
@@ -84,10 +85,12 @@ export class GroupInfoDialogComponent implements OnInit {
   isLoadingMembers = false;
   isUpdating = false;
   isDeleting = false;
+  isLeaving = false;
   processingUserId: string | null = null;
 
   // Confirmation dialogs
   showDeleteConfirmation = false;
+  showLeaveConfirmation = false;
   showRemoveMemberConfirmation = false;
   memberToRemove: GroupMemberDto | null = null;
 
@@ -195,6 +198,17 @@ export class GroupInfoDialogComponent implements OnInit {
       return false;
     }
     return this.members.some(m => m.userId === this.currentUserId && m.role === 'admin');
+  }
+
+  /**
+   * Check if current user is the last admin
+   */
+  get isLastAdmin(): boolean {
+    if (!this.members || !this.currentUserId || !this.isAdmin) {
+      return false;
+    }
+    const adminCount = this.members.filter(m => m.role === 'admin').length;
+    return adminCount === 1;
   }
 
   getFieldError(fieldName: string): boolean {
@@ -381,8 +395,8 @@ export class GroupInfoDialogComponent implements OnInit {
   }
 
   /**
- * Tooltip for the Delete Group button
- */
+   * Tooltip for the Delete Group button
+   */
   get deleteGroupTooltip(): string {
     if (this.isDeleting) {
       return 'Deleting group...';
@@ -394,6 +408,19 @@ export class GroupInfoDialogComponent implements OnInit {
   }
 
   /**
+   * Tooltip for the Leave Group button
+   */
+  get leaveGroupTooltip(): string {
+    if (this.isLeaving) {
+      return 'Leaving group...';
+    }
+    if (this.isLastAdmin) {
+      return 'You are the last admin. Please assign another admin before leaving or delete the group';
+    }
+    return 'Leave this group';
+  }
+
+  /**
    * Handle delete button click
    */
   onDeleteClick(): void {
@@ -401,6 +428,16 @@ export class GroupInfoDialogComponent implements OnInit {
       return;
     }
     this.showDeleteDialog();
+  }
+
+  /**
+   * Handle leave group button click
+   */
+  onLeaveClick(): void {
+    if (this.isLeaving || this.isLastAdmin) {
+      return;
+    }
+    this.showLeaveDialog();
   }
 
   closeDialog(): void {
@@ -420,6 +457,22 @@ export class GroupInfoDialogComponent implements OnInit {
    */
   cancelDelete(): void {
     this.showDeleteConfirmation = false;
+    this.cdr.markForCheck();
+  }
+
+  /**
+   * Show leave confirmation dialog
+   */
+  showLeaveDialog(): void {
+    this.showLeaveConfirmation = true;
+    this.cdr.markForCheck();
+  }
+
+  /**
+   * Cancel leave operation
+   */
+  cancelLeave(): void {
+    this.showLeaveConfirmation = false;
     this.cdr.markForCheck();
   }
 
@@ -465,6 +518,53 @@ export class GroupInfoDialogComponent implements OnInit {
           || 'Failed to delete group. Please try again.';
 
         this.toastService.showError(errorMessage, 'Delete Failed');
+        this.cdr.markForCheck();
+      }
+    });
+  }
+
+  /**
+   * Confirm and execute leave group
+   */
+  confirmLeave(): void {
+    if (this.isLeaving || !this.groupId || this.isLastAdmin) {
+      return;
+    }
+
+    this.isLeaving = true;
+    this.cdr.markForCheck();
+
+    this.groupsService.apiGroupsIdLeavePost$Json({ id: this.groupId }).subscribe({
+      next: (response) => {
+        this.isLeaving = false;
+        this.showLeaveConfirmation = false;
+
+        if (response.success) {
+          this.toastService.showSuccess(
+            'You have successfully left the group.',
+            'Left Group'
+          );
+
+          this.leftGroup.emit(this.groupId);
+          this.closeDialog();
+          this.router.navigate(['/chat']);
+        } else {
+          this.toastService.showError(
+            response.message || 'Failed to leave group',
+            'Leave Failed'
+          );
+          this.cdr.markForCheck();
+        }
+      },
+      error: (error) => {
+        this.isLeaving = false;
+        this.showLeaveConfirmation = false;
+
+        const errorMessage = error?.error?.message
+          || error?.message
+          || 'Failed to leave group. Please try again.';
+
+        this.toastService.showError(errorMessage, 'Leave Failed');
         this.cdr.markForCheck();
       }
     });

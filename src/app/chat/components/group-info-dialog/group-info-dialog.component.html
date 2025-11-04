@@ -144,6 +144,22 @@
               <div class="danger-zone-content">
                 <div class="danger-action">
                   <div class="danger-action-info">
+                    <h4>Leave Group</h4>
+                    <p>Remove yourself from this group and lose access to all content.</p>
+                  </div>
+                  <app-common-button
+                    type="button"
+                    variant="warning"
+                    size="small"
+                    [appCommonTooltip]="leaveGroupTooltip"
+                    [disabled]="isLastAdmin || isLeaving"
+                    (clicked)="onLeaveClick()">
+                    <i class="bi bi-box-arrow-right me-2"></i>Leave Group
+                  </app-common-button>
+                </div>
+
+                <div class="danger-action">
+                  <div class="danger-action-info">
                     <h4>Delete Group</h4>
                     <p>Permanently delete this group and all its data.</p>
                   </div>
@@ -190,6 +206,21 @@
   [loading]="processingUserId !== null"
   (confirmed)="confirmRemoveMember()"
   (cancelled)="cancelRemoveMember()">
+</app-confirmation-dialog>
+
+<!-- Leave Group Confirmation Dialog -->
+<app-confirmation-dialog
+  [isVisible]="showLeaveConfirmation"
+  [title]="'Leave Group?'"
+  [message]="'Are you sure you want to leave this group?'"
+  [secondaryMessage]="'You will lose access to all group messages and content. You can rejoin later if you have an invite code.'"
+  [confirmText]="'Leave Group'"
+  [cancelText]="'Stay in Group'"
+  [variant]="'warning'"
+  [icon]="'bi-box-arrow-right'"
+  [loading]="isLeaving"
+  (confirmed)="confirmLeave()"
+  (cancelled)="cancelLeave()">
 </app-confirmation-dialog>
 
 <!-- Delete Group Confirmation Dialog -->
