@@ -46,7 +46,7 @@ export class ChatConversationComponent implements AfterViewChecked, OnInit, OnDe
   private fragmentSubscription?: Subscription;
   private autoScrollSubscription?: Subscription;
   private typingTimeout?: number; // Typing indicator timeout
-  
+
   // Auto-scroll state
   showScrollButton = false;
   private previousMessageCount = 0;
@@ -99,7 +99,7 @@ export class ChatConversationComponent implements AfterViewChecked, OnInit, OnDe
       this.fragmentSubscription = this.route.fragment.subscribe(fragment => {
         this.showGroupInfoDialog = fragment === 'group-info';
       });
-      
+
       // Subscribe to auto-scroll state
       this.autoScrollSubscription = this.autoScrollService.isNearBottom$.subscribe(isNear => {
         this.showScrollButton = !isNear;
@@ -111,7 +111,7 @@ export class ChatConversationComponent implements AfterViewChecked, OnInit, OnDe
   ngOnDestroy(): void {
     this.fragmentSubscription?.unsubscribe();
     this.autoScrollSubscription?.unsubscribe();
-    
+
     // Clear typing timeout
     if (this.typingTimeout) {
       clearTimeout(this.typingTimeout);
@@ -122,12 +122,12 @@ export class ChatConversationComponent implements AfterViewChecked, OnInit, OnDe
     // Initialize auto-scroll service when container is available
     if (this.messagesContainer && isPlatformBrowser(this.platformId)) {
       const container = this.messagesContainer.nativeElement;
-      
+
       // Initialize service on first render
       if (container && !this.autoScrollService['scrollContainer']) {
         this.autoScrollService.initialize(container);
       }
-      
+
       // Handle conversation changes (new chat opened)
       if (this.conversation && this.conversation.groupId !== this.previousConversationId) {
         this.previousConversationId = this.conversation.groupId;
@@ -138,7 +138,7 @@ export class ChatConversationComponent implements AfterViewChecked, OnInit, OnDe
         }, 0);
         return;
       }
-      
+
       // Handle new messages
       if (this.conversation && this.conversation.messages) {
         const currentMessageCount = this.conversation.messages.length;
@@ -153,7 +153,7 @@ export class ChatConversationComponent implements AfterViewChecked, OnInit, OnDe
           this.previousMessageCount = currentMessageCount;
         }
       }
-      
+
       // Handle manual scroll flag
       if (this.shouldScrollToBottom) {
         this.autoScrollService.scrollToBottom(false);
@@ -224,25 +224,25 @@ export class ChatConversationComponent implements AfterViewChecked, OnInit, OnDe
       this.handleTypingIndicator();
     }
   }
-  
+
   /**
    * Handle typing indicator when user types
    */
   private handleTypingIndicator(): void {
     // Emit typing started
     this.userTyping.emit(true);
-    
+
     // Clear existing timeout
     if (this.typingTimeout) {
       clearTimeout(this.typingTimeout);
     }
-    
+
     // Stop typing after 3 seconds of inactivity
     this.typingTimeout = setTimeout(() => {
       this.userTyping.emit(false);
-    }, 3000) as any;
+    }, 500) as any;
   }
-  
+
   /**
    * Get typing users display text
    */
@@ -250,7 +250,7 @@ export class ChatConversationComponent implements AfterViewChecked, OnInit, OnDe
     if (!this.typingUsers || this.typingUsers.length === 0) {
       return '';
     }
-    
+
     if (this.typingUsers.length === 1) {
       return `${this.typingUsers[0]} is typing...`;
     } else if (this.typingUsers.length === 2) {
@@ -259,14 +259,14 @@ export class ChatConversationComponent implements AfterViewChecked, OnInit, OnDe
       return `${this.typingUsers[0]} and ${this.typingUsers.length - 1} others are typing...`;
     }
   }
-  
+
   /**
    * Handle user scroll to detect manual scrolling
    */
   onMessagesScroll(): void {
     this.autoScrollService.onUserScroll();
   }
-  
+
   /**
    * Handle scroll-to-bottom button click
    */
