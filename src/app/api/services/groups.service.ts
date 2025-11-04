@@ -43,10 +43,6 @@ import { apiGroupsIdNamePut$Json } from '../fn/groups/api-groups-id-name-put-jso
 import { ApiGroupsIdNamePut$Json$Params } from '../fn/groups/api-groups-id-name-put-json';
 import { apiGroupsIdNamePut$Plain } from '../fn/groups/api-groups-id-name-put-plain';
 import { ApiGroupsIdNamePut$Plain$Params } from '../fn/groups/api-groups-id-name-put-plain';
-import { apiGroupsIdPresenceGet$Json } from '../fn/groups/api-groups-id-presence-get-json';
-import { ApiGroupsIdPresenceGet$Json$Params } from '../fn/groups/api-groups-id-presence-get-json';
-import { apiGroupsIdPresenceGet$Plain } from '../fn/groups/api-groups-id-presence-get-plain';
-import { ApiGroupsIdPresenceGet$Plain$Params } from '../fn/groups/api-groups-id-presence-get-plain';
 import { apiGroupsIdRegenerateInvitePost$Json } from '../fn/groups/api-groups-id-regenerate-invite-post-json';
 import { ApiGroupsIdRegenerateInvitePost$Json$Params } from '../fn/groups/api-groups-id-regenerate-invite-post-json';
 import { apiGroupsIdRegenerateInvitePost$Plain } from '../fn/groups/api-groups-id-regenerate-invite-post-plain';
@@ -68,7 +64,6 @@ import { GroupDtoApiResponse } from '../models/group-dto-api-response';
 import { GroupDtoIEnumerableApiResponse } from '../models/group-dto-i-enumerable-api-response';
 import { GroupMemberDtoIEnumerableApiResponse } from '../models/group-member-dto-i-enumerable-api-response';
 import { ObjectApiResponse } from '../models/object-api-response';
-import { PresenceDtoIEnumerableApiResponse } from '../models/presence-dto-i-enumerable-api-response';
 
 @Injectable({ providedIn: 'root' })
 export class GroupsService extends BaseService {
@@ -829,69 +824,6 @@ export class GroupsService extends BaseService {
   apiGroupsIdMembersUserIdDelete$Json(params: ApiGroupsIdMembersUserIdDelete$Json$Params, context?: HttpContext): Observable<(ObjectApiResponse | ApiResponse)> {
     return this.apiGroupsIdMembersUserIdDelete$Json$Response(params, context).pipe(
       map((r: StrictHttpResponse<(ObjectApiResponse | ApiResponse)>): (ObjectApiResponse | ApiResponse) => r.body)
-    );
-  }
-
-  /** Path part for operation `apiGroupsIdPresenceGet()` */
-  static readonly ApiGroupsIdPresenceGetPath = '/api/Groups/{id}/presence';
-
-  /**
-   * Gets presence information for all members in a group.
-   *
-   *
-   *
-   * This method provides access to the full `HttpResponse`, allowing access to response headers.
-   * To access only the response body, use `apiGroupsIdPresenceGet$Plain()` instead.
-   *
-   * This method doesn't expect any request body.
-   */
-  apiGroupsIdPresenceGet$Plain$Response(params: ApiGroupsIdPresenceGet$Plain$Params, context?: HttpContext): Observable<StrictHttpResponse<PresenceDtoIEnumerableApiResponse>> {
-    return apiGroupsIdPresenceGet$Plain(this.http, this.rootUrl, params, context);
-  }
-
-  /**
-   * Gets presence information for all members in a group.
-   *
-   *
-   *
-   * This method provides access only to the response body.
-   * To access the full response (for headers, for example), `apiGroupsIdPresenceGet$Plain$Response()` instead.
-   *
-   * This method doesn't expect any request body.
-   */
-  apiGroupsIdPresenceGet$Plain(params: ApiGroupsIdPresenceGet$Plain$Params, context?: HttpContext): Observable<PresenceDtoIEnumerableApiResponse> {
-    return this.apiGroupsIdPresenceGet$Plain$Response(params, context).pipe(
-      map((r: StrictHttpResponse<PresenceDtoIEnumerableApiResponse>): PresenceDtoIEnumerableApiResponse => r.body)
-    );
-  }
-
-  /**
-   * Gets presence information for all members in a group.
-   *
-   *
-   *
-   * This method provides access to the full `HttpResponse`, allowing access to response headers.
-   * To access only the response body, use `apiGroupsIdPresenceGet$Json()` instead.
-   *
-   * This method doesn't expect any request body.
-   */
-  apiGroupsIdPresenceGet$Json$Response(params: ApiGroupsIdPresenceGet$Json$Params, context?: HttpContext): Observable<StrictHttpResponse<PresenceDtoIEnumerableApiResponse>> {
-    return apiGroupsIdPresenceGet$Json(this.http, this.rootUrl, params, context);
-  }
-
-  /**
-   * Gets presence information for all members in a group.
-   *
-   *
-   *
-   * This method provides access only to the response body.
-   * To access the full response (for headers, for example), `apiGroupsIdPresenceGet$Json$Response()` instead.
-   *
-   * This method doesn't expect any request body.
-   */
-  apiGroupsIdPresenceGet$Json(params: ApiGroupsIdPresenceGet$Json$Params, context?: HttpContext): Observable<PresenceDtoIEnumerableApiResponse> {
-    return this.apiGroupsIdPresenceGet$Json$Response(params, context).pipe(
-      map((r: StrictHttpResponse<PresenceDtoIEnumerableApiResponse>): PresenceDtoIEnumerableApiResponse => r.body)
     );
   }
 
