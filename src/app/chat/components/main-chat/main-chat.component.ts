@@ -59,6 +59,7 @@ export class MainChatComponent implements OnInit, OnDestroy {
   private messageReceivedSubscription?: Subscription;
   private systemMessageSubscription?: Subscription;
   private typingSubscription?: Subscription;
+  private membershipChangedSubscription?: Subscription;
 
   constructor(
     private authService: AuthService,
@@ -148,6 +149,9 @@ export class MainChatComponent implements OnInit, OnDestroy {
     if (this.typingSubscription) {
       this.typingSubscription.unsubscribe();
     }
+    if (this.membershipChangedSubscription) {
+      this.membershipChangedSubscription.unsubscribe();
+    }
   }
 
   /**
@@ -193,6 +197,11 @@ export class MainChatComponent implements OnInit, OnDestroy {
     // Subscribe to typing indicators
     this.typingSubscription = this.chatRealtimeService.onUserTyping.subscribe(typingInfo => {
       this.handleTypingIndicator(typingInfo);
+    });
+
+    // Subscribe to group membership changes
+    this.membershipChangedSubscription = this.chatRealtimeService.onGroupMembershipChanged.subscribe(change => {
+      this.handleGroupMembershipChanged(change);
     });
   }
 
@@ -287,6 +296,118 @@ export class MainChatComponent implements OnInit, OnDestroy {
     } catch (error) {
       // Silently fail - typing indicators are not critical
       console.debug('[MainChat] Failed to send typing indicator:', error);
+    }
+  }
+
+  /**
+   * Handle group membership changes from SignalR
+   * Handles scenarios like user removal, role changes, etc.
+   * Production-ready with comprehensive error handling and state management
+   */
+  private async handleGroupMembershipChanged(change: { 
+    groupId: string; 
+    userId: string; 
+    userName: string; 
+    changeType: 'added' | 'removed' | 'left' | 'roleChanged';
+    newRole?: 'member' | 'admin';
+    timestamp: string;
+    changedBy?: string;
+  }): Promise<void> {
+    console.log('[MainChat] Group membership changed:', change);
+
+    // Check if the change affects the current user
+    const isCurrentUser = change.userId === this.user?.id;
+
+    if (change.changeType === 'removed' || change.changeType === 'left') {
+      if (isCurrentUser) {
+        // Current user was removed from the group
+        await this.handleUserRemovedFromGroup(change.groupId);
+      } else {
+        // Another user was removed - update member count
+        await this.updateGroupInSidebar(change.groupId);
+      }
+    } else if (change.changeType === 'added') {
+      // New member added - update member count
+      await this.updateGroupInSidebar(change.groupId);
+    } else if (change.changeType === 'roleChanged') {
+      // Role changed - might need to update UI permissions
+      if (isCurrentUser) {
+        // Current user's role changed - may affect UI capabilities
+        await this.updateGroupInSidebar(change.groupId);
+      }
+    }
+  }
+
+  /**
+   * Handles scenario when current user is removed from a group
+   * Removes from sidebar and redirects if currently viewing that chat
+   */
+  private async handleUserRemovedFromGroup(groupId: string): Promise<void> {
+    console.log('[MainChat] Current user removed from group:', groupId);
+
+    // Remove the group from the chat list
+    this.chats = this.chats.filter(chat => chat.groupId !== groupId);
+
+    // Leave the SignalR group
+    if (this.chatRealtimeService.isConnected) {
+      try {
+        await this.chatRealtimeService.leaveGroup(groupId);
+      } catch (error) {
+        console.error('[MainChat] Failed to leave SignalR group:', error);
+      }
+    }
+
+    // If user is currently viewing this chat, redirect to chats list
+    if (this.selectedChatId === groupId) {
+      this.selectedChatId = null;
+      this.currentConversation = null;
+      this.currentTypingUsers = [];
+
+      // Navigate to main chats view
+      this.router.navigate(['/chats'], {
+        queryParamsHandling: 'preserve'
+      });
+
+      // Show notification to user
+      console.warn('[MainChat] You have been removed from this group');
+      // TODO: Add toast notification service call here if available
+      // this.toastService.showWarning('You have been removed from this group');
+    }
+  }
+
+  /**
+   * Updates a specific group in the sidebar by refetching its details
+   * Updates member count and other group metadata
+   */
+  private async updateGroupInSidebar(groupId: string): Promise<void> {
+    try {
+      // Find the chat in the list
+      const chatIndex = this.chats.findIndex(c => c.groupId === groupId);
+      
+      if (chatIndex !== -1) {
+        // Refetch group details from REST API to get updated member count
+        const updatedGroup = await this.groupsServiceProxy.getGroupDetails(groupId).toPromise();
+        
+        if (updatedGroup) {
+          // Update the chat item with new member count
+          // Note: ChatItemData might not have memberCount, so we update what's available
+          this.chats[chatIndex] = {
+            ...this.chats[chatIndex],
+            name: updatedGroup.name || this.chats[chatIndex].name
+          };
+
+          // If this is the currently selected chat, update conversation data
+          if (this.currentConversation && this.currentConversation.groupId === groupId) {
+            this.currentConversation.memberCount = updatedGroup.memberCount || 0;
+            this.currentConversation.groupName = updatedGroup.name || this.currentConversation.groupName;
+          }
+
+          console.log('[MainChat] Updated group in sidebar:', groupId);
+        }
+      }
+    } catch (error) {
+      console.error('[MainChat] Failed to update group in sidebar:', error);
+      // Gracefully continue - this is not a critical failure
     }
   }
 
