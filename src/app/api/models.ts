@@ -21,6 +21,8 @@ export type { MessageMetadata } from './models/message-metadata';
 export type { MessageMetadataApiResponse } from './models/message-metadata-api-response';
 export type { ObjectApiResponse } from './models/object-api-response';
 export type { PollContent } from './models/poll-content';
+export type { PresenceDto } from './models/presence-dto';
+export type { PresenceDtoIEnumerableApiResponse } from './models/presence-dto-i-enumerable-api-response';
 export type { RefreshTokenDto } from './models/refresh-token-dto';
 export type { RegisterDto } from './models/register-dto';
 export type { SendMessageDto } from './models/send-message-dto';

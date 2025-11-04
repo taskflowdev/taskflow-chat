@@ -54,24 +54,33 @@
         <div class="date-separator">
           <span class="date-label">{{ group.dateLabel }}</span>
         </div>
-        
+
         <!-- Messages for this date -->
-        <app-chat-message 
-          *ngFor="let message of group.messages; trackBy: trackByMessageId" 
+        <app-chat-message *ngFor="let message of group.messages; trackBy: trackByMessageId"
           [message]="message">
         </app-chat-message>
       </ng-container>
     </div>
-    
+
     <!-- Scroll to Bottom Button -->
-    <app-scroll-to-bottom-button 
+    <app-scroll-to-bottom-button
       *ngIf="showScrollButton && conversation && !loading"
       (scrollClick)="onScrollToBottomClick()">
     </app-scroll-to-bottom-button>
   </div>
 
   <!-- Message Input - Always visible -->
-  <div class="message-input-container">
+  <div class="message-input-container" [class.has-typing]="typingUsersText">
+    <!-- Typing Indicator -->
+    <div class="typing-indicator" *ngIf="typingUsersText">
+      <div class="typing-dots">
+        <span class="dot"></span>
+        <span class="dot"></span>
+        <span class="dot"></span>
+      </div>
+      <span class="typing-text">{{ typingUsersText }}</span>
+    </div>
+
     <div class="input-wrapper">
       <textarea [(ngModel)]="newMessage" (keydown)="onKeyDown($event)"
         placeholder="Type a message..."
