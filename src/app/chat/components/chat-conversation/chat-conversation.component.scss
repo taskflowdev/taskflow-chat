@@ -128,6 +128,10 @@
   // border-top: 1px solid #444444;
   background: black;
 
+  &.has-typing {
+    padding-top: .25rem !important;
+  }
+
   .input-wrapper {
     display: flex;
     align-items: flex-end;
@@ -335,6 +339,10 @@
   .message-input-container {
     padding: 0.75rem 1rem;
 
+    &.has-typing {
+      padding-top: .25rem !important;
+    }
+
     .input-wrapper {
       gap: 0.5rem;
 
@@ -403,6 +411,10 @@
   .message-input-container {
     padding: 0.6rem 0.75rem;
 
+    &.has-typing {
+      padding-top: .25rem !important;
+    }
+
     .input-wrapper {
       .message-input {
         padding: 0.5rem 0.7rem;
@@ -441,11 +453,12 @@
 
 // Typing indicator styles
 .typing-indicator {
+  position: relative;
   display: flex;
   align-items: center;
   padding: 0.5rem 1rem;
-  background: rgba(255, 255, 255, 0.02);
-  border-bottom: 1px solid #444444;
+  background: black;
+  // border-bottom: 1px solid #444444;
   color: #9ca3af;
   font-size: 0.875rem;
   animation: fadeIn 0.2s ease-in;
@@ -456,8 +469,8 @@
     margin-right: 8px;
 
     .dot {
-      width: 6px;
-      height: 6px;
+      width: 8px;
+      height: 8px;
       background: #9ca3af;
       border-radius: 50%;
       animation: typingDot 1.4s infinite ease-in-out;
