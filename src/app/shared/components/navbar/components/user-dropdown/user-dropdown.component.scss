@@ -3,12 +3,12 @@
   .dropdown {
     .user-dropdown-btn {
       background: transparent;
-      color: rgba(255, 255, 255, 0.9);
+      color: var(--color-text-secondary);
       font-weight: 500;
       font-size: 0.85rem;
       padding: 0.5rem 1rem;
-      border-radius: 6px;
-      transition: all 0.3s ease;
+      border-radius: var(--radius-sm);
+      transition: all var(--transition-fast) var(--ease-in-out);
       display: flex;
       align-items: center;
       gap: 0.5rem;
@@ -23,17 +23,17 @@
 
       .dropdown-icon {
         font-size: 0.7rem;
-        transition: transform 0.3s ease;
+        transition: transform var(--transition-fast) var(--ease-in-out);
       }
 
       &:hover {
-        background: rgba(255, 255, 255, 0.1);
-        color: white;
+        background: var(--color-bg-hover);
+        color: var(--color-text-primary);
       }
 
       &[aria-expanded="true"] {
-        background: rgba(255, 255, 255, 0.15);
-        color: white;
+        background: var(--color-bg-active);
+        color: var(--color-text-primary);
 
         .dropdown-icon {
           transform: rotate(180deg);
@@ -42,32 +42,34 @@
     }
 
     .dropdown-menu {
-      background: black;
-      border: 1px solid #444444;
-      border-radius: 8px;
+      background: var(--color-surface-primary);
+      border: 1px solid var(--color-border-primary);
+      border-radius: var(--radius-md);
       padding: 0.5rem 0;
       min-width: 280px;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+      box-shadow: var(--shadow-lg);
       margin-top: 0.2rem !important;
       transform: translateY(4px);
       z-index: 1;
+      transition: background-color var(--transition-normal) var(--ease-in-out),
+                  border-color var(--transition-normal) var(--ease-in-out);
 
       .dropdown-item {
-        color: rgba(255, 255, 255, 0.8);
+        color: var(--color-text-secondary);
         background: transparent;
         border: none;
         width: 100%;
         text-align: left;
         padding: 0.5rem 1rem;
         font-size: 0.9rem;
-        transition: all 0.2s ease;
+        transition: all var(--transition-fast) var(--ease-in-out);
         display: flex;
         align-items: center;
 
         &:hover,
         &:focus {
-          background: rgba(255, 255, 255, 0.1);
-          color: white;
+          background: var(--color-bg-hover);
+          color: var(--color-text-primary);
         }
 
         i {
@@ -76,8 +78,9 @@
         }
 
         .shortcut-key-dropdown {
-          background-color: white;
-          border-radius: 8px;
+          background-color: var(--color-text-primary);
+          border-radius: var(--radius-md);
+          transition: background-color var(--transition-normal) var(--ease-in-out);
           padding: 0.08rem 0.4rem;
           font-size: 0.8rem;
           color: black;

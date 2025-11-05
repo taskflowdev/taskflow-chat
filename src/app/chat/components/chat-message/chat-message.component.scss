@@ -9,15 +9,17 @@
   padding: 0 1rem;
 
   .system-message-content {
-    background: rgba(255, 255, 255, 0.08);
-    color: #9ca3af;
+    background: var(--color-bg-hover);
+    color: var(--color-text-tertiary);
     font-size: 0.8rem;
     padding: 0.4rem 0.75rem;
-    border-radius: 8px;
+    border-radius: var(--radius-md);
     text-align: center;
     max-width: 80%;
+    transition: background-color var(--transition-normal) var(--ease-in-out),
+                color var(--transition-normal) var(--ease-in-out);
     // line-height: 1.3;
-    // border: 1px solid rgba(255, 255, 255, 0.05);
+    // border: 1px solid var(--color-border-secondary);
   }
 }
 
@@ -28,12 +30,14 @@
 
   .message-bubble {
     max-width: 70%;
-    background: #333333;
-    border: 1px solid #444444;
-    border-radius: 12px;
+    background: var(--color-bg-tertiary);
+    border: 1px solid var(--color-border-primary);
+    border-radius: var(--radius-md);
     padding: 0.55rem;
     position: relative;
     word-wrap: break-word;
+    transition: background-color var(--transition-normal) var(--ease-in-out),
+                border-color var(--transition-normal) var(--ease-in-out);
 
     .message-header {
       display: flex;
@@ -44,21 +48,24 @@
       .sender-name {
         font-weight: 500;
         font-size: 0.9rem;
-        color: white;
+        color: var(--color-text-primary);
+        transition: color var(--transition-normal) var(--ease-in-out);
       }
 
       .message-time {
         font-size: 0.75rem;
-        color: #9ca3af;
+        color: var(--color-text-tertiary);
         margin-left: 0.8rem;
+        transition: color var(--transition-normal) var(--ease-in-out);
       }
     }
 
     .message-content {
-      color: white;
+      color: var(--color-text-primary);
       font-size: 0.9rem;
       line-height: 1.4;
       white-space: pre-wrap;
+      transition: color var(--transition-normal) var(--ease-in-out);
 
       // Media message styles (image, video, file)
       .media-message,
@@ -73,9 +80,10 @@
 
         .duration,
         .file-size {
-          color: #9ca3af;
+          color: var(--color-text-tertiary);
           font-size: 0.8rem;
           margin-left: 0.25rem;
+          transition: color var(--transition-normal) var(--ease-in-out);
         }
       }
 
@@ -86,7 +94,8 @@
           align-items: center;
           gap: 0.5rem;
           margin-bottom: 0.5rem;
-          color: #60a5fa;
+          color: var(--color-info);
+          transition: color var(--transition-normal) var(--ease-in-out);
 
           i {
             font-size: 1.1rem;

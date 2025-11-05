@@ -166,9 +166,10 @@ export class ThemeToggleComponent implements OnInit, OnDestroy {
   /**
    * Handle keyboard events
    */
-  onKeydown(event: KeyboardEvent): void {
+  onKeydown(event: Event): void {
+    const keyEvent = event as KeyboardEvent;
     // Prevent default scroll behavior for space key
-    if (event.key === ' ') {
+    if (keyEvent.key === ' ') {
       event.preventDefault();
     }
     
