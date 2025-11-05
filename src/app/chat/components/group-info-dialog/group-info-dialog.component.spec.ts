@@ -53,7 +53,8 @@ describe('GroupInfoDialogComponent', () => {
       'apiGroupsIdNamePut$Json',
       'apiGroupsIdMembersUserIdMakeAdminPost$Json',
       'apiGroupsIdDelete$Json',
-      'apiGroupsIdLeavePost$Json'
+      'apiGroupsIdLeavePost$Json',
+      'apiGroupsIdVisibilityPut$Json'
     ]);
 
     mockToastService = jasmine.createSpyObj('ToastService', [
@@ -503,5 +504,87 @@ describe('GroupInfoDialogComponent', () => {
     component.confirmLeave();
     
     expect(component.leftGroup.emit).toHaveBeenCalledWith('group-1');
+  });
+
+  // Change Visibility Tests
+  it('should show change visibility confirmation', () => {
+    fixture.detectChanges();
+    component.group = mockGroup;
+    component.showVisibilityDialog();
+    
+    expect(component.showVisibilityConfirmation).toBe(true);
+  });
+
+  it('should cancel change visibility confirmation', () => {
+    fixture.detectChanges();
+    component.showVisibilityConfirmation = true;
+    component.pendingVisibilityValue = true;
+    component.cancelVisibilityChange();
+    
+    expect(component.showVisibilityConfirmation).toBe(false);
+    expect(component.pendingVisibilityValue).toBeNull();
+  });
+
+  it('should change visibility successfully', () => {
+    mockGroupsService.apiGroupsIdVisibilityPut$Json.and.returnValue(
+      of({ success: true, data: { ...mockGroup, isPublic: true }, message: '' })
+    );
+    
+    fixture.detectChanges();
+    component.group = mockGroup;
+    component.members = mockMembers;
+    component.currentUserId = 'user-1'; // Admin
+    component.pendingVisibilityValue = true;
+    spyOn(component.updated, 'emit');
+    
+    component.confirmVisibilityChange();
+    
+    expect(mockGroupsService.apiGroupsIdVisibilityPut$Json).toHaveBeenCalledWith({
+      id: 'group-1',
+      body: { isPublic: true }
+    });
+    expect(mockToastService.showSuccess).toHaveBeenCalled();
+    expect(component.group.isPublic).toBe(true);
+    expect(component.updated.emit).toHaveBeenCalled();
+  });
+
+  it('should not allow non-admin to change visibility', () => {
+    fixture.detectChanges();
+    component.group = mockGroup;
+    component.members = mockMembers;
+    component.currentUserId = 'user-2'; // Not admin
+    
+    expect(component.isAdmin).toBe(false);
+    
+    component.onVisibilityToggle();
+    
+    expect(mockGroupsService.apiGroupsIdVisibilityPut$Json).not.toHaveBeenCalled();
+  });
+
+  it('should handle change visibility error', () => {
+    mockGroupsService.apiGroupsIdVisibilityPut$Json.and.returnValue(
+      throwError(() => ({ error: { message: 'Visibility change failed' } }))
+    );
+    
+    fixture.detectChanges();
+    component.group = mockGroup;
+    component.members = mockMembers;
+    component.currentUserId = 'user-1'; // Admin
+    component.pendingVisibilityValue = true;
+    component.confirmVisibilityChange();
+    
+    expect(mockToastService.showError).toHaveBeenCalled();
+  });
+
+  it('should set pending visibility value on toggle', () => {
+    fixture.detectChanges();
+    component.group = mockGroup;
+    component.members = mockMembers;
+    component.currentUserId = 'user-1'; // Admin
+    
+    component.onVisibilityToggle();
+    
+    expect(component.pendingVisibilityValue).toBe(!mockGroup.isPublic);
+    expect(component.showVisibilityConfirmation).toBe(true);
   });
 });

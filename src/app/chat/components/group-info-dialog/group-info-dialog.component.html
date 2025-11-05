@@ -72,12 +72,6 @@
                 [isInvalid]="getFieldError('groupName')" [errorMessage]="getErrorMessage('groupName')">
               </app-common-input>
 
-              <!-- Public/Private Toggle -->
-              <app-common-toggle [label]="'Group Visibility'" [description]="'Allow anyone to view and join this group.'"
-                [onText]="'Public'" [offText]="'Private'"
-                formControlName="isPublic">
-              </app-common-toggle>
-
               <!-- Metadata -->
               <div class="info-section-card">
                 <!-- <span class="info-item" title="Number of Group Members">
@@ -124,6 +118,30 @@
               </div>
 
               <div class="danger-zone-content">
+
+                <!-- Change Visibility -->
+                <div class="danger-action">
+                  <div class="danger-action-info">
+                    <h4>Change Visibility</h4>
+                    <p>Make this group {{ group?.isPublic ? 'private' : 'public' }}. {{ group?.isPublic ? 'Only members will be able to access it.' : 'Anyone will be able to view and join it.' }}</p>
+                  </div>
+                  <!-- visibility toggle btn -->
+                  <ng-container *ngIf="isLoadingMembers; else visibilityBtnLoaded">
+                    <app-skeleton-loader type="rectangle" width="140px" height="36px"></app-skeleton-loader>
+                  </ng-container>
+
+                  <ng-template #visibilityBtnLoaded>
+                    <app-common-button
+                      type="button"
+                      variant="secondary"
+                      size="small"
+                      [appCommonTooltip]="changeVisibilityTooltip"
+                      [disabled]="!isAdmin || isUpdatingVisibility"
+                      (clicked)="onVisibilityToggle()">
+                      <i class="bi {{ group?.isPublic ? 'bi-eye-slash' : 'bi-eye' }} me-2"></i>{{ group?.isPublic ? 'Make Private' : 'Make Public' }}
+                    </app-common-button>
+                  </ng-template>
+                </div>
 
                 <div class="danger-action">
                   <div class="danger-action-info">
@@ -192,6 +210,21 @@
   [secondaryMessage]="'You will lose access to all group messages and content. You can rejoin later if you have an invite code.'"
   [confirmText]="'Leave Group'" [cancelText]="'Stay in Group'" [variant]="'warning'" [icon]="'bi-box-arrow-right'"
   [loading]="isLeaving" (confirmed)="confirmLeave()" (cancelled)="cancelLeave()">
+</app-confirmation-dialog>
+
+<!-- Change Visibility Confirmation Dialog -->
+<app-confirmation-dialog
+  [isVisible]="showVisibilityConfirmation"
+  [title]="'Change Group Visibility?'"
+  [message]="'Are you sure you want to make this group ' + (pendingVisibilityValue ? 'public' : 'private') + '?'"
+  [secondaryMessage]="pendingVisibilityValue ? 'Anyone will be able to view and join this group.' : 'Only existing members will be able to access this group.'"
+  [confirmText]="'Change Visibility'"
+  [cancelText]="'Cancel'"
+  [variant]="'warning'"
+  [icon]="pendingVisibilityValue ? 'bi-eye' : 'bi-eye-slash'"
+  [loading]="isUpdatingVisibility"
+  (confirmed)="confirmVisibilityChange()"
+  (cancelled)="cancelVisibilityChange()">
 </app-confirmation-dialog>
 
 <!-- Delete Group Confirmation Dialog -->
