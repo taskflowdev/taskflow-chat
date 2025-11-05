@@ -30,8 +30,7 @@ import { Theme } from '../../../core/theme/theme.types';
       [attr.aria-label]="currentTheme === 'dark' ? 'Switch to light theme' : 'Switch to dark theme'"
       [attr.aria-pressed]="currentTheme === 'light'"
       (click)="toggleTheme()"
-      (keydown.space)="onKeydown($event)"
-      (keydown.enter)="onKeydown($event)"
+      (keydown)="onKeydown($event)"
       title="{{ currentTheme === 'dark' ? 'Switch to light theme' : 'Switch to dark theme' }}"
     >
       <i 
@@ -166,13 +165,11 @@ export class ThemeToggleComponent implements OnInit, OnDestroy {
   /**
    * Handle keyboard events
    */
-  onKeydown(event: Event): void {
-    const keyEvent = event as KeyboardEvent;
-    // Prevent default scroll behavior for space key
-    if (keyEvent.key === ' ') {
+  onKeydown(event: KeyboardEvent): void {
+    // Only respond to Space or Enter keys
+    if (event.key === ' ' || event.key === 'Enter') {
       event.preventDefault();
+      this.toggleTheme();
     }
-    
-    this.toggleTheme();
   }
 }

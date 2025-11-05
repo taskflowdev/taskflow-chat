@@ -362,9 +362,9 @@ export class ThemeService {
     if (this.mediaQuery) {
       if (this.mediaQuery.removeEventListener) {
         this.mediaQuery.removeEventListener('change', this.handleSystemThemeChange);
-      } else {
-        // @ts-ignore - Legacy browser support
-        this.mediaQuery.removeListener(this.handleSystemThemeChange);
+      } else if ('removeListener' in this.mediaQuery) {
+        // Legacy browser support - use addListener/removeListener instead of addEventListener
+        (this.mediaQuery as any).removeListener(this.handleSystemThemeChange);
       }
     }
   }
