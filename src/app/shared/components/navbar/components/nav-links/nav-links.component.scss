@@ -9,22 +9,22 @@
     align-items: center;
     gap: 0.5rem;
     padding: 0.5rem 1rem;
-    color: rgba(255, 255, 255, 0.8);
+    color: var(--color-text-secondary);
     text-decoration: none;
     border-radius: 10px;
     font-size: 0.9rem;
     font-weight: 500;
-    transition: all 0.3s ease;
+    transition: all var(--transition-fast) var(--ease-in-out);
     position: relative;
 
     &:hover {
-      color: white;
-      background: rgba(255, 255, 255, 0.1);
+      color: var(--color-text-primary);
+      background: var(--color-bg-hover);
     }
 
     &.active {
-      color: white;
-      background: rgba(255, 255, 255, 0.15);
+      color: var(--color-text-primary);
+      background: var(--color-bg-active);
 
       // &::after {
       //   content: '';
@@ -35,7 +35,7 @@
       //   width: 4px;
       //   height: 4px;
       //   border-radius: 50%;
-      //   background: white;
+      //   background: var(--color-text-primary);
       // }
     }
 

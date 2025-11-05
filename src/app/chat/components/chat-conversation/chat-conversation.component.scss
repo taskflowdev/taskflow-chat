@@ -3,9 +3,10 @@
   display: flex;
   flex-direction: column;
   height: 100vh;
-  background: black;
+  background: var(--color-bg-primary);
   margin-left: 400px; // Space for sidebar
   padding-top: 60px; // Space for header
+  transition: background-color var(--transition-normal) var(--ease-in-out);
 }
 
 .conversation-header {
@@ -13,26 +14,28 @@
   align-items: center;
   justify-content: space-between;
   padding: 0.75rem 1rem;
-  border-bottom: 1px solid #444444;
-  background: black;
+  border-bottom: 1px solid var(--color-border-primary);
+  background: var(--color-bg-primary);
+  transition: background-color var(--transition-normal) var(--ease-in-out),
+              border-color var(--transition-normal) var(--ease-in-out);
 
   .back-button {
     background: transparent;
-    border: 1px solid #444444;
-    color: white;
-    border-radius: 6px;
+    border: 1px solid var(--color-border-primary);
+    color: var(--color-text-primary);
+    border-radius: var(--radius-sm);
     width: 36px;
     height: 36px;
     display: none; // Hidden by default
     align-items: center;
     justify-content: center;
-    transition: all 0.2s ease;
+    transition: all var(--transition-fast) var(--ease-in-out);
     margin-right: 0.75rem;
     flex-shrink: 0;
 
     &:hover {
-      background: #333333;
-      border-color: #666666;
+      background: var(--color-bg-hover);
+      border-color: var(--color-border-focus);
     }
 
     i {
@@ -48,16 +51,18 @@
 
   .conversation-info {
     .conversation-title {
-      color: white;
+      color: var(--color-text-primary);
       font-size: 1.1rem;
       font-weight: 600;
       margin: 0 0 0.25rem 0;
+      transition: color var(--transition-normal) var(--ease-in-out);
     }
 
     .conversation-subtitle {
-      color: #9ca3af;
+      color: var(--color-text-tertiary);
       font-size: 0.8rem;
       margin: 0;
+      transition: color var(--transition-normal) var(--ease-in-out);
     }
   }
 
@@ -90,14 +95,16 @@
     text-align: center;
 
     .date-label {
-      color: #9ca3af;
-      background: black;
+      color: var(--color-text-tertiary);
+      background: var(--color-bg-primary);
       // padding: 0 0.75rem;
       font-size: 0.9rem;
       font-weight: 500;
       letter-spacing: 0.3px;
       position: relative;
       z-index: 1;
+      transition: color var(--transition-normal) var(--ease-in-out),
+                  background-color var(--transition-normal) var(--ease-in-out);
     }
 
     // Inverse gradient — fades near "Today", solid at ends
@@ -125,8 +132,9 @@
 .message-input-container {
   padding: 1rem 1.5rem;
   border: none;
-  // border-top: 1px solid #444444;
-  background: black;
+  // border-top: 1px solid var(--color-border-primary);
+  background: var(--color-bg-primary);
+  transition: background-color var(--transition-normal) var(--ease-in-out);
 
   &.has-typing {
     padding-top: .25rem !important;
@@ -137,94 +145,39 @@
     align-items: flex-end;
     gap: 0.75rem;
 
-    // .message-input {
-    //   flex: 1;
-    //   background: black;
-    //   border: 1px solid #444444;
-    //   border-radius: 50px;
-    //   color: white;
-    //   font-size: 0.9rem;
-    //   padding: 0.75rem 1rem;
-    //   resize: none;
-    //   min-height: 44px;
-    //   max-height: 120px;
-    //   transition: all 0.2s ease;
-    //   font-family: inherit;
-
-    //   &:focus {
-    //     background: black;
-    //     border-color: #666666;
-    //     box-shadow: 0 0 0 5px rgba(255, 255, 255, 0.2);
-    //     outline: none;
-    //   }
-
-    //   &::placeholder {
-    //     color: #9ca3af;
-    //   }
-    // }
-
     .message-input {
       flex: 1;
-      background: #111;
-      border: 3px solid #333;
+      background: var(--color-bg-input);
+      border: 3px solid var(--color-border-input);
       border-radius: 10px;
-      color: white;
+      color: var(--color-text-primary);
       font-size: 0.9rem;
       padding: 0.75rem 1rem;
       resize: none;
       min-height: 44px;
       max-height: 120px;
-      transition: all 0.25s ease;
+      transition: all var(--transition-fast) var(--ease-in-out);
       font-family: inherit;
 
       /* Soft floating shadow */
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.8),  /* dark base shadow */
-                  0 0 8px rgba(255, 255, 255, 0.05); /* subtle highlight */
+      box-shadow: var(--shadow-sm);
 
       &:focus {
-        background: #111;
-        border-color: #555;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.9),
-                    0 0 12px rgba(255, 255, 255, 0.1); /* subtle glow */
+        background: var(--color-bg-input);
+        border-color: var(--color-border-input-focus);
+        box-shadow: var(--shadow-md);
         outline: none;
       }
 
       &::placeholder {
-        color: #777;
+        color: var(--color-text-muted);
+        transition: color var(--transition-normal) var(--ease-in-out);
       }
     }
 
-    // .send-btn {
-    //   background: transparent;
-    //   color: white;
-    //   border: none;
-    //   width: 44px;
-    //   height: 44px;
-    //   display: flex;
-    //   align-items: center;
-    //   justify-content: center;
-    //   transition: all 0.2s ease;
-    //   flex-shrink: 0;
-
-    //   &:hover:not(:disabled) {
-    //     background: transparent;
-    //     transform: scale(1.05);
-    //   }
-
-    //   &:disabled {
-    //     background: black;
-    //     color: #9ca3af;
-    //     cursor: not-allowed;
-    //   }
-
-    //   i {
-    //     font-size: 1.5rem;
-    //   }
-    // }
-
     .send-btn {
       background: transparent;
-      color: white;
+      color: var(--color-text-primary);
       border: none;
       width: 44px;
       height: 44px;
@@ -233,10 +186,11 @@
       justify-content: center;
       flex-shrink: 0;
       cursor: pointer;
+      transition: color var(--transition-normal) var(--ease-in-out);
 
       i {
         font-size: 1.5rem;
-        transition: transform 0.3s ease; // smooth scale transition
+        transition: transform var(--transition-normal) var(--ease-in-out);
         transform: scale(1.1); // default smaller when disabled
       }
 
@@ -245,7 +199,7 @@
       }
 
       &:disabled {
-        color: #9ca3af;
+        color: var(--color-text-tertiary);
         cursor: not-allowed;
       }
     }
@@ -259,7 +213,8 @@
   height: 100vh;
   margin-left: 400px; // because sidebar takes space
   padding-top: 60px;
-  background: #000;
+  background: var(--color-bg-primary);
+  transition: background-color var(--transition-normal) var(--ease-in-out);
 
   .placeholder-content {
     text-align: center;
@@ -269,29 +224,33 @@
     .placeholder-icon {
       display: block;
       font-size: 5rem;
-      color: #4b5563;
+      color: var(--color-text-muted);
       margin-bottom: 20px;
+      transition: color var(--transition-normal) var(--ease-in-out);
     }
 
     .placeholder-title {
-      color: #fff;
+      color: var(--color-text-primary);
       font-size: 1.5rem;
       font-weight: 600;
       margin-bottom: 0.1rem;
+      transition: color var(--transition-normal) var(--ease-in-out);
     }
 
     .placeholder-subtitle {
-      color: #9ca3af;
+      color: var(--color-text-tertiary);
       font-size: 1rem;
       line-height: 1.5;
       margin-top: 0;
+      transition: color var(--transition-normal) var(--ease-in-out);
     }
 
     .placeholder-footer {
       margin-top: 1rem;
       font-size: 0.8rem;
-      color: #6b7280; // subtle gray
+      color: var(--color-text-muted);
       font-style: italic;
+      transition: color var(--transition-normal) var(--ease-in-out);
     }
   }
 }
@@ -457,11 +416,13 @@
   display: flex;
   align-items: center;
   padding: 0.5rem 1rem;
-  background: black;
-  // border-bottom: 1px solid #444444;
-  color: #9ca3af;
+  background: var(--color-bg-primary);
+  // border-bottom: 1px solid var(--color-border-primary);
+  color: var(--color-text-tertiary);
   font-size: 0.875rem;
   animation: fadeIn 0.2s ease-in;
+  transition: background-color var(--transition-normal) var(--ease-in-out),
+              color var(--transition-normal) var(--ease-in-out);
 
   .typing-dots {
     display: flex;
@@ -471,9 +432,10 @@
     .dot {
       width: 8px;
       height: 8px;
-      background: #9ca3af;
+      background: var(--color-text-tertiary);
       border-radius: 50%;
       animation: typingDot 1.4s infinite ease-in-out;
+      transition: background-color var(--transition-normal) var(--ease-in-out);
 
       &:nth-child(2) {
         animation-delay: 0.2s;
@@ -486,7 +448,8 @@
   }
 
   .typing-text {
-    color: #9ca3af;
+    color: var(--color-text-tertiary);
+    transition: color var(--transition-normal) var(--ease-in-out);
   }
 }
 

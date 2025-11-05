@@ -1,0 +1,233 @@
+// ============================================================================
+// DESIGN TOKENS - Single Source of Truth for Theme Colors
+// ============================================================================
+// This file defines all color tokens used across the application.
+// Colors are organized semantically for scalable, maintainable theming.
+// 
+// Usage: Import these tokens in components, never hardcode colors.
+// Future: Can extend to brand themes, multi-tenant themes, etc.
+// ============================================================================
+
+// ============================================================================
+// DARK THEME (Default) - Current black & white design
+// ============================================================================
+:root,
+[data-theme="dark"] {
+  // Brand Colors (theme-independent accent colors)
+  --brand-primary: #22c55e;
+  --brand-primary-dark: #16a34a;
+  --brand-primary-light: #4ade80;
+  --brand-accent: #15803d;
+
+  // Semantic Colors - Backgrounds
+  --color-bg-primary: #000000;
+  --color-bg-secondary: #0f0f0f;
+  --color-bg-tertiary: #1a1a1a;
+  --color-bg-elevated: #111111;
+  --color-bg-input: #111111;
+  --color-bg-hover: #333333;
+  --color-bg-active: #444444;
+
+  // Semantic Colors - Surfaces (cards, panels, modals)
+  --color-surface-primary: #0f0f0f;
+  --color-surface-secondary: #1a1a1a;
+  --color-surface-elevated: #222222;
+
+  // Semantic Colors - Borders
+  --color-border-primary: #444444;
+  --color-border-secondary: #333333;
+  --color-border-focus: #555555;
+  --color-border-input: #333333;
+  --color-border-input-focus: #555555;
+
+  // Semantic Colors - Text
+  --color-text-primary: #ffffff;
+  --color-text-secondary: #e5e5e5;
+  --color-text-tertiary: #9ca3af;
+  --color-text-muted: #6b7280;
+  --color-text-disabled: #4b5563;
+  --color-text-inverted: #000000;
+
+  // Semantic Colors - Interactive Elements
+  --color-link: var(--brand-primary);
+  --color-link-hover: var(--brand-primary-light);
+  
+  // Semantic Colors - Status/Feedback
+  --color-success: #22c55e;
+  --color-success-bg: #0f2f1f;
+  --color-success-border: #16a34a;
+  
+  --color-error: #dc2626;
+  --color-error-bg: #2f0f0f;
+  --color-error-border: #991b1b;
+  
+  --color-warning: #f59e0b;
+  --color-warning-bg: #2f220f;
+  --color-warning-border: #d97706;
+  
+  --color-info: #3b82f6;
+  --color-info-bg: #0f1f2f;
+  --color-info-border: #2563eb;
+
+  // Scrollbar
+  --scrollbar-track: transparent;
+  --scrollbar-thumb: #555555;
+  --scrollbar-thumb-hover: #777777;
+
+  // Shadows
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.5);
+  --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.5);
+  --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.6);
+  --shadow-xl: 0 20px 25px rgba(0, 0, 0, 0.7);
+
+  // Focus Ring
+  --focus-ring-color: rgba(255, 255, 255, 0.3);
+  --focus-ring-width: 2px;
+  --focus-ring-offset: 2px;
+}
+
+// ============================================================================
+// LIGHT THEME - Inverted, clean, professional design
+// ============================================================================
+[data-theme="light"] {
+  // Brand Colors (same across themes)
+  --brand-primary: #22c55e;
+  --brand-primary-dark: #16a34a;
+  --brand-primary-light: #4ade80;
+  --brand-accent: #15803d;
+
+  // Semantic Colors - Backgrounds
+  --color-bg-primary: #ffffff;
+  --color-bg-secondary: #f8fafc;
+  --color-bg-tertiary: #f1f5f9;
+  --color-bg-elevated: #ffffff;
+  --color-bg-input: #f8fafc;
+  --color-bg-hover: #e2e8f0;
+  --color-bg-active: #cbd5e1;
+
+  // Semantic Colors - Surfaces
+  --color-surface-primary: #ffffff;
+  --color-surface-secondary: #f8fafc;
+  --color-surface-elevated: #ffffff;
+
+  // Semantic Colors - Borders
+  --color-border-primary: #e2e8f0;
+  --color-border-secondary: #cbd5e1;
+  --color-border-focus: #94a3b8;
+  --color-border-input: #e2e8f0;
+  --color-border-input-focus: #94a3b8;
+
+  // Semantic Colors - Text
+  --color-text-primary: #0f172a;
+  --color-text-secondary: #1e293b;
+  --color-text-tertiary: #475569;
+  --color-text-muted: #64748b;
+  --color-text-disabled: #94a3b8;
+  --color-text-inverted: #ffffff;
+
+  // Semantic Colors - Interactive Elements
+  --color-link: var(--brand-primary-dark);
+  --color-link-hover: var(--brand-primary);
+  
+  // Semantic Colors - Status/Feedback
+  --color-success: #16a34a;
+  --color-success-bg: #f0fdf4;
+  --color-success-border: #22c55e;
+  
+  --color-error: #dc2626;
+  --color-error-bg: #fef2f2;
+  --color-error-border: #f87171;
+  
+  --color-warning: #d97706;
+  --color-warning-bg: #fffbeb;
+  --color-warning-border: #fbbf24;
+  
+  --color-info: #2563eb;
+  --color-info-bg: #eff6ff;
+  --color-info-border: #60a5fa;
+
+  // Scrollbar
+  --scrollbar-track: transparent;
+  --scrollbar-thumb: #cbd5e1;
+  --scrollbar-thumb-hover: #94a3b8;
+
+  // Shadows
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.07);
+  --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1);
+  --shadow-xl: 0 20px 25px rgba(0, 0, 0, 0.15);
+
+  // Focus Ring
+  --focus-ring-color: rgba(34, 197, 94, 0.3);
+  --focus-ring-width: 2px;
+  --focus-ring-offset: 2px;
+}
+
+// ============================================================================
+// TRANSITION CONFIGURATION
+// ============================================================================
+// Performance-optimized transitions for theme switching
+// Uses transform and opacity for GPU acceleration
+// ============================================================================
+
+:root {
+  // Transition Durations (respects prefers-reduced-motion)
+  --transition-fast: 150ms;
+  --transition-normal: 250ms;
+  --transition-slow: 350ms;
+  
+  // Transition Easings
+  --ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
+  --ease-out: cubic-bezier(0, 0, 0.2, 1);
+  --ease-in: cubic-bezier(0.4, 0, 1, 1);
+  
+  // Border Radius
+  --radius-sm: 6px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-xl: 24px;
+  --radius-full: 9999px;
+  
+  // Spacing Scale
+  --space-xs: 0.25rem;
+  --space-sm: 0.5rem;
+  --space-md: 1rem;
+  --space-lg: 1.5rem;
+  --space-xl: 2rem;
+  --space-2xl: 3rem;
+}
+
+// ============================================================================
+// REDUCED MOTION SUPPORT
+// ============================================================================
+// Respect user preferences for reduced motion
+// ============================================================================
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --transition-fast: 0ms;
+    --transition-normal: 0ms;
+    --transition-slow: 0ms;
+  }
+  
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+// ============================================================================
+// THEME TRANSITION CLASSES
+// ============================================================================
+// Apply smooth transitions to themeable properties
+// Only when user explicitly switches theme (not on initial load)
+// ============================================================================
+.theme-transitioning * {
+  transition: 
+    background-color var(--transition-normal) var(--ease-in-out),
+    color var(--transition-normal) var(--ease-in-out),
+    border-color var(--transition-normal) var(--ease-in-out),
+    box-shadow var(--transition-normal) var(--ease-in-out) !important;
+}
