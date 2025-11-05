@@ -104,7 +104,7 @@ export class ChatItemComponent {
     const year = messageTime.getFullYear();
 
     // Format time in 12-hour format with concise AM/PM (e.g., "6:46 PM")
-    const time = messageTime.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit', hour12: true });
+    const time = messageTime.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit', hour12: true }).replace('am', 'AM').replace('pm', 'PM');
 
     // Return formatted string
     return `${weekday} ${day} ${month} ${year} at ${time}`;
