@@ -51,6 +51,10 @@ import { apiGroupsIdRegenerateInvitePost$Json } from '../fn/groups/api-groups-id
 import { ApiGroupsIdRegenerateInvitePost$Json$Params } from '../fn/groups/api-groups-id-regenerate-invite-post-json';
 import { apiGroupsIdRegenerateInvitePost$Plain } from '../fn/groups/api-groups-id-regenerate-invite-post-plain';
 import { ApiGroupsIdRegenerateInvitePost$Plain$Params } from '../fn/groups/api-groups-id-regenerate-invite-post-plain';
+import { apiGroupsIdVisibilityPut$Json } from '../fn/groups/api-groups-id-visibility-put-json';
+import { ApiGroupsIdVisibilityPut$Json$Params } from '../fn/groups/api-groups-id-visibility-put-json';
+import { apiGroupsIdVisibilityPut$Plain } from '../fn/groups/api-groups-id-visibility-put-plain';
+import { ApiGroupsIdVisibilityPut$Plain$Params } from '../fn/groups/api-groups-id-visibility-put-plain';
 import { apiGroupsJoinPost$Json } from '../fn/groups/api-groups-join-post-json';
 import { ApiGroupsJoinPost$Json$Params } from '../fn/groups/api-groups-join-post-json';
 import { apiGroupsJoinPost$Plain } from '../fn/groups/api-groups-join-post-plain';
@@ -765,6 +769,69 @@ export class GroupsService extends BaseService {
    */
   apiGroupsIdRegenerateInvitePost$Json(params: ApiGroupsIdRegenerateInvitePost$Json$Params, context?: HttpContext): Observable<GroupDtoApiResponse> {
     return this.apiGroupsIdRegenerateInvitePost$Json$Response(params, context).pipe(
+      map((r: StrictHttpResponse<GroupDtoApiResponse>): GroupDtoApiResponse => r.body)
+    );
+  }
+
+  /** Path part for operation `apiGroupsIdVisibilityPut()` */
+  static readonly ApiGroupsIdVisibilityPutPath = '/api/Groups/{id}/visibility';
+
+  /**
+   * Updates a group's visibility (admin only).
+   *
+   *
+   *
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `apiGroupsIdVisibilityPut$Plain()` instead.
+   *
+   * This method sends `application/*+json` and handles request body of type `application/*+json`.
+   */
+  apiGroupsIdVisibilityPut$Plain$Response(params: ApiGroupsIdVisibilityPut$Plain$Params, context?: HttpContext): Observable<StrictHttpResponse<GroupDtoApiResponse>> {
+    return apiGroupsIdVisibilityPut$Plain(this.http, this.rootUrl, params, context);
+  }
+
+  /**
+   * Updates a group's visibility (admin only).
+   *
+   *
+   *
+   * This method provides access only to the response body.
+   * To access the full response (for headers, for example), `apiGroupsIdVisibilityPut$Plain$Response()` instead.
+   *
+   * This method sends `application/*+json` and handles request body of type `application/*+json`.
+   */
+  apiGroupsIdVisibilityPut$Plain(params: ApiGroupsIdVisibilityPut$Plain$Params, context?: HttpContext): Observable<GroupDtoApiResponse> {
+    return this.apiGroupsIdVisibilityPut$Plain$Response(params, context).pipe(
+      map((r: StrictHttpResponse<GroupDtoApiResponse>): GroupDtoApiResponse => r.body)
+    );
+  }
+
+  /**
+   * Updates a group's visibility (admin only).
+   *
+   *
+   *
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `apiGroupsIdVisibilityPut$Json()` instead.
+   *
+   * This method sends `application/*+json` and handles request body of type `application/*+json`.
+   */
+  apiGroupsIdVisibilityPut$Json$Response(params: ApiGroupsIdVisibilityPut$Json$Params, context?: HttpContext): Observable<StrictHttpResponse<GroupDtoApiResponse>> {
+    return apiGroupsIdVisibilityPut$Json(this.http, this.rootUrl, params, context);
+  }
+
+  /**
+   * Updates a group's visibility (admin only).
+   *
+   *
+   *
+   * This method provides access only to the response body.
+   * To access the full response (for headers, for example), `apiGroupsIdVisibilityPut$Json$Response()` instead.
+   *
+   * This method sends `application/*+json` and handles request body of type `application/*+json`.
+   */
+  apiGroupsIdVisibilityPut$Json(params: ApiGroupsIdVisibilityPut$Json$Params, context?: HttpContext): Observable<GroupDtoApiResponse> {
+    return this.apiGroupsIdVisibilityPut$Json$Response(params, context).pipe(
       map((r: StrictHttpResponse<GroupDtoApiResponse>): GroupDtoApiResponse => r.body)
     );
   }

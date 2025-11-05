@@ -6,7 +6,6 @@ import { GroupsService } from '../../../api/services/groups.service';
 import { ToastService } from '../../../shared/services/toast.service';
 import { CommonInputComponent } from '../../../shared/components/common-form-controls/common-input.component';
 import { CommonButtonComponent } from '../../../shared/components/common-form-controls/common-button.component';
-import { CommonToggleComponent } from '../../../shared/components/common-form-controls/common-toggle.component';
 import { SkeletonLoaderComponent } from '../../../shared/components/skeleton-loader/skeleton-loader.component';
 import { ConfirmationDialogComponent } from '../../../shared/components/confirmation-dialog/confirmation-dialog.component';
 import { TabsComponent, Tab } from '../../../shared/components/tabs/tabs.component';
@@ -46,7 +45,6 @@ import { CommonTooltipDirective } from '../../../shared/components/common-toolti
     ReactiveFormsModule,
     CommonInputComponent,
     CommonButtonComponent,
-    CommonToggleComponent,
     SkeletonLoaderComponent,
     ConfirmationDialogComponent,
     TabsComponent,
@@ -64,6 +62,7 @@ export class GroupInfoDialogComponent implements OnInit {
   @Output() closed = new EventEmitter<void>();
   @Output() updated = new EventEmitter<GroupDto>();
   @Output() deleted = new EventEmitter<string>();
+  @Output() leftGroup = new EventEmitter<string>();
   @Output() membershipChange = new EventEmitter<{ userId: string; action: 'remove' | 'makeAdmin' }>();
 
   // Tabs configuration
@@ -84,12 +83,17 @@ export class GroupInfoDialogComponent implements OnInit {
   isLoadingMembers = false;
   isUpdating = false;
   isDeleting = false;
+  isLeaving = false;
+  isUpdatingVisibility = false;
   processingUserId: string | null = null;
 
   // Confirmation dialogs
   showDeleteConfirmation = false;
+  showLeaveConfirmation = false;
+  showVisibilityConfirmation = false;
   showRemoveMemberConfirmation = false;
   memberToRemove: GroupMemberDto | null = null;
+  pendingVisibilityValue: boolean | null = null;
 
   constructor(
     private fb: FormBuilder,
@@ -101,8 +105,7 @@ export class GroupInfoDialogComponent implements OnInit {
 
   ngOnInit(): void {
     this.groupInfoForm = this.fb.group({
-      groupName: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(50)]],
-      isPublic: [false]
+      groupName: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(50)]]
     });
 
     this.loadGroupDetails();
@@ -128,8 +131,7 @@ export class GroupInfoDialogComponent implements OnInit {
         if (response.success && response.data) {
           this.group = response.data;
           this.groupInfoForm.patchValue({
-            groupName: this.group.name || '',
-            isPublic: this.group.isPublic || false
+            groupName: this.group.name || ''
           });
           this.cdr.markForCheck();
         } else {
@@ -180,7 +182,7 @@ export class GroupInfoDialogComponent implements OnInit {
     this.activeTab = tabId;
 
     // Load members when switching to Members tab
-    if (tabId === 'members' && this.members.length === 0) {
+    if ((tabId === 'members' || tabId === 'settings') && this.members.length === 0) {
       this.loadMembers();
     }
 
@@ -195,6 +197,17 @@ export class GroupInfoDialogComponent implements OnInit {
       return false;
     }
     return this.members.some(m => m.userId === this.currentUserId && m.role === 'admin');
+  }
+
+  /**
+   * Check if current user is the last admin
+   */
+  get isLastAdmin(): boolean {
+    if (!this.members || !this.currentUserId || !this.isAdmin) {
+      return false;
+    }
+    const adminCount = this.members.filter(m => m.role === 'admin').length;
+    return adminCount === 1;
   }
 
   getFieldError(fieldName: string): boolean {
@@ -381,8 +394,8 @@ export class GroupInfoDialogComponent implements OnInit {
   }
 
   /**
- * Tooltip for the Delete Group button
- */
+   * Tooltip for the Delete Group button
+   */
   get deleteGroupTooltip(): string {
     if (this.isDeleting) {
       return 'Deleting group...';
@@ -394,6 +407,34 @@ export class GroupInfoDialogComponent implements OnInit {
   }
 
   /**
+   * Tooltip for the Leave Group button
+   */
+  get leaveGroupTooltip(): string {
+    if (this.isLeaving) {
+      return 'Leaving group...';
+    }
+    if (this.isLastAdmin) {
+      return 'You are the last admin. Please assign another admin before leaving or delete the group';
+    }
+    return 'Leave this group';
+  }
+
+  /**
+   * Tooltip for the Change Visibility button
+   */
+  get changeVisibilityTooltip(): string {
+    if (this.isUpdatingVisibility) {
+      return 'Updating visibility...';
+    }
+    if (!this.isAdmin) {
+      return 'Only group admins can change visibility';
+    }
+    const currentState = this.group?.isPublic ? 'public' : 'private';
+    const newState = this.group?.isPublic ? 'private' : 'public';
+    return `Change group visibility from ${currentState} to ${newState}`;
+  }
+
+  /**
    * Handle delete button click
    */
   onDeleteClick(): void {
@@ -401,6 +442,28 @@ export class GroupInfoDialogComponent implements OnInit {
       return;
     }
     this.showDeleteDialog();
+  }
+
+  /**
+   * Handle leave group button click
+   */
+  onLeaveClick(): void {
+    if (this.isLeaving || this.isLastAdmin) {
+      return;
+    }
+    this.showLeaveDialog();
+  }
+
+  /**
+   * Handle visibility toggle click
+   */
+  onVisibilityToggle(): void {
+    if (!this.isAdmin || this.isUpdatingVisibility || !this.group) {
+      return;
+    }
+    // Store the pending value (opposite of current)
+    this.pendingVisibilityValue = !this.group.isPublic;
+    this.showVisibilityDialog();
   }
 
   closeDialog(): void {
@@ -420,6 +483,39 @@ export class GroupInfoDialogComponent implements OnInit {
    */
   cancelDelete(): void {
     this.showDeleteConfirmation = false;
+    this.cdr.markForCheck();
+  }
+
+  /**
+   * Show leave confirmation dialog
+   */
+  showLeaveDialog(): void {
+    this.showLeaveConfirmation = true;
+    this.cdr.markForCheck();
+  }
+
+  /**
+   * Cancel leave operation
+   */
+  cancelLeave(): void {
+    this.showLeaveConfirmation = false;
+    this.cdr.markForCheck();
+  }
+
+  /**
+   * Show visibility change confirmation dialog
+   */
+  showVisibilityDialog(): void {
+    this.showVisibilityConfirmation = true;
+    this.cdr.markForCheck();
+  }
+
+  /**
+   * Cancel visibility change operation
+   */
+  cancelVisibilityChange(): void {
+    this.showVisibilityConfirmation = false;
+    this.pendingVisibilityValue = null;
     this.cdr.markForCheck();
   }
 
@@ -465,6 +561,144 @@ export class GroupInfoDialogComponent implements OnInit {
           || 'Failed to delete group. Please try again.';
 
         this.toastService.showError(errorMessage, 'Delete Failed');
+        this.cdr.markForCheck();
+      }
+    });
+  }
+
+  /**
+   * Confirm and execute leave group
+   */
+  confirmLeave(): void {
+    if (this.isLeaving || !this.groupId || this.isLastAdmin) {
+      return;
+    }
+
+    this.isLeaving = true;
+    this.cdr.markForCheck();
+
+    this.groupsService.apiGroupsIdLeavePost$Json({ id: this.groupId }).subscribe({
+      next: (response) => {
+        this.isLeaving = false;
+        this.showLeaveConfirmation = false;
+
+        if (response.success) {
+          this.toastService.showSuccess(
+            'You have successfully left the group.',
+            'Left Group'
+          );
+
+          this.leftGroup.emit(this.groupId);
+          this.closeDialog();
+          this.router.navigate(['/chat']);
+        } else {
+          this.toastService.showError(
+            response.message || 'Failed to leave group',
+            'Leave Failed'
+          );
+          this.cdr.markForCheck();
+        }
+      },
+      error: (error) => {
+        this.isLeaving = false;
+        this.showLeaveConfirmation = false;
+
+        const errorMessage = error?.error?.message
+          || error?.message
+          || 'Failed to leave group. Please try again.';
+
+        this.toastService.showError(errorMessage, 'Leave Failed');
+        this.cdr.markForCheck();
+      }
+    });
+  }
+
+  /**
+   * Formats a given date-time string into a professional tooltip with:
+   * - Day of the week (e.g., "Monday")
+   * - Day of the month (e.g., 29)
+   * - Full month name (e.g., "October")
+   * - Full year (e.g., 2025)
+   * - Time in 12-hour format with AM/PM in a concise style (e.g., "6:46 PM")
+   *
+   * @param {string} [timeString] - The ISO 8601 date-time string (e.g., "2025-10-29T14:30:00").
+   *                                If no string is provided, returns an empty string.
+   *
+   * @returns {string} A formatted string for display in a tooltip.
+   *                   Example: "Wednesday 29 October 2025 at 6:46 PM"
+   */
+  getDateTimeTooltip(timeString?: string): string {
+    if (!timeString) return '';
+
+    const messageTime = new Date(timeString);
+
+    // Format date components
+    const weekday = messageTime.toLocaleString([], { weekday: 'long' });
+    const day = messageTime.getDate();
+    const month = messageTime.toLocaleString([], { month: 'long' });
+    const year = messageTime.getFullYear();
+
+    // Format time in 12-hour format with concise AM/PM (e.g., "6:46 PM")
+    const time = messageTime.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit', hour12: true }).replace('am', 'AM').replace('pm', 'PM');
+
+    // Return formatted string
+    return `${weekday} ${day} ${month} ${year} at ${time}`;
+  }
+
+  /**
+   * Confirm and execute visibility change
+   */
+  confirmVisibilityChange(): void {
+    if (this.isUpdatingVisibility || !this.groupId || this.pendingVisibilityValue === null) {
+      return;
+    }
+
+    this.isUpdatingVisibility = true;
+    this.cdr.markForCheck();
+
+    this.groupsService.apiGroupsIdVisibilityPut$Json({
+      id: this.groupId,
+      body: {
+        isPublic: this.pendingVisibilityValue
+      }
+    }).subscribe({
+      next: (response) => {
+        this.isUpdatingVisibility = false;
+        this.showVisibilityConfirmation = false;
+
+        if (response.success && response.data) {
+          const visibilityType = this.pendingVisibilityValue ? 'public' : 'private';
+          this.toastService.showSuccess(
+            `Group visibility changed to ${visibilityType}.`,
+            'Visibility Updated'
+          );
+
+          // Update local group data
+          if (this.group && this.pendingVisibilityValue !== null) {
+            this.group.isPublic = this.pendingVisibilityValue;
+          }
+          this.pendingVisibilityValue = null;
+          this.updated.emit(this.group!);
+          this.cdr.markForCheck();
+        } else {
+          this.toastService.showError(
+            response.message || 'Failed to update visibility',
+            'Update Failed'
+          );
+          this.pendingVisibilityValue = null;
+          this.cdr.markForCheck();
+        }
+      },
+      error: (error) => {
+        this.isUpdatingVisibility = false;
+        this.showVisibilityConfirmation = false;
+        this.pendingVisibilityValue = null;
+
+        const errorMessage = error?.error?.message
+          || error?.message
+          || 'Failed to update visibility. Please try again.';
+
+        this.toastService.showError(errorMessage, 'Update Failed');
         this.cdr.markForCheck();
       }
     });

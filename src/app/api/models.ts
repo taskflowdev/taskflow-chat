@@ -30,6 +30,7 @@ export type { TextContent } from './models/text-content';
 export type { TokenDto } from './models/token-dto';
 export type { TokenDtoApiResponse } from './models/token-dto-api-response';
 export type { UpdateGroupNameDto } from './models/update-group-name-dto';
+export type { UpdateGroupVisibilityDto } from './models/update-group-visibility-dto';
 export type { UserDto } from './models/user-dto';
 export type { UserDtoApiResponse } from './models/user-dto-api-response';
 export type { VideoContent } from './models/video-content';
