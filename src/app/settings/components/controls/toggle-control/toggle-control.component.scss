@@ -1,0 +1,14 @@
+.form-switch {
+  padding-left: 2.5em;
+  
+  .form-check-input {
+    width: 3em;
+    height: 1.5em;
+    cursor: pointer;
+    
+    &:disabled {
+      cursor: not-allowed;
+      opacity: 0.5;
+    }
+  }
+}

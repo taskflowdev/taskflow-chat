@@ -1,0 +1,16 @@
+.form-select {
+  max-width: 300px;
+  background-color: var(--color-dropdown-bg, #ffffff);
+  color: var(--color-dropdown-fg, #212529);
+  border-color: var(--color-border, #dee2e6);
+  
+  &:disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
+  }
+
+  &:focus {
+    border-color: var(--color-button-primary-bg, #007bff);
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+  }
+}
