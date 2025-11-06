@@ -149,6 +149,43 @@
   }
 }
 
+// Settings sidebar skeleton
+.skeleton-settings-sidebar {
+  padding: 1.5rem 1rem;
+  
+  .skeleton-sidebar-item {
+    padding: 0.625rem 0.75rem;
+    border-radius: 0.375rem;
+  }
+}
+
+// Settings category skeleton
+.skeleton-settings-category {
+  max-width: 800px;
+  padding: 0;
+}
+
+// Settings item skeleton
+.skeleton-settings-item {
+  padding: 1.5rem;
+  border: 1px solid var(--border-color, #dee2e6);
+  border-radius: 0.5rem;
+  background-color: var(--skeleton-item-bg, #ffffff);
+  margin-bottom: 2rem;
+  
+  .skeleton-item-header {
+    margin-bottom: 1rem;
+  }
+  
+  .skeleton-item-info {
+    flex: 1;
+  }
+  
+  .skeleton-item-control {
+    margin-top: 0.5rem;
+  }
+}
+
 @keyframes skeleton-loading {
   0% {
     background-position: -200% 0;
@@ -163,21 +200,26 @@
   --skeleton-base: #2a2a2a;
   --skeleton-highlight: #383838;
   --border-color: #3a3a3a;
+  --skeleton-item-bg: #1a1a1a;
 }
 
-/* For light theme contexts (if needed) */
+/* For light theme contexts */
+[data-theme="light"],
 .light-theme {
-  --skeleton-base: #f0f0f0;
-  --skeleton-highlight: #f8f8f8;
-  --border-color: #e0e0e0;
+  --skeleton-base: #e9ecef;
+  --skeleton-highlight: #f8f9fa;
+  --border-color: #dee2e6;
+  --skeleton-item-bg: #ffffff;
 }
 
 /* Dark theme specific styles */
+[data-theme="dark"],
 .dark-theme,
 body.dark {
-  --skeleton-base: #1a1a1a;
-  --skeleton-highlight: #2d2d2d;
-  --border-color: #404040;
+  --skeleton-base: #2a2a2a;
+  --skeleton-highlight: #383838;
+  --border-color: #495057;
   --skeleton-bubble-other: #2a2a2a;
   --skeleton-bubble-own: #1a4d2e;
+  --skeleton-item-bg: #1a1a1a;
 }

@@ -7,10 +7,11 @@ import { map } from 'rxjs/operators';
 import { CategoryWithKeys } from '../../../api/models/category-with-keys';
 import { CatalogEntryDto } from '../../../api/models/catalog-entry-dto';
 import { SettingsRendererComponent } from '../settings-renderer/settings-renderer.component';
+import { SkeletonLoaderComponent } from '../../../shared/components/skeleton-loader/skeleton-loader.component';
 
 @Component({
   selector: 'app-settings-category',
-  imports: [CommonModule, SettingsRendererComponent],
+  imports: [CommonModule, SettingsRendererComponent, SkeletonLoaderComponent],
   templateUrl: './settings-category.component.html',
   styleUrls: ['./settings-category.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -18,12 +19,15 @@ import { SettingsRendererComponent } from '../settings-renderer/settings-rendere
 export class SettingsCategoryComponent implements OnInit {
   category$!: Observable<CategoryWithKeys | undefined>;
   sortedKeys$!: Observable<CatalogEntryDto[]>;
+  loading$: Observable<boolean>;
 
   constructor(
     private route: ActivatedRoute,
     private userSettingsService: UserSettingsService,
     private cdr: ChangeDetectorRef
-  ) { }
+  ) {
+    this.loading$ = this.userSettingsService.loading$;
+  }
 
   ngOnInit(): void {
     const categoryKey$ = this.route.params.pipe(
