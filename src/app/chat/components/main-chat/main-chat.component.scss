@@ -1,9 +1,7 @@
 // Main chat component styles - orchestrates the entire chat UI within main layout
 .main-chat-container {
   height: 100%;
-  min-height: calc(
-    100vh - 60px - 40px
-  ); // Account for navbar (60px) and footer (40px)
+  height: calc(100vh - 60px);
   overflow: hidden;
   background: #000000 !important; // Force black background
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
@@ -13,7 +11,6 @@
 .chat-content-area {
   // display: flex;
   height: 100%;
-  min-height: calc(100vh - 60px - 40px); // Account for navbar and footer
   position: relative;
 }
 
@@ -49,7 +46,7 @@
     app-chat-conversation {
       width: 100%;
       transition: transform 0.3s ease;
-      
+
       &.mobile-hidden {
         display: none;
       }

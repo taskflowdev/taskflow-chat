@@ -2,10 +2,9 @@
 .chat-conversation {
   display: flex;
   flex-direction: column;
-  height: 100vh;
+  height: 100%;
   background: black;
   margin-left: 400px; // Space for sidebar
-  padding-top: 60px; // Space for header
 }
 
 .conversation-header {
@@ -129,7 +128,7 @@
   background: black;
 
   &.has-typing {
-    padding-top: .25rem !important;
+    padding-top: 0.25rem !important;
   }
 
   .input-wrapper {
@@ -178,14 +177,14 @@
       font-family: inherit;
 
       /* Soft floating shadow */
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.8),  /* dark base shadow */
-                  0 0 8px rgba(255, 255, 255, 0.05); /* subtle highlight */
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.8),
+        /* dark base shadow */ 0 0 8px rgba(255, 255, 255, 0.05); /* subtle highlight */
 
       &:focus {
         background: #111;
         border-color: #555;
         box-shadow: 0 4px 12px rgba(0, 0, 0, 0.9),
-                    0 0 12px rgba(255, 255, 255, 0.1); /* subtle glow */
+          0 0 12px rgba(255, 255, 255, 0.1); /* subtle glow */
         outline: none;
       }
 
@@ -340,7 +339,7 @@
     padding: 0.75rem 1rem;
 
     &.has-typing {
-      padding-top: .25rem !important;
+      padding-top: 0.25rem !important;
     }
 
     .input-wrapper {
@@ -412,7 +411,7 @@
     padding: 0.6rem 0.75rem;
 
     &.has-typing {
-      padding-top: .25rem !important;
+      padding-top: 0.25rem !important;
     }
 
     .input-wrapper {
@@ -491,7 +490,9 @@
 }
 
 @keyframes typingDot {
-  0%, 60%, 100% {
+  0%,
+  60%,
+  100% {
     opacity: 0.3;
     transform: scale(0.8);
   }
