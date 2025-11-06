@@ -48,11 +48,6 @@ export class NavbarComponent implements OnInit, OnDestroy {
       href: '#'
     },
     {
-      label: 'Settings',
-      icon: 'bi-gear',
-      href: '#'
-    },
-    {
       label: 'Keyboard Shortcuts',
       icon: 'bi-keyboard',
       action: 'keyboard-shortcuts',

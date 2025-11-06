@@ -27,6 +27,8 @@ export class UserSettingsService {
     private catalogService: CatalogService,
     private themeService: ThemeService
   ) {
+    // Initialize save queue subscription
+    // This is intentional for a singleton service and will live for app lifetime
     this.initializeSaveQueue();
   }
 
