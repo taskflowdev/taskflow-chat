@@ -5,6 +5,7 @@ import { Subscription } from 'rxjs';
 import { AuthService, AuthUser } from '../../../auth/services/auth.service';
 import { NavLinksComponent, NavLink } from './components/nav-links/nav-links.component';
 import { UserDropdownComponent, DropdownItem } from './components/user-dropdown/user-dropdown.component';
+import { ThemeToggleComponent } from '../theme-toggle/theme-toggle.component';
 
 @Component({
   selector: 'app-navbar',
@@ -13,7 +14,8 @@ import { UserDropdownComponent, DropdownItem } from './components/user-dropdown/
     CommonModule,
     RouterModule,
     NavLinksComponent,
-    UserDropdownComponent
+    UserDropdownComponent,
+    ThemeToggleComponent
   ],
   templateUrl: './navbar.component.html',
   styleUrls: ['./navbar.component.scss']

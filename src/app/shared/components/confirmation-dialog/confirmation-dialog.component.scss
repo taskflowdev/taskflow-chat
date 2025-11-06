@@ -27,17 +27,19 @@
 }
 
 .dialog-container {
-  background: #000;
-  border: 1px solid #444;
-  border-radius: 12px;
+  background: var(--color-surface-primary);
+  border: 1px solid var(--color-border-primary);
+  border-radius: var(--radius-md);
   width: 100%;
   max-width: 500px;
   max-height: 90vh;
   display: flex;
   flex-direction: column;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.8);
+  box-shadow: var(--shadow-xl);
   transform: translateY(20px);
   animation: slideUp 0.3s ease forwards;
+  transition: background-color var(--transition-normal) var(--ease-in-out),
+              border-color var(--transition-normal) var(--ease-in-out);
 }
 
 @keyframes slideUp {
@@ -52,7 +54,8 @@
   align-items: center;
   justify-content: space-between;
   padding: 0.8rem;
-  border-bottom: 1px solid #444;
+  border-bottom: 1px solid var(--color-border-primary);
+  transition: border-color var(--transition-normal) var(--ease-in-out);
 
   .header-content {
     display: flex;

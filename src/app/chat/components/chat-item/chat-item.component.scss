@@ -3,19 +3,19 @@
   display: flex;
   align-items: center;
   padding: 0.9rem 1rem;
-  border-bottom: 1px solid #444444 !important;
+  border-bottom: 1px solid var(--color-border-primary) !important;
   cursor: pointer;
-  transition: all 0.2s ease;
-  background: transparent !important; // Force transparent background
-  color: white !important; // Ensure white text
+  transition: all var(--transition-fast) var(--ease-in-out);
+  background: transparent !important;
+  color: var(--color-text-primary) !important;
 
   &:hover {
-    background: #222222 !important;
+    background: var(--color-bg-hover) !important;
   }
 
   &.active {
-    background: #333333 !important;
-    border-left: 3px solid white;
+    background: var(--color-bg-active) !important;
+    border-left: 3px solid var(--color-text-primary);
   }
 
   &:last-child {
@@ -26,17 +26,19 @@
 .chat-avatar {
   width: 50px;
   height: 50px;
-  background: #444444;
+  background: var(--color-bg-tertiary);
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
   margin-right: 0.75rem;
   flex-shrink: 0;
+  transition: background-color var(--transition-normal) var(--ease-in-out);
 
   i {
-    color: #9ca3af;
+    color: var(--color-text-tertiary);
     font-size: 1.2rem;
+    transition: color var(--transition-normal) var(--ease-in-out);
   }
 }
 
@@ -51,20 +53,22 @@
     margin-bottom: 0.25rem;
 
     .chat-name {
-      color: white !important;
+      color: var(--color-text-primary) !important;
       font-weight: 500;
       font-size: 1rem;
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
       max-width: 250px;
+      transition: color var(--transition-normal) var(--ease-in-out);
     }
 
     .chat-time {
-      color: #9ca3af;
+      color: var(--color-text-tertiary);
       font-size: 0.75rem;
       white-space: nowrap;
       margin-left: 0.5rem;
+      transition: color var(--transition-normal) var(--ease-in-out);
     }
   }
 
@@ -74,7 +78,7 @@
     align-items: center;
 
     .last-message {
-      color: #9ca3af !important;
+      color: var(--color-text-tertiary) !important;
       font-size: 0.8rem;
       white-space: nowrap;
       overflow: hidden;
@@ -82,22 +86,26 @@
       max-width: 250px;
       display: flex;
       align-items: center;
+      transition: color var(--transition-normal) var(--ease-in-out);
 
       .message-icon {
         margin-right: 0.3rem;
         font-size: 0.75rem;
-        color: #9ca3af;
+        color: var(--color-text-tertiary);
         flex-shrink: 0;
+        transition: color var(--transition-normal) var(--ease-in-out);
       }
     }
 
     .unread-count {
-      background: white;
-      color: black;
+      background: var(--color-text-primary);
+      color: var(--color-text-inverted);
       font-size: 0.7rem;
       font-weight: bold;
       padding: 0.15rem 0.4rem;
       border-radius: 10px;
+      transition: background-color var(--transition-normal) var(--ease-in-out),
+                  color var(--transition-normal) var(--ease-in-out);
       min-width: 20px;
       text-align: center;
       margin-left: 0.5rem;

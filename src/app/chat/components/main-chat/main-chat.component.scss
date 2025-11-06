@@ -5,9 +5,10 @@
     100vh - 60px - 40px
   ); // Account for navbar (60px) and footer (40px)
   overflow: hidden;
-  background: #000000 !important; // Force black background
+  background: var(--color-bg-primary) !important;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
     Ubuntu, Cantarell, sans-serif;
+  transition: background-color var(--transition-normal) var(--ease-in-out);
 }
 
 .chat-content-area {
@@ -20,7 +21,7 @@
 // Ensure smooth scrolling
 * {
   scrollbar-width: thin;
-  scrollbar-color: #444444 transparent;
+  scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track);
 }
 
 // Animation for smooth transitions

@@ -6,26 +6,26 @@
 
 .action-btn {
   background: transparent;
-  border: 1px solid #444444;
-  color: white;
-  border-radius: 6px;
+  border: 1px solid var(--color-border-primary);
+  color: var(--color-text-primary);
+  border-radius: var(--radius-sm);
   width: 36px;
   height: 36px;
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: all 0.2s ease;
+  transition: all var(--transition-fast) var(--ease-in-out);
   cursor: pointer;
   padding: 0;
 
   &:hover {
-    background: #333333;
-    border-color: #666666;
+    background: var(--color-bg-hover);
+    border-color: var(--color-border-focus);
   }
 
   &:focus {
     outline: none;
-    box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.1);
+    box-shadow: 0 0 0 2px var(--focus-ring-color);
   }
 
   i {
@@ -37,10 +37,10 @@
   position: absolute;
   top: calc(100% + 0.5rem);
   right: 0;
-  background: black;
-  border: 1px solid #444444;
-  border-radius: 6px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+  background: var(--color-surface-primary);
+  border: 1px solid var(--color-border-primary);
+  border-radius: var(--radius-sm);
+  box-shadow: var(--shadow-lg);
   min-width: 250px;
   z-index: 1000;
   padding: 0;
@@ -48,6 +48,8 @@
   list-style: none;
   display: none;
   animation: fadeInScale 0.15s ease-out;
+  transition: background-color var(--transition-normal) var(--ease-in-out),
+              border-color var(--transition-normal) var(--ease-in-out);
 
   &.show {
     display: block;
@@ -70,11 +72,12 @@
   padding: 0.6rem 1rem;
   background: transparent;
   border: none;
-  color: white;
+  color: var(--color-text-primary);
   text-align: left;
   display: flex;
   align-items: center;
-  transition: background 0.2s ease;
+  transition: background var(--transition-fast) var(--ease-in-out),
+              color var(--transition-fast) var(--ease-in-out);
   cursor: pointer;
   font-size: 0.875rem;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
