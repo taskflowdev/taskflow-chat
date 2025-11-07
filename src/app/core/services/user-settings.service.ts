@@ -85,6 +85,9 @@ export class UserSettingsService {
     // Update in-memory cache immediately
     this.updateInMemoryCache(category, key, value);
     
+    // Apply setting effect immediately (e.g., theme change)
+    this.applySettingEffect(category, key, value);
+    
     // Queue for save (will be debounced)
     this.saveQueue.next({ category, key, value });
   }
@@ -155,7 +158,7 @@ export class UserSettingsService {
       next: (response) => {
         if (response.success) {
           // Setting saved successfully - cache is already updated
-          this.applySettingEffect(category, key, value);
+          // Effect already applied in updateSetting, no need to apply again
         }
       },
       error: (err) => {
