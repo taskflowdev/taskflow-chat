@@ -5,6 +5,14 @@
     width: 3em;
     height: 1.5em;
     cursor: pointer;
+    background-color: var(--color-toggle-bg);
+    border-color: var(--color-toggle-border);
+    transition: background-color 0.2s ease, border-color 0.2s ease;
+    
+    &:checked {
+      background-color: var(--color-accent);
+      border-color: var(--color-accent);
+    }
     
     &:disabled {
       cursor: not-allowed;

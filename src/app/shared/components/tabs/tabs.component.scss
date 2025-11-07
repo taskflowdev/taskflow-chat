@@ -10,16 +10,16 @@
 // Vertical orientation (default for dialogs)
 .tabs-vertical .tabs-list {
   flex-direction: column;
-  // border-right: 1px solid #333333;
   padding-right: 0;
 }
 
 // Horizontal orientation (for mobile)
 .tabs-horizontal .tabs-list {
   flex-direction: row;
-  border-bottom: 1px solid #333333;
+  border-bottom: 1px solid var(--color-border);
   overflow-x: auto;
   -webkit-overflow-scrolling: touch;
+  transition: border-color 0.2s ease;
 }
 
 .tab-button {
@@ -30,8 +30,8 @@
   background: transparent;
   border: none;
   border-left: 3px solid transparent;
-  color: #9ca3af;
-  font-size: 0.875rem;
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-small);
   font-weight: 500;
   text-align: left;
   cursor: pointer;
@@ -39,25 +39,23 @@
   white-space: nowrap;
 
   &:hover:not(.disabled):not(.active) {
-    background: rgba(255, 255, 255, 0.05);
+    background: var(--color-tab-hover);
     border-radius: 8px;
-    color: #ffffff;
+    color: var(--color-text-primary);
   }
 
   &:focus {
-    // outline: 2px solid white;
     border-radius: 8px;
     outline-offset: -2px;
   }
 
   &.active {
-    background: rgba(255, 255, 255, 0.1);
-    // border-left-color: #3b82f6;
+    background: var(--color-tab-active);
     border-radius: 8px;
-    color: #ffffff;
+    color: var(--color-text-primary);
 
     .tab-icon {
-      color: white;
+      color: var(--color-text-primary);
     }
   }
 
@@ -73,7 +71,7 @@
 
   &.active {
     border-left-color: transparent;
-    border-bottom-color: white;
+    border-bottom-color: var(--color-text-primary);
   }
 }
 
@@ -91,7 +89,7 @@
   .tabs-vertical .tabs-list {
     flex-direction: row;
     border-right: none;
-    border-bottom: 1px solid #333333;
+    border-bottom: 1px solid var(--color-border);
     padding-right: 0;
     overflow-x: auto;
   }
@@ -102,7 +100,7 @@
 
     &.active {
       border-left-color: transparent;
-      border-bottom-color: #3b82f6;
+      border-bottom-color: var(--color-accent);
     }
   }
 }
@@ -110,7 +108,7 @@
 @media (max-width: 480px) {
   .tab-button {
     padding: 0.625rem 0.875rem;
-    font-size: 0.813rem;
+    font-size: var(--font-size-xsmall);
   }
 
   .tab-icon {
