@@ -15,8 +15,31 @@ export class SelectControlComponent {
   @Input() disabled: boolean = false;
   @Output() valueChange = new EventEmitter<any>();
 
-  onChange(event: Event): void {
-    const target = event.target as HTMLSelectElement;
-    this.valueChange.emit(target.value);
+  isOpen = false;
+
+  get selectedLabel(): string {
+    const selected = this.options.find(opt => opt.value === this.value);
+    return selected ? selected.label! : 'Select an option';
+  }
+
+  toggleDropdown(): void {
+    if (!this.disabled) {
+      this.isOpen = !this.isOpen;
+    }
+  }
+
+  selectOption(option: SettingOption): void {
+    if (!this.disabled) {
+      this.valueChange.emit(option.value);
+      this.isOpen = false;
+    }
+  }
+
+  isSelected(option: SettingOption): boolean {
+    return option.value === this.value;
+  }
+
+  closeDropdown(): void {
+    this.isOpen = false;
   }
 }
