@@ -7,10 +7,11 @@ import { ToggleControlComponent } from '../controls/toggle-control/toggle-contro
 import { SelectControlComponent } from '../controls/select-control/select-control.component';
 import { RadioControlComponent } from '../controls/radio-control/radio-control.component';
 import { Subject, takeUntil } from 'rxjs';
+import { CommonTooltipDirective } from "../../../shared/components/common-tooltip";
 
 @Component({
   selector: 'app-settings-renderer',
-  imports: [CommonModule, ToggleControlComponent, SelectControlComponent, RadioControlComponent],
+  imports: [CommonModule, ToggleControlComponent, SelectControlComponent, RadioControlComponent, CommonTooltipDirective],
   templateUrl: './settings-renderer.component.html',
   styleUrls: ['./settings-renderer.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -22,7 +23,7 @@ export class SettingsRendererComponent implements OnInit, OnDestroy {
   currentValue: any;
   isSaving: boolean = false;
   isModified: boolean = false;
-  
+
   private destroy$ = new Subject<void>();
 
   constructor(
@@ -33,7 +34,7 @@ export class SettingsRendererComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.loadCurrentValue();
-    
+
     // Subscribe to settings changes to update value
     this.userSettingsService.effectiveSettings$
       .pipe(takeUntil(this.destroy$))
@@ -53,7 +54,7 @@ export class SettingsRendererComponent implements OnInit, OnDestroy {
       this.categoryKey,
       this.settingKey.key!
     );
-    
+
     if (this.currentValue === undefined) {
       this.currentValue = this.settingKey.default;
     }
