@@ -2,7 +2,8 @@
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-  background: #000000;
+  background: var(--color-background, #ffffff);
+  transition: background-color 0.2s ease;
 }
 
 .main-content {
@@ -11,9 +12,10 @@
   flex-direction: column;
   padding: 0;
   margin: 0;
-  background: #000000;
+  background: var(--color-background, #ffffff);
   margin-top: 60px;
   height: 100%;
+  transition: background-color 0.2s ease;
   // Ensure content fills available space
   // min-height: calc(100vh - 60px); // navbar height + footer height
 }

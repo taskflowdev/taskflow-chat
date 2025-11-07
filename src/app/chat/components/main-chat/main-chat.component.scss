@@ -3,9 +3,10 @@
   height: 100%;
   height: calc(100vh - 60px);
   overflow: hidden;
-  background: #000000 !important; // Force black background
+  background: var(--color-background, #000000) !important;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
     Ubuntu, Cantarell, sans-serif;
+  transition: background-color 0.2s ease;
 }
 
 .chat-content-area {
