@@ -24,8 +24,8 @@
 
 // Dialog container
 .dialog-container {
-  background: black;
-  border: 1px solid #444444;
+  background: var(--color-dialog-bg); transition: background 0.2s ease;
+  border: 1px solid var(--color-dialog-border); transition: border-color 0.2s ease;
   border-radius: 12px;
   width: 100%;
   max-width: 800px;
@@ -58,7 +58,7 @@
 
     i {
       font-size: 1.5rem;
-      color: white;
+      color: var(--color-text-primary); transition: color 0.2s ease;
     }
   }
 
@@ -66,7 +66,7 @@
     margin: 0;
     font-size: 1.5rem;
     font-weight: 600;
-    color: white;
+    color: var(--color-text-primary); transition: color 0.2s ease;
   }
 
   .close-btn {
@@ -84,7 +84,7 @@
 
     &:hover {
       background: #222222;
-      color: white;
+      color: var(--color-text-primary); transition: color 0.2s ease;
     }
   }
 }
@@ -122,7 +122,7 @@
   .category-title {
     font-size: 1rem;
     font-weight: 600;
-    color: white;
+    color: var(--color-text-primary); transition: color 0.2s ease;
     margin: 0 0 1rem 0;
     padding-bottom: 0.5rem;
     border-bottom: 2px solid #333333;
