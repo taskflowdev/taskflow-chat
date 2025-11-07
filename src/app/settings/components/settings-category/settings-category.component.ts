@@ -20,6 +20,7 @@ export class SettingsCategoryComponent implements OnInit {
   category$!: Observable<CategoryWithKeys | undefined>;
   sortedKeys$!: Observable<CatalogEntryDto[]>;
   loading$: Observable<boolean>;
+  catalogLoaded$: Observable<boolean>;
 
   constructor(
     private route: ActivatedRoute,
@@ -27,6 +28,10 @@ export class SettingsCategoryComponent implements OnInit {
     private cdr: ChangeDetectorRef
   ) {
     this.loading$ = this.userSettingsService.loading$;
+    // Check if catalog has been loaded (catalog$ emits non-null value)
+    this.catalogLoaded$ = this.userSettingsService.catalog$.pipe(
+      map(catalog => catalog !== null && catalog !== undefined)
+    );
   }
 
   ngOnInit(): void {

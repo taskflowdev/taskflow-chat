@@ -1,5 +1,5 @@
-<!-- Show skeleton while loading -->
-<ng-container *ngIf="loading$ | async; else categoryContent">
+<!-- Show skeleton while loading OR while catalog is not loaded -->
+<ng-container *ngIf="(loading$ | async) || !(catalogLoaded$ | async); else categoryContent">
   <div class="category-container">
     <app-skeleton-loader type="settings-category"></app-skeleton-loader>
     <div class="settings-list">
