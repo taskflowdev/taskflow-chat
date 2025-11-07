@@ -1,7 +1,7 @@
 <div class="settings-layout">
   <div class="settings-sidebar">
     <!-- Show sidebar skeleton while loading -->
-    <ng-container *ngIf="loading$ | async; else sidebarContent">
+    <ng-container *ngIf="(loading$ | async) || !(catalogLoaded$ | async); else sidebarContent">
       <app-skeleton-loader type="settings-sidebar"></app-skeleton-loader>
     </ng-container>
     <ng-template #sidebarContent>

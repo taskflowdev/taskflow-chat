@@ -4,7 +4,7 @@ import { RouterOutlet } from '@angular/router';
 import { UserSettingsService } from '../../../core/services/user-settings.service';
 import { SettingsSidebarComponent } from '../settings-sidebar/settings-sidebar.component';
 import { SkeletonLoaderComponent } from '../../../shared/components/skeleton-loader/skeleton-loader.component';
-import { Observable } from 'rxjs';
+import { map, Observable } from 'rxjs';
 
 @Component({
   selector: 'app-settings-layout',
@@ -15,9 +15,15 @@ import { Observable } from 'rxjs';
 })
 export class SettingsLayoutComponent implements OnInit {
   loading$: Observable<boolean>;
+  catalogLoaded$: Observable<boolean>;
 
   constructor(private userSettingsService: UserSettingsService) {
     this.loading$ = this.userSettingsService.loading$;
+
+    // Check if catalog has been loaded (catalog$ emits non-null value)
+    this.catalogLoaded$ = this.userSettingsService.catalog$.pipe(
+      map(catalog => catalog !== null && catalog !== undefined)
+    );
   }
 
   ngOnInit(): void {
