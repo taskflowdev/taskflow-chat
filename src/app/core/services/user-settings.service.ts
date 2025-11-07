@@ -196,10 +196,15 @@ export class UserSettingsService {
     if (category === 'appearance' && key === 'theme') {
       this.themeService.setTheme(value);
     }
+    
+    // Apply font size changes
+    if (category === 'appearance' && key === 'fontSize') {
+      this.themeService.setFontSize(value);
+    }
   }
 
   /**
-   * Apply theme from loaded settings
+   * Apply theme and typography from loaded settings
    */
   private applyThemeFromSettings(settings: EffectiveSettingsResponse | null): void {
     if (!settings || !settings.settings) {
@@ -207,8 +212,16 @@ export class UserSettingsService {
     }
 
     const appearanceSettings = settings.settings['appearance'];
-    if (appearanceSettings && appearanceSettings['theme']) {
-      this.themeService.setTheme(appearanceSettings['theme']);
+    if (appearanceSettings) {
+      // Apply theme
+      if (appearanceSettings['theme']) {
+        this.themeService.setTheme(appearanceSettings['theme']);
+      }
+      
+      // Apply font size
+      if (appearanceSettings['fontSize']) {
+        this.themeService.setFontSize(appearanceSettings['fontSize']);
+      }
     }
   }
 }
