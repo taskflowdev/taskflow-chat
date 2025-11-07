@@ -13,11 +13,12 @@
       <button
         *ngIf="isModified"
         type="button"
-        class="btn btn-sm btn-outline-secondary reset-btn"
+        class="reset-btn"
         (click)="onResetToDefault()"
         title="Reset to default"
       >
-        <i class="bi bi-arrow-counterclockwise"></i> Reset
+        <i class="bi bi-arrow-counterclockwise"></i>
+        <span class="reset-text">Reset</span>
       </button>
     </div>
   </div>
@@ -27,7 +28,7 @@
     <app-toggle-control
       *ngIf="controlType === 'boolean'"
       [value]="currentValue"
-      [disabled]="isSaving"
+      [disabled]="false"
       (valueChange)="onValueChange($event)"
     ></app-toggle-control>
 
@@ -36,7 +37,7 @@
       *ngIf="controlType === 'select' && hasOptions"
       [value]="currentValue"
       [options]="settingKey.options!"
-      [disabled]="isSaving"
+      [disabled]="false"
       (valueChange)="onValueChange($event)"
     ></app-select-control>
 
@@ -46,13 +47,8 @@
       [value]="currentValue"
       [options]="settingKey.options!"
       [name]="settingKey.key!"
-      [disabled]="isSaving"
+      [disabled]="false"
       (valueChange)="onValueChange($event)"
     ></app-radio-control>
-
-    <div *ngIf="isSaving" class="saving-indicator">
-      <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
-      <span class="ms-2">Saving...</span>
-    </div>
   </div>
 </div>

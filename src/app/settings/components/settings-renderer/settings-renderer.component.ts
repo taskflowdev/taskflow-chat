@@ -65,28 +65,23 @@ export class SettingsRendererComponent implements OnInit, OnDestroy {
   }
 
   onValueChange(newValue: any): void {
-    this.isSaving = true;
     this.currentValue = newValue;
     this.cdr.markForCheck();
 
+    // Silent auto-save - no UI feedback, just save
     this.userSettingsService.updateSetting(this.categoryKey, this.settingKey.key!, newValue);
 
-    // Show save notification after a short delay to match debounce
-    setTimeout(() => {
-      this.isSaving = false;
-      this.isModified = this.userSettingsService.isModifiedFromDefault(
-        this.categoryKey,
-        this.settingKey.key!
-      );
-      this.toastService.showSuccess('Setting saved', undefined, true, 2000);
-      this.cdr.markForCheck();
-    }, 400);
+    // Update modified state
+    this.isModified = this.userSettingsService.isModifiedFromDefault(
+      this.categoryKey,
+      this.settingKey.key!
+    );
+    this.cdr.markForCheck();
   }
 
   onResetToDefault(): void {
     this.userSettingsService.resetToDefault(this.categoryKey, this.settingKey.key!);
     this.loadCurrentValue();
-    this.toastService.showInfo('Reset to default', undefined, true, 2000);
     this.cdr.markForCheck();
   }
 
