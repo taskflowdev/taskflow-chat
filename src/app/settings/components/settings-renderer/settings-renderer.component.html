@@ -1,26 +1,20 @@
-<div class="setting-item">
+<div class="setting-card">
   <div class="setting-header">
     <div class="setting-info">
       <label class="setting-label">{{ settingKey.label }}</label>
       <p class="setting-description" *ngIf="settingKey.description">
         {{ settingKey.description }}
       </p>
-      <p class="setting-default-hint" *ngIf="settingKey.default !== null && settingKey.default !== undefined">
-        <small>Default: {{ settingKey.default }}</small>
-      </p>
     </div>
-    <div class="setting-actions">
-      <button
-        *ngIf="isModified"
-        type="button"
-        class="reset-btn"
-        (click)="onResetToDefault()"
-        title="Reset to default"
-      >
-        <i class="bi bi-arrow-counterclockwise"></i>
-        <span class="reset-text">Reset</span>
-      </button>
-    </div>
+    <button
+      *ngIf="isModified"
+      type="button"
+      class="reset-btn"
+      (click)="onResetToDefault()"
+      title="Reset to default"
+    >
+      <i class="bi bi-arrow-counterclockwise"></i>
+    </button>
   </div>
 
   <div class="setting-control">

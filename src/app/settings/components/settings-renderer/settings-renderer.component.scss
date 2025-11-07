@@ -1,20 +1,27 @@
-.setting-item {
-  padding: 0;
-  border: none;
-  border-bottom: 1px solid var(--color-border-subtle, #d0d7de);
-  background-color: transparent;
+.setting-card {
+  padding: 20px;
+  border: 1px solid var(--color-border, #d0d7de);
+  border-radius: 6px;
+  background-color: var(--color-surface, #ffffff);
+  margin-bottom: 16px;
+  transition: border-color 0.12s cubic-bezier(0.2, 0, 0.38, 0.9),
+              box-shadow 0.12s cubic-bezier(0.2, 0, 0.38, 0.9);
+  
+  &:hover {
+    border-color: var(--color-text-secondary, #57606a);
+  }
   
   &:last-child {
-    border-bottom: none;
+    margin-bottom: 0;
   }
 }
 
 .setting-header {
-  display: grid;
-  grid-template-columns: 1fr auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
   gap: 1rem;
-  align-items: start;
-  padding: 24px 0 16px 0;
+  margin-bottom: 16px;
 }
 
 .setting-info {
@@ -38,43 +45,24 @@
   margin: 4px 0 0 0;
 }
 
-.setting-default-hint {
-  font-size: 12px;
-  line-height: 18px;
-  color: var(--color-text-tertiary, #8c959f);
-  margin: 4px 0 0 0;
-  
-  small {
-    font-size: inherit;
-  }
-}
-
-.setting-actions {
-  display: flex;
-  align-items: flex-start;
-}
-
 .reset-btn {
   display: inline-flex;
   align-items: center;
-  gap: 4px;
-  padding: 4px 12px;
-  font-size: 12px;
-  font-weight: 500;
-  line-height: 20px;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  font-size: 14px;
   color: var(--color-text-primary, #24292f);
   background-color: var(--color-surface, #ffffff);
   border: 1px solid var(--color-border, #d0d7de);
   border-radius: 6px;
   cursor: pointer;
   transition: all 0.12s cubic-bezier(0.2, 0, 0.38, 0.9);
+  flex-shrink: 0;
   
   i {
     font-size: 14px;
-  }
-  
-  .reset-text {
-    font-size: 12px;
   }
   
   &:hover {
@@ -96,5 +84,4 @@
 
 .setting-control {
   position: relative;
-  padding-bottom: 24px;
 }

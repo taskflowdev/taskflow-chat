@@ -114,8 +114,7 @@ export type SkeletonType = 'text' | 'circle' | 'rectangle' | 'chat-item' | 'mess
         <div class="skeleton-item-header">
           <div class="skeleton-item-info">
             <div class="skeleton skeleton-text" style="width: 150px; height: 1rem; margin-bottom: 0.5rem;"></div>
-            <div class="skeleton skeleton-text" style="width: 90%; height: 0.875rem; margin-bottom: 0.5rem;"></div>
-            <div class="skeleton skeleton-text" style="width: 120px; height: 0.75rem;"></div>
+            <div class="skeleton skeleton-text" style="width: 90%; height: 0.875rem;"></div>
           </div>
         </div>
         <div class="skeleton-item-control">
