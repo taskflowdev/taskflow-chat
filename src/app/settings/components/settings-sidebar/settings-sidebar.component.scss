@@ -7,7 +7,7 @@
   font-weight: 600;
   margin-bottom: 1.2rem;
   padding: 0 0.5rem;
-  color: var(--color-text-primary, #24292f);
+  color: var(--taskflow-color-text-primary, #24292f);
   // text-transform: uppercase;
   // letter-spacing: 0.05em;
 }
@@ -24,7 +24,7 @@
   padding: 0.5rem 0.75rem;
   border-radius: 6px;
   text-decoration: none;
-  color: var(--color-text-primary, #24292f);
+  color: var(--taskflow-color-text-primary, #24292f);
   font-size: 0.875rem;
   font-weight: 400;
   line-height: 1.5;
@@ -33,13 +33,13 @@
     color 0.12s cubic-bezier(0.2, 0, 0.38, 0.9);
 
   &:hover:not(.active) {
-    background-color: var(--color-surface-hover, #f6f8fa);
+    background-color: var(--taskflow-color-surface-hover, #f6f8fa);
     text-decoration: none;
   }
 
   &.active {
-    background-color: var(--color-accent-subtle, #ddf4ff);
-    color: var(--color-accent-emphasis, #0550ae);
+    background-color: var(--taskflow-color-accent-subtle, #ddf4ff);
+    color: var(--taskflow-color-accent-emphasis, #0550ae);
     font-weight: 600;
 
     &::before {
@@ -49,7 +49,7 @@
       top: 0;
       bottom: 0;
       width: 3px;
-      background-color: var(--color-accent, #0969da);
+      background-color: var(--taskflow-color-accent, #0969da);
       // border-radius: 0 3px 3px 0;
     }
   }

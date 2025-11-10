@@ -6,8 +6,8 @@
 
 .action-btn {
   background: transparent;
-  border: 1px solid var(--color-border);
-  color: var(--color-text-primary);
+  border: 1px solid var(--taskflow-color-border);
+  color: var(--taskflow-color-text-primary);
   border-radius: 6px;
   width: 36px;
   height: 36px;
@@ -19,13 +19,13 @@
   padding: 0;
 
   &:hover {
-    background: var(--color-surface-hover);
-    border-color: var(--color-border-hover);
+    background: var(--taskflow-color-surface-hover);
+    border-color: var(--taskflow-color-border-hover);
   }
 
   &:focus {
     outline: none;
-    box-shadow: 0 0 0 2px var(--color-focus-ring);
+    box-shadow: 0 0 0 2px var(--taskflow-color-focus-ring);
   }
 
   i {
@@ -37,8 +37,8 @@
   position: absolute;
   top: calc(100% + 0.5rem);
   right: 0;
-  background: var(--color-dropdown-bg);
-  border: 1px solid var(--color-dropdown-border);
+  background: var(--taskflow-color-dropdown-bg);
+  border: 1px solid var(--taskflow-color-dropdown-border);
   border-radius: 6px;
   box-shadow: var(--shadow-lg);
   min-width: 250px;
@@ -71,23 +71,23 @@
   padding: 0.6rem 1rem;
   background: transparent;
   border: none;
-  color: var(--color-dropdown-item-text);
+  color: var(--taskflow-color-dropdown-item-text);
   text-align: left;
   display: flex;
   align-items: center;
   transition: background 0.2s ease, color 0.2s ease;
   cursor: pointer;
-  font-size: var(--font-size-small);
+  font-size: var(--taskflow-font-size-small);
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
     Ubuntu, Cantarell, sans-serif;
 
   &:hover:not(.disabled) {
-    background: var(--color-dropdown-item-hover);
+    background: var(--taskflow-color-dropdown-item-hover);
   }
 
   &:focus {
     outline: none;
-    background: var(--color-dropdown-item-hover);
+    background: var(--taskflow-color-dropdown-item-hover);
   }
 
   &.disabled {
@@ -112,8 +112,8 @@
   }
 
   .shortcut-key-dropdown {
-    font-size: var(--font-size-normal);
-    color: var(--color-text-primary);
+    font-size: var(--taskflow-font-size-normal);
+    color: var(--taskflow-color-text-primary);
     opacity: 0.7;
     font-family: "JetBrains Mono", monospace;
     white-space: nowrap;
@@ -124,7 +124,7 @@
 
   &:hover .shortcut-key-dropdown {
     opacity: 1;
-    color: var(--color-text-primary);
+    color: var(--taskflow-color-text-primary);
   }
 }
 
@@ -132,7 +132,7 @@
   height: 0;
   margin: 0;
   overflow: hidden;
-  border-top: 1px solid var(--color-divider);
+  border-top: 1px solid var(--taskflow-color-divider);
   transition: border-color 0.2s ease;
 }
 
@@ -144,7 +144,7 @@
 
   .dropdown-item {
     padding: 0.625rem 0.875rem;
-    font-size: var(--font-size-xsmall);
+    font-size: var(--taskflow-font-size-xsmall);
   }
 }
 
@@ -155,7 +155,7 @@
 
   .dropdown-item {
     padding: 0.5rem 0.75rem;
-    font-size: var(--font-size-xsmall);
+    font-size: var(--taskflow-font-size-xsmall);
 
     .shortcut-key-dropdown {
       display: none;

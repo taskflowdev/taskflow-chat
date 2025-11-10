@@ -48,6 +48,7 @@ export class ThemeService {
   
   private mediaQuery?: MediaQueryList;
   private isBrowser: boolean;
+  private styleElement?: HTMLStyleElement;
 
   constructor(@Inject(PLATFORM_ID) platformId: Object) {
     this.isBrowser = isPlatformBrowser(platformId);
@@ -56,7 +57,32 @@ export class ThemeService {
       this.mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
       // Use addEventListener for modern browsers
       this.mediaQuery.addEventListener('change', this.onSystemThemeChange.bind(this));
+      
+      // Create style element for theme variables
+      this.createStyleElement();
     }
+  }
+  
+  /**
+   * Create a dedicated style element for theme variables
+   * This prevents inline styles in HTML element
+   */
+  private createStyleElement(): void {
+    if (!this.isBrowser) {
+      return;
+    }
+    
+    // Check if style element already exists
+    let styleEl = document.getElementById('taskflow-theme-variables') as HTMLStyleElement;
+    
+    if (!styleEl) {
+      styleEl = document.createElement('style');
+      styleEl.id = 'taskflow-theme-variables';
+      styleEl.type = 'text/css';
+      document.head.appendChild(styleEl);
+    }
+    
+    this.styleElement = styleEl;
   }
 
   /**
@@ -99,11 +125,11 @@ export class ThemeService {
   }
 
   /**
-   * Apply theme tokens to the document root
-   * Optimized for zero flicker
+   * Apply theme tokens to the document root via dedicated stylesheet
+   * Optimized for zero flicker with taskflow- prefix to avoid conflicts
    */
   private applyTheme(mode: ThemeMode): void {
-    if (!this.isBrowser) {
+    if (!this.isBrowser || !this.styleElement) {
       return;
     }
 
@@ -111,43 +137,62 @@ export class ThemeService {
     this.resolvedThemeSubject.next(resolved);
     
     const tokens = resolved === 'dark' ? darkTheme as ThemeTokens : lightTheme as ThemeTokens;
-    const root = document.documentElement;
 
-    // Apply all color tokens as CSS variables
-    // Using requestAnimationFrame to batch DOM updates
+    // Build CSS string for theme variables with taskflow- prefix
+    const cssVariables: string[] = [];
+    
+    Object.entries(tokens.colors).forEach(([key, value]) => {
+      cssVariables.push(`  --taskflow-color-${this.camelToKebab(key)}: ${value};`);
+    });
+
+    // Apply to stylesheet via requestAnimationFrame for batching
     requestAnimationFrame(() => {
-      Object.entries(tokens.colors).forEach(([key, value]) => {
-        root.style.setProperty(`--color-${this.camelToKebab(key)}`, value);
-      });
-
+      if (this.styleElement) {
+        this.styleElement.textContent = `:root {\n${cssVariables.join('\n')}\n}`;
+      }
+      
       // Set data attribute for CSS selectors
-      root.setAttribute('data-theme', resolved);
+      document.documentElement.setAttribute('data-theme', resolved);
     });
   }
 
   /**
-   * Apply typography tokens based on font size preference
-   * Optimized for zero flicker
+   * Apply typography tokens based on font size preference via dedicated stylesheet
+   * Optimized for zero flicker with taskflow- prefix
    */
   private applyTypography(size: FontSize): void {
-    if (!this.isBrowser) {
+    if (!this.isBrowser || !this.styleElement) {
       return;
     }
 
     const resolved = this.getResolvedTheme();
     const tokens = resolved === 'dark' ? darkTheme as ThemeTokens : lightTheme as ThemeTokens;
     const typography = tokens.typography[size];
-    const root = document.documentElement;
 
-    // Apply typography tokens as CSS variables
-    // Using requestAnimationFrame to batch DOM updates
+    // Get existing color variables from stylesheet
+    const existingCss = this.styleElement.textContent || '';
+    const colorVarsMatch = existingCss.match(/:root\s*\{([^}]+)\}/);
+    const existingColorVars = colorVarsMatch ? colorVarsMatch[1].trim() : '';
+    
+    // Build typography CSS variables with taskflow- prefix
+    const typographyVariables: string[] = [];
+    Object.entries(typography).forEach(([key, value]) => {
+      typographyVariables.push(`  --taskflow-font-${this.camelToKebab(key)}: ${value};`);
+    });
+
+    // Merge color and typography variables
+    const allVariables = existingColorVars 
+      ? existingColorVars.split('\n').concat(typographyVariables)
+      : typographyVariables;
+
+    // Apply to stylesheet via requestAnimationFrame for batching
     requestAnimationFrame(() => {
-      Object.entries(typography).forEach(([key, value]) => {
-        root.style.setProperty(`--font-${this.camelToKebab(key)}`, value);
-      });
-
+      if (this.styleElement) {
+        this.styleElement.textContent = `:root {\n${allVariables.join('\n')}\n}`;
+      }
+      
       // Set data attribute for CSS selectors
-      root.setAttribute('data-font-size', size);
+      document.documentElement.setAttribute('data-font-size', size);
     });
   }
 

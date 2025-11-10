@@ -27,7 +27,7 @@
       }
 
       &:hover {
-        background: var(--color-dropdown-item-hover); transition: background 0.2s ease;
+        background: var(--taskflow-color-dropdown-item-hover); transition: background 0.2s ease;
         color: white;
       }
 
@@ -42,8 +42,8 @@
     }
 
     .dropdown-menu {
-      background: var(--color-dropdown-bg); transition: background 0.2s ease;
-      border: 1px solid var(--color-dropdown-border); transition: border-color 0.2s ease;
+      background: var(--taskflow-color-dropdown-bg); transition: background 0.2s ease;
+      border: 1px solid var(--taskflow-color-dropdown-border); transition: border-color 0.2s ease;
       border-radius: 8px;
       padding: 0.5rem 0;
       min-width: 280px;
@@ -53,7 +53,7 @@
       z-index: 1;
 
       .dropdown-item {
-        color: var(--color-dropdown-item-text); transition: color 0.2s ease;
+        color: var(--taskflow-color-dropdown-item-text); transition: color 0.2s ease;
         background: transparent;
         border: none;
         width: 100%;
@@ -66,7 +66,7 @@
 
         &:hover,
         &:focus {
-          background: var(--color-dropdown-item-hover); transition: background 0.2s ease;
+          background: var(--taskflow-color-dropdown-item-hover); transition: background 0.2s ease;
           color: white;
         }
 
@@ -96,7 +96,7 @@
       }
 
       .dropdown-divider {
-        border-color: var(--color-divider); transition: border-color 0.2s ease;
+        border-color: var(--taskflow-color-divider); transition: border-color 0.2s ease;
         // margin: 0.25rem 0;
       }
     }

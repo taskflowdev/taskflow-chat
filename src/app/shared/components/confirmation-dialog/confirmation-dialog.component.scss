@@ -8,7 +8,7 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background: var(--color-overlay);
+  background: var(--taskflow-color-overlay);
   backdrop-filter: blur(1px);
   display: flex;
   align-items: center;
@@ -26,8 +26,8 @@
 }
 
 .dialog-container {
-  background: var(--color-dialog-bg);
-  border: 1px solid var(--color-dialog-border);
+  background: var(--taskflow-color-dialog-bg);
+  border: 1px solid var(--taskflow-color-dialog-border);
   border-radius: 12px;
   width: 100%;
   max-width: 500px;
@@ -52,7 +52,7 @@
   align-items: center;
   justify-content: space-between;
   padding: 0.8rem;
-  border-bottom: 1px solid var(--color-dialog-border);
+  border-bottom: 1px solid var(--taskflow-color-dialog-border);
   transition: border-color 0.2s ease;
 
   .header-content {
@@ -63,16 +63,16 @@
     i {
       margin-left: 10px;
       font-size: 1.5rem;
-      color: var(--color-text-primary);
+      color: var(--taskflow-color-text-primary);
       transition: color 0.2s ease;
     }
 
     .dialog-title {
       margin: 0;
       margin-left: 10px;
-      font-size: var(--font-size-h4);
+      font-size: var(--taskflow-font-size-h4);
       font-weight: 600;
-      color: var(--color-text-primary);
+      color: var(--taskflow-color-text-primary);
       transition: color 0.2s ease;
     }
   }
@@ -80,7 +80,7 @@
   .close-btn {
     background: transparent;
     border: none;
-    color: var(--color-text-tertiary);
+    color: var(--taskflow-color-text-tertiary);
     font-size: 1.25rem;
     cursor: pointer;
     padding: 0.5rem;
@@ -91,8 +91,8 @@
     justify-content: center;
 
     &:hover {
-      background: var(--color-surface-hover);
-      color: var(--color-text-primary);
+      background: var(--taskflow-color-surface-hover);
+      color: var(--taskflow-color-text-primary);
     }
   }
 }
@@ -101,7 +101,7 @@
 .dialog-content {
   flex: 1;
   padding: 1.2rem;
-  color: var(--color-text-secondary);
+  color: var(--taskflow-color-text-secondary);
   text-align: start;
   transition: color 0.2s ease;
 
@@ -112,21 +112,21 @@
     width: 3.5rem;
     height: 3.5rem;
     border-radius: 50%;
-    background-color: var(--color-surface-subtle);
-    color: var(--color-text-primary);
+    background-color: var(--taskflow-color-surface-subtle);
+    color: var(--taskflow-color-text-primary);
     font-size: 1.8rem;
     margin-bottom: 1rem;
     transition: background-color 0.2s ease, color 0.2s ease;
   }
 
   .dialog-message {
-    font-size: var(--font-size-large);
+    font-size: var(--taskflow-font-size-large);
     margin-bottom: 0.5rem;
   }
 
   .dialog-secondary-message {
-    font-size: var(--font-size-normal);
-    color: var(--color-text-tertiary);
+    font-size: var(--taskflow-font-size-normal);
+    color: var(--taskflow-color-text-tertiary);
     margin-top: 0.25rem;
     transition: color 0.2s ease;
   }
@@ -135,7 +135,7 @@
 /* Footer */
 .dialog-footer {
   padding: 0.5rem;
-  border-top: 1px solid var(--color-dialog-border);
+  border-top: 1px solid var(--taskflow-color-dialog-border);
   display: flex;
   justify-content: end;
   transition: border-color 0.2s ease;
@@ -149,13 +149,13 @@
 
 /* Variant Icons */
 .icon-danger i {
-  color: var(--color-danger);
+  color: var(--taskflow-color-danger);
 }
 .icon-warning i {
-  color: var(--color-warning);
+  color: var(--taskflow-color-warning);
 }
 .icon-primary i {
-  color: var(--color-accent);
+  color: var(--taskflow-color-accent);
 }
 
 /* Responsive */
@@ -167,7 +167,7 @@
   }
 
   .dialog-header .dialog-title {
-    font-size: var(--font-size-normal);
+    font-size: var(--taskflow-font-size-normal);
   }
 
   .dialog-footer {

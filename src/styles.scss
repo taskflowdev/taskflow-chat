@@ -1,5 +1,9 @@
 /* You can add global styles to this file, and also import other style files */
 
+// TaskFlow Theme Variables (managed by ThemeService)
+// These CSS custom properties use --taskflow- prefix to avoid Bootstrap conflicts
+@import 'theme/theme-variables';
+
 // Common Tooltip Component Styles
 @use 'app/shared/components/common-tooltip/common-tooltip.scss';
 
@@ -79,12 +83,12 @@ html, body, * {
 // Global styles for the app
 body {
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  background: var(--color-background, var(--light-gray));
+  background: var(--taskflow-color-background, var(--light-gray));
   margin: 0;
   padding: 0;
-  color: var(--color-text-primary, var(--primary-black));
-  font-size: var(--font-font-size-base, 14px);
-  line-height: var(--font-line-height-base, 1.5);
+  color: var(--taskflow-color-text-primary, var(--primary-black));
+  font-size: var(--taskflow-font-font-size-base, 14px);
+  line-height: var(--taskflow-font-line-height-base, 1.5);
   transition: background-color 0.2s ease, color 0.2s ease;
 }
 

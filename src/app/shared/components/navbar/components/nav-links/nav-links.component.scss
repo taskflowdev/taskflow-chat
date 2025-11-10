@@ -9,22 +9,22 @@
     align-items: center;
     gap: 0.5rem;
     padding: 0.5rem 1rem;
-    color: var(--color-navbar-text);
+    color: var(--taskflow-color-navbar-text);
     text-decoration: none;
     border-radius: 10px;
-    font-size: var(--font-size-normal);
+    font-size: var(--taskflow-font-size-normal);
     font-weight: 500;
     transition: all 0.3s ease;
     position: relative;
 
     &:hover {
-      color: var(--color-text-primary);
-      background: var(--color-navbar-hover);
+      color: var(--taskflow-color-text-primary);
+      background: var(--taskflow-color-navbar-hover);
     }
 
     &.active {
-      color: var(--color-text-primary);
-      background: var(--color-navbar-active);
+      color: var(--taskflow-color-text-primary);
+      background: var(--taskflow-color-navbar-active);
     }
 
     i {
@@ -32,7 +32,7 @@
     }
 
     .nav-text {
-      font-size: var(--font-size-small);
+      font-size: var(--taskflow-font-size-small);
     }
   }
 }
@@ -44,7 +44,7 @@
 
     .nav-link {
       padding: 0.4rem 0.75rem;
-      font-size: var(--font-size-small);
+      font-size: var(--taskflow-font-size-small);
 
       i {
         font-size: 1rem;

@@ -9,9 +9,9 @@
   padding: 0 1rem;
 
   .system-message-content {
-    background: var(--color-chat-system-message-bg);
-    color: var(--color-chat-system-message-text);
-    font-size: var(--font-size-small);
+    background: var(--taskflow-color-chat-system-message-bg);
+    color: var(--taskflow-color-chat-system-message-text);
+    font-size: var(--taskflow-font-size-small);
     padding: 0.4rem 0.75rem;
     border-radius: 8px;
     text-align: center;
@@ -27,8 +27,8 @@
 
   .message-bubble {
     max-width: 70%;
-    background: var(--color-chat-bubble-others-bg);
-    border: 1px solid var(--color-chat-bubble-others-border);
+    background: var(--taskflow-color-chat-bubble-others-bg);
+    border: 1px solid var(--taskflow-color-chat-bubble-others-border);
     border-radius: 12px;
     padding: 0.55rem;
     position: relative;
@@ -43,23 +43,23 @@
 
       .sender-name {
         font-weight: 500;
-        font-size: var(--font-size-normal);
-        color: var(--color-chat-bubble-others-text);
+        font-size: var(--taskflow-font-size-normal);
+        color: var(--taskflow-color-chat-bubble-others-text);
         transition: color 0.2s ease;
       }
 
       .message-time {
-        font-size: var(--font-size-xsmall);
-        color: var(--color-text-tertiary);
+        font-size: var(--taskflow-font-size-xsmall);
+        color: var(--taskflow-color-text-tertiary);
         margin-left: 0.8rem;
         transition: color 0.2s ease;
       }
     }
 
     .message-content {
-      color: var(--color-chat-bubble-others-text);
-      font-size: var(--font-size-normal);
-      line-height: var(--font-line-height-base);
+      color: var(--taskflow-color-chat-bubble-others-text);
+      font-size: var(--taskflow-font-size-normal);
+      line-height: var(--taskflow-font-line-height-base);
       white-space: pre-wrap;
       transition: color 0.2s ease;
 
@@ -76,8 +76,8 @@
 
         .duration,
         .file-size {
-          color: var(--color-text-tertiary);
-          font-size: var(--font-size-small);
+          color: var(--taskflow-color-text-tertiary);
+          font-size: var(--taskflow-font-size-small);
           margin-left: 0.25rem;
           transition: color 0.2s ease;
         }
@@ -90,7 +90,7 @@
           align-items: center;
           gap: 0.5rem;
           margin-bottom: 0.5rem;
-          color: var(--color-accent);
+          color: var(--taskflow-color-accent);
           transition: color 0.2s ease;
 
           i {
@@ -98,7 +98,7 @@
           }
 
           strong {
-            font-size: var(--font-size-small);
+            font-size: var(--taskflow-font-size-small);
           }
         }
 
@@ -115,8 +115,8 @@
             align-items: center;
             gap: 0.5rem;
             padding: 0.25rem 0;
-            font-size: var(--font-size-small);
-            color: var(--color-text-secondary);
+            font-size: var(--taskflow-font-size-small);
+            color: var(--taskflow-color-text-secondary);
             transition: color 0.2s ease;
 
             i {
@@ -133,8 +133,8 @@
       margin-top: 0.25rem;
 
       .message-time {
-        font-size: var(--font-size-xsmall);
-        color: var(--color-text-tertiary);
+        font-size: var(--taskflow-font-size-xsmall);
+        color: var(--taskflow-color-text-tertiary);
         margin-left: 0.8rem;
         transition: color 0.2s ease;
       }
@@ -146,8 +146,8 @@
     justify-content: flex-start;
 
     .message-bubble {
-      background: var(--color-chat-bubble-others-bg);
-      border: 1px solid var(--color-chat-bubble-others-border);
+      background: var(--taskflow-color-chat-bubble-others-bg);
+      border: 1px solid var(--taskflow-color-chat-bubble-others-border);
 
       &::before {
         content: "";
@@ -158,7 +158,7 @@
         height: 0;
         border-top: 8px solid transparent;
         border-bottom: 8px solid transparent;
-        border-right: 8px solid var(--color-chat-bubble-others-border);
+        border-right: 8px solid var(--taskflow-color-chat-bubble-others-border);
         transition: border-right-color 0.2s ease;
       }
 
@@ -171,7 +171,7 @@
         height: 0;
         border-top: 8px solid transparent;
         border-bottom: 8px solid transparent;
-        border-right: 8px solid var(--color-chat-bubble-others-bg);
+        border-right: 8px solid var(--taskflow-color-chat-bubble-others-bg);
         transition: border-right-color 0.2s ease;
       }
     }
@@ -182,35 +182,35 @@
     justify-content: flex-end;
 
     .message-bubble {
-      background: var(--color-chat-bubble-own-bg);
-      color: var(--color-chat-bubble-own-text);
-      border: 1px solid var(--color-chat-bubble-own-border);
+      background: var(--taskflow-color-chat-bubble-own-bg);
+      color: var(--taskflow-color-chat-bubble-own-text);
+      border: 1px solid var(--taskflow-color-chat-bubble-own-border);
 
       .message-content {
-        color: var(--color-chat-bubble-own-text);
+        color: var(--taskflow-color-chat-bubble-own-text);
 
         // Override colors for own messages
         .media-message,
         .file-message {
           .duration,
           .file-size {
-            color: var(--color-text-tertiary);
+            color: var(--taskflow-color-text-tertiary);
           }
         }
 
         .poll-message {
           .poll-header {
-            color: var(--color-accent);
+            color: var(--taskflow-color-accent);
           }
 
           .poll-options .poll-option {
-            color: var(--color-text-secondary);
+            color: var(--taskflow-color-text-secondary);
           }
         }
       }
 
       .message-footer .message-time {
-        color: var(--color-text-tertiary);
+        color: var(--taskflow-color-text-tertiary);
       }
 
       &::before {
@@ -222,7 +222,7 @@
         height: 0;
         border-top: 8px solid transparent;
         border-bottom: 8px solid transparent;
-        border-left: 8px solid var(--color-chat-bubble-own-border);
+        border-left: 8px solid var(--taskflow-color-chat-bubble-own-border);
         transition: border-left-color 0.2s ease;
       }
 
@@ -235,7 +235,7 @@
         height: 0;
         border-top: 8px solid transparent;
         border-bottom: 8px solid transparent;
-        border-left: 8px solid var(--color-chat-bubble-own-bg);
+        border-left: 8px solid var(--taskflow-color-chat-bubble-own-bg);
         transition: border-left-color 0.2s ease;
       }
     }
@@ -258,12 +258,12 @@
   align-items: center;
 
   .date-label {
-    background: var(--color-chat-date-separator-bg);
-    color: var(--color-chat-date-separator-text);
+    background: var(--taskflow-color-chat-date-separator-bg);
+    color: var(--taskflow-color-chat-date-separator-text);
     padding: 0.35rem 0.75rem;
     border-radius: 8px;
-    font-size: var(--font-size-xsmall);
-    border: 1px solid var(--color-border-subtle);
+    font-size: var(--taskflow-font-size-xsmall);
+    border: 1px solid var(--taskflow-color-border-subtle);
     font-weight: 500;
     letter-spacing: 0.3px;
     transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease;

@@ -17,21 +17,21 @@
 .category-header {
   margin-bottom: 24px;
   padding-bottom: 16px;
-  border-bottom: 1px solid var(--color-border-subtle, #d0d7de);
+  border-bottom: 1px solid var(--taskflow-color-border-subtle, #d0d7de);
 }
 
 .category-title {
   font-size: 24px;
   font-weight: 600;
   margin-bottom: 8px;
-  color: var(--color-text-primary, #24292f);
+  color: var(--taskflow-color-text-primary, #24292f);
   line-height: 32px;
 }
 
 .category-description {
   font-size: 14px;
   line-height: 20px;
-  color: var(--color-text-secondary, #57606a);
+  color: var(--taskflow-color-text-secondary, #57606a);
   margin: 0;
 }
 

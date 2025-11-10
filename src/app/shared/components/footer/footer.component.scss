@@ -1,6 +1,6 @@
 .app-footer {
-  background: var(--color-background);
-  border-top: 1px solid var(--color-border);
+  background: var(--taskflow-color-background);
+  border-top: 1px solid var(--taskflow-color-border);
   padding: 0.75rem 0;
   margin-top: auto;
   min-height: 40px;
@@ -22,8 +22,8 @@
   align-items: center;
 
   .copyright {
-    font-size: var(--font-size-small);
-    color: var(--color-text-tertiary);
+    font-size: var(--taskflow-font-size-small);
+    color: var(--taskflow-color-text-tertiary);
     margin: 0;
     transition: color 0.2s ease;
   }
@@ -40,14 +40,14 @@
   }
 
   .footer-link {
-    color: var(--color-text-tertiary);
+    color: var(--taskflow-color-text-tertiary);
     text-decoration: none;
-    font-size: var(--font-size-small);
+    font-size: var(--taskflow-font-size-small);
     font-weight: 500;
     transition: color 0.2s ease;
 
     &:hover {
-      color: var(--color-text-primary);
+      color: var(--taskflow-color-text-primary);
     }
   }
 }
@@ -68,7 +68,7 @@
     justify-content: center;
     width: 24px;
     height: 24px;
-    color: var(--color-text-tertiary);
+    color: var(--taskflow-color-text-tertiary);
     text-decoration: none;
     border-radius: 4px;
     transition: all 0.2s ease;
@@ -78,8 +78,8 @@
     }
 
     &:hover {
-      color: var(--color-text-primary);
-      background: var(--color-surface-hover);
+      color: var(--taskflow-color-text-primary);
+      background: var(--taskflow-color-surface-hover);
     }
   }
 }

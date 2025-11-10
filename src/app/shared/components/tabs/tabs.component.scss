@@ -16,7 +16,7 @@
 // Horizontal orientation (for mobile)
 .tabs-horizontal .tabs-list {
   flex-direction: row;
-  border-bottom: 1px solid var(--color-border);
+  border-bottom: 1px solid var(--taskflow-color-border);
   overflow-x: auto;
   -webkit-overflow-scrolling: touch;
   transition: border-color 0.2s ease;
@@ -30,8 +30,8 @@
   background: transparent;
   border: none;
   border-left: 3px solid transparent;
-  color: var(--color-text-secondary);
-  font-size: var(--font-size-small);
+  color: var(--taskflow-color-text-secondary);
+  font-size: var(--taskflow-font-size-small);
   font-weight: 500;
   text-align: left;
   cursor: pointer;
@@ -39,9 +39,9 @@
   white-space: nowrap;
 
   &:hover:not(.disabled):not(.active) {
-    background: var(--color-tab-hover);
+    background: var(--taskflow-color-tab-hover);
     border-radius: 8px;
-    color: var(--color-text-primary);
+    color: var(--taskflow-color-text-primary);
   }
 
   &:focus {
@@ -50,12 +50,12 @@
   }
 
   &.active {
-    background: var(--color-tab-active);
+    background: var(--taskflow-color-tab-active);
     border-radius: 8px;
-    color: var(--color-text-primary);
+    color: var(--taskflow-color-text-primary);
 
     .tab-icon {
-      color: var(--color-text-primary);
+      color: var(--taskflow-color-text-primary);
     }
   }
 
@@ -71,7 +71,7 @@
 
   &.active {
     border-left-color: transparent;
-    border-bottom-color: var(--color-text-primary);
+    border-bottom-color: var(--taskflow-color-text-primary);
   }
 }
 
@@ -89,7 +89,7 @@
   .tabs-vertical .tabs-list {
     flex-direction: row;
     border-right: none;
-    border-bottom: 1px solid var(--color-border);
+    border-bottom: 1px solid var(--taskflow-color-border);
     padding-right: 0;
     overflow-x: auto;
   }
@@ -100,7 +100,7 @@
 
     &.active {
       border-left-color: transparent;
-      border-bottom-color: var(--color-accent);
+      border-bottom-color: var(--taskflow-color-accent);
     }
   }
 }
@@ -108,7 +108,7 @@
 @media (max-width: 480px) {
   .tab-button {
     padding: 0.625rem 0.875rem;
-    font-size: var(--font-size-xsmall);
+    font-size: var(--taskflow-font-size-xsmall);
   }
 
   .tab-icon {

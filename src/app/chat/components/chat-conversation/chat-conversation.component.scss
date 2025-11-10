@@ -3,7 +3,7 @@
   display: flex;
   flex-direction: column;
   height: 100%;
-  background: var(--color-background);
+  background: var(--taskflow-color-background);
   margin-left: 400px; // Space for sidebar
   transition: background 0.2s ease;
 }
@@ -13,14 +13,14 @@
   align-items: center;
   justify-content: space-between;
   padding: 0.75rem 1rem;
-  border-bottom: 1px solid var(--color-border);
-  background: var(--color-background);
+  border-bottom: 1px solid var(--taskflow-color-border);
+  background: var(--taskflow-color-background);
   transition: background 0.2s ease, border-color 0.2s ease;
 
   .back-button {
     background: transparent;
-    border: 1px solid var(--color-border);
-    color: var(--color-text-primary);
+    border: 1px solid var(--taskflow-color-border);
+    color: var(--taskflow-color-text-primary);
     border-radius: 6px;
     width: 36px;
     height: 36px;
@@ -32,8 +32,8 @@
     flex-shrink: 0;
 
     &:hover {
-      background: var(--color-surface-hover);
-      border-color: var(--color-border-hover);
+      background: var(--taskflow-color-surface-hover);
+      border-color: var(--taskflow-color-border-hover);
     }
 
     i {
@@ -49,16 +49,16 @@
 
   .conversation-info {
     .conversation-title {
-      color: var(--color-text-primary);
-      font-size: var(--font-size-large);
+      color: var(--taskflow-color-text-primary);
+      font-size: var(--taskflow-font-size-large);
       font-weight: 600;
       margin: 0 0 0.25rem 0;
       transition: color 0.2s ease;
     }
 
     .conversation-subtitle {
-      color: var(--color-text-tertiary);
-      font-size: var(--font-size-small);
+      color: var(--taskflow-color-text-tertiary);
+      font-size: var(--taskflow-font-size-small);
       margin: 0;
       transition: color 0.2s ease;
     }
@@ -93,9 +93,9 @@
     text-align: center;
 
     .date-label {
-      color: var(--color-chat-date-separator-text);
-      background: var(--color-background);
-      font-size: var(--font-size-normal);
+      color: var(--taskflow-color-chat-date-separator-text);
+      background: var(--taskflow-color-background);
+      font-size: var(--taskflow-font-size-normal);
       font-weight: 500;
       letter-spacing: 0.3px;
       position: relative;
@@ -128,7 +128,7 @@
 .message-input-container {
   padding: 1rem 1.5rem;
   border: none;
-  background: var(--color-background);
+  background: var(--taskflow-color-background);
   transition: background 0.2s ease;
 
   &.has-typing {
@@ -142,11 +142,11 @@
 
     .message-input {
       flex: 1;
-      background: var(--color-input-bg);
-      border: 3px solid var(--color-input-border);
+      background: var(--taskflow-color-input-bg);
+      border: 3px solid var(--taskflow-color-input-border);
       border-radius: 10px;
-      color: var(--color-text-primary);
-      font-size: var(--font-size-normal);
+      color: var(--taskflow-color-text-primary);
+      font-size: var(--taskflow-font-size-normal);
       padding: 0.75rem 1rem;
       resize: none;
       min-height: 44px;
@@ -156,20 +156,20 @@
       box-shadow: 0 2px 4px rgba(0, 0, 0, 0.8), 0 0 8px rgba(255, 255, 255, 0.05);
 
       &:focus {
-        background: var(--color-input-bg);
-        border-color: var(--color-input-border-focus);
+        background: var(--taskflow-color-input-bg);
+        border-color: var(--taskflow-color-input-border-focus);
         box-shadow: 0 4px 12px rgba(0, 0, 0, 0.9), 0 0 12px rgba(255, 255, 255, 0.1);
         outline: none;
       }
 
       &::placeholder {
-        color: var(--color-text-disabled);
+        color: var(--taskflow-color-text-disabled);
       }
     }
 
     .send-btn {
       background: transparent;
-      color: var(--color-text-primary);
+      color: var(--taskflow-color-text-primary);
       border: none;
       width: 44px;
       height: 44px;
@@ -191,7 +191,7 @@
       }
 
       &:disabled {
-        color: var(--color-text-disabled);
+        color: var(--taskflow-color-text-disabled);
         cursor: not-allowed;
       }
     }
@@ -205,7 +205,7 @@
   height: 100vh;
   margin-left: 400px;
   padding-top: 60px;
-  background: var(--color-background);
+  background: var(--taskflow-color-background);
   transition: background 0.2s ease;
 
   .placeholder-content {
@@ -216,31 +216,31 @@
     .placeholder-icon {
       display: block;
       font-size: 5rem;
-      color: var(--color-text-tertiary);
+      color: var(--taskflow-color-text-tertiary);
       margin-bottom: 20px;
       transition: color 0.2s ease;
     }
 
     .placeholder-title {
-      color: var(--color-text-primary);
-      font-size: var(--font-size-h3);
+      color: var(--taskflow-color-text-primary);
+      font-size: var(--taskflow-font-size-h3);
       font-weight: 600;
       margin-bottom: 0.1rem;
       transition: color 0.2s ease;
     }
 
     .placeholder-subtitle {
-      color: var(--color-text-secondary);
-      font-size: var(--font-size-normal);
-      line-height: var(--font-line-height-base);
+      color: var(--taskflow-color-text-secondary);
+      font-size: var(--taskflow-font-size-normal);
+      line-height: var(--taskflow-font-line-height-base);
       margin-top: 0;
       transition: color 0.2s ease;
     }
 
     .placeholder-footer {
       margin-top: 1rem;
-      font-size: var(--font-size-small);
-      color: var(--color-text-tertiary);
+      font-size: var(--taskflow-font-size-small);
+      color: var(--taskflow-color-text-tertiary);
       font-style: italic;
       transition: color 0.2s ease;
     }
@@ -408,9 +408,9 @@
   display: flex;
   align-items: center;
   padding: 0.5rem 1rem;
-  background: var(--color-background);
-  color: var(--color-text-tertiary);
-  font-size: var(--font-size-small);
+  background: var(--taskflow-color-background);
+  color: var(--taskflow-color-text-tertiary);
+  font-size: var(--taskflow-font-size-small);
   animation: fadeIn 0.2s ease-in;
   transition: background 0.2s ease, color 0.2s ease;
 
@@ -422,7 +422,7 @@
     .dot {
       width: 8px;
       height: 8px;
-      background: var(--color-text-tertiary);
+      background: var(--taskflow-color-text-tertiary);
       border-radius: 50%;
       animation: typingDot 1.4s infinite ease-in-out;
       transition: background 0.2s ease;
@@ -438,7 +438,7 @@
   }
 
   .typing-text {
-    color: var(--color-text-tertiary);
+    color: var(--taskflow-color-text-tertiary);
     transition: color 0.2s ease;
   }
 }

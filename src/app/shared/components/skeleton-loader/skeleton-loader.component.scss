@@ -5,9 +5,9 @@
 .skeleton {
   background: linear-gradient(
     90deg,
-    var(--color-skeleton-base, #f0f0f0) 0%,
-    var(--color-skeleton-highlight, #fafafa) 50%,
-    var(--color-skeleton-base, #f0f0f0) 100%
+    var(--taskflow-color-skeleton-base, #f0f0f0) 0%,
+    var(--taskflow-color-skeleton-highlight, #fafafa) 50%,
+    var(--taskflow-color-skeleton-base, #f0f0f0) 100%
   );
   background-size: 200% 100%;
   animation: skeleton-shimmer 1.8s ease-in-out infinite;
@@ -175,16 +175,16 @@
 .skeleton-settings-category {
   max-width: 900px;
   padding: 0 0 16px 0;
-  border-bottom: 1px solid var(--color-border-subtle, #d0d7de);
+  border-bottom: 1px solid var(--taskflow-color-border-subtle, #d0d7de);
   margin-bottom: 24px;
 }
 
 // Settings item skeleton
 .skeleton-settings-item {
   padding: 20px;
-  border: 1px solid var(--color-border, #d0d7de);
+  border: 1px solid var(--taskflow-color-border, #d0d7de);
   border-radius: 6px;
-  background-color: var(--color-surface, #ffffff);
+  background-color: var(--taskflow-color-surface, #ffffff);
   margin-bottom: 16px;
   
   &:last-child {
