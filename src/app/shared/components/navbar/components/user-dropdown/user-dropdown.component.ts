@@ -55,7 +55,7 @@ export interface DropdownItem {
                 class="dropdown-item d-flex align-items-center justify-content-between"
                 (click)="onItemClick(item)"
                 [appCommonTooltip]="item.label">
-                <div class="d-flex align-items-center">
+                <div>
                   <i class="bi me-2" [ngClass]="item.icon"></i>
                   <span [class.bold-label]="item.isBold">{{ item.label }}</span>
                 </div>

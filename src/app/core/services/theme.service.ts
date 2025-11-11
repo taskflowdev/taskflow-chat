@@ -1,0 +1,253 @@
+import { Injectable, Inject, PLATFORM_ID } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
+import { BehaviorSubject, Observable } from 'rxjs';
+import lightTheme from '../../../theme/theme.light.json';
+import darkTheme from '../../../theme/theme.dark.json';
+
+export type ThemeMode = 'light' | 'dark' | 'system';
+export type FontSize = 'small' | 'medium' | 'large';
+
+interface TypographyTokens {
+  fontSizeBase: string;
+  fontSizeH1: string;
+  fontSizeH2: string;
+  fontSizeH3: string;
+  fontSizeH4: string;
+  fontSizeH5: string;
+  fontSizeH6: string;
+  fontSizeLarge: string;
+  fontSizeNormal: string;
+  fontSizeSmall: string;
+  fontSizeXSmall: string;
+  lineHeightBase: string;
+  lineHeightHeading: string;
+  lineHeightCompact: string;
+}
+
+interface ThemeTokens {
+  colors: { [key: string]: string };
+  typography: {
+    small: TypographyTokens;
+    medium: TypographyTokens;
+    large: TypographyTokens;
+  };
+}
+
+@Injectable({
+  providedIn: 'root'
+})
+export class ThemeService {
+  private currentThemeSubject = new BehaviorSubject<ThemeMode>('system');
+  public currentTheme$: Observable<ThemeMode> = this.currentThemeSubject.asObservable();
+
+  private resolvedThemeSubject = new BehaviorSubject<'light' | 'dark'>('light');
+  public resolvedTheme$: Observable<'light' | 'dark'> = this.resolvedThemeSubject.asObservable();
+
+  private currentFontSizeSubject = new BehaviorSubject<FontSize>('medium');
+  public currentFontSize$: Observable<FontSize> = this.currentFontSizeSubject.asObservable();
+
+  private mediaQuery?: MediaQueryList;
+  private isBrowser: boolean;
+  private styleElement?: HTMLStyleElement;
+
+  constructor(@Inject(PLATFORM_ID) platformId: Object) {
+    this.isBrowser = isPlatformBrowser(platformId);
+
+    if (this.isBrowser) {
+      this.mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+      // Use addEventListener for modern browsers
+      this.mediaQuery.addEventListener('change', this.onSystemThemeChange.bind(this));
+
+      // Create style element for theme variables
+      this.createStyleElement();
+    }
+  }
+
+  /**
+   * Create a dedicated style element for theme variables
+   * This prevents inline styles in HTML element
+   */
+  private createStyleElement(): void {
+    if (!this.isBrowser) {
+      return;
+    }
+
+    // Check if style element already exists
+    let styleEl = document.getElementById('taskflow-theme-variables') as HTMLStyleElement;
+
+    if (!styleEl) {
+      styleEl = document.createElement('style');
+      styleEl.id = 'taskflow-theme-variables';
+      styleEl.type = 'text/css';
+      document.head.appendChild(styleEl);
+    }
+
+    this.styleElement = styleEl;
+  }
+
+  /**
+   * Set the theme mode (light, dark, or system)
+   * Applies immediately without flicker
+   */
+  setTheme(mode: ThemeMode): void {
+    this.currentThemeSubject.next(mode);
+    this.applyTheme(mode);
+  }
+
+  /**
+   * Set the font size (small, medium, or large)
+   * Applies immediately without re-render
+   */
+  setFontSize(size: FontSize): void {
+    this.currentFontSizeSubject.next(size);
+    this.applyTypography(size);
+  }
+
+  /**
+   * Get the current theme mode
+   */
+  getCurrentTheme(): ThemeMode {
+    return this.currentThemeSubject.value;
+  }
+
+  /**
+   * Get the current font size
+   */
+  getCurrentFontSize(): FontSize {
+    return this.currentFontSizeSubject.value;
+  }
+
+  /**
+   * Get the resolved theme (always 'light' or 'dark', never 'system')
+   */
+  getResolvedTheme(): 'light' | 'dark' {
+    return this.resolvedThemeSubject.value;
+  }
+
+  /**
+   * Apply theme tokens to the document root via dedicated stylesheet
+   * Optimized for zero flicker with taskflow- prefix to avoid conflicts
+   */
+  private applyTheme(mode: ThemeMode): void {
+    if (!this.isBrowser || !this.styleElement) {
+      return;
+    }
+
+    const resolved = this.resolveTheme(mode);
+    this.resolvedThemeSubject.next(resolved);
+
+    const tokens = resolved === 'dark' ? darkTheme as ThemeTokens : lightTheme as ThemeTokens;
+
+    // Build CSS string for theme variables with taskflow- prefix
+    const cssVariables: string[] = [];
+
+    Object.entries(tokens.colors).forEach(([key, value]) => {
+      cssVariables.push(`  --taskflow-color-${this.camelToKebab(key)}: ${value};`);
+    });
+
+    // Apply to stylesheet via requestAnimationFrame for batching
+    requestAnimationFrame(() => {
+      if (this.styleElement) {
+        this.styleElement.textContent = `:root {\n${cssVariables.join('\n')}\n}`;
+      }
+
+      // Set data attribute for CSS selectors
+      document.documentElement.setAttribute('data-theme', resolved);
+    });
+  }
+
+  /**
+   * Apply typography tokens based on font size preference via dedicated stylesheet
+   * Optimized for zero flicker with taskflow- prefix
+   */
+  private applyTypography(size: FontSize): void {
+    if (!this.isBrowser || !this.styleElement) return;
+
+    const resolved = this.getResolvedTheme();
+    const tokens = resolved === 'dark' ? darkTheme as ThemeTokens : lightTheme as ThemeTokens;
+    const typography = tokens.typography[size];
+
+    const typographyVariables: string[] = [];
+    Object.entries(typography).forEach(([key, value]) => {
+      typographyVariables.push(`  --taskflow-font-${this.camelToKebab(key)}: ${value};`);
+    });
+
+    if (this.isBrowser) {
+      requestAnimationFrame(() => {
+        if (!this.styleElement) return;
+
+        // we DO NOT touch existing color vars block
+        const content = this.styleElement.textContent ?? '';
+
+        const colorBlock = content.match(/:root\s*\{([\s\S]*?)\}/)?.[1]?.trim() ?? ''; // safe
+
+        this.styleElement.textContent =
+          `:root {
+              ${colorBlock}
+              }
+
+              :root {
+              ${typographyVariables.join('\n')}
+              }`;
+
+        document.documentElement.setAttribute('data-font-size', size);
+      });
+    }
+  }
+
+  /**
+   * Resolve 'system' to actual theme based on OS preference
+   */
+  private resolveTheme(mode: ThemeMode): 'light' | 'dark' {
+    if (mode === 'system') {
+      if (this.isBrowser && this.mediaQuery) {
+        return this.mediaQuery.matches ? 'dark' : 'light';
+      }
+      return 'light'; // Default fallback
+    }
+    return mode;
+  }
+
+  /**
+   * Handle system theme changes
+   * Reacts instantly to OS appearance changes
+   */
+  private onSystemThemeChange(e: MediaQueryListEvent): void {
+    if (this.currentThemeSubject.value === 'system') {
+      this.applyTheme('system');
+    }
+  }
+
+  /**
+   * Convert camelCase to kebab-case
+   */
+  private camelToKebab(str: string): string {
+    return str.replace(/([a-z0-9])([A-Z])/g, '$1-$2').toLowerCase();
+  }
+
+  /**
+   * Initialize theme and typography on app startup
+   * Called from main layout or app component
+   */
+  initialize(initialTheme?: ThemeMode, initialFontSize?: FontSize): void {
+    const theme = initialTheme || 'system';
+    const fontSize = initialFontSize || 'medium';
+
+    this.setTheme(theme);
+
+    if (this.isBrowser) {
+      requestAnimationFrame(() => this.setFontSize(fontSize));
+    } else {
+      this.setFontSize(fontSize);
+    }
+  }
+
+  /**
+   * Cleanup method (called on service destroy if needed)
+   */
+  ngOnDestroy(): void {
+    if (this.isBrowser && this.mediaQuery) {
+      this.mediaQuery.removeEventListener('change', this.onSystemThemeChange.bind(this));
+    }
+  }
+}

@@ -1,0 +1,44 @@
+.settings-layout {
+  display: flex;
+  flex-direction: row;
+  height: calc(100vh - 60px);
+  overflow: hidden;
+  background-color: var(--taskflow-color-background, #ffffff);
+}
+
+.settings-sidebar {
+  width: 280px;
+  border-right: 1px solid var(--taskflow-color-border, #d0d7de);
+  overflow-y: auto;
+  flex-shrink: 0;
+  height: 100%;
+  background-color: var(--taskflow-color-surface, #ffffff);
+}
+
+.settings-content {
+  flex: 1;
+  overflow-y: auto;
+  padding: 32px 32px 64px 32px;
+  height: 100%;
+  background-color: var(--taskflow-color-background, #ffffff);
+}
+
+@media (max-width: 768px) {
+  .settings-layout {
+    flex-direction: column;
+    height: calc(100vh - 56px);
+  }
+
+  .settings-sidebar {
+    width: 100%;
+    height: auto;
+    max-height: 40vh;
+    border-right: none;
+    border-bottom: 1px solid var(--taskflow-color-border, #d0d7de);
+  }
+
+  .settings-content {
+    padding: 16px;
+    flex: 1;
+  }
+}

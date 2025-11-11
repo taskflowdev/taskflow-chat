@@ -1,0 +1,9 @@
+<div class="sidebar-container">
+  <h3 class="sidebar-title">Settings</h3>
+  <nav class="sidebar-nav">
+    <a *ngFor="let category of sortedCategories$ | async" [routerLink]="['/settings', category.key]"
+      routerLinkActive="active" class="sidebar-link">
+      <span class="category-name">{{ category.displayName }}</span>
+    </a>
+  </nav>
+</div>

@@ -1,7 +1,7 @@
 import { Component, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
-export type SkeletonType = 'text' | 'circle' | 'rectangle' | 'chat-item' | 'message' | 'chat-header';
+export type SkeletonType = 'text' | 'circle' | 'rectangle' | 'chat-item' | 'message' | 'chat-header' | 'settings-sidebar' | 'settings-item' | 'settings-category';
 
 /**
  * Reusable skeleton loader component with dark theme support
@@ -85,6 +85,41 @@ export type SkeletonType = 'text' | 'circle' | 'rectangle' | 'chat-item' | 'mess
         <!-- <div class="skeleton-header-actions">
           <div class="skeleton skeleton-circle" style="width: 28px; height: 28px;"></div>
         </div> -->
+      </div>
+
+      <!-- Settings sidebar skeleton -->
+      <div *ngSwitchCase="'settings-sidebar'" class="skeleton-settings-sidebar" [style.opacity]="fadeOpacity">
+        <div class="skeleton skeleton-text" style="width: 100px; height: 1.25rem; margin-bottom: 1.5rem;"></div>
+        <div class="skeleton-sidebar-item" style="margin-bottom: 0.25rem;">
+          <div class="skeleton skeleton-text" style="width: 85%; height: 0.875rem;"></div>
+        </div>
+        <div class="skeleton-sidebar-item" style="margin-bottom: 0.25rem;">
+          <div class="skeleton skeleton-text" style="width: 75%; height: 0.875rem;"></div>
+        </div>
+        <div class="skeleton-sidebar-item" style="margin-bottom: 0.25rem;">
+          <div class="skeleton skeleton-text" style="width: 80%; height: 0.875rem;"></div>
+        </div>
+        <div class="skeleton-sidebar-item" style="margin-bottom: 0.25rem;">
+          <div class="skeleton skeleton-text" style="width: 70%; height: 0.875rem;"></div>
+        </div>
+      </div>
+
+      <!-- Settings category skeleton -->
+      <div *ngSwitchCase="'settings-category'" class="skeleton-settings-category" [style.opacity]="fadeOpacity">
+        <div class="skeleton skeleton-text" style="width: 200px; height: 1.75rem; margin-bottom: 2rem;"></div>
+      </div>
+
+      <!-- Settings item skeleton -->
+      <div *ngSwitchCase="'settings-item'" class="skeleton-settings-item" [style.opacity]="fadeOpacity">
+        <div class="skeleton-item-header">
+          <div class="skeleton-item-info">
+            <div class="skeleton skeleton-text" style="width: 150px; height: 1rem; margin-bottom: 0.5rem;"></div>
+            <div class="skeleton skeleton-text" style="width: 90%; height: 0.875rem;"></div>
+          </div>
+        </div>
+        <div class="skeleton-item-control">
+          <div class="skeleton skeleton-rectangle" style="width: 200px; height: 38px;"></div>
+        </div>
       </div>
 
     </div>

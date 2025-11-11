@@ -1,6 +1,5 @@
 /**
- * Enterprise-level Confirmation Dialog Styles
- * Matches the design system of other dialogs in the application
+ * Enterprise-level Confirmation Dialog Styles - uses theme tokens
  */
 
 .dialog-overlay {
@@ -9,7 +8,7 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(0, 0, 0, 0.7);
+  background: var(--taskflow-color-confirmation-dialog-overlay);
   backdrop-filter: blur(1px);
   display: flex;
   align-items: center;
@@ -27,17 +26,18 @@
 }
 
 .dialog-container {
-  background: #000;
-  border: 1px solid #444;
+  background: var(--taskflow-color-confirmation-dialog-bg);
+  border: 1px solid var(--taskflow-color-confirmation-dialog-border);
   border-radius: 12px;
   width: 100%;
   max-width: 500px;
   max-height: 90vh;
   display: flex;
   flex-direction: column;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.8);
+  box-shadow: var(--shadow-xl);
   transform: translateY(20px);
   animation: slideUp 0.3s ease forwards;
+  transition: background 0.2s ease, border-color 0.2s ease;
 }
 
 @keyframes slideUp {
@@ -52,7 +52,8 @@
   align-items: center;
   justify-content: space-between;
   padding: 0.8rem;
-  border-bottom: 1px solid #444;
+  border-bottom: 1px solid var(--taskflow-color-confirmation-dialog-border);
+  transition: border-color 0.2s ease;
 
   .header-content {
     display: flex;
@@ -62,34 +63,38 @@
     i {
       margin-left: 10px;
       font-size: 1.5rem;
-      color: white;
+      color: var(--taskflow-color-text-primary);
+      transition: color 0.2s ease;
     }
 
     .dialog-title {
       margin: 0;
       margin-left: 10px;
-      font-size: 1.25rem;
+      font-size: var(--taskflow-font-size-h4);
       font-weight: 600;
-      color: white;
+      color: var(--taskflow-color-text-primary);
+      transition: color 0.2s ease;
     }
   }
 
   .close-btn {
     background: transparent;
     border: none;
-    color: #888888;
+    color: var(--taskflow-color-text-secondary);
     font-size: 1.25rem;
     cursor: pointer;
     padding: 0.5rem;
     border-radius: 6px;
     transition: all 0.2s ease;
+    height: 2.1rem; // Add explicit height (32px)
+    width: 2.1rem; // Make it square
     display: flex;
     align-items: center;
     justify-content: center;
 
     &:hover {
-      background: #222222;
-      color: white;
+      background: var(--taskflow-color-confirmation-dialog-close-hover-bg);
+      color: var(--taskflow-color-text-primary);
     }
   }
 }
@@ -98,8 +103,9 @@
 .dialog-content {
   flex: 1;
   padding: 1.2rem;
-  color: #ccc;
+  color: var(--taskflow-color-text-primary);
   text-align: start;
+  transition: color 0.2s ease;
 
   i {
     display: inline-flex;
@@ -108,30 +114,33 @@
     width: 3.5rem;
     height: 3.5rem;
     border-radius: 50%;
-    background-color: rgba(255, 255, 255, 0.1);
-    color: white;
+    background-color: var(--taskflow-color-confirmation-dialog-icon-bg);
+    color: var(--taskflow-color-text-primary);
     font-size: 1.8rem;
     margin-bottom: 1rem;
+    transition: background-color 0.2s ease, color 0.2s ease;
   }
 
   .dialog-message {
-    font-size: 1.1rem;
+    font-size: var(--taskflow-font-size-large);
     margin-bottom: 0.5rem;
   }
 
   .dialog-secondary-message {
-    font-size: 0.9rem;
-    color: #999;
+    font-size: var(--taskflow-font-size-normal);
+    color: var(--taskflow-color-text-secondary);
     margin-top: 0.25rem;
+    transition: color 0.2s ease;
   }
 }
 
 /* Footer */
 .dialog-footer {
   padding: 0.5rem;
-  border-top: 1px solid #444;
+  border-top: 1px solid var(--taskflow-color-confirmation-dialog-border);
   display: flex;
   justify-content: end;
+  transition: border-color 0.2s ease;
 
   .button-group {
     display: flex;
@@ -142,13 +151,13 @@
 
 /* Variant Icons */
 .icon-danger i {
-  color: #dc3545;
+  color: var(--taskflow-color-danger);
 }
 .icon-warning i {
-  color: #ffc107;
+  color: var(--taskflow-color-warning);
 }
 .icon-primary i {
-  color: #0d6efd;
+  color: var(--taskflow-color-accent);
 }
 
 /* Responsive */
@@ -160,7 +169,7 @@
   }
 
   .dialog-header .dialog-title {
-    font-size: 1rem;
+    font-size: var(--taskflow-font-size-normal);
   }
 
   .dialog-footer {

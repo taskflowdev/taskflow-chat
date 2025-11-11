@@ -3,7 +3,7 @@
   .dropdown {
     .user-dropdown-btn {
       background: transparent;
-      color: rgba(255, 255, 255, 0.9);
+      color: var(--taskflow-color-text-primary);
       font-weight: 500;
       font-size: 0.85rem;
       padding: 0.5rem 1rem;
@@ -13,6 +13,7 @@
       align-items: center;
       gap: 0.5rem;
       z-index: 2;
+      cursor: pointer;
 
       .user-name {
         max-width: 120px;
@@ -27,13 +28,14 @@
       }
 
       &:hover {
-        background: rgba(255, 255, 255, 0.1);
-        color: white;
+        background: var(--taskflow-color-user-dropdown-item-hover);
+        transition: background 0.2s ease;
+        color: var(--taskflow-color-text-primary);
       }
 
       &[aria-expanded="true"] {
         background: rgba(255, 255, 255, 0.15);
-        color: white;
+        color: var(--taskflow-color-text-primary);
 
         .dropdown-icon {
           transform: rotate(180deg);
@@ -42,18 +44,21 @@
     }
 
     .dropdown-menu {
-      background: black;
-      border: 1px solid #444444;
+      background: var(--taskflow-color-user-dropdown-bg);
+      transition: background 0.2s ease;
+      border: 1px solid var(--taskflow-color-user-dropdown-border);
+      transition: border-color 0.2s ease;
       border-radius: 8px;
       padding: 0.5rem 0;
-      min-width: 280px;
+      min-width: 300px;
       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
       margin-top: 0.2rem !important;
       transform: translateY(4px);
       z-index: 1;
 
       .dropdown-item {
-        color: rgba(255, 255, 255, 0.8);
+        color: var(--taskflow-color-text-primary);
+        transition: color 0.2s ease;
         background: transparent;
         border: none;
         width: 100%;
@@ -66,8 +71,9 @@
 
         &:hover,
         &:focus {
-          background: rgba(255, 255, 255, 0.1);
-          color: white;
+          background: var(--taskflow-color-user-dropdown-item-hover);
+          transition: background 0.2s ease;
+          color: var(--taskflow-color-text-primary);
         }
 
         i {
@@ -76,12 +82,11 @@
         }
 
         .shortcut-key-dropdown {
-          background-color: white;
+          background-color: var(--taskflow-color-badge-bg);
           border-radius: 8px;
           padding: 0.08rem 0.4rem;
           font-size: 0.8rem;
-          color: black;
-          opacity: 0.7;
+          color: var(--taskflow-color-badge-text);
           font-family: "JetBrains Mono", monospace;
           white-space: nowrap;
           transition: opacity 0.2s ease;
@@ -91,12 +96,13 @@
 
         &:hover .shortcut-key-dropdown {
           opacity: 1;
-          color: black;
+          color: var(--taskflow-color-badge-text);
         }
       }
 
       .dropdown-divider {
-        border-color: #444444;
+        border-color: var(--taskflow-color-user-dropdown-divider);
+        transition: border-color 0.2s ease;
         // margin: 0.25rem 0;
       }
     }
