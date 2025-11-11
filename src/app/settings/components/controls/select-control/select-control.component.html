@@ -10,7 +10,7 @@
       <button class="dropdown-item" [class.active]="isSelected(option)" type="button"
         (mousedown)="selectOption(option)">
         <span class="option-label">{{ option.label }}</span>
-        <i *ngIf="isSelected(option)" class="bi bi-check2 check-icon"></i>
+        <i *ngIf="isSelected(option)" class="bi bi-check-circle-fill check-icon"></i>
       </button>
     </li>
   </ul>

@@ -61,8 +61,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
     {
       label: 'Logout',
       icon: 'bi-box-arrow-right',
-      action: 'logout',
-      isBold: true
+      action: 'logout'
     }
   ];
 

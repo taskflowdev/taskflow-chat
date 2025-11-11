@@ -3,19 +3,19 @@
   display: flex;
   align-items: center;
   padding: 0.9rem 1rem;
-  border-bottom: 1px solid #444444 !important;
+  border-bottom: 1px solid var(--taskflow-color-chat-sidebar-item-border) !important;
   cursor: pointer;
   transition: all 0.2s ease;
   background: transparent !important; // Force transparent background
-  color: white !important; // Ensure white text
+  color: var(--taskflow-color-chat-sidebar-item-text); // Ensure white text
 
   &:hover {
-    background: #222222 !important;
+    background: var(--taskflow-color-chat-sidebar-item-hover) !important;
   }
 
   &.active {
-    background: #333333 !important;
-    border-left: 3px solid white;
+    background: var(--taskflow-color-chat-sidebar-item-active) !important;
+    border-left: 3px solid var(--taskflow-color-chat-sidebar-item-active-border);
   }
 
   &:last-child {

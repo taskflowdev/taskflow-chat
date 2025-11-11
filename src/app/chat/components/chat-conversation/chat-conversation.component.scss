@@ -94,7 +94,7 @@
 
     .date-label {
       color: var(--taskflow-color-chat-date-separator-text);
-      background: var(--taskflow-color-background);
+      background: var(--taskflow-color-chat-date-separator-bg);
       font-size: var(--taskflow-font-size-normal);
       font-weight: 500;
       letter-spacing: 0.3px;
@@ -153,12 +153,14 @@
       max-height: 120px;
       transition: all 0.25s ease;
       font-family: inherit;
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.8), 0 0 8px rgba(255, 255, 255, 0.05);
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.8),
+        0 0 8px rgba(255, 255, 255, 0.05);
 
       &:focus {
         background: var(--taskflow-color-input-bg);
         border-color: var(--taskflow-color-input-border-focus);
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.9), 0 0 12px rgba(255, 255, 255, 0.1);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.9),
+          0 0 12px rgba(255, 255, 255, 0.1);
         outline: none;
       }
 

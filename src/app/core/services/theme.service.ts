@@ -39,30 +39,30 @@ interface ThemeTokens {
 export class ThemeService {
   private currentThemeSubject = new BehaviorSubject<ThemeMode>('system');
   public currentTheme$: Observable<ThemeMode> = this.currentThemeSubject.asObservable();
-  
+
   private resolvedThemeSubject = new BehaviorSubject<'light' | 'dark'>('light');
   public resolvedTheme$: Observable<'light' | 'dark'> = this.resolvedThemeSubject.asObservable();
-  
+
   private currentFontSizeSubject = new BehaviorSubject<FontSize>('medium');
   public currentFontSize$: Observable<FontSize> = this.currentFontSizeSubject.asObservable();
-  
+
   private mediaQuery?: MediaQueryList;
   private isBrowser: boolean;
   private styleElement?: HTMLStyleElement;
 
   constructor(@Inject(PLATFORM_ID) platformId: Object) {
     this.isBrowser = isPlatformBrowser(platformId);
-    
+
     if (this.isBrowser) {
       this.mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
       // Use addEventListener for modern browsers
       this.mediaQuery.addEventListener('change', this.onSystemThemeChange.bind(this));
-      
+
       // Create style element for theme variables
       this.createStyleElement();
     }
   }
-  
+
   /**
    * Create a dedicated style element for theme variables
    * This prevents inline styles in HTML element
@@ -71,17 +71,17 @@ export class ThemeService {
     if (!this.isBrowser) {
       return;
     }
-    
+
     // Check if style element already exists
     let styleEl = document.getElementById('taskflow-theme-variables') as HTMLStyleElement;
-    
+
     if (!styleEl) {
       styleEl = document.createElement('style');
       styleEl.id = 'taskflow-theme-variables';
       styleEl.type = 'text/css';
       document.head.appendChild(styleEl);
     }
-    
+
     this.styleElement = styleEl;
   }
 
@@ -135,12 +135,12 @@ export class ThemeService {
 
     const resolved = this.resolveTheme(mode);
     this.resolvedThemeSubject.next(resolved);
-    
+
     const tokens = resolved === 'dark' ? darkTheme as ThemeTokens : lightTheme as ThemeTokens;
 
     // Build CSS string for theme variables with taskflow- prefix
     const cssVariables: string[] = [];
-    
+
     Object.entries(tokens.colors).forEach(([key, value]) => {
       cssVariables.push(`  --taskflow-color-${this.camelToKebab(key)}: ${value};`);
     });
@@ -150,7 +150,7 @@ export class ThemeService {
       if (this.styleElement) {
         this.styleElement.textContent = `:root {\n${cssVariables.join('\n')}\n}`;
       }
-      
+
       // Set data attribute for CSS selectors
       document.documentElement.setAttribute('data-theme', resolved);
     });
@@ -161,39 +161,38 @@ export class ThemeService {
    * Optimized for zero flicker with taskflow- prefix
    */
   private applyTypography(size: FontSize): void {
-    if (!this.isBrowser || !this.styleElement) {
-      return;
-    }
+    if (!this.isBrowser || !this.styleElement) return;
 
     const resolved = this.getResolvedTheme();
     const tokens = resolved === 'dark' ? darkTheme as ThemeTokens : lightTheme as ThemeTokens;
     const typography = tokens.typography[size];
 
-    // Get existing color variables from stylesheet
-    const existingCss = this.styleElement.textContent || '';
-    const colorVarsMatch = existingCss.match(/:root\s*\{([^}]+)\}/);
-    const existingColorVars = colorVarsMatch ? colorVarsMatch[1].trim() : '';
-    
-    // Build typography CSS variables with taskflow- prefix
     const typographyVariables: string[] = [];
     Object.entries(typography).forEach(([key, value]) => {
       typographyVariables.push(`  --taskflow-font-${this.camelToKebab(key)}: ${value};`);
     });
 
-    // Merge color and typography variables
-    const allVariables = existingColorVars 
-      ? existingColorVars.split('\n').concat(typographyVariables)
-      : typographyVariables;
+    if (this.isBrowser) {
+      requestAnimationFrame(() => {
+        if (!this.styleElement) return;
 
-    // Apply to stylesheet via requestAnimationFrame for batching
-    requestAnimationFrame(() => {
-      if (this.styleElement) {
-        this.styleElement.textContent = `:root {\n${allVariables.join('\n')}\n}`;
-      }
-      
-      // Set data attribute for CSS selectors
-      document.documentElement.setAttribute('data-font-size', size);
-    });
+        // we DO NOT touch existing color vars block
+        const content = this.styleElement.textContent ?? '';
+
+        const colorBlock = content.match(/:root\s*\{([\s\S]*?)\}/)?.[1]?.trim() ?? ''; // safe
+
+        this.styleElement.textContent =
+          `:root {
+              ${colorBlock}
+              }
+
+              :root {
+              ${typographyVariables.join('\n')}
+              }`;
+
+        document.documentElement.setAttribute('data-font-size', size);
+      });
+    }
   }
 
   /**
@@ -233,10 +232,14 @@ export class ThemeService {
   initialize(initialTheme?: ThemeMode, initialFontSize?: FontSize): void {
     const theme = initialTheme || 'system';
     const fontSize = initialFontSize || 'medium';
-    
-    // Apply both theme and typography in one batch
+
     this.setTheme(theme);
-    this.setFontSize(fontSize);
+
+    if (this.isBrowser) {
+      requestAnimationFrame(() => this.setFontSize(fontSize));
+    } else {
+      this.setFontSize(fontSize);
+    }
   }
 
   /**

@@ -1,7 +1,7 @@
 // Chat sidebar component styles - uses theme tokens
 .chat-sidebar {
-  background: var(--taskflow-color-sidebar-bg, #000000) !important;
-  border-right: 1px solid var(--taskflow-color-sidebar-border, #444444);
+  background: var(--taskflow-color-chat-sidebar-bg);
+  border-right: 1px solid var(--taskflow-color-chat-sidebar-border);
   height: 100%;
   // height: calc(100vh - 60px); // Subtract header height to fit viewport
   width: 400px;
@@ -19,11 +19,11 @@
   align-items: center;
   justify-content: space-between;
   padding: 1rem;
-  border-bottom: 1px solid var(--taskflow-color-sidebar-border, #444444);
+  border-bottom: 1px solid var(--taskflow-color-chat-sidebar-border);
   transition: border-color 0.2s ease;
 
   .sidebar-title {
-    color: var(--taskflow-color-sidebar-text, white) !important;
+    color: var(--taskflow-color-chat-sidebar-text);
     font-size: 1.1rem;
     font-weight: 600;
     margin: 0;
@@ -39,8 +39,8 @@
   .search-btn,
   .new-chat-btn {
     background: transparent;
-    border: 1px solid var(--taskflow-color-sidebar-border, #444444);
-    color: var(--taskflow-color-sidebar-text, white);
+    border: 1px solid var(--taskflow-color-chat-sidebar-border);
+    color: var(--taskflow-color-chat-sidebar-text);
     border-radius: 6px;
     width: 36px;
     height: 36px;
@@ -50,7 +50,7 @@
     transition: all 0.2s ease;
 
     &:hover {
-      background: var(--taskflow-color-sidebar-hover, #333333);
+      background: var(--taskflow-color-chat-sidebar-hover);
       border-color: #666666;
     }
 

@@ -1,14 +1,13 @@
 // Main navbar component styles - orchestrates the layout only
 .app-navbar {
-  background: var(--taskflow-color-navbar-bg, #000000) !important;
-  border-bottom: 1px solid var(--taskflow-color-navbar-border, #444444);
+  background: var(--taskflow-color-navbar-bg) !important;
+  border-bottom: 1px solid var(--taskflow-color-navbar-border);
   height: 60px;
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
   z-index: 1030; // Higher than Bootstrap modals
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   transition: background-color 0.2s ease, border-color 0.2s ease;
 
   .navbar-content {
@@ -35,14 +34,14 @@
     color: inherit;
     transition: opacity 0.2s ease;
 
-    &:hover {
-      opacity: 0.8;
-    }
+    // &:hover {
+    //   opacity: 0.8;
+    // }
   }
 
   .logo-icon {
     font-size: 2rem;
-    color: var(--taskflow-color-navbar-text, #fff);
+    color: var(--taskflow-color-navbar-text);
     transition: color 0.2s ease;
   }
 
@@ -55,7 +54,7 @@
   .logo-text {
     font-size: 1.1rem;
     font-weight: 600;
-    color: var(--taskflow-color-navbar-text, #fff);
+    color: var(--taskflow-color-navbar-text);
     letter-spacing: 0.5px;
     transition: color 0.2s ease;
   }

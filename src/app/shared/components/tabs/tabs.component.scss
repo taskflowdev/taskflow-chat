@@ -16,7 +16,7 @@
 // Horizontal orientation (for mobile)
 .tabs-horizontal .tabs-list {
   flex-direction: row;
-  border-bottom: 1px solid var(--taskflow-color-border);
+  border-bottom: 1px solid var(--taskflow-color-group-info-dialog-border);
   overflow-x: auto;
   -webkit-overflow-scrolling: touch;
   transition: border-color 0.2s ease;
@@ -39,9 +39,9 @@
   white-space: nowrap;
 
   &:hover:not(.disabled):not(.active) {
-    background: var(--taskflow-color-tab-hover);
+    background: var(--taskflow-color-group-info-dialog-tab-inactive-hover);
     border-radius: 8px;
-    color: var(--taskflow-color-text-primary);
+    color: var(--taskflow-color-group-info-dialog-tab-inactive-text);
   }
 
   &:focus {
@@ -50,12 +50,12 @@
   }
 
   &.active {
-    background: var(--taskflow-color-tab-active);
+    background: var(--taskflow-color-group-info-dialog-tab-active-bg);
     border-radius: 8px;
-    color: var(--taskflow-color-text-primary);
+    color: var(--taskflow-color-group-info-dialog-tab-active-text);
 
     .tab-icon {
-      color: var(--taskflow-color-text-primary);
+      color: var(--taskflow-color-group-info-dialog-tab-active-text);
     }
   }
 
@@ -71,7 +71,9 @@
 
   &.active {
     border-left-color: transparent;
-    border-bottom-color: var(--taskflow-color-text-primary);
+    border-bottom-color: var(
+      --taskflow-color-group-info-dialog-tab-active-text
+    );
   }
 }
 
@@ -89,7 +91,7 @@
   .tabs-vertical .tabs-list {
     flex-direction: row;
     border-right: none;
-    border-bottom: 1px solid var(--taskflow-color-border);
+    border-bottom: 1px solid var(--taskflow-color-group-info-dialog-border);
     padding-right: 0;
     overflow-x: auto;
   }
@@ -100,7 +102,9 @@
 
     &.active {
       border-left-color: transparent;
-      border-bottom-color: var(--taskflow-color-accent);
+      border-bottom-color: var(
+        --taskflow-color-group-info-dialog-tab-active-text
+      );
     }
   }
 }

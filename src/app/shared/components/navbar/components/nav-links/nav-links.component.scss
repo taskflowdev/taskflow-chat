@@ -9,7 +9,8 @@
     align-items: center;
     gap: 0.5rem;
     padding: 0.5rem 1rem;
-    color: var(--taskflow-color-navbar-text);
+    background-color: var(--taskflow-color-navbar-tab-inactive-bg);
+    color: var(--taskflow-color-navbar-tab-inactive-text);
     text-decoration: none;
     border-radius: 10px;
     font-size: var(--taskflow-font-size-normal);
@@ -18,13 +19,13 @@
     position: relative;
 
     &:hover {
-      color: var(--taskflow-color-text-primary);
-      background: var(--taskflow-color-navbar-hover);
+      color: var(--taskflow-color-navbar-tab-inactive-hover-text);
+      background: var(--taskflow-color-navbar-tab-inactive-hover);
     }
 
     &.active {
-      color: var(--taskflow-color-text-primary);
-      background: var(--taskflow-color-navbar-active);
+      color: var(--taskflow-color-navbar-tab-active-text);
+      background: var(--taskflow-color-navbar-tab-active-bg);
     }
 
     i {

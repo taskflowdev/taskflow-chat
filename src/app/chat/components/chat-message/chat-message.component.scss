@@ -27,8 +27,8 @@
 
   .message-bubble {
     max-width: 70%;
-    background: var(--taskflow-color-chat-bubble-others-bg);
-    border: 1px solid var(--taskflow-color-chat-bubble-others-border);
+    background: var(--taskflow-color-chat-bubble-others-message-bg);
+    border: 1px solid var(--taskflow-color-chat-bubble-others-message-border);
     border-radius: 12px;
     padding: 0.55rem;
     position: relative;
@@ -44,20 +44,20 @@
       .sender-name {
         font-weight: 500;
         font-size: var(--taskflow-font-size-normal);
-        color: var(--taskflow-color-chat-bubble-others-text);
+        color: var(--taskflow-color-chat-bubble-others-message-text);
         transition: color 0.2s ease;
       }
 
       .message-time {
         font-size: var(--taskflow-font-size-xsmall);
-        color: var(--taskflow-color-text-tertiary);
+        color: var(--taskflow-color-chat-bubble-others-message-timestamp);
         margin-left: 0.8rem;
         transition: color 0.2s ease;
       }
     }
 
     .message-content {
-      color: var(--taskflow-color-chat-bubble-others-text);
+      color: var(--taskflow-color-chat-bubble-others-message-text);
       font-size: var(--taskflow-font-size-normal);
       line-height: var(--taskflow-font-line-height-base);
       white-space: pre-wrap;
@@ -134,7 +134,7 @@
 
       .message-time {
         font-size: var(--taskflow-font-size-xsmall);
-        color: var(--taskflow-color-text-tertiary);
+        color: var(--taskflow-color-chat-bubble-own-message-timestamp);
         margin-left: 0.8rem;
         transition: color 0.2s ease;
       }
@@ -146,8 +146,8 @@
     justify-content: flex-start;
 
     .message-bubble {
-      background: var(--taskflow-color-chat-bubble-others-bg);
-      border: 1px solid var(--taskflow-color-chat-bubble-others-border);
+      background: var(--taskflow-color-chat-bubble-others-message-bg);
+      border: 1px solid var(--taskflow-color-chat-bubble-others-message-border);
 
       &::before {
         content: "";
@@ -158,7 +158,8 @@
         height: 0;
         border-top: 8px solid transparent;
         border-bottom: 8px solid transparent;
-        border-right: 8px solid var(--taskflow-color-chat-bubble-others-border);
+        border-right: 8px solid
+          var(--taskflow-color-chat-bubble-others-message-border);
         transition: border-right-color 0.2s ease;
       }
 
@@ -171,7 +172,8 @@
         height: 0;
         border-top: 8px solid transparent;
         border-bottom: 8px solid transparent;
-        border-right: 8px solid var(--taskflow-color-chat-bubble-others-bg);
+        border-right: 8px solid
+          var(--taskflow-color-chat-bubble-others-message-bg);
         transition: border-right-color 0.2s ease;
       }
     }
@@ -182,12 +184,12 @@
     justify-content: flex-end;
 
     .message-bubble {
-      background: var(--taskflow-color-chat-bubble-own-bg);
-      color: var(--taskflow-color-chat-bubble-own-text);
-      border: 1px solid var(--taskflow-color-chat-bubble-own-border);
+      background: var(--taskflow-color-chat-bubble-own-message-bg);
+      color: var(--taskflow-color-chat-bubble-own-message-text);
+      border: 1px solid var(--taskflow-color-chat-bubble-own-message-border);
 
       .message-content {
-        color: var(--taskflow-color-chat-bubble-own-text);
+        color: var(--taskflow-color-chat-bubble-own-message-text);
 
         // Override colors for own messages
         .media-message,
@@ -210,7 +212,7 @@
       }
 
       .message-footer .message-time {
-        color: var(--taskflow-color-text-tertiary);
+        color: var(--taskflow-color-chat-bubble-own-message-timestamp);
       }
 
       &::before {
@@ -222,7 +224,8 @@
         height: 0;
         border-top: 8px solid transparent;
         border-bottom: 8px solid transparent;
-        border-left: 8px solid var(--taskflow-color-chat-bubble-own-border);
+        border-left: 8px solid
+          var(--taskflow-color-chat-bubble-own-message-border);
         transition: border-left-color 0.2s ease;
       }
 
@@ -235,7 +238,7 @@
         height: 0;
         border-top: 8px solid transparent;
         border-bottom: 8px solid transparent;
-        border-left: 8px solid var(--taskflow-color-chat-bubble-own-bg);
+        border-left: 8px solid var(--taskflow-color-chat-bubble-own-message-bg);
         transition: border-left-color 0.2s ease;
       }
     }
