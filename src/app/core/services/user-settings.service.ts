@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, OnDestroy } from '@angular/core';
 import { BehaviorSubject, Observable, Subject, throwError, timer, of } from 'rxjs';
 import { catchError, debounceTime, distinctUntilChanged, map, tap, switchMap, takeUntil } from 'rxjs/operators';
 import { SettingsService } from '../../api/services/settings.service';
@@ -12,7 +12,7 @@ import { SettingsCacheService } from './settings-cache.service';
 @Injectable({
   providedIn: 'root'
 })
-export class UserSettingsService {
+export class UserSettingsService implements OnDestroy {
   private catalogSubject = new BehaviorSubject<CatalogResponse | null>(null);
   public catalog$: Observable<CatalogResponse | null> = this.catalogSubject.asObservable();
 
@@ -27,6 +27,7 @@ export class UserSettingsService {
   private readonly BACKGROUND_REFRESH_INTERVAL = 5 * 60 * 1000; // 5 minutes
   private backgroundRefreshSubscription?: any;
   private stopBackgroundRefresh$ = new Subject<void>();
+  private destroy$ = new Subject<void>();
 
   constructor(
     private settingsService: SettingsService,
@@ -255,7 +256,8 @@ export class UserSettingsService {
         prev.category === curr.category &&
         prev.key === curr.key &&
         prev.value === curr.value
-      )
+      ),
+      takeUntil(this.destroy$)
     ).subscribe(({ category, key, value }) => {
       this.saveSetting(category, key, value);
     });
@@ -366,5 +368,7 @@ export class UserSettingsService {
    */
   ngOnDestroy(): void {
     this.stopBackgroundRefresh();
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 }

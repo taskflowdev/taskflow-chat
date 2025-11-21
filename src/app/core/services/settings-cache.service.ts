@@ -115,10 +115,12 @@ export class SettingsCacheService {
       const key = versionedKey(this.CACHE_KEY, this.CURRENT_VERSION);
       this.localStorageService.removeItem(key);
       
-      // Also clear old versions if they exist
-      for (let version = 1; version < this.CURRENT_VERSION; version++) {
-        const oldKey = versionedKey(this.CACHE_KEY, version);
-        this.localStorageService.removeItem(oldKey);
+      // Also clear old versions if they exist (check versions 0 through CURRENT_VERSION-1)
+      if (this.CURRENT_VERSION > 1) {
+        for (let version = 1; version < this.CURRENT_VERSION; version++) {
+          const oldKey = versionedKey(this.CACHE_KEY, version);
+          this.localStorageService.removeItem(oldKey);
+        }
       }
       
       console.log('Settings cache cleared');
