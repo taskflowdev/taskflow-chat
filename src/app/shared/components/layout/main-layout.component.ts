@@ -26,20 +26,14 @@ import { UserSettingsService } from '../../../core/services/user-settings.servic
   styleUrls: ['./main-layout.component.scss']
 })
 export class MainLayoutComponent implements OnInit {
-  
   constructor(
     private router: Router,
     private userSettingsService: UserSettingsService
-  ) {}
+  ) { }
 
   ngOnInit(): void {
-    // Load user settings and apply theme on initialization
-    this.userSettingsService.loadUserSettings().subscribe({
-      error: (err) => {
-        console.error('Failed to load user settings:', err);
-        // Continue with default theme even if loading fails
-      }
-    });
+    // Settings are loaded during app initialization (APP_INITIALIZER).
+    // Avoid re-loading here to prevent a late re-application of theme tokens.
   }
 
   /**
@@ -47,7 +41,7 @@ export class MainLayoutComponent implements OnInit {
    */
   onShowKeyboardShortcuts(): void {
     // Navigate with fragment to show keyboard shortcuts
-    this.router.navigate([], { 
+    this.router.navigate([], {
       fragment: 'keyboard-shortcuts',
       queryParamsHandling: 'preserve'
     });

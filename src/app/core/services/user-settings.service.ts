@@ -84,10 +84,10 @@ export class UserSettingsService {
   updateSetting(category: string, key: string, value: any): void {
     // Update in-memory cache immediately
     this.updateInMemoryCache(category, key, value);
-    
+
     // Apply setting effect immediately (e.g., theme change)
     this.applySettingEffect(category, key, value);
-    
+
     // Queue for save (will be debounced)
     this.saveQueue.next({ category, key, value });
   }
@@ -135,9 +135,9 @@ export class UserSettingsService {
   private initializeSaveQueue(): void {
     this.saveQueue.pipe(
       debounceTime(350),
-      distinctUntilChanged((prev, curr) => 
-        prev.category === curr.category && 
-        prev.key === curr.key && 
+      distinctUntilChanged((prev, curr) =>
+        prev.category === curr.category &&
+        prev.key === curr.key &&
         prev.value === curr.value
       )
     ).subscribe(({ category, key, value }) => {
@@ -196,12 +196,12 @@ export class UserSettingsService {
    */
   private applySettingEffect(category: string, key: string, value: any): void {
     // Apply theme changes
-    if (category === 'appearance' && key === 'theme') {
+    if (category === 'appearance' && key === 'appearance.theme') {
       this.themeService.setTheme(value);
     }
-    
+
     // Apply font size changes
-    if (category === 'appearance' && key === 'fontSize') {
+    if (category === 'appearance' && key === 'appearance.fontSize') {
       this.themeService.setFontSize(value);
     }
   }
@@ -218,11 +218,12 @@ export class UserSettingsService {
     }
 
     const appearanceSettings = settings.settings['appearance'];
-    
+
     // Extract theme and fontSize from settings, with fallbacks
-    const theme = (appearanceSettings?.['theme'] || 'system') as ThemeMode;
-    const fontSize = (appearanceSettings?.['fontSize'] || 'medium') as FontSize;
-    
+    // Keys are stored under the 'appearance' category (e.g. settings.appearance.theme)
+    const theme = (appearanceSettings?.['appearance.theme'] || 'system') as ThemeMode;
+    const fontSize = (appearanceSettings?.['appearance.fontSize'] || 'medium') as FontSize;
+
     // Initialize theme service with user preferences
     // This ensures theme is applied only once with correct values
     this.themeService.initialize(theme, fontSize);

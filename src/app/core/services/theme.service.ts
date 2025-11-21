@@ -49,10 +49,10 @@ export class ThemeService {
   private mediaQuery?: MediaQueryList;
   private isBrowser: boolean;
   private styleElement?: HTMLStyleElement;
-  
+
   // Track if theme has been explicitly initialized (prevents premature application)
   private isInitialized = false;
-  
+
   // Store bound event handler reference for proper cleanup
   private systemThemeChangeHandler?: (e: MediaQueryListEvent) => void;
 
@@ -61,7 +61,7 @@ export class ThemeService {
 
     if (this.isBrowser) {
       this.mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
-      
+
       // Create and store bound handler for proper cleanup
       this.systemThemeChangeHandler = this.onSystemThemeChange.bind(this);
       this.mediaQuery.addEventListener('change', this.systemThemeChangeHandler);
@@ -99,7 +99,7 @@ export class ThemeService {
    */
   setTheme(mode: ThemeMode): void {
     this.currentThemeSubject.next(mode);
-    
+
     // Only apply if initialized (prevents applying before settings load)
     if (this.isInitialized) {
       this.applyTheme(mode);
@@ -112,7 +112,7 @@ export class ThemeService {
    */
   setFontSize(size: FontSize): void {
     this.currentFontSizeSubject.next(size);
-    
+
     // Only apply if initialized (prevents applying before settings load)
     if (this.isInitialized) {
       this.applyTypography(size);
@@ -169,7 +169,7 @@ export class ThemeService {
     if (!this.isBrowser || !this.styleElement) return;
 
     const resolved = this.getResolvedTheme();
-    
+
     // Apply all tokens (colors + typography) together
     this.applyAllTokens(resolved, size);
 
