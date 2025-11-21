@@ -92,7 +92,7 @@ export class ChatConversationComponent implements AfterViewChecked, OnInit, OnDe
     private autoScrollService: AutoScrollService,
     private cdr: ChangeDetectorRef,
     @Inject(PLATFORM_ID) private platformId: Object
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     if (isPlatformBrowser(this.platformId)) {

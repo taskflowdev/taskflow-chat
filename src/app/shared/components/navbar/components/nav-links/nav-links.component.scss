@@ -8,7 +8,7 @@
     display: flex;
     align-items: center;
     gap: 0.5rem;
-    padding: 0.5rem 1rem;
+    padding: 0.4rem 1rem;
     background-color: var(--taskflow-color-navbar-tab-inactive-bg);
     color: var(--taskflow-color-navbar-tab-inactive-text);
     text-decoration: none;
@@ -24,6 +24,7 @@
     }
 
     &.active {
+      font-weight: bold;
       color: var(--taskflow-color-navbar-tab-active-text);
       background: var(--taskflow-color-navbar-tab-active-bg);
     }

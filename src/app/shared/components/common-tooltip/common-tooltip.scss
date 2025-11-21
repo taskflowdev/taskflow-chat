@@ -8,9 +8,9 @@
   z-index: 10000;
   max-width: 300px;
   padding: 0.5rem 0.5rem;
-  background: black;
-  color: white;
-  border: 1px solid #444444;
+  background: var(--taskflow-color-tooltip-bg);
+  color: var(--taskflow-color-tooltip-text);
+  border: 1px solid var(--taskflow-color-tooltip-border);
   border-radius: 6px;
   font-size: 0.875rem;
   line-height: 1.4;
@@ -18,7 +18,7 @@
   opacity: 0;
   transform: scale(0.95);
   transition: opacity 0.2s ease, transform 0.2s ease;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+  box-shadow: var(--taskflow-color-tooltip-box-shadow);
   word-wrap: break-word;
 
   /* Show state */
@@ -29,7 +29,7 @@
 
   /* Arrow styles for different positions */
   &::before {
-    content: '';
+    content: "";
     position: absolute;
     width: 0;
     height: 0;
@@ -41,7 +41,7 @@
   &.tooltip-top-left::before,
   &.tooltip-top-right::before {
     bottom: -12px;
-    border-top-color: #444444;
+    border-top-color: var(--taskflow-color-tooltip-arrow-color);
   }
 
   &.tooltip-top::before {
@@ -62,7 +62,7 @@
   &.tooltip-bottom-left::before,
   &.tooltip-bottom-right::before {
     top: -12px;
-    border-bottom-color: #444444;
+    border-bottom-color: var(--taskflow-color-tooltip-arrow-color);
   }
 
   &.tooltip-bottom::before {
@@ -83,7 +83,7 @@
     right: -12px;
     top: 50%;
     transform: translateY(-50%);
-    border-left-color: #444444;
+    border-left-color: var(--taskflow-color-tooltip-arrow-color);
   }
 
   /* Right position arrow */
@@ -91,7 +91,7 @@
     left: -12px;
     top: 50%;
     transform: translateY(-50%);
-    border-right-color: #444444;
+    border-right-color: var(--taskflow-color-tooltip-arrow-color);
   }
 
   /* Auto position inherits from determined position */
@@ -102,16 +102,17 @@
   /* HTML content support */
   strong {
     font-weight: 600;
-    color: white;
+    color: var(--taskflow-color-tooltip-strong);
   }
 
   p {
     margin: 0.25rem 0 0 0;
     font-size: 0.8125rem;
-    color: #b3b3b3;
+    color: var(--taskflow-color-tooltip-p);
   }
 
-  ul, ol {
+  ul,
+  ol {
     margin: 0.25rem 0;
     padding-left: 1.25rem;
   }
@@ -121,7 +122,7 @@
   }
 
   a {
-    color: #66b3ff;
+    color: var(--taskflow-color-tooltip-link);
     text-decoration: none;
 
     &:hover {
@@ -130,7 +131,7 @@
   }
 
   code {
-    background: rgba(255, 255, 255, 0.1);
+    background: var(--taskflow-color-tooltip-code-bg);
     padding: 0.125rem 0.25rem;
     border-radius: 3px;
     font-family: monospace;
@@ -148,35 +149,7 @@
 }
 
 /* Dark theme variant (default is already dark) */
-.theme-dark .common-tooltip {
-  background: #1a1a1a;
-  border-color: #444444;
-  color: white;
-}
+/* theme variants are handled by theme tokens; no static overrides needed */
 
 /* Light theme variant (if needed in future) */
-.theme-light .common-tooltip {
-  background: white;
-  border-color: #e0e0e0;
-  color: #333333;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-
-  &::before {
-    border-top-color: #e0e0e0;
-    border-bottom-color: #e0e0e0;
-    border-left-color: #e0e0e0;
-    border-right-color: #e0e0e0;
-  }
-
-  strong {
-    color: #333333;
-  }
-
-  p {
-    color: #666666;
-  }
-
-  code {
-    background: rgba(0, 0, 0, 0.05);
-  }
-}
+/* theme-light overrides moved to theme tokens */
