@@ -1,12 +1,13 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable, Subject, throwError } from 'rxjs';
-import { catchError, debounceTime, distinctUntilChanged, map, tap } from 'rxjs/operators';
+import { BehaviorSubject, Observable, Subject, throwError, timer, of } from 'rxjs';
+import { catchError, debounceTime, distinctUntilChanged, map, tap, switchMap, takeUntil } from 'rxjs/operators';
 import { SettingsService } from '../../api/services/settings.service';
 import { CatalogService } from '../../api/services/catalog.service';
 import { EffectiveSettingsResponse } from '../../api/models/effective-settings-response';
 import { CatalogResponse } from '../../api/models/catalog-response';
 import { UpdateSettingsRequest } from '../../api/models/update-settings-request';
 import { ThemeService, ThemeMode, FontSize } from './theme.service';
+import { SettingsCacheService } from './settings-cache.service';
 
 @Injectable({
   providedIn: 'root'
@@ -22,10 +23,16 @@ export class UserSettingsService {
   private loadingSubject = new BehaviorSubject<boolean>(false);
   public loading$: Observable<boolean> = this.loadingSubject.asObservable();
 
+  // Background refresh management
+  private readonly BACKGROUND_REFRESH_INTERVAL = 5 * 60 * 1000; // 5 minutes
+  private backgroundRefreshSubscription?: any;
+  private stopBackgroundRefresh$ = new Subject<void>();
+
   constructor(
     private settingsService: SettingsService,
     private catalogService: CatalogService,
-    private themeService: ThemeService
+    private themeService: ThemeService,
+    private settingsCacheService: SettingsCacheService
   ) {
     // Initialize save queue subscription
     // This is intentional for a singleton service and will live for app lifetime
@@ -47,15 +54,54 @@ export class UserSettingsService {
   }
 
   /**
-   * Load effective user settings from backend
+   * Load effective user settings with caching support
+   * 
+   * Strategy:
+   * 1. Try to load from cache first (fast)
+   * 2. If cache exists and is fresh, use it and start background refresh
+   * 3. If no cache or stale, fetch from API
+   * 4. Always cache fresh data
    */
   loadUserSettings(): Observable<EffectiveSettingsResponse | null> {
+    // Try to load from cache first
+    const cachedSettings = this.settingsCacheService.getCachedSettings();
+
+    if (cachedSettings) {
+      // We have cached settings, use them immediately
+      console.log('Loading settings from cache');
+      this.effectiveSettingsSubject.next(cachedSettings);
+      this.applyThemeFromSettings(cachedSettings);
+      
+      // Start background refresh to get fresh data
+      this.startBackgroundRefresh();
+      
+      return of(cachedSettings);
+    }
+
+    // No cache, fetch from API
+    console.log('Loading settings from API');
     this.loadingSubject.next(true);
+    return this.fetchSettingsFromAPI();
+  }
+
+  /**
+   * Fetch settings from API and cache them
+   */
+  private fetchSettingsFromAPI(): Observable<EffectiveSettingsResponse | null> {
     return this.settingsService.apiSettingsMeGet$Json().pipe(
       map(response => response.data || null),
       tap(settings => {
-        this.effectiveSettingsSubject.next(settings);
-        this.applyThemeFromSettings(settings);
+        if (settings) {
+          // Cache the fresh settings
+          this.settingsCacheService.setCachedSettings(settings);
+          
+          // Update in-memory state
+          this.effectiveSettingsSubject.next(settings);
+          this.applyThemeFromSettings(settings);
+          
+          // Start background refresh for future updates
+          this.startBackgroundRefresh();
+        }
         this.loadingSubject.next(false);
       }),
       catchError(err => {
@@ -64,6 +110,76 @@ export class UserSettingsService {
         return throwError(() => err);
       })
     );
+  }
+
+  /**
+   * Start background refresh of settings
+   * Periodically fetches fresh settings from API without blocking UI
+   */
+  private startBackgroundRefresh(): void {
+    // Stop any existing background refresh
+    this.stopBackgroundRefresh();
+
+    // Start new background refresh
+    this.backgroundRefreshSubscription = timer(this.BACKGROUND_REFRESH_INTERVAL, this.BACKGROUND_REFRESH_INTERVAL).pipe(
+      switchMap(() => {
+        console.log('Background refresh: Fetching fresh settings');
+        return this.settingsService.apiSettingsMeGet$Json().pipe(
+          map(response => response.data || null),
+          tap(settings => {
+            if (settings) {
+              // Check if settings actually changed
+              const currentSettings = this.effectiveSettingsSubject.value;
+              if (JSON.stringify(currentSettings) !== JSON.stringify(settings)) {
+                console.log('Background refresh: Settings changed, updating');
+                
+                // Cache the fresh settings
+                this.settingsCacheService.setCachedSettings(settings);
+                
+                // Update in-memory state
+                this.effectiveSettingsSubject.next(settings);
+                
+                // Re-apply theme if appearance settings changed
+                const currentAppearance = currentSettings?.settings?.['appearance'];
+                const newAppearance = settings.settings?.['appearance'];
+                
+                if (JSON.stringify(currentAppearance) !== JSON.stringify(newAppearance)) {
+                  console.log('Background refresh: Appearance settings changed, re-applying theme');
+                  this.applyThemeFromSettings(settings);
+                }
+              } else {
+                console.log('Background refresh: No changes detected');
+              }
+            }
+          }),
+          catchError(err => {
+            console.error('Background refresh failed:', err);
+            return of(null); // Continue background refresh even if one fails
+          })
+        );
+      }),
+      takeUntil(this.stopBackgroundRefresh$)
+    ).subscribe();
+  }
+
+  /**
+   * Stop background refresh
+   */
+  private stopBackgroundRefresh(): void {
+    if (this.backgroundRefreshSubscription) {
+      this.backgroundRefreshSubscription.unsubscribe();
+      this.backgroundRefreshSubscription = undefined;
+    }
+  }
+
+  /**
+   * Force refresh settings from API
+   * Can be called manually to refresh immediately
+   */
+  refreshSettings(): Observable<EffectiveSettingsResponse | null> {
+    console.log('Force refreshing settings');
+    this.loadingSubject.next(true);
+    return this.fetchSettingsFromAPI();
   }
 
   /**
@@ -146,7 +262,7 @@ export class UserSettingsService {
   }
 
   /**
-   * Save setting to backend
+   * Save setting to backend and update cache
    */
   private saveSetting(category: string, key: string, value: any): void {
     const request: UpdateSettingsRequest = {
@@ -157,8 +273,16 @@ export class UserSettingsService {
     this.settingsService.apiSettingsMePut$Json({ body: request }).subscribe({
       next: (response) => {
         if (response.success) {
-          // Setting saved successfully - cache is already updated
-          // Effect already applied in updateSetting, no need to apply again
+          // Setting saved successfully - update cache with current state
+          const currentSettings = this.effectiveSettingsSubject.value;
+          if (currentSettings) {
+            this.settingsCacheService.setCachedSettings(currentSettings);
+          }
+          
+          // Trigger background refresh to get any server-side computed values
+          this.refreshSettings().subscribe({
+            error: (err) => console.error('Failed to refresh after save:', err)
+          });
         }
       },
       error: (err) => {
@@ -235,5 +359,12 @@ export class UserSettingsService {
    */
   initializeDefaultTheme(): void {
     this.themeService.initialize('system', 'medium');
+  }
+
+  /**
+   * Cleanup method (called on service destroy)
+   */
+  ngOnDestroy(): void {
+    this.stopBackgroundRefresh();
   }
 }

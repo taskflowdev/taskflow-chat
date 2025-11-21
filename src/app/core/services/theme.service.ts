@@ -3,6 +3,7 @@ import { isPlatformBrowser } from '@angular/common';
 import { BehaviorSubject, Observable } from 'rxjs';
 import lightTheme from '../../../theme/theme.light.json';
 import darkTheme from '../../../theme/theme.dark.json';
+import { camelToKebab } from '../utils/settings.utils';
 
 export type ThemeMode = 'light' | 'dark' | 'system';
 export type FontSize = 'small' | 'medium' | 'large';
@@ -200,12 +201,12 @@ export class ThemeService {
 
     // Add color tokens
     Object.entries(tokens.colors).forEach(([key, value]) => {
-      cssVariables.push(`  --taskflow-color-${this.camelToKebab(key)}: ${value};`);
+      cssVariables.push(`  --taskflow-color-${camelToKebab(key)}: ${value};`);
     });
 
     // Add typography tokens
     Object.entries(typography).forEach(([key, value]) => {
-      cssVariables.push(`  --taskflow-font-${this.camelToKebab(key)}: ${value};`);
+      cssVariables.push(`  --taskflow-font-${camelToKebab(key)}: ${value};`);
     });
 
     // Only apply if we have tokens to apply
@@ -244,13 +245,6 @@ export class ThemeService {
     if (this.currentThemeSubject.value === 'system') {
       this.applyTheme('system');
     }
-  }
-
-  /**
-   * Convert camelCase to kebab-case
-   */
-  private camelToKebab(str: string): string {
-    return str.replace(/([a-z0-9])([A-Z])/g, '$1-$2').toLowerCase();
   }
 
   /**
