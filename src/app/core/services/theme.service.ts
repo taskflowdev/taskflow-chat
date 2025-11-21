@@ -238,8 +238,9 @@ export class ThemeService {
   /**
    * Handle system theme changes
    * Reacts instantly to OS appearance changes
+   * Only applies when user has explicitly selected 'system' theme
    */
-  private onSystemThemeChange(e: MediaQueryListEvent): void {
+  private onSystemThemeChange(_e: MediaQueryListEvent): void {
     if (this.currentThemeSubject.value === 'system') {
       this.applyTheme('system');
     }

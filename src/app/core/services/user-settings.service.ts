@@ -6,7 +6,7 @@ import { CatalogService } from '../../api/services/catalog.service';
 import { EffectiveSettingsResponse } from '../../api/models/effective-settings-response';
 import { CatalogResponse } from '../../api/models/catalog-response';
 import { UpdateSettingsRequest } from '../../api/models/update-settings-request';
-import { ThemeService } from './theme.service';
+import { ThemeService, ThemeMode, FontSize } from './theme.service';
 
 @Injectable({
   providedIn: 'root'
@@ -220,8 +220,8 @@ export class UserSettingsService {
     const appearanceSettings = settings.settings['appearance'];
     
     // Extract theme and fontSize from settings, with fallbacks
-    const theme = (appearanceSettings?.['theme'] as any) || 'system';
-    const fontSize = (appearanceSettings?.['fontSize'] as any) || 'medium';
+    const theme = (appearanceSettings?.['theme'] || 'system') as ThemeMode;
+    const fontSize = (appearanceSettings?.['fontSize'] || 'medium') as FontSize;
     
     // Initialize theme service with user preferences
     // This ensures theme is applied only once with correct values
