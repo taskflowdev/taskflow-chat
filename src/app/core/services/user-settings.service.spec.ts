@@ -3,6 +3,7 @@ import { PLATFORM_ID } from '@angular/core';
 import { UserSettingsService } from './user-settings.service';
 import { SettingsService } from '../../api/services/settings.service';
 import { CatalogService } from '../../api/services/catalog.service';
+import { ApiConfiguration } from '../../api/api-configuration';
 import { ThemeService } from './theme.service';
 import { SettingsCacheService } from './settings-cache.service';
 import { of, throwError } from 'rxjs';
@@ -13,6 +14,7 @@ describe('UserSettingsService', () => {
   let service: UserSettingsService;
   let settingsService: jasmine.SpyObj<SettingsService>;
   let catalogService: jasmine.SpyObj<CatalogService>;
+  let apiConfiguration: jasmine.SpyObj<ApiConfiguration>;
   let themeService: jasmine.SpyObj<ThemeService>;
   let settingsCacheService: jasmine.SpyObj<SettingsCacheService>;
 
@@ -71,6 +73,9 @@ describe('UserSettingsService', () => {
     const catalogServiceSpy = jasmine.createSpyObj('CatalogService', [
       'apiSettingsCatalogGet$Json'
     ]);
+    const apiConfigurationSpy = jasmine.createSpyObj('ApiConfiguration', [], {
+      rootUrl: 'https://localhost:44347'
+    });
     const themeServiceSpy = jasmine.createSpyObj('ThemeService', [
       'initialize',
       'setTheme',
@@ -86,6 +91,7 @@ describe('UserSettingsService', () => {
         UserSettingsService,
         { provide: SettingsService, useValue: settingsServiceSpy },
         { provide: CatalogService, useValue: catalogServiceSpy },
+        { provide: ApiConfiguration, useValue: apiConfigurationSpy },
         { provide: ThemeService, useValue: themeServiceSpy },
         { provide: SettingsCacheService, useValue: settingsCacheServiceSpy },
         { provide: PLATFORM_ID, useValue: 'browser' }
@@ -95,6 +101,7 @@ describe('UserSettingsService', () => {
     service = TestBed.inject(UserSettingsService);
     settingsService = TestBed.inject(SettingsService) as jasmine.SpyObj<SettingsService>;
     catalogService = TestBed.inject(CatalogService) as jasmine.SpyObj<CatalogService>;
+    apiConfiguration = TestBed.inject(ApiConfiguration) as jasmine.SpyObj<ApiConfiguration>;
     themeService = TestBed.inject(ThemeService) as jasmine.SpyObj<ThemeService>;
     settingsCacheService = TestBed.inject(SettingsCacheService) as jasmine.SpyObj<SettingsCacheService>;
 

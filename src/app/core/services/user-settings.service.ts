@@ -1,9 +1,10 @@
 import { Injectable, OnDestroy, Inject, PLATFORM_ID } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
-import { BehaviorSubject, Observable, Subject, throwError, timer, of } from 'rxjs';
+import { BehaviorSubject, Observable, Subject, throwError, timer, of, forkJoin } from 'rxjs';
 import { catchError, debounceTime, map, tap, switchMap, takeUntil } from 'rxjs/operators';
 import { SettingsService } from '../../api/services/settings.service';
 import { CatalogService } from '../../api/services/catalog.service';
+import { ApiConfiguration } from '../../api/api-configuration';
 import { EffectiveSettingsResponse } from '../../api/models/effective-settings-response';
 import { CatalogResponse } from '../../api/models/catalog-response';
 import { UpdateSettingsRequest } from '../../api/models/update-settings-request';
@@ -54,6 +55,7 @@ export class UserSettingsService implements OnDestroy {
     private catalogService: CatalogService,
     private themeService: ThemeService,
     private settingsCacheService: SettingsCacheService,
+    private apiConfiguration: ApiConfiguration,
     @Inject(PLATFORM_ID) private platformId: Object
   ) {
     // Initialize debounced save queue
@@ -298,8 +300,10 @@ export class UserSettingsService implements OnDestroy {
    * Flush pending updates to backend
    * 
    * Merges all pending updates by category, then calls apiSettingsMePut$Json()
-   * for each category with all pending changes. After save completes,
+   * for each category with all pending changes. After all saves complete,
    * refreshes settings from backend via apiSettingsMeGet$Json().
+   * 
+   * Uses forkJoin for parallel execution with proper error handling.
    */
   private flushPendingUpdates(): void {
     if (this.pendingUpdates.size === 0 || this.isSaving) {
@@ -316,8 +320,8 @@ export class UserSettingsService implements OnDestroy {
     // Group updates by category
     const updatesByCategory = this.groupUpdatesByCategory(updates);
 
-    // Save each category
-    const savePromises: Observable<any>[] = [];
+    // Create save observables for each category
+    const saveObservables: Observable<any>[] = [];
     
     for (const [category, payload] of updatesByCategory.entries()) {
       const request: UpdateSettingsRequest = {
@@ -328,43 +332,19 @@ export class UserSettingsService implements OnDestroy {
       const saveObs = this.settingsService.apiSettingsMePut$Json({ body: request }).pipe(
         catchError(err => {
           console.error(`Failed to save settings for category ${category}:`, err);
-          // Return a null observable to continue with other saves
+          // Return null to continue with other saves
           return of(null);
         })
       );
       
-      savePromises.push(saveObs);
+      saveObservables.push(saveObs);
     }
 
-    // Execute all saves, then refresh from backend
-    if (savePromises.length > 0) {
-      // Use a simple sequential approach - save all, then refresh
-      const saveAll$ = new Observable<void>(observer => {
-        let completed = 0;
-        savePromises.forEach(obs => {
-          obs.subscribe({
-            next: () => {
-              completed++;
-              if (completed === savePromises.length) {
-                observer.next(undefined);
-                observer.complete();
-              }
-            },
-            error: (err) => {
-              // Continue even if one fails
-              completed++;
-              if (completed === savePromises.length) {
-                observer.next(undefined);
-                observer.complete();
-              }
-            }
-          });
-        });
-      });
-
-      saveAll$.pipe(
+    // Execute all saves in parallel, then refresh from backend
+    if (saveObservables.length > 0) {
+      forkJoin(saveObservables).pipe(
         switchMap(() => {
-          // After all saves, refresh from backend
+          // After all saves complete, refresh from backend
           return this.settingsService.apiSettingsMeGet$Json();
         }),
         takeUntil(this.destroy$)
@@ -435,6 +415,8 @@ export class UserSettingsService implements OnDestroy {
    * 
    * Uses sendBeacon to send pending updates even when page is unloading.
    * This is a fallback mechanism - normal debounced saves are preferred.
+   * 
+   * Uses ApiConfiguration.rootUrl for proper URL construction.
    */
   private sendPendingUpdatesViaBeacon(): void {
     if (this.pendingUpdates.size === 0) {
@@ -445,8 +427,8 @@ export class UserSettingsService implements OnDestroy {
     const updates = Array.from(this.pendingUpdates.values());
     const updatesByCategory = this.groupUpdatesByCategory(updates);
 
-    // Try to send via sendBeacon for each category
-    const apiUrl = this.settingsService['rootUrl'] || ''; // Access via bracket notation
+    // Get API base URL from configuration
+    const apiUrl = this.apiConfiguration.rootUrl;
     
     for (const [category, payload] of updatesByCategory.entries()) {
       const request: UpdateSettingsRequest = {
