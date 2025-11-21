@@ -54,6 +54,9 @@ export class MainChatComponent implements OnInit, OnDestroy {
   showKeyboardShortcutsDialog: boolean = false;
   showGroupInfoDialog: boolean = false;
 
+  // Track if groups have been loaded to prevent duplicate API calls
+  private groupsLoaded: boolean = false;
+
   // Subscriptions
   private shortcutSubscription?: Subscription;
   private messageReceivedSubscription?: Subscription;
@@ -91,13 +94,15 @@ export class MainChatComponent implements OnInit, OnDestroy {
         this.user = user;
         if (!user) {
           this.router.navigate(['/auth/login']);
-        } else {
+        } else if (!this.groupsLoaded) {
+          // Only load groups if they haven't been loaded yet
           this.loadUserGroups();
         }
       });
 
       // Load initial data if user is already authenticated
-      if (this.user) {
+      // Only load if groups haven't been loaded yet
+      if (this.user && !this.groupsLoaded) {
         this.loadUserGroups();
       }
 
@@ -117,8 +122,9 @@ export class MainChatComponent implements OnInit, OnDestroy {
         const groupId = params['groupId'];
         if (groupId && this.chats.length > 0) {
           // Only load if we have chats loaded and groupId exists in the list
+          // Also check if this is a different chat to avoid reloading the same chat
           const chatExists = this.chats.some(chat => chat.groupId === groupId);
-          if (chatExists) {
+          if (chatExists && (!this.selectedChatId || this.selectedChatId !== groupId)) {
             this.selectChatById(groupId);
           }
         }
@@ -506,13 +512,15 @@ export class MainChatComponent implements OnInit, OnDestroy {
 
   /**
    * Loads user groups from API
+   * @param forceRefresh - If true, bypasses cache and fetches fresh data
    */
-  private loadUserGroups(): void {
+  private loadUserGroups(forceRefresh: boolean = false): void {
     this.loading = true;
-    this.groupsServiceProxy.getUserGroups().subscribe({
+    this.groupsServiceProxy.getUserGroups(forceRefresh).subscribe({
       next: (groups: GroupWithMessages[]) => {
         this.chats = groups.map(group => this.mapGroupToChatItem(group));
         this.loading = false;
+        this.groupsLoaded = true; // Mark groups as loaded
 
         // After loading groups, check if there's a groupId in the route
         if (isPlatformBrowser(this.platformId)) {
@@ -528,6 +536,7 @@ export class MainChatComponent implements OnInit, OnDestroy {
       error: (error) => {
         console.error('Failed to load user groups:', error);
         this.loading = false;
+        this.groupsLoaded = true; // Mark as loaded even on error to prevent infinite retries
       }
     });
   }
@@ -547,11 +556,10 @@ export class MainChatComponent implements OnInit, OnDestroy {
 
   onChatSelect(groupId: string): void {
     // Navigate to the group URL
+    // The route params subscription will handle loading the chat
     this.router.navigate(['/chats/group', groupId], {
       queryParamsHandling: 'preserve'
     });
-
-    this.selectChatById(groupId);
   }
 
   /**
@@ -607,14 +615,14 @@ export class MainChatComponent implements OnInit, OnDestroy {
    * Handles group creation event - refreshes chat list instead of full page reload
    */
   onGroupCreated(): void {
-    this.loadUserGroups();
+    this.loadUserGroups(true); // Force refresh after creating a group
   }
 
   /**
    * Handles group update event - refreshes chat list and current conversation
    */
   onGroupUpdated(): void {
-    this.loadUserGroups();
+    this.loadUserGroups(true); // Force refresh after updating a group
     // Reload current conversation to get updated details
     if (this.selectedChatId) {
       this.loadGroupMessages(this.selectedChatId);
@@ -912,6 +920,6 @@ export class MainChatComponent implements OnInit, OnDestroy {
    * Reload the groups list to include the newly joined group
    */
   onGroupJoined(): void {
-    this.loadUserGroups();
+    this.loadUserGroups(true); // Force refresh after joining a group
   }
 }
