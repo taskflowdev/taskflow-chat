@@ -1,4 +1,4 @@
-// Nav links component styles - reusable navigation component
+// Nav links component styles - uses theme tokens
 .nav-links {
   display: flex;
   align-items: center;
@@ -8,35 +8,25 @@
     display: flex;
     align-items: center;
     gap: 0.5rem;
-    padding: 0.5rem 1rem;
-    color: rgba(255, 255, 255, 0.8);
+    padding: 0.4rem 1rem;
+    background-color: var(--taskflow-color-navbar-tab-inactive-bg);
+    color: var(--taskflow-color-navbar-tab-inactive-text);
     text-decoration: none;
     border-radius: 10px;
-    font-size: 0.9rem;
+    font-size: var(--taskflow-font-size-normal);
     font-weight: 500;
     transition: all 0.3s ease;
     position: relative;
 
     &:hover {
-      color: white;
-      background: rgba(255, 255, 255, 0.1);
+      color: var(--taskflow-color-navbar-tab-inactive-hover-text);
+      background: var(--taskflow-color-navbar-tab-inactive-hover);
     }
 
     &.active {
-      color: white;
-      background: rgba(255, 255, 255, 0.15);
-
-      // &::after {
-      //   content: '';
-      //   position: absolute;
-      //   bottom: -8px;
-      //   left: 50%;
-      //   transform: translateX(-50%);
-      //   width: 4px;
-      //   height: 4px;
-      //   border-radius: 50%;
-      //   background: white;
-      // }
+      font-weight: bold;
+      color: var(--taskflow-color-navbar-tab-active-text);
+      background: var(--taskflow-color-navbar-tab-active-bg);
     }
 
     i {
@@ -44,7 +34,7 @@
     }
 
     .nav-text {
-      font-size: 0.85rem;
+      font-size: var(--taskflow-font-size-small);
     }
   }
 }
@@ -56,7 +46,7 @@
 
     .nav-link {
       padding: 0.4rem 0.75rem;
-      font-size: 0.8rem;
+      font-size: var(--taskflow-font-size-small);
 
       i {
         font-size: 1rem;

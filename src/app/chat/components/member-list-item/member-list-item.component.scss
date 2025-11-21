@@ -3,14 +3,14 @@
   align-items: center;
   justify-content: space-between;
   padding: 0.75rem;
-  border: 1px solid #333333;
+  border: 1px solid var(--taskflow-color-member-item-border);
   border-radius: 8px;
-  background: rgba(255, 255, 255, 0.02);
+  background: var(--taskflow-color-member-item-bg);
   transition: all 0.2s ease;
 
   &:hover {
-    background: rgba(255, 255, 255, 0.05);
-    border-color: #444444;
+    background: var(--taskflow-color-member-item-hover-bg);
+    border-color: var(--taskflow-color-action-btn-border);
   }
 
   &.processing {
@@ -38,13 +38,14 @@
   width: 40px;
   height: 40px;
   border-radius: 50%;
-  background: white;
+  background: var(--taskflow-color-member-avatar-bg);
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: 0.875rem;
   font-weight: 600;
-  color: black;
+  color: var(--taskflow-color-member-avatar-text);
+  border: 1px solid var(--taskflow-color-member-avatar-border);
   flex-shrink: 0;
 }
 
@@ -57,7 +58,7 @@
 }
 
 .member-name {
-  color: #ffffff;
+  color: var(--taskflow-color-member-name-text);
   font-size: 0.9rem;
   font-weight: 500;
   overflow: hidden;
@@ -70,7 +71,7 @@
   align-items: center;
   gap: 0.5rem;
   font-size: 0.75rem;
-  color: #9ca3af;
+  color: var(--taskflow-color-member-meta-text);
 }
 
 .member-role {
@@ -110,10 +111,10 @@
   align-items: center;
   gap: 0.375rem;
   padding: 0.5rem 0.75rem;
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid #444444;
+  background: var(--taskflow-color-action-btn-bg);
+  border: 1px solid var(--taskflow-color-action-btn-border);
   border-radius: 6px;
-  color: #9ca3af;
+  color: var(--taskflow-color-action-btn-text);
   font-size: 0.75rem;
   font-weight: 500;
   cursor: pointer;
@@ -125,20 +126,20 @@
   }
 
   &:hover:not(.disabled) {
-    background: rgba(255, 255, 255, 0.1);
-    border-color: #555555;
-    color: #ffffff;
+    background: var(--taskflow-color-action-btn-hover-bg);
+    border-color: var(--taskflow-color-action-btn-hover-border);
+    color: var(--taskflow-color-action-btn-hover-text);
   }
 
   &:focus {
-    outline: 2px solid #3b82f6;
+    outline: 2px solid var(--taskflow-color-focus-ring);
     outline-offset: 2px;
   }
 
   &.remove-btn:hover:not(.disabled) {
-    background: rgba(239, 68, 68, 0.1);
-    border-color: #ef4444;
-    color: #ef4444;
+    background: var(--taskflow-color-remove-btn-hover-bg);
+    border-color: var(--taskflow-color-remove-btn-hover-border);
+    color: var(--taskflow-color-remove-btn-hover-text);
   }
 
   &.disabled {

@@ -1,30 +1,34 @@
 /* You can add global styles to this file, and also import other style files */
 
+// TaskFlow Theme Variables (managed by ThemeService)
+// These CSS custom properties use --taskflow- prefix to avoid Bootstrap conflicts
+@use "theme/theme-variables";
+
 // Common Tooltip Component Styles
-@use 'app/shared/components/common-tooltip/common-tooltip.scss';
+@use "app/shared/components/common-tooltip/common-tooltip.scss";
 
 // Custom CSS variables for green and black theme
-:root {
-  --primary-green: #22c55e;
-  --dark-green: #16a34a;
-  --light-green: #4ade80;
-  --accent-green: #15803d;
-  --primary-black: #0f172a;
-  --secondary-black: #1e293b;
-  --tertiary-black: #334155;
-  --light-gray: #f8fafc;
-  --medium-gray: #e2e8f0;
-  --dark-gray: #64748b;
+// :root {
+//   --primary-green: #22c55e;
+//   --dark-green: #16a34a;
+//   --light-green: #4ade80;
+//   --accent-green: #15803d;
+//   --primary-black: #0f172a;
+//   --secondary-black: #1e293b;
+//   --tertiary-black: #334155;
+//   --light-gray: #f8fafc;
+//   --medium-gray: #e2e8f0;
+//   --dark-gray: #64748b;
 
-  // Scrollbar CSS variables
-  --scrollbar-width: 8px;
-  --scrollbar-track-light: transparent;
-  --scrollbar-track-dark: transparent;
-  --scrollbar-thumb-light: rgba(0, 0, 0, 1);
-  --scrollbar-thumb-dark: rgba(255, 255, 255, 1);
-  --scrollbar-thumb-hover-light: rgba(0, 0, 0, 1);
-  --scrollbar-thumb-hover-dark: rgba(255, 255, 255, 1);
-}
+//   // Scrollbar CSS variables
+//   --scrollbar-width: 8px;
+//   --scrollbar-track-light: transparent;
+//   --scrollbar-track-dark: transparent;
+//   --scrollbar-thumb-light: rgba(0, 0, 0, 1);
+//   --scrollbar-thumb-dark: rgba(255, 255, 255, 1);
+//   --scrollbar-thumb-hover-light: rgba(0, 0, 0, 1);
+//   --scrollbar-thumb-hover-dark: rgba(255, 255, 255, 1);
+// }
 
 // ==========================================
 // Global Scrollbar Styles - Always Visible
@@ -46,7 +50,9 @@
 }
 
 /* force overlay mode (MOST IMPORTANT) */
-html, body, * {
+html,
+body,
+* {
   scrollbar-width: thin;
   scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track);
 }
@@ -78,11 +84,15 @@ html, body, * {
 
 // Global styles for the app
 body {
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  background: var(--light-gray);
+  font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    sans-serif;
+  background: var(--taskflow-color-background);
   margin: 0;
   padding: 0;
-  color: var(--primary-black);
+  color: var(--taskflow-color-text-primary);
+  font-size: var(--taskflow-font-font-size-base);
+  line-height: var(--taskflow-font-line-height-base);
+  transition: background-color 0.2s ease, color 0.2s ease;
 }
 
 // Auth form styles
@@ -92,7 +102,12 @@ body {
   align-items: center;
   justify-content: center;
   padding: 20px;
-  background: linear-gradient(135deg, var(--primary-black) 0%, var(--secondary-black) 50%, var(--primary-green) 100%);
+  background: linear-gradient(
+    135deg,
+    var(--primary-black) 0%,
+    var(--secondary-black) 50%,
+    var(--primary-green) 100%
+  );
 }
 
 .auth-card {
@@ -175,7 +190,11 @@ body {
 
 // Primary button styling
 .btn-primary {
-  background: linear-gradient(135deg, var(--primary-green) 0%, var(--dark-green) 100%);
+  background: linear-gradient(
+    135deg,
+    var(--primary-green) 0%,
+    var(--dark-green) 100%
+  );
   border: none;
   border-radius: 12px;
   padding: 14px 24px;
@@ -266,63 +285,63 @@ body {
 }
 
 // Additional component styles for better UI
-.card {
-  border-radius: 16px;
-  border: none;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-}
+// .card {
+//   border-radius: 16px;
+//   border: none;
+//   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+// }
 
-.card-body {
-  padding: 1.5rem;
-}
+// .card-body {
+//   padding: 1.5rem;
+// }
 
-.form-check-input:checked {
-  background-color: var(--primary-green);
-  border-color: var(--primary-green);
-}
+// .form-check-input:checked {
+//   background-color: var(--primary-green);
+//   border-color: var(--primary-green);
+// }
 
-.form-check-input:focus {
-  border-color: var(--primary-green);
-  outline: 0;
-  box-shadow: 0 0 0 0.2rem rgba(34, 197, 94, 0.25);
-}
+// .form-check-input:focus {
+//   border-color: var(--primary-green);
+//   outline: 0;
+//   box-shadow: 0 0 0 0.2rem rgba(34, 197, 94, 0.25);
+// }
 
-// Dropdown improvements
-.dropdown-toggle::after {
-  margin-left: 0.5rem;
-}
+// // Dropdown improvements
+// .dropdown-toggle::after {
+//   margin-left: 0.5rem;
+// }
 
-.dropdown-menu {
-  border-radius: 12px;
-  border: none;
-  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
-  padding: 0.5rem 0;
-}
+// .dropdown-menu {
+//   border-radius: 12px;
+//   border: none;
+//   box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+//   padding: 0.5rem 0;
+// }
 
-.dropdown-item {
-  padding: 0.5rem 1rem;
-  transition: all 0.2s ease;
-}
+// .dropdown-item {
+//   padding: 0.5rem 1rem;
+//   transition: all 0.2s ease;
+// }
 
-.dropdown-item:hover {
-  background-color: rgba(34, 197, 94, 0.1);
-  color: var(--primary-green);
-}
+// .dropdown-item:hover {
+//   background-color: rgba(34, 197, 94, 0.1);
+//   color: var(--primary-green);
+// }
 
-// Loading spinner color
-.spinner-border {
-  color: var(--primary-green);
-}
+// // Loading spinner color
+// .spinner-border {
+//   color: var(--primary-green);
+// }
 
-// Text colors
-.text-success {
-  color: var(--primary-green) !important;
-}
+// // Text colors
+// .text-success {
+//   color: var(--primary-green) !important;
+// }
 
-// Icon styling
-i.bi {
-  line-height: 1;
-}
+// // Icon styling
+// i.bi {
+//   line-height: 1;
+// }
 
 // shortcut tooltip style
 .shortcut-key {

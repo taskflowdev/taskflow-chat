@@ -1,0 +1,38 @@
+<!-- Show skeleton while loading OR while catalog is not loaded -->
+<ng-container *ngIf="(loading$ | async) || !(catalogLoaded$ | async); else categoryContent">
+  <div class="category-container">
+    <app-skeleton-loader type="settings-category"></app-skeleton-loader>
+    <div class="settings-list">
+      <app-skeleton-loader type="settings-item"></app-skeleton-loader>
+      <app-skeleton-loader type="settings-item"></app-skeleton-loader>
+      <app-skeleton-loader type="settings-item"></app-skeleton-loader>
+    </div>
+  </div>
+</ng-container>
+
+<ng-template #categoryContent>
+  <div class="category-container" *ngIf="category$ | async as category; else notFound">
+    <div class="category-header">
+      <h2 class="category-title">{{ category.displayName }}</h2>
+      <p class="category-description" *ngIf="category.description">
+        {{ category.description }}
+      </p>
+    </div>
+
+    <div class="settings-list">
+      <app-settings-renderer
+        *ngFor="let key of sortedKeys$ | async"
+        [categoryKey]="category.key!"
+        [settingKey]="key"
+      ></app-settings-renderer>
+    </div>
+  </div>
+
+  <ng-template #notFound>
+    <div class="category-container">
+      <div class="category-header">
+        <h2 class="category-title">Category not found</h2>
+      </div>
+    </div>
+  </ng-template>
+</ng-template>

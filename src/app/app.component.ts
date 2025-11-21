@@ -5,7 +5,8 @@ import { ToastContainerComponent } from './shared/components/toast-container.com
 import { LoadingScreenComponent } from './shared/components/loading-screen/loading-screen.component';
 import { KeyboardShortcutService } from './shared/services/keyboard-shortcut.service';
 import { AuthService } from './auth/services/auth.service';
-import { Observable } from 'rxjs';
+import { UserSettingsService } from './core/services/user-settings.service';
+import { Observable, combineLatest, map } from 'rxjs';
 
 @Component({
   selector: 'app-root',
@@ -16,18 +17,29 @@ import { Observable } from 'rxjs';
 export class AppComponent {
   title = 'taskflow-chat';
   
-  // Observable to track if app is still initializing
+  // Observable to track if app is still initializing (auth + settings)
   isAppInitializing$: Observable<boolean>;
 
   /**
    * Inject KeyboardShortcutService to ensure it's initialized at app startup
    * This activates the global keyboard event listener
+   * 
+   * Note: App initialization (auth + theme + settings) is now handled by AppInitService
+   * via APP_INITIALIZER, ensuring everything is ready before the app renders
    */
   constructor(
     private keyboardShortcutService: KeyboardShortcutService,
-    private authService: AuthService
+    private authService: AuthService,
+    private userSettingsService: UserSettingsService
   ) {
     // Service is now initialized and listening for keyboard events
-    this.isAppInitializing$ = this.authService.authInitializing$;
+    
+    // Combine auth and settings loading states for loading screen
+    this.isAppInitializing$ = combineLatest([
+      this.authService.authInitializing$,
+      this.userSettingsService.loading$
+    ]).pipe(
+      map(([authLoading, settingsLoading]) => authLoading || settingsLoading)
+    );
   }
 }

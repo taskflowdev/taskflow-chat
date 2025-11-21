@@ -11,7 +11,7 @@ import { Subscription } from 'rxjs';
     <div class="toast-container position-fixed bottom-0 end-0 p-3" style="z-index: 9999;">
       <div
         *ngFor="let toast of toasts; trackBy: trackByToastId"
-        class="toast show bg-black text-white"
+        class="toast show"
         [ngClass]="getToastClass(toast.type)"
         role="alert">
         <div class="toast-header">
@@ -19,7 +19,7 @@ import { Subscription } from 'rxjs';
           <strong class="me-auto">{{ toast.title || getDefaultTitle(toast.type) }}</strong>
           <button
             type="button"
-            class="btn-close btn-close-white"
+            class="btn-close"
             (click)="removeToast(toast.id)"
             aria-label="Close"></button>
         </div>
@@ -33,43 +33,61 @@ import { Subscription } from 'rxjs';
     .toast {
       min-width: 300px;
       margin-bottom: 0.5rem;
-      border: 0.2px solid rgba(255, 255, 255, 0.2);
+      background: var(--taskflow-color-toast-bg, #000);
+      color: var(--taskflow-color-toast-text, #fff);
+      border: 1px solid var(--taskflow-color-toast-border, rgba(255,255,255,0.2));
     }
 
     .toast-success {
-      --bs-toast-header-bg: rgba(34, 197, 94, 0.1);
-      --bs-toast-header-border-color: rgba(34, 197, 94, 0.2);
+      --bs-toast-header-bg: var(--taskflow-color-toast-header-bg-success, rgba(34,197,94,0.08));
+      --bs-toast-header-border-color: var(--taskflow-color-toast-header-border-success, rgba(34,197,94,0.16));
     }
 
     .toast-success .toast-header {
-      color: #16a34a;
+      color: var(--taskflow-color-toast-header-text-success, #16a34a);
     }
 
     .toast-error {
-      --bs-toast-header-bg: rgba(220, 38, 38, 0.1);
-      --bs-toast-header-border-color: rgba(220, 38, 38, 0.2);
+      --bs-toast-header-bg: var(--taskflow-color-toast-header-bg-error, rgba(220,38,38,0.08));
+      --bs-toast-header-border-color: var(--taskflow-color-toast-header-border-error, rgba(220,38,38,0.16));
     }
 
     .toast-error .toast-header {
-      color: #dc2626;
+      color: var(--taskflow-color-toast-header-text-error, #dc2626);
     }
 
     .toast-warning {
-      --bs-toast-header-bg: rgba(245, 158, 11, 0.1);
-      --bs-toast-header-border-color: rgba(245, 158, 11, 0.2);
+      --bs-toast-header-bg: var(--taskflow-color-toast-header-bg-warning, rgba(245,158,11,0.08));
+      --bs-toast-header-border-color: var(--taskflow-color-toast-header-border-warning, rgba(245,158,11,0.16));
     }
 
     .toast-warning .toast-header {
-      color: #f59e0b;
+      color: var(--taskflow-color-toast-header-text-warning, #f59e0b);
     }
 
     .toast-info {
-      --bs-toast-header-bg: rgba(59, 130, 246, 0.1);
-      --bs-toast-header-border-color: rgba(59, 130, 246, 0.2);
+      --bs-toast-header-bg: var(--taskflow-color-toast-header-bg-info, rgba(59,130,246,0.08));
+      --bs-toast-header-border-color: var(--taskflow-color-toast-header-border-info, rgba(59,130,246,0.16));
     }
 
     .toast-info .toast-header {
-      color: #3b82f6;
+      color: var(--taskflow-color-toast-header-text-info, #3b82f6);
+    }
+
+    /* Close button uses currentColor in Bootstrap's SVG; set it from theme tokens */
+    .toast .btn-close {
+      color: var(--taskflow-color-toast-close, rgba(255,255,255,0.9)) !important;
+      background: transparent;
+      border: none;
+      opacity: 0.95;
+      transition: background-color 0.15s ease, color 0.15s ease;
+    }
+
+    .toast .btn-close:hover,
+    .toast .btn-close:focus {
+      background: var(--taskflow-color-toast-close-hover, rgba(255,255,255,0.06)) !important;
+      border-radius: 6px;
+      color: var(--taskflow-color-toast-close, rgba(255,255,255,0.95)) !important;
     }
   `]
 })

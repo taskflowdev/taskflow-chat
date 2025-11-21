@@ -7,10 +7,12 @@ import { HttpClient } from '@angular/common/http';
 import { ApiConfiguration, ApiConfigurationParams } from './api-configuration';
 
 import { AuthService } from './services/auth.service';
+import { CatalogService } from './services/catalog.service';
 import { GroupsService } from './services/groups.service';
 import { HealthService } from './services/health.service';
 import { MessageMetadataService } from './services/message-metadata.service';
 import { MessagesService } from './services/messages.service';
+import { SettingsService } from './services/settings.service';
 
 /**
  * Module that provides all services and configuration.
@@ -21,10 +23,12 @@ import { MessagesService } from './services/messages.service';
   declarations: [],
   providers: [
     AuthService,
+    CatalogService,
     GroupsService,
     HealthService,
     MessageMetadataService,
     MessagesService,
+    SettingsService,
     ApiConfiguration
   ],
 })

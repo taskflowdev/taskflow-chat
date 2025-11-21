@@ -1,0 +1,42 @@
+.category-container {
+  max-width: 900px;
+  animation: fadeIn 0.2s cubic-bezier(0.2, 0, 0.38, 0.9);
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.category-header {
+  margin-bottom: 24px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--taskflow-color-border-subtle, #d0d7de);
+}
+
+.category-title {
+  font-size: 24px;
+  font-weight: 600;
+  margin-bottom: 8px;
+  color: var(--taskflow-color-text-primary, #24292f);
+  line-height: 32px;
+}
+
+.category-description {
+  font-size: 14px;
+  line-height: 20px;
+  color: var(--taskflow-color-text-secondary, #57606a);
+  margin: 0;
+}
+
+.settings-list {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}

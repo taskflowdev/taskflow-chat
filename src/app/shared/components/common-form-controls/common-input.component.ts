@@ -33,7 +33,7 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 
     .form-label {
       display: block;
-      color: white;
+      color: var(--taskflow-color-text-primary);
       font-size: 0.875rem;
       font-weight: 500;
       margin-bottom: 0.5rem;
@@ -41,10 +41,10 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 
     .form-control {
       width: 100%;
-      background: black;
-      border: 1px solid #444444;
+      background: var(--taskflow-color-common-input-bg);
+      border: 1px solid var(--taskflow-color-common-input-border) !important;
       border-radius: 6px;
-      color: white;
+      color: var(--taskflow-color-common-input-text);
       font-size: 0.875rem;
       padding: 0.75rem 0.875rem;
       transition: all 0.2s ease;
@@ -52,18 +52,18 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
     }
 
     .form-control:focus {
-      background: black;
-      border-color: #666666;
-      box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.1);
+      background: var(--taskflow-color-common-input-bg) !important;
+      border-color: var(--taskflow-color-common-input-border-focus) !important;
+      box-shadow: 0 0 0 2px var(--taskflow-color-common-input-box-shadow) !important;
       outline: none;
     }
 
     .form-control::placeholder {
-      color: #888888;
+      color: var(--taskflow-color-common-input-placeholder-text) !important;
     }
 
     .form-control.is-invalid {
-      border-color: #e74c3c;
+      border-color: var(--taskflow-color-common-input-invalid-border) !important;
     }
 
     .form-control:disabled {
@@ -73,7 +73,7 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 
     .error-message {
       min-height: 1rem;
-      color: #e74c3c;
+      color: var(--taskflow-color-common-input-invalid-error-msg-text);
       font-size: 0.85rem;
       margin-top: 0.375rem;
       display: block;
@@ -81,6 +81,7 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 
     @media (max-width: 640px) {
       .form-label {
+        color: var(--taskflow-color-text-primary);
         font-size: 0.813rem;
       }
 
@@ -113,8 +114,8 @@ export class CommonInputComponent implements ControlValueAccessor {
 
   value = '';
 
-  onChange: any = () => {};
-  onTouched: any = () => {};
+  onChange: any = () => { };
+  onTouched: any = () => { };
 
   writeValue(value: string): void {
     this.value = value || '';

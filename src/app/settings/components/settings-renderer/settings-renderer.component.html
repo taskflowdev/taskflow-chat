@@ -1,0 +1,29 @@
+<div class="setting-card">
+  <div class="setting-header">
+    <div class="setting-info">
+      <label class="setting-label">{{ settingKey.label }}</label>
+      <p class="setting-description" *ngIf="settingKey.description">
+        {{ settingKey.description }}
+      </p>
+    </div>
+    <button *ngIf="isModified" type="button" class="reset-btn" (click)="onResetToDefault()"
+      appCommonTooltip="Reset to default">
+      <i class="bi bi-arrow-counterclockwise"></i>
+    </button>
+  </div>
+
+  <div class="setting-control">
+    <!-- Boolean type - Toggle Switch -->
+    <app-toggle-control *ngIf="controlType === 'boolean'" [value]="currentValue" [disabled]="false"
+      (valueChange)="onValueChange($event)"></app-toggle-control>
+
+    <!-- Select type - Dropdown -->
+    <app-select-control *ngIf="controlType === 'select' && hasOptions" [value]="currentValue"
+      [options]="settingKey.options!" [disabled]="false" (valueChange)="onValueChange($event)"></app-select-control>
+
+    <!-- Radio type - Radio Group -->
+    <app-radio-control *ngIf="controlType === 'radio' && hasOptions" [value]="currentValue"
+      [options]="settingKey.options!" [name]="settingKey.key!" [disabled]="false"
+      (valueChange)="onValueChange($event)"></app-radio-control>
+  </div>
+</div>

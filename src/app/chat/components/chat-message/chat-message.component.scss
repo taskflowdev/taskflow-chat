@@ -1,4 +1,4 @@
-// Chat message component styles - black and white theme
+// Chat message component styles - uses theme tokens
 
 // System message styles - WhatsApp-like centered messages
 .system-message {
@@ -9,15 +9,14 @@
   padding: 0 1rem;
 
   .system-message-content {
-    background: rgba(255, 255, 255, 0.08);
-    color: #9ca3af;
-    font-size: 0.8rem;
+    background: var(--taskflow-color-chat-system-message-bg);
+    color: var(--taskflow-color-chat-system-message-text);
+    font-size: var(--taskflow-font-size-small);
     padding: 0.4rem 0.75rem;
     border-radius: 8px;
     text-align: center;
     max-width: 80%;
-    // line-height: 1.3;
-    // border: 1px solid rgba(255, 255, 255, 0.05);
+    transition: background 0.2s ease, color 0.2s ease;
   }
 }
 
@@ -28,12 +27,13 @@
 
   .message-bubble {
     max-width: 70%;
-    background: #333333;
-    border: 1px solid #444444;
+    background: var(--taskflow-color-chat-bubble-others-message-bg);
+    border: 1px solid var(--taskflow-color-chat-bubble-others-message-border);
     border-radius: 12px;
     padding: 0.55rem;
     position: relative;
     word-wrap: break-word;
+    transition: background 0.2s ease, border-color 0.2s ease;
 
     .message-header {
       display: flex;
@@ -43,22 +43,25 @@
 
       .sender-name {
         font-weight: 500;
-        font-size: 0.9rem;
-        color: white;
+        font-size: var(--taskflow-font-size-normal);
+        color: var(--taskflow-color-chat-bubble-others-message-text);
+        transition: color 0.2s ease;
       }
 
       .message-time {
-        font-size: 0.75rem;
-        color: #9ca3af;
+        font-size: var(--taskflow-font-size-xsmall);
+        color: var(--taskflow-color-chat-bubble-others-message-timestamp);
         margin-left: 0.8rem;
+        transition: color 0.2s ease;
       }
     }
 
     .message-content {
-      color: white;
-      font-size: 0.9rem;
-      line-height: 1.4;
+      color: var(--taskflow-color-chat-bubble-others-message-text);
+      font-size: var(--taskflow-font-size-normal);
+      line-height: var(--taskflow-font-line-height-base);
       white-space: pre-wrap;
+      transition: color 0.2s ease;
 
       // Media message styles (image, video, file)
       .media-message,
@@ -73,9 +76,10 @@
 
         .duration,
         .file-size {
-          color: #9ca3af;
-          font-size: 0.8rem;
+          color: var(--taskflow-color-text-tertiary);
+          font-size: var(--taskflow-font-size-small);
           margin-left: 0.25rem;
+          transition: color 0.2s ease;
         }
       }
 
@@ -86,14 +90,15 @@
           align-items: center;
           gap: 0.5rem;
           margin-bottom: 0.5rem;
-          color: #60a5fa;
+          color: var(--taskflow-color-accent);
+          transition: color 0.2s ease;
 
           i {
             font-size: 1.1rem;
           }
 
           strong {
-            font-size: 0.85rem;
+            font-size: var(--taskflow-font-size-small);
           }
         }
 
@@ -110,8 +115,9 @@
             align-items: center;
             gap: 0.5rem;
             padding: 0.25rem 0;
-            font-size: 0.85rem;
-            color: #d1d5db;
+            font-size: var(--taskflow-font-size-small);
+            color: var(--taskflow-color-text-secondary);
+            transition: color 0.2s ease;
 
             i {
               font-size: 0.7rem;
@@ -127,9 +133,10 @@
       margin-top: 0.25rem;
 
       .message-time {
-        font-size: 0.75rem;
-        color: #9ca3af;
+        font-size: var(--taskflow-font-size-xsmall);
+        color: var(--taskflow-color-chat-bubble-own-message-timestamp);
         margin-left: 0.8rem;
+        transition: color 0.2s ease;
       }
     }
   }
@@ -139,8 +146,8 @@
     justify-content: flex-start;
 
     .message-bubble {
-      background: #333333;
-      border: 1px solid #444444;
+      background: var(--taskflow-color-chat-bubble-others-message-bg);
+      border: 1px solid var(--taskflow-color-chat-bubble-others-message-border);
 
       &::before {
         content: "";
@@ -151,7 +158,9 @@
         height: 0;
         border-top: 8px solid transparent;
         border-bottom: 8px solid transparent;
-        border-right: 8px solid #444444;
+        border-right: 8px solid
+          var(--taskflow-color-chat-bubble-others-message-border);
+        transition: border-right-color 0.2s ease;
       }
 
       &::after {
@@ -163,7 +172,9 @@
         height: 0;
         border-top: 8px solid transparent;
         border-bottom: 8px solid transparent;
-        border-right: 8px solid #333333;
+        border-right: 8px solid
+          var(--taskflow-color-chat-bubble-others-message-bg);
+        transition: border-right-color 0.2s ease;
       }
     }
   }
@@ -173,35 +184,35 @@
     justify-content: flex-end;
 
     .message-bubble {
-      background: white;
-      color: black;
-      border: 1px solid #e5e5e5;
+      background: var(--taskflow-color-chat-bubble-own-message-bg);
+      color: var(--taskflow-color-chat-bubble-own-message-text);
+      border: 1px solid var(--taskflow-color-chat-bubble-own-message-border);
 
       .message-content {
-        color: black;
+        color: var(--taskflow-color-chat-bubble-own-message-text);
 
         // Override colors for own messages
         .media-message,
         .file-message {
           .duration,
           .file-size {
-            color: #666666;
+            color: var(--taskflow-color-text-tertiary);
           }
         }
 
         .poll-message {
           .poll-header {
-            color: #2563eb;
+            color: var(--taskflow-color-accent);
           }
 
           .poll-options .poll-option {
-            color: #4b5563;
+            color: var(--taskflow-color-text-secondary);
           }
         }
       }
 
       .message-footer .message-time {
-        color: #666666;
+        color: var(--taskflow-color-chat-bubble-own-message-timestamp);
       }
 
       &::before {
@@ -213,7 +224,9 @@
         height: 0;
         border-top: 8px solid transparent;
         border-bottom: 8px solid transparent;
-        border-left: 8px solid #e5e5e5;
+        border-left: 8px solid
+          var(--taskflow-color-chat-bubble-own-message-border);
+        transition: border-left-color 0.2s ease;
       }
 
       &::after {
@@ -225,7 +238,8 @@
         height: 0;
         border-top: 8px solid transparent;
         border-bottom: 8px solid transparent;
-        border-left: 8px solid white;
+        border-left: 8px solid var(--taskflow-color-chat-bubble-own-message-bg);
+        transition: border-left-color 0.2s ease;
       }
     }
   }
@@ -247,14 +261,15 @@
   align-items: center;
 
   .date-label {
-    background: rgba(255, 255, 255, 0.08);
-    color: #9ca3af;
+    background: var(--taskflow-color-chat-date-separator-bg);
+    color: var(--taskflow-color-chat-date-separator-text);
     padding: 0.35rem 0.75rem;
     border-radius: 8px;
-    font-size: 0.7rem;
-    border: 1px solid rgba(255, 255, 255, 0.05);
+    font-size: var(--taskflow-font-size-xsmall);
+    border: 1px solid var(--taskflow-color-border-subtle);
     font-weight: 500;
     letter-spacing: 0.3px;
+    transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease;
   }
 }
 

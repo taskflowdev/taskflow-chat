@@ -27,15 +27,17 @@ export class NavbarComponent implements OnInit, OnDestroy {
   // Configuration for nav links
   navLinks: NavLink[] = [
     {
-      path: '/chat',
+      path: '/chats',
       label: 'Chats',
       icon: 'bi-chat-quote',
+      activeIcon: 'bi-chat-quote-fill',
       title: 'Chats'
     },
     {
       path: '/settings',
       label: 'Settings',
       icon: 'bi-gear',
+      activeIcon: 'bi-gear-fill',
       title: 'Settings'
     }
   ];
@@ -45,11 +47,6 @@ export class NavbarComponent implements OnInit, OnDestroy {
     {
       label: 'Profile',
       icon: 'bi-person',
-      href: '#'
-    },
-    {
-      label: 'Settings',
-      icon: 'bi-gear',
       href: '#'
     },
     {
@@ -66,8 +63,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
     {
       label: 'Logout',
       icon: 'bi-box-arrow-right',
-      action: 'logout',
-      isBold: true
+      action: 'logout'
     }
   ];
 

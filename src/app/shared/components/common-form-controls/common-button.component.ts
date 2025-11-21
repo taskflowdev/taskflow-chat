@@ -57,33 +57,33 @@ export type ButtonSize = 'small' | 'medium' | 'large';
       width: 100%;
     }
 
-    /* Primary variant - white background */
+    /* Primary variant */
     .btn-primary {
-      background: white;
-      color: black;
-      border-color: transparent;
+      background: var(--taskflow-color-button-primary-bg);
+      color: var(--taskflow-color-button-primary-text);
+      border-color: var(--taskflow-color-button-primary-border, transparent);
     }
 
     .btn-primary:hover:not(:disabled) {
-      background: #f3f4f6;
+      background: var(--taskflow-color-button-primary-bg-hover);
     }
 
     .btn-primary:disabled {
-      background: #1a1a1a;
-      color: #999999;
+      background: var(--taskflow-color-button-primary-disabled-bg);
+      color: var(--taskflow-color-button-disabled-text);
       cursor: not-allowed;
     }
 
-    /* Secondary variant - transparent with border */
+    /* Secondary variant */
     .btn-secondary {
-      background: transparent;
-      border: 1px solid #444444;
-      color: white;
+      background: var(--taskflow-color-button-secondary-bg, transparent);
+      border: 1px solid var(--taskflow-color-button-secondary-border);
+      color: var(--taskflow-color-button-secondary-text);
     }
 
     .btn-secondary:hover:not(:disabled) {
-      background: #333333;
-      border-color: #555555;
+      background: var(--taskflow-color-button-secondary-bg-hover);
+      border-color: var(--taskflow-color-button-secondary-border-hover);
     }
 
     .btn-secondary:disabled {
@@ -93,51 +93,51 @@ export type ButtonSize = 'small' | 'medium' | 'large';
 
     /* Danger variant */
     .btn-danger {
-      background: #dc2626;
+      background: var(--taskflow-color-button-danger-bg);
       border: none;
-      color: white;
+      color: var(--taskflow-color-button-danger-text);
     }
 
     .btn-danger:hover:not(:disabled) {
-      background: #b91c1c;
+      background: var(--taskflow-color-button-danger-bg-hover);
     }
 
     .btn-danger:disabled {
-      background: #991b1b;
+      background: var(--taskflow-color-button-danger-bg-disabled);
       opacity: 0.5;
       cursor: not-allowed;
     }
 
     /* Success variant */
     .btn-success {
-      background: #16a34a;
+      background: var(--taskflow-color-button-success-bg);
       border: none;
-      color: white;
+      color: var(--taskflow-color-button-success-text);
     }
 
     .btn-success:hover:not(:disabled) {
-      background: #15803d;
+      background: var(--taskflow-color-button-success-bg-hover);
     }
 
     .btn-success:disabled {
-      background: #166534;
+      background: var(--taskflow-color-button-success-bg-disabled);
       opacity: 0.5;
       cursor: not-allowed;
     }
 
     /* Warning variant */
     .btn-warning {
-      background: #f59e0b;
+      background: var(--taskflow-color-button-warning-bg);
       border: none;
-      color: white;
+      color: var(--taskflow-color-button-warning-text);
     }
 
     .btn-warning:hover:not(:disabled) {
-      background: #d97706;
+      background: var(--taskflow-color-button-warning-bg-hover);
     }
 
     .btn-warning:disabled {
-      background: #b45309;
+      background: var(--taskflow-color-button-warning-bg-disabled);
       opacity: 0.5;
       cursor: not-allowed;
     }
@@ -155,7 +155,7 @@ export type ButtonSize = 'small' | 'medium' | 'large';
     .btn-danger,
     .btn-success,
     .btn-warning {
-      border-color: transparent;
+      border-color: var(--taskflow-color-button-variant-border, transparent);
     }
 
     /* Loading state */
