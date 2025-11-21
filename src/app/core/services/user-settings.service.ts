@@ -213,7 +213,7 @@ export class UserSettingsService {
   private applyThemeFromSettings(settings: EffectiveSettingsResponse | null): void {
     if (!settings || !settings.settings) {
       // No settings loaded, initialize with defaults
-      this.themeService.initialize('system', 'medium');
+      this.initializeDefaultTheme();
       return;
     }
 
@@ -226,5 +226,13 @@ export class UserSettingsService {
     // Initialize theme service with user preferences
     // This ensures theme is applied only once with correct values
     this.themeService.initialize(theme, fontSize);
+  }
+
+  /**
+   * Initialize theme with default values
+   * Used when no user settings are available or when settings fail to load
+   */
+  initializeDefaultTheme(): void {
+    this.themeService.initialize('system', 'medium');
   }
 }

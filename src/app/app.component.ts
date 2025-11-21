@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { ToastContainerComponent } from './shared/components/toast-container.component';
@@ -14,7 +14,7 @@ import { Observable, combineLatest, map } from 'rxjs';
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss'
 })
-export class AppComponent implements OnInit {
+export class AppComponent {
   title = 'taskflow-chat';
   
   // Observable to track if app is still initializing (auth + settings)
@@ -24,8 +24,8 @@ export class AppComponent implements OnInit {
    * Inject KeyboardShortcutService to ensure it's initialized at app startup
    * This activates the global keyboard event listener
    * 
-   * Inject UserSettingsService to load and apply user preferences
-   * This ensures theme and other settings are loaded before app renders
+   * Note: App initialization (auth + theme + settings) is now handled by AppInitService
+   * via APP_INITIALIZER, ensuring everything is ready before the app renders
    */
   constructor(
     private keyboardShortcutService: KeyboardShortcutService,
@@ -34,26 +34,12 @@ export class AppComponent implements OnInit {
   ) {
     // Service is now initialized and listening for keyboard events
     
-    // Combine auth and settings loading states
+    // Combine auth and settings loading states for loading screen
     this.isAppInitializing$ = combineLatest([
       this.authService.authInitializing$,
       this.userSettingsService.loading$
     ]).pipe(
       map(([authLoading, settingsLoading]) => authLoading || settingsLoading)
     );
-  }
-
-  ngOnInit(): void {
-    // Load user settings (which will initialize theme with user preferences)
-    // Only load if user is authenticated
-    const currentUser = this.authService.getCurrentUser();
-    if (currentUser) {
-      this.userSettingsService.loadUserSettings().subscribe({
-        error: (err) => {
-          console.error('Failed to load user settings on app init:', err);
-          // Even if settings fail to load, don't block the app
-        }
-      });
-    }
   }
 }

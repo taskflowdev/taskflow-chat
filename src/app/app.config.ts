@@ -7,10 +7,10 @@ import { routes } from './app.routes';
 import { provideClientHydration, withEventReplay } from '@angular/platform-browser';
 import { ApiConfiguration } from './api/api-configuration';
 import { AuthInterceptor } from './auth/interceptors/auth.interceptor';
-import { AuthService } from './auth/services/auth.service';
-import { appInitializerFactory } from './core/app-initializer';
 import { AppConfigService } from './core/services/app-config.service';
 import { appConfigInitializerFactory } from './core/config-initializer';
+import { AppInitService } from './core/services/app-init.service';
+import { appInitServiceFactory } from './core/app-init-service.factory';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -21,6 +21,7 @@ export const appConfig: ApplicationConfig = {
     provideHttpClient(withInterceptorsFromDi()),
     ApiConfiguration,
     AppConfigService,
+    AppInitService,
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
     {
       provide: APP_INITIALIZER,
@@ -30,8 +31,8 @@ export const appConfig: ApplicationConfig = {
     },
     {
       provide: APP_INITIALIZER,
-      useFactory: appInitializerFactory,
-      deps: [AuthService, PLATFORM_ID],
+      useFactory: appInitServiceFactory,
+      deps: [AppInitService],
       multi: true
     }
   ]
