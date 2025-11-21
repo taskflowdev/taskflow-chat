@@ -56,7 +56,7 @@ export class UserSettingsService implements OnDestroy {
 
   /**
    * Load effective user settings with caching support
-   * 
+   *
    * Strategy:
    * 1. Try to load from cache first (fast)
    * 2. If cache exists and is fresh, use it and start background refresh
@@ -72,16 +72,16 @@ export class UserSettingsService implements OnDestroy {
       console.log('Loading settings from cache');
       this.effectiveSettingsSubject.next(cachedSettings);
       this.applyThemeFromSettings(cachedSettings);
-      
+
       // Start background refresh to get fresh data
       this.startBackgroundRefresh();
-      
+
       return of(cachedSettings);
     }
 
     // No cache, fetch from API
     console.log('Loading settings from API');
-    this.loadingSubject.next(true);
+    // this.loadingSubject.next(true);
     return this.fetchSettingsFromAPI();
   }
 
@@ -95,19 +95,19 @@ export class UserSettingsService implements OnDestroy {
         if (settings) {
           // Cache the fresh settings
           this.settingsCacheService.setCachedSettings(settings);
-          
+
           // Update in-memory state
           this.effectiveSettingsSubject.next(settings);
           this.applyThemeFromSettings(settings);
-          
+
           // Start background refresh for future updates
           this.startBackgroundRefresh();
         }
-        this.loadingSubject.next(false);
+        // this.loadingSubject.next(false);
       }),
       catchError(err => {
         console.error('Failed to load user settings:', err);
-        this.loadingSubject.next(false);
+        // this.loadingSubject.next(false);
         return throwError(() => err);
       })
     );
@@ -133,17 +133,17 @@ export class UserSettingsService implements OnDestroy {
               const currentSettings = this.effectiveSettingsSubject.value;
               if (JSON.stringify(currentSettings) !== JSON.stringify(settings)) {
                 console.log('Background refresh: Settings changed, updating');
-                
+
                 // Cache the fresh settings
                 this.settingsCacheService.setCachedSettings(settings);
-                
+
                 // Update in-memory state
                 this.effectiveSettingsSubject.next(settings);
-                
+
                 // Re-apply theme if appearance settings changed
                 const currentAppearance = currentSettings?.settings?.['appearance'];
                 const newAppearance = settings.settings?.['appearance'];
-                
+
                 if (JSON.stringify(currentAppearance) !== JSON.stringify(newAppearance)) {
                   console.log('Background refresh: Appearance settings changed, re-applying theme');
                   this.applyThemeFromSettings(settings);
@@ -179,7 +179,7 @@ export class UserSettingsService implements OnDestroy {
    */
   refreshSettings(): Observable<EffectiveSettingsResponse | null> {
     console.log('Force refreshing settings');
-    this.loadingSubject.next(true);
+    // this.loadingSubject.next(true);
     return this.fetchSettingsFromAPI();
   }
 
@@ -280,7 +280,7 @@ export class UserSettingsService implements OnDestroy {
           if (currentSettings) {
             this.settingsCacheService.setCachedSettings(currentSettings);
           }
-          
+
           // Trigger background refresh to get any server-side computed values
           this.refreshSettings().subscribe({
             error: (err) => console.error('Failed to refresh after save:', err)
