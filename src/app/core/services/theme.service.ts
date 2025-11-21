@@ -173,6 +173,12 @@ export class ThemeService {
     const tokens = theme === 'dark' ? darkTheme as ThemeTokens : lightTheme as ThemeTokens;
     const typography = tokens.typography[fontSize];
 
+    // Defensive check: ensure typography exists for the given fontSize
+    if (!typography) {
+      console.warn(`Typography tokens not found for fontSize: ${fontSize}`);
+      return;
+    }
+
     // Build CSS string for all variables with taskflow- prefix
     const cssVariables: string[] = [];
 
@@ -185,6 +191,12 @@ export class ThemeService {
     Object.entries(typography).forEach(([key, value]) => {
       cssVariables.push(`  --taskflow-font-${this.camelToKebab(key)}: ${value};`);
     });
+
+    // Only apply if we have tokens to apply
+    if (cssVariables.length === 0) {
+      console.warn('No CSS variables to apply');
+      return;
+    }
 
     // Apply to stylesheet via requestAnimationFrame for batching
     requestAnimationFrame(() => {

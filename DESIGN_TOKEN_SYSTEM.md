@@ -221,8 +221,32 @@ initialize(theme?: ThemeMode, fontSize?: FontSize): void
 1. **requestAnimationFrame Batching**: All token applications batched to prevent layout thrashing
 2. **Instant Application**: No setTimeout delays, immediate CSS var updates
 3. **Zero Flicker**: Theme/typography changes apply in single frame
-4. **System Sync**: MediaQuery listener reacts instantly to OS changes
-5. **SSR Compatible**: Platform checks prevent server-side errors
+4. **Unified Token Application**: Color and typography tokens applied together to prevent overwrites
+5. **System Sync**: MediaQuery listener reacts instantly to OS changes
+6. **SSR Compatible**: Platform checks prevent server-side errors
+
+## Theme System Architecture
+
+### Token Application Flow
+
+The theme system ensures all tokens (colors + typography) are applied atomically:
+
+1. **User changes theme** → `applyTheme()` → `applyAllTokens(newTheme, currentFontSize)`
+2. **User changes font size** → `applyTypography()` → `applyAllTokens(currentTheme, newFontSize)`
+3. **App initializes** → `initialize()` → Both theme and typography set together
+4. **Settings load** → `applyThemeFromSettings()` → Both theme and typography applied
+
+### Key Fix (2024-11-21)
+
+**Problem**: When theme changed, color tokens would overwrite typography tokens, or vice versa, causing tokens to be lost.
+
+**Solution**: Created unified `applyAllTokens(theme, fontSize)` method that:
+- Takes both theme and fontSize parameters
+- Applies ALL 95 color tokens AND 13 typography tokens in a single update
+- Prevents any tokens from being overwritten during theme/font changes
+- Generates a single `:root { }` block with all CSS variables
+
+**Result**: Theme changes now properly update ALL tokens including light theme colors, ensuring the entire app reflects the selected theme instantly.
 
 ## Multi-Tenant Support
 
