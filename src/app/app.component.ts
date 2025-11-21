@@ -5,8 +5,8 @@ import { ToastContainerComponent } from './shared/components/toast-container.com
 import { LoadingScreenComponent } from './shared/components/loading-screen/loading-screen.component';
 import { KeyboardShortcutService } from './shared/services/keyboard-shortcut.service';
 import { AuthService } from './auth/services/auth.service';
-import { ThemeService } from './core/services/theme.service';
-import { Observable } from 'rxjs';
+import { UserSettingsService } from './core/services/user-settings.service';
+import { Observable, combineLatest, map } from 'rxjs';
 
 @Component({
   selector: 'app-root',
@@ -17,29 +17,43 @@ import { Observable } from 'rxjs';
 export class AppComponent implements OnInit {
   title = 'taskflow-chat';
   
-  // Observable to track if app is still initializing
+  // Observable to track if app is still initializing (auth + settings)
   isAppInitializing$: Observable<boolean>;
 
   /**
    * Inject KeyboardShortcutService to ensure it's initialized at app startup
    * This activates the global keyboard event listener
    * 
-   * Inject ThemeService to initialize theme tokens on app startup
-   * This ensures CSS custom properties are set before any component renders
+   * Inject UserSettingsService to load and apply user preferences
+   * This ensures theme and other settings are loaded before app renders
    */
   constructor(
     private keyboardShortcutService: KeyboardShortcutService,
     private authService: AuthService,
-    private themeService: ThemeService
+    private userSettingsService: UserSettingsService
   ) {
     // Service is now initialized and listening for keyboard events
-    this.isAppInitializing$ = this.authService.authInitializing$;
+    
+    // Combine auth and settings loading states
+    this.isAppInitializing$ = combineLatest([
+      this.authService.authInitializing$,
+      this.userSettingsService.loading$
+    ]).pipe(
+      map(([authLoading, settingsLoading]) => authLoading || settingsLoading)
+    );
   }
 
   ngOnInit(): void {
-    // Initialize theme with default values immediately
-    // This sets up CSS custom properties at :root before any content loads
-    // User settings will override these defaults when loaded
-    this.themeService.initialize('system', 'medium');
+    // Load user settings (which will initialize theme with user preferences)
+    // Only load if user is authenticated
+    const currentUser = this.authService.getCurrentUser();
+    if (currentUser) {
+      this.userSettingsService.loadUserSettings().subscribe({
+        error: (err) => {
+          console.error('Failed to load user settings on app init:', err);
+          // Even if settings fail to load, don't block the app
+        }
+      });
+    }
   }
 }

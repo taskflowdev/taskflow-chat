@@ -49,14 +49,22 @@ export class ThemeService {
   private mediaQuery?: MediaQueryList;
   private isBrowser: boolean;
   private styleElement?: HTMLStyleElement;
+  
+  // Track if theme has been explicitly initialized (prevents premature application)
+  private isInitialized = false;
+  
+  // Store bound event handler reference for proper cleanup
+  private systemThemeChangeHandler?: (e: MediaQueryListEvent) => void;
 
   constructor(@Inject(PLATFORM_ID) platformId: Object) {
     this.isBrowser = isPlatformBrowser(platformId);
 
     if (this.isBrowser) {
       this.mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
-      // Use addEventListener for modern browsers
-      this.mediaQuery.addEventListener('change', this.onSystemThemeChange.bind(this));
+      
+      // Create and store bound handler for proper cleanup
+      this.systemThemeChangeHandler = this.onSystemThemeChange.bind(this);
+      this.mediaQuery.addEventListener('change', this.systemThemeChangeHandler);
 
       // Create style element for theme variables
       this.createStyleElement();
@@ -91,7 +99,11 @@ export class ThemeService {
    */
   setTheme(mode: ThemeMode): void {
     this.currentThemeSubject.next(mode);
-    this.applyTheme(mode);
+    
+    // Only apply if initialized (prevents applying before settings load)
+    if (this.isInitialized) {
+      this.applyTheme(mode);
+    }
   }
 
   /**
@@ -100,7 +112,11 @@ export class ThemeService {
    */
   setFontSize(size: FontSize): void {
     this.currentFontSizeSubject.next(size);
-    this.applyTypography(size);
+    
+    // Only apply if initialized (prevents applying before settings load)
+    if (this.isInitialized) {
+      this.applyTypography(size);
+    }
   }
 
   /**
@@ -238,27 +254,47 @@ export class ThemeService {
 
   /**
    * Initialize theme and typography on app startup
-   * Called from main layout or app component
+   * Called after user settings are loaded to apply user preferences
+   * Falls back to defaults if no user preferences are available
    */
   initialize(initialTheme?: ThemeMode, initialFontSize?: FontSize): void {
     const theme = initialTheme || 'system';
     const fontSize = initialFontSize || 'medium';
 
-    this.setTheme(theme);
+    // Update subjects without applying (in case called before settings load)
+    this.currentThemeSubject.next(theme);
+    this.currentFontSizeSubject.next(fontSize);
 
+    // Mark as initialized and apply tokens
+    this.isInitialized = true;
+
+    // Apply both theme and font size together
+    const resolved = this.resolveTheme(theme);
+    this.resolvedThemeSubject.next(resolved);
+    this.applyAllTokens(resolved, fontSize);
+
+    // Set data attributes
     if (this.isBrowser) {
-      requestAnimationFrame(() => this.setFontSize(fontSize));
-    } else {
-      this.setFontSize(fontSize);
+      requestAnimationFrame(() => {
+        document.documentElement.setAttribute('data-theme', resolved);
+        document.documentElement.setAttribute('data-font-size', fontSize);
+      });
     }
+  }
+
+  /**
+   * Check if theme service has been initialized
+   */
+  isThemeInitialized(): boolean {
+    return this.isInitialized;
   }
 
   /**
    * Cleanup method (called on service destroy if needed)
    */
   ngOnDestroy(): void {
-    if (this.isBrowser && this.mediaQuery) {
-      this.mediaQuery.removeEventListener('change', this.onSystemThemeChange.bind(this));
+    if (this.isBrowser && this.mediaQuery && this.systemThemeChangeHandler) {
+      this.mediaQuery.removeEventListener('change', this.systemThemeChangeHandler);
     }
   }
 }

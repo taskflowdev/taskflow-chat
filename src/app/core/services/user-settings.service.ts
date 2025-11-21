@@ -208,23 +208,23 @@ export class UserSettingsService {
 
   /**
    * Apply theme and typography from loaded settings
+   * This is the single source of truth for applying user preferences
    */
   private applyThemeFromSettings(settings: EffectiveSettingsResponse | null): void {
     if (!settings || !settings.settings) {
+      // No settings loaded, initialize with defaults
+      this.themeService.initialize('system', 'medium');
       return;
     }
 
     const appearanceSettings = settings.settings['appearance'];
-    if (appearanceSettings) {
-      // Apply theme
-      if (appearanceSettings['theme']) {
-        this.themeService.setTheme(appearanceSettings['theme']);
-      }
-      
-      // Apply font size
-      if (appearanceSettings['fontSize']) {
-        this.themeService.setFontSize(appearanceSettings['fontSize']);
-      }
-    }
+    
+    // Extract theme and fontSize from settings, with fallbacks
+    const theme = (appearanceSettings?.['theme'] as any) || 'system';
+    const fontSize = (appearanceSettings?.['fontSize'] as any) || 'medium';
+    
+    // Initialize theme service with user preferences
+    // This ensures theme is applied only once with correct values
+    this.themeService.initialize(theme, fontSize);
   }
 }
