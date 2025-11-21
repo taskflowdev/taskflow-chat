@@ -341,7 +341,28 @@
     "buttonWarningBg": "#f59e0b",
     "buttonWarningBgHover": "#d97706",
     "buttonWarningBgDisabled": "#b45309",
-    "buttonVariantBorder": "transparent"
+    "buttonVariantBorder": "transparent",
+    "toastBg": "#0d1117",
+    "toastText": "#c9d1d9",
+    "toastBorder": "rgba(255,255,255,0.06)",
+
+    "toastHeaderBgSuccess": "rgba(34, 197, 94, 0.06)",
+    "toastHeaderBorderSuccess": "rgba(34, 197, 94, 0.14)",
+    "toastHeaderTextSuccess": "#16a34a",
+
+    "toastHeaderBgError": "rgba(220, 38, 38, 0.06)",
+    "toastHeaderBorderError": "rgba(220, 38, 38, 0.14)",
+    "toastHeaderTextError": "#ff7b72",
+
+    "toastHeaderBgWarning": "rgba(245, 158, 11, 0.06)",
+    "toastHeaderBorderWarning": "rgba(245, 158, 11, 0.14)",
+    "toastHeaderTextWarning": "#f59e0b",
+
+    "toastHeaderBgInfo": "rgba(59, 130, 246, 0.06)",
+    "toastHeaderBorderInfo": "rgba(59, 130, 246, 0.14)",
+    "toastHeaderTextInfo": "#58a6ff",
+    "toastCloseColor": "#9ca3af",
+    "toastCloseHoverBg": "rgba(255,255,255,0.04)"
   },
   "typography": {
     "small": {
