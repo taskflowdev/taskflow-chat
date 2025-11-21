@@ -3,6 +3,7 @@ import { isPlatformBrowser } from '@angular/common';
 import { BehaviorSubject, Observable } from 'rxjs';
 import lightTheme from '../../../theme/theme.light.json';
 import darkTheme from '../../../theme/theme.dark.json';
+import { camelToKebab } from '../utils/settings.utils';
 
 export type ThemeMode = 'light' | 'dark' | 'system';
 export type FontSize = 'small' | 'medium' | 'large';
@@ -50,13 +51,21 @@ export class ThemeService {
   private isBrowser: boolean;
   private styleElement?: HTMLStyleElement;
 
+  // Track if theme has been explicitly initialized (prevents premature application)
+  private isInitialized = false;
+
+  // Store bound event handler reference for proper cleanup
+  private systemThemeChangeHandler?: (e: MediaQueryListEvent) => void;
+
   constructor(@Inject(PLATFORM_ID) platformId: Object) {
     this.isBrowser = isPlatformBrowser(platformId);
 
     if (this.isBrowser) {
       this.mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
-      // Use addEventListener for modern browsers
-      this.mediaQuery.addEventListener('change', this.onSystemThemeChange.bind(this));
+
+      // Create and store bound handler for proper cleanup
+      this.systemThemeChangeHandler = this.onSystemThemeChange.bind(this);
+      this.mediaQuery.addEventListener('change', this.systemThemeChangeHandler);
 
       // Create style element for theme variables
       this.createStyleElement();
@@ -91,7 +100,11 @@ export class ThemeService {
    */
   setTheme(mode: ThemeMode): void {
     this.currentThemeSubject.next(mode);
-    this.applyTheme(mode);
+
+    // Only apply if initialized (prevents applying before settings load)
+    if (this.isInitialized) {
+      this.applyTheme(mode);
+    }
   }
 
   /**
@@ -100,7 +113,11 @@ export class ThemeService {
    */
   setFontSize(size: FontSize): void {
     this.currentFontSizeSubject.next(size);
-    this.applyTypography(size);
+
+    // Only apply if initialized (prevents applying before settings load)
+    if (this.isInitialized) {
+      this.applyTypography(size);
+    }
   }
 
   /**
@@ -136,22 +153,11 @@ export class ThemeService {
     const resolved = this.resolveTheme(mode);
     this.resolvedThemeSubject.next(resolved);
 
-    const tokens = resolved === 'dark' ? darkTheme as ThemeTokens : lightTheme as ThemeTokens;
+    // Apply all tokens (colors + typography) together
+    this.applyAllTokens(resolved, this.currentFontSizeSubject.value);
 
-    // Build CSS string for theme variables with taskflow- prefix
-    const cssVariables: string[] = [];
-
-    Object.entries(tokens.colors).forEach(([key, value]) => {
-      cssVariables.push(`  --taskflow-color-${this.camelToKebab(key)}: ${value};`);
-    });
-
-    // Apply to stylesheet via requestAnimationFrame for batching
+    // Set data attribute for CSS selectors
     requestAnimationFrame(() => {
-      if (this.styleElement) {
-        this.styleElement.textContent = `:root {\n${cssVariables.join('\n')}\n}`;
-      }
-
-      // Set data attribute for CSS selectors
       document.documentElement.setAttribute('data-theme', resolved);
     });
   }
@@ -164,35 +170,57 @@ export class ThemeService {
     if (!this.isBrowser || !this.styleElement) return;
 
     const resolved = this.getResolvedTheme();
-    const tokens = resolved === 'dark' ? darkTheme as ThemeTokens : lightTheme as ThemeTokens;
-    const typography = tokens.typography[size];
 
-    const typographyVariables: string[] = [];
-    Object.entries(typography).forEach(([key, value]) => {
-      typographyVariables.push(`  --taskflow-font-${this.camelToKebab(key)}: ${value};`);
+    // Apply all tokens (colors + typography) together
+    this.applyAllTokens(resolved, size);
+
+    // Set data attribute for CSS selectors
+    requestAnimationFrame(() => {
+      document.documentElement.setAttribute('data-font-size', size);
+    });
+  }
+
+  /**
+   * Apply all theme tokens (colors + typography) in a single update
+   * This prevents tokens from being overwritten when switching themes or font sizes
+   */
+  private applyAllTokens(theme: 'light' | 'dark', fontSize: FontSize): void {
+    if (!this.isBrowser || !this.styleElement) return;
+
+    const tokens = theme === 'dark' ? darkTheme as ThemeTokens : lightTheme as ThemeTokens;
+    const typography = tokens.typography[fontSize];
+
+    // Defensive check: ensure typography exists for the given fontSize
+    if (!typography) {
+      console.warn(`Typography tokens not found for fontSize: ${fontSize}`);
+      return;
+    }
+
+    // Build CSS string for all variables with taskflow- prefix
+    const cssVariables: string[] = [];
+
+    // Add color tokens
+    Object.entries(tokens.colors).forEach(([key, value]) => {
+      cssVariables.push(`  --taskflow-color-${camelToKebab(key)}: ${value};`);
     });
 
-    if (this.isBrowser) {
-      requestAnimationFrame(() => {
-        if (!this.styleElement) return;
+    // Add typography tokens
+    Object.entries(typography).forEach(([key, value]) => {
+      cssVariables.push(`  --taskflow-font-${camelToKebab(key)}: ${value};`);
+    });
 
-        // we DO NOT touch existing color vars block
-        const content = this.styleElement.textContent ?? '';
-
-        const colorBlock = content.match(/:root\s*\{([\s\S]*?)\}/)?.[1]?.trim() ?? ''; // safe
-
-        this.styleElement.textContent =
-          `:root {
-              ${colorBlock}
-              }
-
-              :root {
-              ${typographyVariables.join('\n')}
-              }`;
-
-        document.documentElement.setAttribute('data-font-size', size);
-      });
+    // Only apply if we have tokens to apply
+    if (cssVariables.length === 0) {
+      console.warn('No CSS variables to apply');
+      return;
     }
+
+    // Apply to stylesheet via requestAnimationFrame for batching
+    requestAnimationFrame(() => {
+      if (this.styleElement) {
+        this.styleElement.textContent = `:root {\n${cssVariables.join('\n')}\n}`;
+      }
+    });
   }
 
   /**
@@ -211,43 +239,57 @@ export class ThemeService {
   /**
    * Handle system theme changes
    * Reacts instantly to OS appearance changes
+   * Only applies when user has explicitly selected 'system' theme
    */
-  private onSystemThemeChange(e: MediaQueryListEvent): void {
+  private onSystemThemeChange(_e: MediaQueryListEvent): void {
     if (this.currentThemeSubject.value === 'system') {
       this.applyTheme('system');
     }
   }
 
   /**
-   * Convert camelCase to kebab-case
-   */
-  private camelToKebab(str: string): string {
-    return str.replace(/([a-z0-9])([A-Z])/g, '$1-$2').toLowerCase();
-  }
-
-  /**
    * Initialize theme and typography on app startup
-   * Called from main layout or app component
+   * Called after user settings are loaded to apply user preferences
+   * Falls back to defaults if no user preferences are available
    */
   initialize(initialTheme?: ThemeMode, initialFontSize?: FontSize): void {
     const theme = initialTheme || 'system';
     const fontSize = initialFontSize || 'medium';
 
-    this.setTheme(theme);
+    // Update subjects without applying (in case called before settings load)
+    this.currentThemeSubject.next(theme);
+    this.currentFontSizeSubject.next(fontSize);
 
+    // Mark as initialized and apply tokens
+    this.isInitialized = true;
+
+    // Apply both theme and font size together
+    const resolved = this.resolveTheme(theme);
+    this.resolvedThemeSubject.next(resolved);
+    this.applyAllTokens(resolved, fontSize);
+
+    // Set data attributes
     if (this.isBrowser) {
-      requestAnimationFrame(() => this.setFontSize(fontSize));
-    } else {
-      this.setFontSize(fontSize);
+      requestAnimationFrame(() => {
+        document.documentElement.setAttribute('data-theme', resolved);
+        document.documentElement.setAttribute('data-font-size', fontSize);
+      });
     }
+  }
+
+  /**
+   * Check if theme service has been initialized
+   */
+  isThemeInitialized(): boolean {
+    return this.isInitialized;
   }
 
   /**
    * Cleanup method (called on service destroy if needed)
    */
   ngOnDestroy(): void {
-    if (this.isBrowser && this.mediaQuery) {
-      this.mediaQuery.removeEventListener('change', this.onSystemThemeChange.bind(this));
+    if (this.isBrowser && this.mediaQuery && this.systemThemeChangeHandler) {
+      this.mediaQuery.removeEventListener('change', this.systemThemeChangeHandler);
     }
   }
 }

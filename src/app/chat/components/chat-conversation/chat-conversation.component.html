@@ -2,10 +2,8 @@
   <!-- Conversation Header -->
   <div class="conversation-header" *ngIf="conversation && !loading">
     <!-- Mobile Back Button -->
-    <button *ngIf="showBackButton" class="back-button"
-      [appCommonTooltip]="'Back to chats'"
-      [tooltipPosition]="TooltipPosition.BOTTOM"
-      (click)="onBackClick()">
+    <button *ngIf="showBackButton" class="back-button" [appCommonTooltip]="'Back to chats'"
+      [tooltipPosition]="TooltipPosition.BOTTOM" (click)="onBackClick()">
       <i class="bi bi-arrow-left"></i>
     </button>
 
@@ -17,12 +15,8 @@
     </div>
 
     <div class="conversation-actions">
-      <app-common-dropdown
-        [items]="dropdownItems"
-        buttonIcon="bi-three-dots-vertical"
-        buttonClass="action-btn"
-        [appCommonTooltip]="'More options'"
-        (itemSelected)="onDropdownItemSelected($event)">
+      <app-common-dropdown [items]="dropdownItems" buttonIcon="bi-three-dots-vertical" buttonClass="action-btn"
+        [appCommonTooltip]="'More options'" (itemSelected)="onDropdownItemSelected($event)">
       </app-common-dropdown>
     </div>
   </div>
@@ -41,9 +35,7 @@
   <div class="messages-container" #messagesContainer (scroll)="onMessagesScroll()">
     <!-- Loading Messages -->
     <div class="messages-list" *ngIf="loading">
-      <app-skeleton-loader
-        *ngFor="let item of messageSkeletonItems; trackBy: trackByMessageIndex"
-        type="message">
+      <app-skeleton-loader *ngFor="let item of messageSkeletonItems; trackBy: trackByMessageIndex" type="message">
       </app-skeleton-loader>
     </div>
 
@@ -56,15 +48,13 @@
         </div>
 
         <!-- Messages for this date -->
-        <app-chat-message *ngFor="let message of group.messages; trackBy: trackByMessageId"
-          [message]="message">
+        <app-chat-message *ngFor="let message of group.messages; trackBy: trackByMessageId" [message]="message">
         </app-chat-message>
       </ng-container>
     </div>
 
     <!-- Scroll to Bottom Button -->
-    <app-scroll-to-bottom-button
-      *ngIf="showScrollButton && conversation && !loading"
+    <app-scroll-to-bottom-button *ngIf="showScrollButton && conversation && !loading"
       (scrollClick)="onScrollToBottomClick()">
     </app-scroll-to-bottom-button>
   </div>
@@ -82,11 +72,8 @@
     </div>
 
     <div class="input-wrapper">
-      <textarea [(ngModel)]="newMessage" (keydown)="onKeyDown($event)"
-        placeholder="Type a message..."
-        class="message-input"
-        rows="1"
-        [disabled]="loading">
+      <textarea [(ngModel)]="newMessage" (keydown)="onKeyDown($event)" placeholder="Type a message..."
+        class="message-input" rows="1" [disabled]="loading">
       </textarea>
       <button class="btn send-btn" (click)="onSendMessage()" [disabled]="!newMessage.trim() || loading"
         [appCommonTooltip]="btnSendTooltip">
@@ -123,12 +110,7 @@
 </ng-template>
 
 <!-- Group Info Dialog -->
-<app-group-info-dialog
-  *ngIf="showGroupInfoDialog && conversation"
-  [groupId]="conversation.groupId"
-  [currentUserId]="currentUserId || ''"
-  [triggerDelete]="openGroupInfoForDeletion"
-  (closed)="onGroupInfoClosed()"
-  (updated)="onGroupInfoUpdated()"
-  (deleted)="onGroupDeleted($event)">
+<app-group-info-dialog *ngIf="showGroupInfoDialog && conversation" [groupId]="conversation.groupId"
+  [currentUserId]="currentUserId || ''" [triggerDelete]="openGroupInfoForDeletion" (closed)="onGroupInfoClosed()"
+  (updated)="onGroupInfoUpdated()" (deleted)="onGroupDeleted($event)">
 </app-group-info-dialog>

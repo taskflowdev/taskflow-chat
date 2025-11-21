@@ -6,6 +6,7 @@ export interface NavLink {
   path: string;
   label: string;
   icon: string;
+  activeIcon: string;
   title: string;
 }
 
@@ -25,7 +26,10 @@ export interface NavLink {
         class="nav-link"
         [class.active]="isActiveRoute(link.path)"
         [title]="link.title">
-        <i class="bi" [ngClass]="link.icon"></i>
+        <i
+          class="bi"
+          [ngClass]="isActiveRoute(link.path) ? link.activeIcon : link.icon">
+        </i>
         <span class="nav-text">{{ link.label }}</span>
       </a>
     </nav>

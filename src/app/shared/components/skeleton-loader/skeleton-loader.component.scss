@@ -5,9 +5,9 @@
 .skeleton {
   background: linear-gradient(
     90deg,
-    var(--taskflow-color-skeleton-base, #f0f0f0) 0%,
-    var(--taskflow-color-skeleton-highlight, #fafafa) 50%,
-    var(--taskflow-color-skeleton-base, #f0f0f0) 100%
+    var(--taskflow-color-skeleton-base) 0%,
+    var(--taskflow-color-skeleton-highlight) 50%,
+    var(--taskflow-color-skeleton-base) 100%
   );
   background-size: 200% 100%;
   animation: skeleton-shimmer 1.8s ease-in-out infinite;
@@ -43,7 +43,7 @@
   align-items: flex-start;
   gap: 0.75rem;
   padding: 0.75rem 1rem;
-  border-bottom: 1px solid var(--border-color, #3a3a3a);
+  border-bottom: 1px solid var(--taskflow-color-border, #3a3a3a);
 
   .skeleton-chat-content {
     flex: 1;
@@ -90,7 +90,7 @@
       max-width: 70%;
       padding: 0.75rem;
       border-radius: 1rem 1rem 1rem 0.25rem;
-      background: var(--skeleton-bubble-other, #2a2a2a);
+      background: var(--taskflow-color-skeleton-bubble-other, #2a2a2a);
 
       .skeleton-message-header {
         display: flex;
@@ -111,7 +111,7 @@
       max-width: 70%;
       padding: 0.75rem;
       border-radius: 1rem 1rem 0.25rem 1rem;
-      background: var(--skeleton-bubble-own, #2a2a2a);
+      background: var(--taskflow-color-skeleton-bubble-own, #2a2a2a);
 
       .skeleton-message-footer {
         display: flex;
@@ -163,7 +163,7 @@
 // Settings sidebar skeleton
 .skeleton-settings-sidebar {
   padding: 1.5rem 1rem;
-  
+
   .skeleton-sidebar-item {
     padding: 0.5rem 0.75rem;
     border-radius: 6px;
@@ -186,19 +186,19 @@
   border-radius: 6px;
   background-color: var(--taskflow-color-surface, #ffffff);
   margin-bottom: 16px;
-  
+
   &:last-child {
     margin-bottom: 0;
   }
-  
+
   .skeleton-item-header {
     margin-bottom: 16px;
   }
-  
+
   .skeleton-item-info {
     flex: 1;
   }
-  
+
   .skeleton-item-control {
     margin-top: 0;
   }
@@ -213,24 +213,5 @@
   }
 }
 
-/* Light theme colors */
-:root,
-[data-theme="light"],
-.light-theme {
-  --skeleton-base: #f0f0f0;
-  --skeleton-highlight: #fafafa;
-  --border-color: #d0d7de;
-  --skeleton-item-bg: transparent;
-}
-
-/* Dark theme specific styles */
-[data-theme="dark"],
-.dark-theme,
-body.dark {
-  --skeleton-base: #21262d;
-  --skeleton-highlight: #30363d;
-  --border-color: #30363d;
-  --skeleton-bubble-other: #161b22;
-  --skeleton-bubble-own: #0d419d;
-  --skeleton-item-bg: transparent;
-}
+/* Skeleton visuals are driven by centralized theme tokens (`--taskflow-color-*`).
+   Local fallback variables were removed to centralize colors in the theme JSON files. */

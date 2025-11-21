@@ -33,7 +33,7 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 
     .form-label {
       display: block;
-      color: white;
+      color: var(--taskflow-color-text-primary);
       font-size: 0.875rem;
       font-weight: 500;
       margin-bottom: 0.5rem;
@@ -81,6 +81,7 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 
     @media (max-width: 640px) {
       .form-label {
+        color: var(--taskflow-color-text-primary);
         font-size: 0.813rem;
       }
 

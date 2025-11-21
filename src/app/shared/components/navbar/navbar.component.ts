@@ -30,12 +30,14 @@ export class NavbarComponent implements OnInit, OnDestroy {
       path: '/chats',
       label: 'Chats',
       icon: 'bi-chat-quote',
+      activeIcon: 'bi-chat-quote-fill',
       title: 'Chats'
     },
     {
       path: '/settings',
       label: 'Settings',
       icon: 'bi-gear',
+      activeIcon: 'bi-gear-fill',
       title: 'Settings'
     }
   ];

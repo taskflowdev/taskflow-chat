@@ -14,9 +14,9 @@
   align-items: center;
   gap: 0.75rem;
   padding: 0.75rem;
-  border: 1px solid #333333;
+  border: 1px solid var(--taskflow-color-member-item-border);
   border-radius: 8px;
-  background: rgba(255, 255, 255, 0.02);
+  background: var(--taskflow-color-member-item-bg);
 }
 
 .skeleton-details {
@@ -44,12 +44,12 @@
 
 .empty-icon {
   font-size: 3rem;
-  color: #444444;
+  color: var(--taskflow-color-text-secondary);
   margin-bottom: 1rem;
 }
 
 .empty-message {
-  color: #9ca3af;
+  color: var(--taskflow-color-text-tertiary);
   font-size: 0.875rem;
   margin: 0;
 }
@@ -129,7 +129,7 @@
 
 /* scroll member list for many members */
 .member-list-scroll {
-  max-height: 400px;       /* or 60vh if you want dynamic height */
+  max-height: 400px; /* or 60vh if you want dynamic height */
   overflow-y: auto;
   display: flex;
   flex-direction: column;

@@ -23,7 +23,7 @@ import { CommonModule } from '@angular/common';
     .loading-screen {
       position: fixed;
       inset: 0;
-      background-color: #000;
+      background-color: var(--taskflow-color-loading-screen-bg, #000);
       display: flex;
       align-items: center;
       justify-content: center;
@@ -44,7 +44,7 @@ import { CommonModule } from '@angular/common';
 
     .app-logo {
       font-size: 80px;
-      color: #fff;
+      color: var(--taskflow-color-loading-logo, #fff);
       // filter: drop-shadow(0 0 20px rgba(255, 255, 255, 0.3));
     }
 
@@ -52,11 +52,11 @@ import { CommonModule } from '@angular/common';
     .loader {
       display: block;
       --height-of-loader: 4.5px;
-      --loader-color: #fff;
+      --loader-color: var(--taskflow-color-loading-loader, #fff);
       width: 120px;
       height: var(--height-of-loader);
       border-radius: 30px;
-      background-color: rgba(255, 255, 255, 0.1);
+      background-color: var(--taskflow-color-loading-loader-track, rgba(255,255,255,0.1));
       position: relative;
       overflow: hidden;
     }
