@@ -318,4 +318,15 @@ export class AuthService {
   setInitialized(): void {
     this.authInitializingSubject.next(false);
   }
+
+  /**
+   * Verify authentication with server by fetching user profile.
+   * This is used during app startup to verify the stored token is still valid.
+   * @returns Observable<boolean> indicating if authentication is valid
+   */
+  verifyAuthenticationWithServer(): Observable<boolean> {
+    return this.getUserProfile().pipe(
+      map(user => user !== null)
+    );
+  }
 }

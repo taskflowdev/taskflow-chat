@@ -1,9 +1,15 @@
 import { Injectable, Inject, PLATFORM_ID } from '@angular/core';
 import { CanActivate, Router } from '@angular/router';
-import { Observable, of, map, catchError, tap } from 'rxjs';
 import { isPlatformBrowser } from '@angular/common';
 import { AuthService } from '../services/auth.service';
 
+/**
+ * AuthGuard - Protects routes that require authentication
+ * 
+ * This guard is simplified because StartupService (via APP_INITIALIZER)
+ * already verified authentication and loaded user profile before any routes render.
+ * The guard just needs to check if user is authenticated.
+ */
 @Injectable({
   providedIn: 'root'
 })
@@ -15,35 +21,22 @@ export class AuthGuard implements CanActivate {
     @Inject(PLATFORM_ID) private platformId: Object
   ) {}
 
-  canActivate(): Observable<boolean> | boolean {
+  canActivate(): boolean {
     // During SSR, allow navigation and defer authentication to client-side
     if (!isPlatformBrowser(this.platformId)) {
       return true;
     }
 
-    // Client-side: perform actual authentication check
+    // Check if user is authenticated
+    // StartupService already verified this before routes render
     const token = this.authService.getToken();
-    if (!token) {
-      this.router.navigate(['/auth/login']);
-      return false;
-    }
-
-    // If we have user data in memory, allow access immediately
-    // The interceptor will handle 401 errors if the token is actually invalid
     const currentUser = this.authService.getCurrentUser();
-    if (currentUser) {
+    
+    if (token && currentUser) {
       return true;
     }
 
-    // Have token but no user data - try to restore from localStorage
-    // This happens on page refresh
-    const storedUser = this.authService.restoreUserFromStorage();
-    if (storedUser) {
-      return true;
-    }
-
-    // No stored user data, redirect to login
-    // Don't make HTTP calls here to avoid circular dependency
+    // Not authenticated, redirect to login
     this.router.navigate(['/auth/login']);
     return false;
   }

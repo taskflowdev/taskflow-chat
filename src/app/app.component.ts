@@ -24,7 +24,7 @@ export class AppComponent {
    * Inject KeyboardShortcutService to ensure it's initialized at app startup
    * This activates the global keyboard event listener
    * 
-   * Note: App initialization (auth + theme + settings) is now handled by AppInitService
+   * Note: App initialization (auth + theme + settings) is now handled by StartupService
    * via APP_INITIALIZER, ensuring everything is ready before the app renders
    */
   constructor(
@@ -41,5 +41,11 @@ export class AppComponent {
     ]).pipe(
       map(([authLoading, settingsLoading]) => authLoading || settingsLoading)
     );
+
+    // Hide the initial loader from index.html after Angular bootstrap
+    // We do this immediately since APP_INITIALIZER has already completed
+    if (typeof document !== 'undefined') {
+      document.body.classList.add('app-loaded');
+    }
   }
 }

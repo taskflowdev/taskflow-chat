@@ -12,9 +12,10 @@ import { CommonModule } from '@angular/common';
     <div class="loading-screen" role="status" aria-live="polite" aria-label="Loading application">
       <div class="loading-content">
         <div class="logo-container">
-          <i class="bi bi-chat-quote app-logo"></i>
+          <i class="bi bi-chat-quote"></i>
         </div>
         <div class="loader"></div>
+        <p class="loading-text">Preparing your workspace...</p>
         <span class="visually-hidden">Loading, please wait...</span>
       </div>
     </div>
@@ -36,6 +37,18 @@ import { CommonModule } from '@angular/common';
       flex-direction: column;
       align-items: center;
       gap: 2rem;
+      animation: fadeIn var(--taskflow-color-loading-fade-duration, 0.3s) ease-in-out;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
     }
 
     .logo-container {
@@ -70,7 +83,7 @@ import { CommonModule } from '@angular/common';
       width: 0%;
       height: 100%;
       border-radius: 30px;
-      animation: moving 1.2s ease-in-out infinite;
+      animation: moving var(--taskflow-color-loading-moving-duration, 1.2s) ease-in-out infinite;
     }
 
     @keyframes moving {
@@ -93,6 +106,25 @@ import { CommonModule } from '@angular/common';
         opacity: 0.8;
         transform: scale(0.98);
       }
+    }
+
+    .loading-text {
+      position: relative;
+      display: inline-block;
+      background: linear-gradient(90deg,
+        var(--taskflow-color-loading-gradient-start, rgba(255,255,255,0.4)),
+        var(--taskflow-color-loading-gradient-mid, rgba(255,255,255,1)),
+        var(--taskflow-color-loading-gradient-end, rgba(255,255,255,0.4))
+      );
+      background-size: 200% auto;
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      animation: shine var(--taskflow-color-loading-shine-duration, 2.5s) linear infinite;
+      font-size: 14px;
+      font-weight: 400;
+      margin: 0;
+      letter-spacing: 0.3px;
     }
 
     .visually-hidden {
