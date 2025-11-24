@@ -9,8 +9,8 @@ import { ApiConfiguration } from './api/api-configuration';
 import { AuthInterceptor } from './auth/interceptors/auth.interceptor';
 import { AppConfigService } from './core/services/app-config.service';
 import { appConfigInitializerFactory } from './core/config-initializer';
-import { AppInitService } from './core/services/app-init.service';
-import { appInitServiceFactory } from './core/app-init-service.factory';
+import { StartupService } from './core/services/startup.service';
+import { startupServiceFactory } from './core/startup-service.factory';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -21,7 +21,7 @@ export const appConfig: ApplicationConfig = {
     provideHttpClient(withInterceptorsFromDi()),
     ApiConfiguration,
     AppConfigService,
-    AppInitService,
+    StartupService,
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
     {
       provide: APP_INITIALIZER,
@@ -31,8 +31,8 @@ export const appConfig: ApplicationConfig = {
     },
     {
       provide: APP_INITIALIZER,
-      useFactory: appInitServiceFactory,
-      deps: [AppInitService],
+      useFactory: startupServiceFactory,
+      deps: [StartupService],
       multi: true
     }
   ]
