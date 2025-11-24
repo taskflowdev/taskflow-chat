@@ -6,8 +6,108 @@
   <base href="/">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="icon" sizes="32x32" href="images/taskflowchat-light.png" type="image/png">
+  <style>
+    /* Inline loading screen - shows immediately before Angular boots */
+    #initial-loader {
+      position: fixed;
+      inset: 0;
+      background-color: #000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 10000;
+      pointer-events: all;
+    }
+
+    #initial-loader .loading-content {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 2rem;
+      animation: fadeIn 0.3s ease-in-out;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    #initial-loader .app-logo {
+      font-size: 80px;
+      color: #fff;
+      font-family: 'bootstrap-icons';
+    }
+
+    #initial-loader .app-logo::before {
+      content: "\f268"; /* Bootstrap icon chat-quote */
+    }
+
+    #initial-loader .loader {
+      display: block;
+      width: 120px;
+      height: 4.5px;
+      border-radius: 30px;
+      background-color: rgba(255,255,255,0.1);
+      position: relative;
+      overflow: hidden;
+    }
+
+    #initial-loader .loader::before {
+      content: "";
+      position: absolute;
+      background: #fff;
+      top: 0;
+      left: 0;
+      width: 0%;
+      height: 100%;
+      border-radius: 30px;
+      animation: moving 1.2s ease-in-out infinite;
+    }
+
+    @keyframes moving {
+      50% {
+        width: 100%;
+      }
+      100% {
+        width: 0;
+        right: 0;
+        left: unset;
+      }
+    }
+
+    #initial-loader .loading-text {
+      color: rgba(255, 255, 255, 0.7);
+      font-size: 14px;
+      font-weight: 400;
+      margin: 0;
+      letter-spacing: 0.3px;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    }
+
+    /* Hide initial loader when Angular app is ready */
+    body.app-loaded #initial-loader {
+      display: none;
+    }
+  </style>
 </head>
 <body>
+  <!-- Initial loading screen - shows before Angular bootstrap -->
+  <div id="initial-loader">
+    <div class="loading-content">
+      <div class="logo-container">
+        <i class="app-logo"></i>
+      </div>
+      <div class="loader"></div>
+      <p class="loading-text">Preparing your workspace...</p>
+    </div>
+  </div>
+  
   <app-root></app-root>
 </body>
 </html>

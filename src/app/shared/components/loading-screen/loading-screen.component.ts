@@ -15,6 +15,7 @@ import { CommonModule } from '@angular/common';
           <i class="bi bi-chat-quote app-logo"></i>
         </div>
         <div class="loader"></div>
+        <p class="loading-text">Preparing your workspace...</p>
         <span class="visually-hidden">Loading, please wait...</span>
       </div>
     </div>
@@ -36,6 +37,18 @@ import { CommonModule } from '@angular/common';
       flex-direction: column;
       align-items: center;
       gap: 2rem;
+      animation: fadeIn 0.3s ease-in-out;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
     }
 
     .logo-container {
@@ -93,6 +106,14 @@ import { CommonModule } from '@angular/common';
         opacity: 0.8;
         transform: scale(0.98);
       }
+    }
+
+    .loading-text {
+      color: var(--taskflow-color-loading-text, rgba(255, 255, 255, 0.7));
+      font-size: 14px;
+      font-weight: 400;
+      margin: 0;
+      letter-spacing: 0.3px;
     }
 
     .visually-hidden {
