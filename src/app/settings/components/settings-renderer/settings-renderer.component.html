@@ -1,7 +1,10 @@
 <div class="setting-card">
   <div class="setting-header">
     <div class="setting-info">
-      <label class="setting-label">{{ settingKey.label }}</label>
+      <div class="setting-label-container">
+        <i [class]="'bi bi-' + getIconClass()" class="setting-icon"></i>
+        <label class="setting-label">{{ settingKey.label }}</label>
+      </div>
       <p class="setting-description" *ngIf="settingKey.description">
         {{ settingKey.description }}
       </p>
@@ -14,7 +17,7 @@
 
   <div class="setting-control">
     <!-- Boolean type - Toggle Switch -->
-    <app-toggle-control *ngIf="controlType === 'boolean'" [value]="currentValue" [disabled]="false"
+    <app-toggle-control *ngIf="controlType === 'toggle'" [value]="currentValue" [disabled]="false"
       (valueChange)="onValueChange($event)"></app-toggle-control>
 
     <!-- Select type - Dropdown -->

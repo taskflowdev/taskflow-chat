@@ -9,6 +9,11 @@
 export interface SettingOption {
 
   /**
+   * Bootstrap icon name for this option (e.g., "sun", "moon", "laptop")
+   */
+  icon?: string | null;
+
+  /**
    * Display label for this option
    */
   label?: string;

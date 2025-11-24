@@ -53,4 +53,11 @@ export class SettingsSidebarComponent {
     const currentCategory = urlSegments[urlSegments.length - 1];
     return currentCategory === categoryKey;
   }
+
+  getIconClass(category: CategoryWithKeys, isActive: boolean): string {
+    if (isActive && category.iconSelected) {
+      return 'bi-' + category.iconSelected;
+    }
+    return 'bi-' + (category.icon || 'box');
+  }
 }

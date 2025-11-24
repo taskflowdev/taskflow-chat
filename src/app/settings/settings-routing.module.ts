@@ -7,7 +7,7 @@ export const settingsRoutes: Routes = [
     path: '',
     component: SettingsLayoutComponent,
     children: [
-      { path: '', redirectTo: 'appearance', pathMatch: 'full' },
+      { path: '', redirectTo: 'accessibility', pathMatch: 'full' },
       { path: ':categoryKey', component: SettingsCategoryComponent }
     ]
   }

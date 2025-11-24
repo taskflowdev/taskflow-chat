@@ -8,9 +8,18 @@ import { CatalogEntryDto } from '../models/catalog-entry-dto';
  * Category with its keys
  */
 export interface CategoryWithKeys {
+  adminOnly?: boolean;
+  beta?: boolean;
+  deprecated?: boolean;
   description?: string | null;
   displayName?: string;
+  icon?: string | null;
+  iconColor?: string | null;
+  iconSelected?: string | null;
   key?: string;
   keys?: Array<CatalogEntryDto>;
+  markdownDescription?: string | null;
   order?: number;
+  sectionDivider?: boolean;
+  sidebarGroup?: string | null;
 }
