@@ -32,6 +32,8 @@
   transition: background-color 0.12s cubic-bezier(0.2, 0, 0.38, 0.9),
     color 0.12s cubic-bezier(0.2, 0, 0.38, 0.9);
   gap: 0.5rem;
+  align-items: center;
+  vertical-align: middle;
 
   &:hover:not(.active) {
     background-color: var(--taskflow-color-sidebar-hover);
@@ -84,8 +86,11 @@
 }
 
 .badge-beta {
-  background-color: var(--taskflow-color-badge-beta-bg, rgba(9, 105, 218, 0.08));
-  border: 1px solid var(--taskflow-color-badge-beta-border, rgba(9, 105, 218, 0.16));
+  background-color: var(
+    --taskflow-color-badge-beta-bg,
+    rgba(9, 105, 218, 0.08)
+  );
+  border: 1px solid
+    var(--taskflow-color-badge-beta-border, rgba(9, 105, 218, 0.16));
   color: var(--taskflow-color-badge-beta-text, #0969da);
 }
-

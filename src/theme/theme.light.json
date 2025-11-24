@@ -98,7 +98,7 @@
     "sidebarActiveBorder": "#0969da",
     "sidebarActiveText": "#000000",
     "sidebarIcon": "#57606a",
-    "sidebarIconActive": "#0969da",
+    "sidebarIconActive": "#000000",
 
     "userDropdownBg": "#ffffff",
     "userDropdownBorder": "#d0d7de",
@@ -378,11 +378,11 @@
     "toastCloseHoverBg": "#f3f4f6",
 
     "settingsIcon": "#57606a",
-    "settingsIconActive": "#0969da",
+    "settingsIconActive": "#000000",
 
-    "badgeBetaBg": "rgba(9, 105, 218, 0.08)",
-    "badgeBetaBorder": "rgba(9, 105, 218, 0.16)",
-    "badgeBetaText": "#0969da",
+    "badgeBetaBg": "#198754",
+    "badgeBetaBorder": "transparent",
+    "badgeBetaText": "#ffffff",
 
     "badgeNewBg": "rgba(26, 127, 55, 0.08)",
     "badgeNewBorder": "rgba(26, 127, 55, 0.16)",

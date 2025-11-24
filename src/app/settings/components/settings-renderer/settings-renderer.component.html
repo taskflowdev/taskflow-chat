@@ -17,7 +17,7 @@
 
   <div class="setting-control">
     <!-- Boolean type - Toggle Switch -->
-    <app-toggle-control *ngIf="controlType === 'boolean'" [value]="currentValue" [disabled]="false"
+    <app-toggle-control *ngIf="controlType === 'toggle'" [value]="currentValue" [disabled]="false"
       (valueChange)="onValueChange($event)"></app-toggle-control>
 
     <!-- Select type - Dropdown -->

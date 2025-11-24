@@ -30,19 +30,20 @@
 
 .setting-label-container {
   display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  margin-bottom: 4px;
+  flex-direction: column;
+  align-items: start;
+  text-align: left;
 }
 
 .setting-icon {
-  font-size: 1rem;
+  font-size: 1.8rem;
   color: var(--taskflow-color-settings-icon, #57606a);
+  margin-bottom: 0.2rem;
   flex-shrink: 0;
 }
 
 .setting-label {
-  font-size: 14px;
+  font-size: 16px;
   font-weight: 600;
   color: var(--taskflow-color-text-primary, #24292f);
   display: block;
@@ -51,8 +52,8 @@
 }
 
 .setting-description {
-  font-size: 12px;
-  line-height: 18px;
+  font-size: 14px;
+  line-height: 16px;
   color: var(--taskflow-color-text-secondary, #57606a);
   margin: 4px 0 0 0;
 }
@@ -90,7 +91,8 @@
   &:focus {
     outline: none;
     border-color: var(--taskflow-color-accent, #0969da);
-    box-shadow: 0 0 0 3px var(--taskflow-color-accent-subtle, rgba(9, 105, 218, 0.12));
+    box-shadow: 0 0 0 3px
+      var(--taskflow-color-accent-subtle, rgba(9, 105, 218, 0.12));
   }
 }
 
