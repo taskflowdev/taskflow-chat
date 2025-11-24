@@ -177,6 +177,12 @@
   padding: 0 0 16px 0;
   border-bottom: 1px solid var(--taskflow-color-border-subtle, #d0d7de);
   margin-bottom: 24px;
+
+  .skeleton-settings-category-info {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
 }
 
 // Settings item skeleton
@@ -189,6 +195,10 @@
 
   &:last-child {
     margin-bottom: 0;
+  }
+
+  .skeleton-item-header-icon {
+    // margin-bottom: 10px;
   }
 
   .skeleton-item-header {
