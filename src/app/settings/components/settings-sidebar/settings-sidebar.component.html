@@ -2,8 +2,14 @@
   <h3 class="sidebar-title">Settings</h3>
   <nav class="sidebar-nav">
     <a *ngFor="let category of sortedCategories$ | async" [routerLink]="['/settings', category.key]"
-      routerLinkActive="active" class="sidebar-link">
+      routerLinkActive="active" #rla="routerLinkActive" class="sidebar-link">
+      <i *ngIf="category.icon || category.iconSelected" 
+         [class]="'bi ' + getIconClass(category, rla.isActive)" 
+         class="sidebar-icon"></i>
+      <i *ngIf="!category.icon && !category.iconSelected" 
+         class="bi bi-box sidebar-icon"></i>
       <span class="category-name">{{ category.displayName }}</span>
+      <span *ngIf="category.beta" class="badge badge-beta">Beta</span>
     </a>
   </nav>
 </div>

@@ -31,6 +31,7 @@
   position: relative;
   transition: background-color 0.12s cubic-bezier(0.2, 0, 0.38, 0.9),
     color 0.12s cubic-bezier(0.2, 0, 0.38, 0.9);
+  gap: 0.5rem;
 
   &:hover:not(.active) {
     background-color: var(--taskflow-color-sidebar-hover);
@@ -41,6 +42,10 @@
     background-color: var(--taskflow-color-sidebar-active);
     color: var(--taskflow-color-sidebar-active-text);
     font-weight: 600;
+
+    .sidebar-icon {
+      color: var(--taskflow-color-sidebar-icon-active, #0969da);
+    }
 
     // &::before {
     //   content: "";
@@ -55,6 +60,32 @@
   }
 }
 
+.sidebar-icon {
+  font-size: 1rem;
+  color: var(--taskflow-color-sidebar-icon, #57606a);
+  flex-shrink: 0;
+  transition: color 0.12s cubic-bezier(0.2, 0, 0.38, 0.9);
+}
+
 .category-name {
   flex: 1;
 }
+
+.badge {
+  padding: 0.125rem 0.5rem;
+  font-size: 0.6875rem;
+  font-weight: 500;
+  line-height: 1.4;
+  border-radius: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  flex-shrink: 0;
+  white-space: nowrap;
+}
+
+.badge-beta {
+  background-color: var(--taskflow-color-badge-beta-bg, rgba(9, 105, 218, 0.08));
+  border: 1px solid var(--taskflow-color-badge-beta-border, rgba(9, 105, 218, 0.16));
+  color: var(--taskflow-color-badge-beta-text, #0969da);
+}
+
