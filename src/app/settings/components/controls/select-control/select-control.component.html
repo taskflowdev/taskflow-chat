@@ -1,7 +1,10 @@
 <div class="custom-dropdown" [class.disabled]="disabled">
   <button class="btn" [class.disabled]="disabled" type="button" [attr.aria-expanded]="isOpen" (click)="toggleDropdown()"
     (blur)="closeDropdown()">
-    <span class="dropdown-text">{{ selectedLabel }}</span>
+    <span class="dropdown-text">
+      <i *ngIf="selectedIcon" [class]="'bi bi-' + selectedIcon" class="option-icon"></i>
+      {{ selectedLabel }}
+    </span>
     <i class="bi bi-chevron-down dropdown-icon" [class.rotated]="isOpen"></i>
   </button>
 
@@ -9,7 +12,10 @@
     <li *ngFor="let option of options">
       <button class="dropdown-item" [class.active]="isSelected(option)" type="button"
         (mousedown)="selectOption(option)">
-        <span class="option-label">{{ option.label }}</span>
+        <span class="option-content">
+          <i *ngIf="option.icon" [class]="'bi bi-' + option.icon" class="option-icon"></i>
+          <span class="option-label">{{ option.label }}</span>
+        </span>
         <i *ngIf="isSelected(option)" class="bi bi-check-circle-fill check-icon"></i>
       </button>
     </li>

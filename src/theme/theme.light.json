@@ -97,6 +97,8 @@
     "sidebarActive": "#00000024",
     "sidebarActiveBorder": "#0969da",
     "sidebarActiveText": "#000000",
+    "sidebarIcon": "#57606a",
+    "sidebarIconActive": "#000000",
 
     "userDropdownBg": "#ffffff",
     "userDropdownBorder": "#d0d7de",
@@ -373,7 +375,22 @@
     "toastHeaderBorderInfo": "rgba(59, 130, 246, 0.16)",
     "toastHeaderTextInfo": "#3b82f6",
     "toastCloseColor": "#000000",
-    "toastCloseHoverBg": "#f3f4f6"
+    "toastCloseHoverBg": "#f3f4f6",
+
+    "settingsIcon": "#57606a",
+    "settingsIconActive": "#000000",
+
+    "badgeBetaBg": "#198754",
+    "badgeBetaBorder": "transparent",
+    "badgeBetaText": "#ffffff",
+
+    "badgeNewBg": "rgba(26, 127, 55, 0.08)",
+    "badgeNewBorder": "rgba(26, 127, 55, 0.16)",
+    "badgeNewText": "#1a7f37",
+
+    "badgeDeprecatedBg": "rgba(154, 103, 0, 0.08)",
+    "badgeDeprecatedBorder": "rgba(154, 103, 0, 0.16)",
+    "badgeDeprecatedText": "#9a6700"
   },
   "typography": {
     "small": {

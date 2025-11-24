@@ -93,4 +93,8 @@ export class SettingsRendererComponent implements OnInit, OnDestroy {
   get hasOptions(): boolean {
     return !!this.settingKey.options && this.settingKey.options.length > 0;
   }
+
+  getIconClass(): string {
+    return this.settingKey.icon || 'box';
+  }
 }
