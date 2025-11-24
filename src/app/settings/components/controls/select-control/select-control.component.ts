@@ -22,6 +22,11 @@ export class SelectControlComponent {
     return selected ? selected.label! : 'Select an option';
   }
 
+  get selectedIcon(): string | null {
+    const selected = this.options.find(opt => opt.value === this.value);
+    return selected?.icon || null;
+  }
+
   toggleDropdown(): void {
     if (!this.disabled) {
       this.isOpen = !this.isOpen;
