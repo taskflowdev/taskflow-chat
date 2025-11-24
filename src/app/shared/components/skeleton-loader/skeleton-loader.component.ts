@@ -89,28 +89,34 @@ export type SkeletonType = 'text' | 'circle' | 'rectangle' | 'chat-item' | 'mess
 
       <!-- Settings sidebar skeleton -->
       <div *ngSwitchCase="'settings-sidebar'" class="skeleton-settings-sidebar" [style.opacity]="fadeOpacity">
-        <div class="skeleton skeleton-text" style="width: 100px; height: 1.25rem; margin-bottom: 1.5rem;"></div>
+        <div class="skeleton skeleton-text" style="width: 120px; height: 1.75rem; margin-bottom: 1.5rem;"></div>
         <div class="skeleton-sidebar-item" style="margin-bottom: 0.25rem;">
-          <div class="skeleton skeleton-text" style="width: 85%; height: 0.875rem;"></div>
+          <div class="skeleton skeleton-text" style="width: 85%; height: 1.5rem;"></div>
         </div>
         <div class="skeleton-sidebar-item" style="margin-bottom: 0.25rem;">
-          <div class="skeleton skeleton-text" style="width: 75%; height: 0.875rem;"></div>
+          <div class="skeleton skeleton-text" style="width: 75%; height: 1.5rem;"></div>
         </div>
         <div class="skeleton-sidebar-item" style="margin-bottom: 0.25rem;">
-          <div class="skeleton skeleton-text" style="width: 80%; height: 0.875rem;"></div>
+          <div class="skeleton skeleton-text" style="width: 80%; height: 1.5rem;"></div>
         </div>
         <div class="skeleton-sidebar-item" style="margin-bottom: 0.25rem;">
-          <div class="skeleton skeleton-text" style="width: 70%; height: 0.875rem;"></div>
+          <div class="skeleton skeleton-text" style="width: 70%; height: 1.5rem;"></div>
         </div>
       </div>
 
       <!-- Settings category skeleton -->
       <div *ngSwitchCase="'settings-category'" class="skeleton-settings-category" [style.opacity]="fadeOpacity">
-        <div class="skeleton skeleton-text" style="width: 200px; height: 1.75rem; margin-bottom: 2rem;"></div>
+        <div class="skeleton-settings-category-info">
+          <div class="skeleton skeleton-text" style="width: 200px; height: 1.75rem; margin-bottom: 0.2rem;"></div>
+          <div class="skeleton skeleton-text" style="width: 90%; height: 1rem; margin-bottom: 0.5rem;"></div>
+        </div>
       </div>
 
       <!-- Settings item skeleton -->
       <div *ngSwitchCase="'settings-item'" class="skeleton-settings-item" [style.opacity]="fadeOpacity">
+        <div class="skeleton-item-header-icon">
+            <div class="skeleton skeleton-text" style="width: 50px; height: 50px; margin-bottom: 0.5rem;"></div>
+        </div>
         <div class="skeleton-item-header">
           <div class="skeleton-item-info">
             <div class="skeleton skeleton-text" style="width: 150px; height: 1rem; margin-bottom: 0.5rem;"></div>
