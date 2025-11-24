@@ -2,11 +2,7 @@
   <div class="setting-header">
     <div class="setting-info">
       <div class="setting-label-container">
-        <i *ngIf="settingKey.icon" 
-           [class]="'bi bi-' + settingKey.icon" 
-           class="setting-icon"></i>
-        <i *ngIf="!settingKey.icon" 
-           class="bi bi-box setting-icon"></i>
+        <i [class]="'bi bi-' + getIconClass()" class="setting-icon"></i>
         <label class="setting-label">{{ settingKey.label }}</label>
       </div>
       <p class="setting-description" *ngIf="settingKey.description">
