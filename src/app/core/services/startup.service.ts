@@ -120,8 +120,6 @@ export class StartupService {
    * Returns true if authenticated, false otherwise
    */
   private verifyAuthenticationAndLoadProfile(): Observable<boolean> {
-    // Use the private getUserProfile method via the auth service's public API
-    // We'll call the API service directly to get /me
     return this.authService.verifyAuthenticationWithServer().pipe(
       map((authenticated) => {
         if (authenticated) {

@@ -37,7 +37,7 @@ import { CommonModule } from '@angular/common';
       flex-direction: column;
       align-items: center;
       gap: 2rem;
-      animation: fadeIn 0.3s ease-in-out;
+      animation: fadeIn var(--taskflow-loading-fade-duration, 0.3s) ease-in-out;
     }
 
     @keyframes fadeIn {
