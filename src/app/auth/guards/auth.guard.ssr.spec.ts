@@ -11,7 +11,7 @@ describe('AuthGuard SSR Fix', () => {
   let router: jasmine.SpyObj<Router>;
 
   beforeEach(() => {
-    const authServiceSpy = jasmine.createSpyObj('AuthService', ['getToken', 'getCurrentUser', 'verifyAuthentication']);
+    const authServiceSpy = jasmine.createSpyObj('AuthService', ['getToken', 'getCurrentUser']);
     const routerSpy = jasmine.createSpyObj('Router', ['navigate']);
 
     TestBed.configureTestingModule({
@@ -42,7 +42,7 @@ describe('AuthGuard Client-side', () => {
   let router: jasmine.SpyObj<Router>;
 
   beforeEach(() => {
-    const authServiceSpy = jasmine.createSpyObj('AuthService', ['getToken', 'getCurrentUser', 'verifyAuthentication']);
+    const authServiceSpy = jasmine.createSpyObj('AuthService', ['getToken', 'getCurrentUser']);
     const routerSpy = jasmine.createSpyObj('Router', ['navigate']);
 
     TestBed.configureTestingModule({
@@ -61,36 +61,33 @@ describe('AuthGuard Client-side', () => {
 
   it('should redirect to login when no token is present', () => {
     authService.getToken.and.returnValue(null);
+    authService.getCurrentUser.and.returnValue(null);
     
     const result = guard.canActivate();
     expect(result).toBe(false);
     expect(router.navigate).toHaveBeenCalledWith(['/auth/login']);
   });
 
-  it('should allow access when user data exists', () => {
+  it('should redirect to login when token exists but no user data', () => {
     authService.getToken.and.returnValue('valid-token');
-    authService.getCurrentUser.and.returnValue({ id: '1', userName: 'test', email: 'test@test.com', fullName: 'Test User' });
+    authService.getCurrentUser.and.returnValue(null);
+    
+    const result = guard.canActivate();
+    expect(result).toBe(false);
+    expect(router.navigate).toHaveBeenCalledWith(['/auth/login']);
+  });
+
+  it('should allow access when token and user data both exist', () => {
+    authService.getToken.and.returnValue('valid-token');
+    authService.getCurrentUser.and.returnValue({ 
+      id: '1', 
+      userName: 'test', 
+      email: 'test@test.com', 
+      fullName: 'Test User' 
+    });
     
     const result = guard.canActivate();
     expect(result).toBe(true);
     expect(router.navigate).not.toHaveBeenCalled();
-  });
-
-  it('should verify authentication when token exists but no user data', (done) => {
-    authService.getToken.and.returnValue('valid-token');
-    authService.getCurrentUser.and.returnValue(null);
-    authService.verifyAuthentication.and.returnValue(of(true));
-    
-    const result = guard.canActivate();
-    if (typeof result === 'boolean') {
-      fail('Expected Observable, got boolean');
-      return;
-    }
-    
-    result.subscribe((canActivate: boolean) => {
-      expect(canActivate).toBe(true);
-      expect(router.navigate).not.toHaveBeenCalled();
-      done();
-    });
   });
 });

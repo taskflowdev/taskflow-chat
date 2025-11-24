@@ -13,8 +13,7 @@ describe('GuestGuard', () => {
   beforeEach(() => {
     const authServiceSpy = jasmine.createSpyObj('AuthService', [
       'getToken',
-      'getCurrentUser',
-      'verifyAuthentication'
+      'getCurrentUser'
     ]);
     const routerSpy = jasmine.createSpyObj('Router', ['navigate']);
 
@@ -36,19 +35,27 @@ describe('GuestGuard', () => {
     expect(guard).toBeTruthy();
   });
 
-  it('should allow access when user is not authenticated', (done) => {
+  it('should allow access when user is not authenticated (no token)', () => {
     authService.getToken.and.returnValue(null);
+    authService.getCurrentUser.and.returnValue(null);
     
-    const result$ = guard.canActivate();
+    const result = guard.canActivate();
     
-    result$.subscribe(result => {
-      expect(result).toBe(true);
-      expect(router.navigate).not.toHaveBeenCalled();
-      done();
-    });
+    expect(result).toBe(true);
+    expect(router.navigate).not.toHaveBeenCalled();
   });
 
-  it('should redirect to /chats when user is authenticated with token and user data', (done) => {
+  it('should allow access when user has token but no user data', () => {
+    authService.getToken.and.returnValue('fake-token');
+    authService.getCurrentUser.and.returnValue(null);
+    
+    const result = guard.canActivate();
+    
+    expect(result).toBe(true);
+    expect(router.navigate).not.toHaveBeenCalled();
+  });
+
+  it('should redirect to /chats when user is fully authenticated', () => {
     authService.getToken.and.returnValue('fake-token');
     authService.getCurrentUser.and.returnValue({ 
       id: '1', 
@@ -57,44 +64,9 @@ describe('GuestGuard', () => {
       fullName: 'Test User'
     });
     
-    const result$ = guard.canActivate();
+    const result = guard.canActivate();
     
-    result$.subscribe(result => {
-      expect(result).toBe(false);
-      expect(router.navigate).toHaveBeenCalledWith(['/chats'], { replaceUrl: true });
-      done();
-    });
-  });
-
-  it('should verify authentication when token exists but no user data', (done) => {
-    authService.getToken.and.returnValue('fake-token');
-    authService.getCurrentUser.and.returnValue(null);
-    authService.verifyAuthentication.and.returnValue(of(true));
-    
-    const result$ = guard.canActivate();
-    
-    if (typeof result$ === 'object') {
-      result$.subscribe(result => {
-        expect(result).toBe(false);
-        expect(router.navigate).toHaveBeenCalledWith(['/chats'], { replaceUrl: true });
-        done();
-      });
-    }
-  });
-
-  it('should allow access when verification fails', (done) => {
-    authService.getToken.and.returnValue('fake-token');
-    authService.getCurrentUser.and.returnValue(null);
-    authService.verifyAuthentication.and.returnValue(of(false));
-    
-    const result$ = guard.canActivate();
-    
-    if (typeof result$ === 'object') {
-      result$.subscribe(result => {
-        expect(result).toBe(true);
-        expect(router.navigate).not.toHaveBeenCalled();
-        done();
-      });
-    }
+    expect(result).toBe(false);
+    expect(router.navigate).toHaveBeenCalledWith(['/chats'], { replaceUrl: true });
   });
 });
