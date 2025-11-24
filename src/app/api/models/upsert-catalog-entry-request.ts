@@ -10,16 +10,28 @@ import { SettingValidation } from '../models/setting-validation';
  * Request to create or update a catalog entry
  */
 export interface UpsertCatalogEntryRequest {
+  allowReset?: boolean;
   category?: string;
   default?: any | null;
   description?: string | null;
+  disabled?: boolean;
+  disabledReason?: string | null;
+  group?: string | null;
   i18nKey?: string | null;
+  icon?: string | null;
+  iconColor?: string | null;
+  iconSelected?: string | null;
   immutable?: boolean;
+  infoMessage?: string | null;
   key?: string;
   label?: string;
+  learnMoreUrl?: string | null;
+  markdownDescription?: string | null;
   options?: Array<SettingOption> | null;
   required?: boolean;
   sensitive?: boolean;
+  summary?: string | null;
+  tags?: Array<string> | null;
   type?: string;
 
   /**
@@ -32,4 +44,5 @@ export interface UpsertCatalogEntryRequest {
    */
   validation?: SettingValidation | null;
   version?: number;
+  warningMessage?: string | null;
 }
