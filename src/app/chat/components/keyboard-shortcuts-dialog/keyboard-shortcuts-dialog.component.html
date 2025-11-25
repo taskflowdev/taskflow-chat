@@ -32,20 +32,20 @@
         </div>
       </div>
 
-      <!-- Footer -->
-      <div class="dialog-footer">
-        <div class="footer-hint">
-          <i class="bi bi-info-circle"></i>
-          Press <span class="shortcut-key-dialog-footer">Shift + ?</span> anytime to view the keyboard shortcuts.
-        </div>
-      </div>
-
       <!-- Disabled overlay -->
       <div *ngIf="!shortcutsEnabled" class="disabled-overlay">
         <div class="disabled-message">
           <i class="bi bi-keyboard-fill"></i>
-          <span>Keyboard shortcuts are disabled. Enable them from Settings → Accessibility.</span>
+          <span>Keyboard shortcuts are disabled<br />Enable them from Settings → Accessibility</span>
         </div>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="dialog-footer" [class.disabled]="!shortcutsEnabled">
+      <div class="footer-hint">
+        <i class="bi bi-info-circle"></i>
+        Press <span class="shortcut-key-dialog-footer">Shift + ?</span> anytime to view the keyboard shortcuts.
       </div>
     </div>
   </div>
