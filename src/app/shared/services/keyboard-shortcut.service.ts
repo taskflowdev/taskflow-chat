@@ -142,13 +142,15 @@ export class KeyboardShortcutService implements OnDestroy {
         if (!accessibilitySettings) {
           return true; // Default to enabled if category doesn't exist
         }
-        const enabled = accessibilitySettings[KeyboardShortcutService.SETTINGS_KEY];
+        // Check both key formats for compatibility (with and without category prefix)
+        const enabledWithPrefix = accessibilitySettings[KeyboardShortcutService.SETTINGS_KEY];
+        const enabledWithoutPrefix = accessibilitySettings['enableKeyboardShortcuts'];
+        const enabled = enabledWithPrefix ?? enabledWithoutPrefix;
         // Default to true if setting is undefined, otherwise use the setting value
         return enabled !== false;
       }),
       distinctUntilChanged()
     ).subscribe(enabled => {
-      console.log('[KeyboardShortcut] Shortcuts enabled:', enabled);
       this.shortcutsEnabledSubject.next(enabled);
     });
   }

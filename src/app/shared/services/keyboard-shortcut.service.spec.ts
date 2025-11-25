@@ -32,6 +32,21 @@ describe('KeyboardShortcutService', () => {
     };
   }
 
+  function createSettingsResponseWithSimpleKey(
+    enableKeyboardShortcuts: boolean | undefined
+  ): EffectiveSettingsResponse | null {
+    if (enableKeyboardShortcuts === undefined) {
+      return null;
+    }
+    return {
+      settings: {
+        accessibility: {
+          'enableKeyboardShortcuts': enableKeyboardShortcuts
+        }
+      }
+    };
+  }
+
   beforeEach(() => {
     effectiveSettingsSubject = new BehaviorSubject<EffectiveSettingsResponse | null>(null);
 
@@ -167,6 +182,20 @@ describe('KeyboardShortcutService', () => {
       tick();
 
       expect(currentState).toBe(true);
+    }));
+
+    it('should work with simple key format (without category prefix)', fakeAsync(() => {
+      let currentState: boolean | undefined;
+      service.shortcutsEnabled$.subscribe(enabled => {
+        currentState = enabled;
+      });
+
+      // Use the simple key format
+      effectiveSettingsSubject.next(createSettingsResponseWithSimpleKey(false));
+      tick();
+
+      expect(currentState).toBe(false);
+      expect(service.areShortcutsEnabled()).toBe(false);
     }));
   });
 
