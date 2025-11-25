@@ -79,7 +79,7 @@ export class KeyboardShortcutService implements OnDestroy {
    * @deprecated Use ShortcutHandlerService.actionRequested$ instead
    */
   private readonly shortcutTriggered = new Subject<string>();
-  
+
   /**
    * Observable stream of triggered shortcuts
    * @deprecated Use ShortcutHandlerService.actionRequested$ instead
@@ -112,7 +112,7 @@ export class KeyboardShortcutService implements OnDestroy {
    * Settings category and key for keyboard shortcuts setting
    */
   private static readonly SETTINGS_CATEGORY = 'accessibility';
-  private static readonly SETTINGS_KEY = 'accessibility.enableKeyboardShortcuts';
+  private static readonly SETTINGS_KEY = 'accessibility.keyboard.shortcuts';
 
   constructor(
     @Inject(PLATFORM_ID) private platformId: Object,
@@ -204,10 +204,10 @@ export class KeyboardShortcutService implements OnDestroy {
 
       // Create binding from event
       const binding = this.createBindingFromEvent(event);
-      
+
       // Find matching shortcut from registry using current context
       const shortcut = this.registryService.findMatchingShortcut(binding, this.currentContext);
-      
+
       // Debug logging (can be enabled/disabled)
       if (shortcut) {
         console.log('[KeyboardShortcut] Match found:', {
@@ -249,8 +249,8 @@ export class KeyboardShortcutService implements OnDestroy {
     }
 
     return tagName === 'input' ||
-           tagName === 'textarea' ||
-           target.isContentEditable;
+      tagName === 'textarea' ||
+      target.isContentEditable;
   }
 
   /**
@@ -259,12 +259,12 @@ export class KeyboardShortcutService implements OnDestroy {
   private createBindingFromEvent(event: KeyboardEvent): ShortcutKeyBinding {
     // Normalize the key to lowercase for consistent matching
     let key = event.key;
-    
+
     // For letter keys with modifiers, use lowercase
     if (key.length === 1 && (event.ctrlKey || event.altKey || event.metaKey)) {
       key = key.toLowerCase();
     }
-    
+
     return {
       key: key,
       ctrl: event.ctrlKey,
@@ -281,7 +281,7 @@ export class KeyboardShortcutService implements OnDestroy {
   private triggerAction(action: ShortcutActionTypes): void {
     // Emit on legacy observable for backward compatibility
     this.shortcutTriggered.next(action);
-    
+
     // Execute through handler service (new architecture)
     this.handlerService.executeAction(action, this.currentContext);
   }
