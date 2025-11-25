@@ -13,25 +13,36 @@
       </button>
     </div>
 
-    <!-- Content -->
-    <div class="dialog-content">
-      <div class="shortcuts-grid">
-        <div *ngFor="let category of categories" class="shortcut-category">
-          <h3 class="category-title">{{ category.name }}</h3>
-          <div class="shortcuts-list">
-            <div *ngFor="let shortcut of category.shortcuts" class="shortcut-item">
-              <span class="shortcut-description">{{ shortcut.description }}</span>
-              <div class="shortcut-keys">
-                <span class="shortcut-key">{{ shortcut.keys }}</span>
+    <!-- Content wrapper with disabled state -->
+    <div class="dialog-body" [class.disabled]="!shortcutsEnabled">
+      <!-- Content -->
+      <div class="dialog-content">
+        <div class="shortcuts-grid">
+          <div *ngFor="let category of categories" class="shortcut-category">
+            <h3 class="category-title">{{ category.name }}</h3>
+            <div class="shortcuts-list">
+              <div *ngFor="let shortcut of category.shortcuts" class="shortcut-item">
+                <span class="shortcut-description">{{ shortcut.description }}</span>
+                <div class="shortcut-keys">
+                  <span class="shortcut-key">{{ shortcut.keys }}</span>
+                </div>
               </div>
             </div>
           </div>
         </div>
       </div>
+
+      <!-- Disabled overlay -->
+      <div *ngIf="!shortcutsEnabled" class="disabled-overlay">
+        <div class="disabled-message">
+          <i class="bi bi-keyboard-fill"></i>
+          <span>Keyboard shortcuts are disabled<br />Enable them from Settings → Accessibility</span>
+        </div>
+      </div>
     </div>
 
     <!-- Footer -->
-    <div class="dialog-footer">
+    <div class="dialog-footer" [class.disabled]="!shortcutsEnabled">
       <div class="footer-hint">
         <i class="bi bi-info-circle"></i>
         Press <span class="shortcut-key-dialog-footer">Shift + ?</span> anytime to view the keyboard shortcuts.

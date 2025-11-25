@@ -9,3 +9,11 @@ export * from './components/footer/footer.component';
 export * from './components/toast-container.component';
 export * from './components/skeleton-loader/skeleton-loader.component';
 export * from './components/loading-screen/loading-screen.component';
+
+// Directives
+export * from './directives/keyboard-shortcut.directive';
+
+// Services
+export * from './services/keyboard-shortcut.service';
+export * from './services/shortcut-handler.service';
+export * from './services/shortcut-registry.service';
