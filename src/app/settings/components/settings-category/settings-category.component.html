@@ -13,6 +13,7 @@
 <ng-template #categoryContent>
   <div class="category-container" *ngIf="category$ | async as category; else notFound">
     <div class="category-header">
+      <i [class]="'bi bi-' + (category.icon)" class="category-icon"></i>
       <h2 class="category-title">{{ category.displayName }}</h2>
       <p class="category-description" *ngIf="category.description">
         {{ category.description }}
@@ -20,11 +21,8 @@
     </div>
 
     <div class="settings-list">
-      <app-settings-renderer
-        *ngFor="let key of sortedKeys$ | async"
-        [categoryKey]="category.key!"
-        [settingKey]="key"
-      ></app-settings-renderer>
+      <app-settings-renderer *ngFor="let key of sortedKeys$ | async" [categoryKey]="category.key!"
+        [settingKey]="key"></app-settings-renderer>
     </div>
   </div>
 
