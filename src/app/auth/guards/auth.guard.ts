@@ -1,7 +1,8 @@
 import { Injectable, Inject, PLATFORM_ID } from '@angular/core';
-import { CanActivate, Router } from '@angular/router';
+import { CanActivate, RouterStateSnapshot, ActivatedRouteSnapshot } from '@angular/router';
 import { isPlatformBrowser } from '@angular/common';
 import { AuthService } from '../services/auth.service';
+import { RedirectUrlService } from '../services/redirect-url.service';
 
 /**
  * AuthGuard - Protects routes that require authentication
@@ -14,14 +15,14 @@ import { AuthService } from '../services/auth.service';
   providedIn: 'root'
 })
 export class AuthGuard implements CanActivate {
-  
+
   constructor(
     private authService: AuthService,
-    private router: Router,
+    private redirectUrlService: RedirectUrlService,
     @Inject(PLATFORM_ID) private platformId: Object
-  ) {}
+  ) { }
 
-  canActivate(): boolean {
+  canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean {
     // During SSR, allow navigation and defer authentication to client-side
     if (!isPlatformBrowser(this.platformId)) {
       return true;
@@ -31,13 +32,13 @@ export class AuthGuard implements CanActivate {
     // StartupService already verified this before routes render
     const token = this.authService.getToken();
     const currentUser = this.authService.getCurrentUser();
-    
+
     if (token && currentUser) {
       return true;
     }
 
-    // Not authenticated, redirect to login
-    this.router.navigate(['/auth/login']);
+    // Not authenticated, redirect to login with returnUrl
+    this.redirectUrlService.navigateToLogin(state.url);
     return false;
   }
 }
