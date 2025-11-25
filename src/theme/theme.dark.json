@@ -186,6 +186,9 @@
     "keyboardShortcutsDialogAvatarPlaceholder": "#ffffff",
     "keyboardShortcutsDialogBadgeBg": "transparent",
     "keyboardShortcutsDialogBadgeBorder": "#444444",
+    "keyboardShortcutsDialogDisabledOverlayBg": "rgba(0, 0, 0, 0.7)",
+    "keyboardShortcutsDialogDisabledOverlayText": "#c9d1d9",
+    "keyboardShortcutsDialogDisabledOverlayIcon": "#8b949e",
 
     "confirmationDialogBg": "#000000",
     "confirmationDialogBorder": "#444444",

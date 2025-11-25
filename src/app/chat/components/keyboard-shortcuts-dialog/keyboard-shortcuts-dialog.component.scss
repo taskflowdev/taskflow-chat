@@ -99,6 +99,59 @@
   }
 }
 
+// Dialog body wrapper (for disabled state)
+.dialog-body {
+  position: relative;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+
+  &.disabled {
+    .dialog-content,
+    .dialog-footer {
+      filter: blur(4px);
+      pointer-events: none;
+      user-select: none;
+    }
+  }
+}
+
+// Disabled overlay
+.disabled-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: var(--taskflow-color-keyboard-shortcuts-dialog-disabled-overlay-bg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+  padding: 2rem;
+
+  .disabled-message {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    text-align: center;
+    max-width: 400px;
+
+    i {
+      font-size: 3rem;
+      color: var(--taskflow-color-keyboard-shortcuts-dialog-disabled-overlay-icon);
+    }
+
+    span {
+      font-size: 1rem;
+      color: var(--taskflow-color-keyboard-shortcuts-dialog-disabled-overlay-text);
+      line-height: 1.5;
+    }
+  }
+}
+
 // Content
 .dialog-content {
   flex: 1;
