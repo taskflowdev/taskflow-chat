@@ -1,8 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ShortcutRegistryService } from '../../../shared/services/shortcut-registry.service';
+import { KeyboardShortcutService } from '../../../shared/services/keyboard-shortcut.service';
 import { ShortcutMetadata, ShortcutCategory } from '../../../shared/models/keyboard-shortcut.model';
 import { Router } from '@angular/router';
+import { Subscription } from 'rxjs';
 
 interface CategoryDisplay {
   name: string;
@@ -21,16 +23,35 @@ interface ShortcutDisplay {
   templateUrl: './keyboard-shortcuts-dialog.component.html',
   styleUrl: './keyboard-shortcuts-dialog.component.scss'
 })
-export class KeyboardShortcutsDialogComponent implements OnInit {
+export class KeyboardShortcutsDialogComponent implements OnInit, OnDestroy {
   categories: CategoryDisplay[] = [];
+  shortcutsEnabled = true;
+  private shortcutsEnabledSubscription?: Subscription;
 
   constructor(
     private registryService: ShortcutRegistryService,
+    private keyboardShortcutService: KeyboardShortcutService,
     private router: Router
   ) { }
 
   ngOnInit(): void {
     this.loadShortcuts();
+    this.subscribeToShortcutsEnabled();
+  }
+
+  ngOnDestroy(): void {
+    this.shortcutsEnabledSubscription?.unsubscribe();
+  }
+
+  /**
+   * Subscribe to shortcuts enabled state
+   */
+  private subscribeToShortcutsEnabled(): void {
+    this.shortcutsEnabledSubscription = this.keyboardShortcutService.shortcutsEnabled$.subscribe(
+      enabled => {
+        this.shortcutsEnabled = enabled;
+      }
+    );
   }
 
   /**
