@@ -1,8 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
-import { Router, RouterModule } from '@angular/router';
+import { Router, RouterModule, ActivatedRoute } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { AuthService } from '../../services/auth.service';
+import { RedirectUrlService } from '../../services/redirect-url.service';
 import { ToastService } from '../../../shared/services/toast.service';
 
 @Component({
@@ -20,7 +21,9 @@ export class SigninComponent implements OnInit {
     private fb: FormBuilder,
     private authService: AuthService,
     private router: Router,
-    private toastService: ToastService
+    private route: ActivatedRoute,
+    private toastService: ToastService,
+    private redirectUrlService: RedirectUrlService
   ) {
     this.signinForm = this.fb.group({
       userName: ['', [Validators.required, Validators.minLength(3)]],
@@ -83,8 +86,9 @@ export class SigninComponent implements OnInit {
             if (user) {
               this.isLoading = false;
               this.toastService.showSuccess('Welcome back!', 'Login Successful');
-              // Use replaceUrl to prevent back button returning to login
-              this.router.navigate(['/chats'], { replaceUrl: true });
+
+              // Redirect to intended URL or default
+              this.redirectUrlService.redirectAfterLogin(this.route, '/chats');
             }
           });
         } else {

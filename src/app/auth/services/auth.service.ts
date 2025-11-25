@@ -145,7 +145,7 @@ export class AuthService {
     if (!isPlatformBrowser(this.platformId)) {
       return false;
     }
-    
+
     const token = this.getToken();
     if (!token) return false;
 
@@ -225,7 +225,7 @@ export class AuthService {
 
     const token = this.getToken();
     const currentUser = this.getCurrentUser();
-    
+
     // If we have a token but no user in memory, restore from localStorage
     // Don't make HTTP calls here to avoid circular dependency on init
     if (token && !currentUser) {
@@ -250,8 +250,8 @@ export class AuthService {
     }
 
     // Create and cache the refresh request
-    this.refreshTokenInProgress$ = this.apiAuthService.apiAuthRefreshPost({ 
-      body: { refreshToken } 
+    this.refreshTokenInProgress$ = this.apiAuthService.apiAuthRefreshPost({
+      body: { refreshToken }
     }).pipe(
       tap(response => {
         if (response.success && response.data && isPlatformBrowser(this.platformId)) {

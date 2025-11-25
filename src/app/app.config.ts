@@ -1,5 +1,6 @@
 import { ApplicationConfig, provideZoneChangeDetection, APP_INITIALIZER, PLATFORM_ID } from '@angular/core';
-import { provideRouter } from '@angular/router';
+import { provideRouter, UrlSerializer } from '@angular/router';
+import { CustomUrlSerializer } from './core/serializers/custom-url.serializer';
 import { provideHttpClient, withInterceptorsFromDi, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { provideAnimations } from '@angular/platform-browser/animations';
 
@@ -34,6 +35,7 @@ export const appConfig: ApplicationConfig = {
       useFactory: startupServiceFactory,
       deps: [StartupService],
       multi: true
-    }
+    },
+    { provide: UrlSerializer, useClass: CustomUrlSerializer }
   ]
 };
