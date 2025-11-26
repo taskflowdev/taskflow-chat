@@ -391,7 +391,20 @@
 
     "badgeDeprecatedBg": "rgba(158, 106, 3, 0.08)",
     "badgeDeprecatedBorder": "rgba(158, 106, 3, 0.16)",
-    "badgeDeprecatedText": "#d29922"
+    "badgeDeprecatedText": "#d29922",
+
+    "startupLoadingScreenBg": "#000000",
+    "startupLoadingFadeDuration": "0.3s",
+    "startupLoadingLogo": "#ffffff",
+    "startupLoadingLoader": "#ffffff",
+    "startupLoadingLoaderTrack": "rgba(255, 255, 255, 0.2)",
+    "startupLoadingMovingDuration": "1.2s",
+    "startupLoadingGradientOne": "rgba(0, 0, 0)",
+    "startupLoadingGradientTwo": "rgba(0, 0, 0)",
+    "startupLoadingGradientThree": "rgb(77, 77, 77)",
+    "startupLoadingGradientFour": "rgb(255, 255, 255)",
+    "startupLoadingGradientFive": "rgb(255, 255, 255)",
+    "startupLoadingShineDuration": "2.5s"
   },
   "typography": {
     "small": {
