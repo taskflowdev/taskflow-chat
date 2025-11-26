@@ -12,7 +12,7 @@
     #initial-loader {
       position: fixed;
       inset: 0;
-      background-color: var(--taskflow-color-loading-screen-bg, #000);
+      background-color: var(--taskflow-color-startup-loading-screen-bg);
       display: flex;
       align-items: center;
       justify-content: center;
@@ -24,8 +24,8 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 1.5rem;
-      animation: fadeIn var(--taskflow-color-loading-fade-duration, 0.3s) ease-in-out;
+      gap: 1rem;
+      animation: fadeIn var(--taskflow-color-startup-loading-fade-duration) ease-in-out;
     }
 
     @keyframes fadeIn {
@@ -42,7 +42,7 @@
 
     #initial-loader .app-logo {
       font-size: 5rem;
-      color: var(--taskflow-color-loading-logo, #fff);
+      color: var(--taskflow-color-startup-loading-logo);
     }
 
     /* #initial-loader .app-logo::before {
@@ -55,7 +55,7 @@
       width: 150px;
       height: 5px;
       border-radius: 30px;
-      background-color: var(--taskflow-color-loading-loader-track, rgba(255, 255, 255, 0.2));
+      background-color: var(--taskflow-color-startup-loading-loader-track);
       position: relative;
       overflow: hidden;
     }
@@ -63,13 +63,13 @@
     #initial-loader .loader::before {
       content: "";
       position: absolute;
-      background: var(--taskflow-color-loading-loader, #fff);
+      background: var(--taskflow-color-startup-loading-loader);
       top: 0;
       left: 0;
       width: 0%;
       height: 100%;
       border-radius: 30px;
-      animation: moving var(--taskflow-color-loading-moving-duration, 1.2s) ease-in-out infinite;
+      animation: moving var(--taskflow-color-startup-loading-moving-duration) ease-in-out infinite;
     }
 
     @keyframes moving {
@@ -84,7 +84,7 @@
       }
     }
 
-    #initial-loader .loading-text {
+    /* #initial-loader .loading-text {
       position: relative;
       display: inline-block;
       background: linear-gradient(90deg,
@@ -100,6 +100,43 @@
       font-weight: 400;
       letter-spacing: .3px;
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    } */
+
+    #initial-loader .loading-text {
+      position: relative;
+      display: inline-block;
+      background: linear-gradient(90deg,
+          var(--taskflow-color-startup-loading-gradient-one),
+          var(--taskflow-color-startup-loading-gradient-two),
+          var(--taskflow-color-startup-loading-gradient-three),
+          var(--taskflow-color-startup-loading-gradient-four),
+          var(--taskflow-color-startup-loading-gradient-five));
+      /* background: linear-gradient(114deg, rgba(0, 0, 0), rgb(0, 0, 0), rgb(77, 77, 77), rgb(255 255 255), rgb(255 255 255)); */
+      background-size: 200% auto;
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+
+      font-size: 16px;
+      font-weight: 400;
+      letter-spacing: .3px;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+
+      animation:
+        textFadeIn 0.6s ease-out forwards,
+        shine var(--taskflow-color-startup-loading-shine-duration) linear infinite;
+    }
+
+    @keyframes textFadeIn {
+      0% {
+        opacity: 0;
+        transform: translateY(6px);
+      }
+
+      100% {
+        opacity: 1;
+        transform: translateY(0);
+      }
     }
 
     @keyframes shine {
@@ -126,7 +163,7 @@
       <div class="logo-container">
         <i class="bi bi-chat-quote app-logo"></i>
       </div>
-      <div class="loader"></div>
+      <!-- <div class="loader"></div> -->
       <p class="loading-text">Setting things up for you…</p>
     </div>
   </div>
