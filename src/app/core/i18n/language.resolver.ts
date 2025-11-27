@@ -13,7 +13,7 @@ import { Injectable, inject } from '@angular/core';
 import { Resolve, ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
 import { TranslocoService } from '@jsverse/transloco';
 import { Observable, of } from 'rxjs';
-import { catchError, first, tap } from 'rxjs/operators';
+import { catchError, first, map, tap } from 'rxjs/operators';
 import { LanguageService } from './language.service';
 
 /**
@@ -78,19 +78,19 @@ export class LanguageResolver implements Resolve<LanguageResolverData> {
       tap(() => {
         console.debug(`[LanguageResolver] Translations loaded for route: ${state.url}`);
       }),
+      map(() => ({
+        language: currentLang,
+        loaded: true
+      })),
       catchError(error => {
         console.error('[LanguageResolver] Failed to load translations:', error);
-        // Return success anyway to not block navigation
-        return of({});
-      }),
-      // Map to resolver data format
-      first(),
-      tap(() => ({})),
-      catchError(() => of({
-        language: currentLang,
-        loaded: false
-      }))
-    ) as unknown as Observable<LanguageResolverData>;
+        // Return with loaded: false to indicate failure, but don't block navigation
+        return of({
+          language: currentLang,
+          loaded: false
+        });
+      })
+    );
   }
 }
 
@@ -105,6 +105,13 @@ export const languageResolverFn = () => {
 
   return transloco.load(currentLang).pipe(
     first(),
-    catchError(() => of({}))
+    map(() => ({
+      language: currentLang,
+      loaded: true
+    })),
+    catchError(() => of({
+      language: currentLang,
+      loaded: false
+    }))
   );
 };

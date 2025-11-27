@@ -17,13 +17,13 @@ import { Observable, of } from 'rxjs';
 import { catchError, shareReplay, tap } from 'rxjs/operators';
 import { TRANSLATIONS_PATH, DEFAULT_LANGUAGE } from './i18n.config';
 
-// Import static translations for SSR
-import enTranslations from '../../../../public/i18n/en.json';
-import esTranslations from '../../../../public/i18n/es.json';
-import frTranslations from '../../../../public/i18n/fr.json';
-import deTranslations from '../../../../public/i18n/de.json';
-import jaTranslations from '../../../../public/i18n/ja.json';
-import zhTranslations from '../../../../public/i18n/zh.json';
+// Import static translations for SSR using path alias
+import enTranslations from '@i18n/en.json';
+import esTranslations from '@i18n/es.json';
+import frTranslations from '@i18n/fr.json';
+import deTranslations from '@i18n/de.json';
+import jaTranslations from '@i18n/ja.json';
+import zhTranslations from '@i18n/zh.json';
 
 /**
  * Static translations map for SSR
