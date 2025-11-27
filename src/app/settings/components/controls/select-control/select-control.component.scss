@@ -57,7 +57,7 @@
     }
 
     .dropdown-icon {
-      font-size: var(--taskflow-font-icon-size-xs);
+      font-size: var(--taskflow-font-icon-size-md);
       transition: transform 0.2s cubic-bezier(0.2, 0, 0.38, 0.9);
       color: var(--taskflow-color-text-secondary);
       flex-shrink: 0;
@@ -142,6 +142,10 @@
       width: 100%;
       text-align: left;
 
+      i {
+        font-size: var(--taskflow-font-icon-size-sm);
+      }
+
       .option-content {
         flex: 1;
         display: flex;
@@ -151,7 +155,7 @@
       }
 
       .option-icon {
-        font-size: var(--taskflow-font-icon-size-md);
+        font-size: var(--taskflow-font-icon-size-sm);
         color: var(--taskflow-color-settings-icon, #57606a);
         flex-shrink: 0;
       }
@@ -168,7 +172,7 @@
       .check-icon {
         text-align: center;
         vertical-align: middle;
-        font-size: var(--taskflow-font-icon-size-md);
+        font-size: var(--taskflow-font-icon-size-sm);
         font-weight: 600;
         color: var(--taskflow-color-text-secondary);
         flex-shrink: 0;

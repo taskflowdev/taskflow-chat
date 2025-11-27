@@ -43,10 +43,10 @@
   display: flex;
   align-items: center;
   gap: 0.75rem;
+  margin-left: 0.6rem;
 }
 
 .header-icon {
-  margin-left: 0.5rem;
   font-size: var(--taskflow-font-icon-size-xl);
   color: var(--taskflow-color-text-primary);
 }
@@ -58,14 +58,14 @@
 
 .dialog-title {
   margin: 0;
-  font-size: var(--taskflow-font-font-size-h3);
+  font-size: var(--taskflow-font-font-size-h2);
   font-weight: 600;
   color: var(--taskflow-color-text-primary);
 }
 
 .dialog-subtitle {
   margin: 0;
-  font-size: var(--taskflow-font-font-size-small);
+  font-size: var(--taskflow-font-font-size-normal);
   color: var(--taskflow-color-text-secondary);
 }
 
@@ -73,7 +73,7 @@
   background: transparent;
   border: none;
   color: var(--taskflow-color-text-secondary);
-  font-size: var(--taskflow-font-icon-size-lg);
+  font-size: var(--taskflow-font-icon-size-md);
   cursor: pointer;
   padding: 0.5rem;
   border-radius: 6px;
@@ -146,11 +146,9 @@
 
 // Section Header
 .section-header {
-  display: flex;
   align-items: center;
-  gap: 0.5rem;
   color: var(--taskflow-color-text-secondary);
-  font-size: var(--taskflow-font-font-size-small);
+  font-size: var(--taskflow-font-font-size-normal);
   font-weight: 500;
   margin-bottom: 0.75rem;
   text-transform: uppercase;
@@ -158,6 +156,7 @@
 
   i {
     font-size: var(--taskflow-font-icon-size-md);
+    margin-right: 0.5rem;
   }
 }
 
@@ -178,7 +177,7 @@
   gap: 0.5rem;
   border: 1px solid var(--taskflow-color-group-search-dialog-list-item-border);
   border-radius: 6px;
-  padding: 0.3rem 0.5rem;
+  padding: 0.2rem 0.5rem;
   color: var(--taskflow-color-text-primary);
   background: transparent;
   transition: all 0.2s ease;
@@ -218,7 +217,7 @@
   color: var(--taskflow-color-text-secondary);
   font-size: var(--taskflow-font-icon-size-md);
   cursor: pointer;
-  padding: 0.2rem 0.4rem;
+  padding: 0rem 0rem;
   border-radius: 4px;
   display: flex;
   align-items: center;
@@ -227,7 +226,7 @@
 
   &:hover {
     color: var(--taskflow-color-text-primary);
-    background-color: var(--taskflow-color-group-search-dialog-close-hover-bg);
+    // background-color: var(--taskflow-color-group-search-dialog-close-hover-bg);
   }
 
   &:focus {
@@ -316,7 +315,7 @@
 
 .result-description {
   color: var(--taskflow-color-text-secondary);
-  font-size: var(--taskflow-font-font-size-small);
+  font-size: var(--taskflow-font-font-size-normal);
   display: flex;
   align-items: center;
   gap: 0.5rem;
@@ -334,11 +333,11 @@
   background: transparent;
   border: 1px solid var(--taskflow-color-group-search-dialog-badge-border);
   border-radius: 10px;
-  font-size: var(--taskflow-font-font-size-x-small);
+  font-size: var(--taskflow-font-font-size-small);
   margin-left: 0.25rem;
 
   i {
-    font-size: var(--taskflow-font-icon-size-xs);
+    font-size: var(--taskflow-font-icon-size-md);
   }
 }
 
@@ -355,7 +354,7 @@
   // border: 1px solid #444444;
   // border-radius: 6px;
   color: var(--taskflow-color-text-secondary);
-  font-size: var(--taskflow-font-font-size-small);
+  font-size: var(--taskflow-font-font-size-normal);
   font-weight: 500;
 
   i {
@@ -388,14 +387,14 @@
   }
 
   .no-results-title {
-    font-size: var(--taskflow-font-font-size-normal);
+    font-size: var(--taskflow-font-font-size-large);
     font-weight: 500;
     color: var(--taskflow-color-text-primary);
     margin-bottom: 0.2rem;
   }
 
   .no-results-text {
-    font-size: var(--taskflow-font-font-size-small);
+    font-size: var(--taskflow-font-font-size-normal);
     margin: 0;
   }
 }

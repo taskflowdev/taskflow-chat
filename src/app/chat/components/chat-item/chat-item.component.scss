@@ -54,7 +54,7 @@
     .chat-name {
       color: var(--taskflow-color-text-primary);
       font-weight: 500;
-      font-size: var(--taskflow-font-font-size-normal);
+      font-size: var(--taskflow-font-font-size-large);
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
@@ -63,7 +63,7 @@
 
     .chat-time {
       color: var(--taskflow-color-text-secondary);
-      font-size: var(--taskflow-font-font-size-x-small);
+      font-size: var(--taskflow-font-font-size-normal);
       white-space: nowrap;
       margin-left: 0.5rem;
     }
@@ -76,7 +76,7 @@
 
     .last-message {
       color: var(--taskflow-color-text-secondary);
-      font-size: var(--taskflow-font-font-size-small);
+      font-size: var(--taskflow-font-font-size-normal);
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;

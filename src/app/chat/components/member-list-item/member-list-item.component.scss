@@ -35,14 +35,14 @@
 }
 
 .member-avatar {
-  width: 40px;
-  height: 40px;
+  width: 45px;
+  height: 45px;
   border-radius: 50%;
   background: var(--taskflow-color-member-avatar-bg);
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: var(--taskflow-font-font-size-small);
+  font-size: var(--taskflow-font-font-size-large);
   font-weight: 600;
   color: var(--taskflow-color-member-avatar-text);
   border: 1px solid var(--taskflow-color-member-avatar-border);
@@ -70,7 +70,7 @@
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  font-size: var(--taskflow-font-font-size-x-small);
+  font-size: var(--taskflow-font-font-size-normal);
   color: var(--taskflow-color-member-meta-text);
 }
 
@@ -115,14 +115,14 @@
   border: 1px solid var(--taskflow-color-action-btn-border);
   border-radius: 6px;
   color: var(--taskflow-color-action-btn-text);
-  font-size: var(--taskflow-font-font-size-x-small);
+  font-size: var(--taskflow-font-font-size-small);
   font-weight: 500;
   cursor: pointer;
   transition: all 0.2s ease;
   white-space: nowrap;
 
   i {
-    font-size: var(--taskflow-font-icon-size-sm);
+    font-size: var(--taskflow-font-icon-size-xs);
   }
 
   &:hover:not(.disabled) {

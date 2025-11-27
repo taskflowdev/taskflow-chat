@@ -55,7 +55,7 @@
     }
 
     i {
-      font-size: var(--taskflow-font-icon-size-lg);
+      font-size: var(--taskflow-font-icon-size-md);
     }
   }
 }
@@ -89,7 +89,7 @@
   }
 
   .empty-text {
-    font-size: var(--taskflow-font-font-size-small);
+    font-size: var(--taskflow-font-font-size-normal);
     margin-bottom: 1rem;
     color: var(--taskflow-color-text-secondary);
   }
