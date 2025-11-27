@@ -13,6 +13,17 @@ import { appConfigInitializerFactory } from './core/config-initializer';
 import { StartupService } from './core/services/startup.service';
 import { startupServiceFactory } from './core/startup-service.factory';
 
+// i18n imports
+import { translocoProviders, TranslocoHttpInterceptor, LanguageService } from './core/i18n';
+
+/**
+ * Factory function for language initialization
+ * Loads saved language preference on application bootstrap
+ */
+function languageInitializerFactory(languageService: LanguageService) {
+  return () => languageService.loadLanguageOnBootstrap();
+}
+
 export const appConfig: ApplicationConfig = {
   providers: [
     provideZoneChangeDetection({ eventCoalescing: true }),
@@ -23,7 +34,15 @@ export const appConfig: ApplicationConfig = {
     ApiConfiguration,
     AppConfigService,
     StartupService,
+
+    // Transloco i18n providers
+    ...translocoProviders,
+
+    // HTTP Interceptors
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
+    { provide: HTTP_INTERCEPTORS, useClass: TranslocoHttpInterceptor, multi: true },
+
+    // App Initializers (order matters)
     {
       provide: APP_INITIALIZER,
       useFactory: appConfigInitializerFactory,
@@ -34,6 +53,12 @@ export const appConfig: ApplicationConfig = {
       provide: APP_INITIALIZER,
       useFactory: startupServiceFactory,
       deps: [StartupService],
+      multi: true
+    },
+    {
+      provide: APP_INITIALIZER,
+      useFactory: languageInitializerFactory,
+      deps: [LanguageService],
       multi: true
     },
     { provide: UrlSerializer, useClass: CustomUrlSerializer }

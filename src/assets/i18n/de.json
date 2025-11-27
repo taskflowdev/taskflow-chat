@@ -1,0 +1,140 @@
+{
+  "common": {
+    "save": "Speichern",
+    "cancel": "Abbrechen",
+    "search": "Suchen",
+    "loading": "Laden...",
+    "error": "Fehler",
+    "success": "Erfolg",
+    "confirm": "Bestätigen",
+    "delete": "Löschen",
+    "edit": "Bearbeiten",
+    "add": "Hinzufügen",
+    "remove": "Entfernen",
+    "close": "Schließen",
+    "back": "Zurück",
+    "next": "Weiter",
+    "previous": "Zurück",
+    "yes": "Ja",
+    "no": "Nein",
+    "ok": "OK",
+    "apply": "Anwenden",
+    "reset": "Zurücksetzen"
+  },
+  "settings": {
+    "title": "Einstellungen",
+    "categories": {
+      "language": "Sprache",
+      "appearance": "Erscheinungsbild",
+      "notifications": "Benachrichtigungen",
+      "privacy": "Datenschutz",
+      "accessibility": "Barrierefreiheit",
+      "media": "Medien",
+      "chat": "Chat"
+    },
+    "language": {
+      "title": "Spracheinstellungen",
+      "interface": "Oberflächensprache",
+      "interfaceDescription": "Wählen Sie Ihre bevorzugte Sprache für die Anwendungsoberfläche",
+      "dateFormat": "Datumsformat",
+      "dateFormatDescription": "Wählen Sie, wie Daten in der Anwendung angezeigt werden",
+      "timeFormat": "Zeitformat",
+      "timeFormatDescription": "Wählen Sie zwischen 12-Stunden- oder 24-Stunden-Format"
+    },
+    "appearance": {
+      "title": "Erscheinungsbild-Einstellungen",
+      "theme": "Design",
+      "themeDescription": "Wählen Sie Ihr bevorzugtes Farbschema",
+      "darkMode": "Dunkelmodus",
+      "lightMode": "Hellmodus",
+      "systemDefault": "Systemstandard",
+      "fontSize": "Schriftgröße",
+      "fontSizeDescription": "Passen Sie die Textgröße für bessere Lesbarkeit an",
+      "small": "Klein",
+      "medium": "Mittel",
+      "large": "Groß"
+    },
+    "notifications": {
+      "title": "Benachrichtigungseinstellungen",
+      "enableNotifications": "Benachrichtigungen aktivieren",
+      "enableNotificationsDescription": "Erhalten Sie Benachrichtigungen für neue Nachrichten und Updates",
+      "soundEnabled": "Tonbenachrichtigungen",
+      "soundEnabledDescription": "Einen Ton abspielen, wenn Sie eine Benachrichtigung erhalten",
+      "desktopNotifications": "Desktop-Benachrichtigungen",
+      "desktopNotificationsDescription": "Benachrichtigungen auf Ihrem Desktop anzeigen"
+    },
+    "privacy": {
+      "title": "Datenschutzeinstellungen",
+      "readReceipts": "Lesebestätigungen",
+      "readReceiptsDescription": "Andere wissen lassen, wenn Sie ihre Nachrichten gelesen haben",
+      "onlineStatus": "Online-Status",
+      "onlineStatusDescription": "Anderen Benutzern anzeigen, wenn Sie online sind",
+      "typingIndicator": "Tipp-Anzeige",
+      "typingIndicatorDescription": "Anderen zeigen, wenn Sie eine Nachricht tippen"
+    },
+    "accessibility": {
+      "title": "Barrierefreiheitseinstellungen",
+      "reducedMotion": "Reduzierte Bewegung",
+      "reducedMotionDescription": "Animationen in der gesamten Oberfläche minimieren",
+      "highContrast": "Hoher Kontrast",
+      "highContrastDescription": "Kontrast für bessere Sichtbarkeit erhöhen",
+      "screenReader": "Bildschirmleser-Unterstützung",
+      "screenReaderDescription": "Die Oberfläche für Bildschirmleser optimieren"
+    },
+    "media": {
+      "title": "Medieneinstellungen",
+      "autoPlayVideos": "Videos automatisch abspielen",
+      "autoPlayVideosDescription": "Videos im Chat automatisch abspielen",
+      "autoDownloadImages": "Bilder automatisch herunterladen",
+      "autoDownloadImagesDescription": "Bilder in Unterhaltungen automatisch herunterladen",
+      "imageQuality": "Bildqualität",
+      "imageQualityDescription": "Qualität für hochgeladene Bilder festlegen"
+    },
+    "chat": {
+      "title": "Chat-Einstellungen",
+      "enterToSend": "Eingabetaste zum Senden",
+      "enterToSendDescription": "Eingabetaste drücken, um Nachrichten zu senden (Umschalt+Eingabe für neue Zeile)",
+      "showTimestamps": "Zeitstempel anzeigen",
+      "showTimestampsDescription": "Nachrichtenzeitstempel in Unterhaltungen anzeigen",
+      "messagePreview": "Nachrichtenvorschau",
+      "messagePreviewDescription": "Nachrichtenvorschauen in der Chat-Liste anzeigen"
+    }
+  },
+  "navbar": {
+    "home": "Startseite",
+    "chats": "Chats",
+    "settings": "Einstellungen",
+    "profile": "Profil",
+    "logout": "Abmelden",
+    "search": "Suchen...",
+    "notifications": "Benachrichtigungen"
+  },
+  "chat": {
+    "newMessage": "Neue Nachricht",
+    "typeMessage": "Nachricht eingeben...",
+    "send": "Senden",
+    "attachment": "Anhang",
+    "emoji": "Emoji",
+    "noMessages": "Noch keine Nachrichten",
+    "startConversation": "Unterhaltung starten",
+    "members": "Mitglieder",
+    "online": "Online",
+    "offline": "Offline",
+    "typing": "tippt...",
+    "delivered": "Zugestellt",
+    "read": "Gelesen",
+    "sent": "Gesendet",
+    "createGroup": "Gruppe erstellen",
+    "groupName": "Gruppenname",
+    "addMembers": "Mitglieder hinzufügen",
+    "leaveGroup": "Gruppe verlassen",
+    "deleteChat": "Chat löschen"
+  },
+  "errors": {
+    "generic": "Etwas ist schief gelaufen. Bitte versuchen Sie es erneut.",
+    "network": "Netzwerkfehler. Bitte überprüfen Sie Ihre Verbindung.",
+    "unauthorized": "Sie sind nicht berechtigt, diese Aktion auszuführen.",
+    "notFound": "Die angeforderte Ressource wurde nicht gefunden.",
+    "validation": "Bitte überprüfen Sie Ihre Eingabe und versuchen Sie es erneut."
+  }
+}

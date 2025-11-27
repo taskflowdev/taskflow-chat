@@ -1,6 +1,6 @@
-<aside class="chat-sidebar">
+<aside class="chat-sidebar" *transloco="let t">
   <div class="sidebar-header">
-    <h3 class="sidebar-title">Chats</h3>
+    <h3 class="sidebar-title">{{ t('navbar.chats') }}</h3>
     <div class="header-actions">
       <!-- Search Button -->
       <button class="btn search-btn" [appCommonTooltip]="searchTooltip" [tooltipPosition]="TooltipPosition.BOTTOM"
@@ -8,7 +8,7 @@
         <i class="bi bi-search"></i>
       </button>
       <ng-template #searchTooltip>
-        Search <span class="shortcut-key-tooltip">Ctrl + K</span>
+        {{ t('common.search') }} <span class="shortcut-key-tooltip">Ctrl + K</span>
       </ng-template>
 
       <!-- New Chat Button -->
@@ -17,7 +17,7 @@
         <i class="bi bi-plus-lg"></i>
       </button>
       <ng-template #btnCreateGroupTooltip>
-        New Chat <span class="shortcut-key-tooltip">Ctrl + N</span>
+        {{ t('chat.newMessage') }} <span class="shortcut-key-tooltip">Ctrl + N</span>
       </ng-template>
     </div>
   </div>
@@ -42,10 +42,10 @@
     <!-- No Chats State -->
     <div *ngIf="!loading && chats.length === 0" class="no-chats">
       <i class="bi bi-chat-text empty-icon"></i>
-      <p class="empty-text">No conversations yet</p>
+      <p class="empty-text">{{ t('chat.noMessages') }}</p>
       <button class="btn start-chat-btn" (click)="onCreateGroup()">
         <i class="bi bi-plus-circle-fill me-1"></i>
-        New Group
+        {{ t('chat.createGroup') }}
       </button>
     </div>
   </div>

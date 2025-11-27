@@ -1,0 +1,140 @@
+{
+  "common": {
+    "save": "保存",
+    "cancel": "キャンセル",
+    "search": "検索",
+    "loading": "読み込み中...",
+    "error": "エラー",
+    "success": "成功",
+    "confirm": "確認",
+    "delete": "削除",
+    "edit": "編集",
+    "add": "追加",
+    "remove": "削除",
+    "close": "閉じる",
+    "back": "戻る",
+    "next": "次へ",
+    "previous": "前へ",
+    "yes": "はい",
+    "no": "いいえ",
+    "ok": "OK",
+    "apply": "適用",
+    "reset": "リセット"
+  },
+  "settings": {
+    "title": "設定",
+    "categories": {
+      "language": "言語",
+      "appearance": "外観",
+      "notifications": "通知",
+      "privacy": "プライバシー",
+      "accessibility": "アクセシビリティ",
+      "media": "メディア",
+      "chat": "チャット"
+    },
+    "language": {
+      "title": "言語設定",
+      "interface": "インターフェース言語",
+      "interfaceDescription": "アプリケーションインターフェースの優先言語を選択してください",
+      "dateFormat": "日付形式",
+      "dateFormatDescription": "アプリケーション全体での日付の表示方法を選択してください",
+      "timeFormat": "時刻形式",
+      "timeFormatDescription": "12時間形式または24時間形式を選択してください"
+    },
+    "appearance": {
+      "title": "外観設定",
+      "theme": "テーマ",
+      "themeDescription": "お好みの配色を選択してください",
+      "darkMode": "ダークモード",
+      "lightMode": "ライトモード",
+      "systemDefault": "システムのデフォルト",
+      "fontSize": "フォントサイズ",
+      "fontSizeDescription": "読みやすさのためにテキストサイズを調整してください",
+      "small": "小",
+      "medium": "中",
+      "large": "大"
+    },
+    "notifications": {
+      "title": "通知設定",
+      "enableNotifications": "通知を有効にする",
+      "enableNotificationsDescription": "新しいメッセージと更新の通知を受け取る",
+      "soundEnabled": "サウンド通知",
+      "soundEnabledDescription": "通知を受け取ったときに音を鳴らす",
+      "desktopNotifications": "デスクトップ通知",
+      "desktopNotificationsDescription": "デスクトップに通知を表示する"
+    },
+    "privacy": {
+      "title": "プライバシー設定",
+      "readReceipts": "既読確認",
+      "readReceiptsDescription": "メッセージを読んだことを他の人に知らせる",
+      "onlineStatus": "オンラインステータス",
+      "onlineStatusDescription": "オンライン時に他のユーザーに表示する",
+      "typingIndicator": "入力中インジケーター",
+      "typingIndicatorDescription": "メッセージを入力しているときに他の人に表示する"
+    },
+    "accessibility": {
+      "title": "アクセシビリティ設定",
+      "reducedMotion": "モーションを減らす",
+      "reducedMotionDescription": "インターフェース全体のアニメーションを最小限にする",
+      "highContrast": "ハイコントラスト",
+      "highContrastDescription": "視認性を向上させるためにコントラストを上げる",
+      "screenReader": "スクリーンリーダーサポート",
+      "screenReaderDescription": "スクリーンリーダー向けにインターフェースを最適化する"
+    },
+    "media": {
+      "title": "メディア設定",
+      "autoPlayVideos": "動画を自動再生",
+      "autoPlayVideosDescription": "チャット内の動画を自動的に再生する",
+      "autoDownloadImages": "画像を自動ダウンロード",
+      "autoDownloadImagesDescription": "会話内の画像を自動的にダウンロードする",
+      "imageQuality": "画像品質",
+      "imageQualityDescription": "アップロードする画像の品質を設定する"
+    },
+    "chat": {
+      "title": "チャット設定",
+      "enterToSend": "Enterキーで送信",
+      "enterToSendDescription": "Enterキーを押してメッセージを送信（Shift+Enterで改行）",
+      "showTimestamps": "タイムスタンプを表示",
+      "showTimestampsDescription": "会話でメッセージのタイムスタンプを表示する",
+      "messagePreview": "メッセージプレビュー",
+      "messagePreviewDescription": "チャットリストでメッセージのプレビューを表示する"
+    }
+  },
+  "navbar": {
+    "home": "ホーム",
+    "chats": "チャット",
+    "settings": "設定",
+    "profile": "プロフィール",
+    "logout": "ログアウト",
+    "search": "検索...",
+    "notifications": "通知"
+  },
+  "chat": {
+    "newMessage": "新規メッセージ",
+    "typeMessage": "メッセージを入力...",
+    "send": "送信",
+    "attachment": "添付ファイル",
+    "emoji": "絵文字",
+    "noMessages": "メッセージはまだありません",
+    "startConversation": "会話を始める",
+    "members": "メンバー",
+    "online": "オンライン",
+    "offline": "オフライン",
+    "typing": "入力中...",
+    "delivered": "配信済み",
+    "read": "既読",
+    "sent": "送信済み",
+    "createGroup": "グループを作成",
+    "groupName": "グループ名",
+    "addMembers": "メンバーを追加",
+    "leaveGroup": "グループを退出",
+    "deleteChat": "チャットを削除"
+  },
+  "errors": {
+    "generic": "問題が発生しました。もう一度お試しください。",
+    "network": "ネットワークエラー。接続を確認してください。",
+    "unauthorized": "この操作を行う権限がありません。",
+    "notFound": "リクエストされたリソースが見つかりませんでした。",
+    "validation": "入力内容を確認してもう一度お試しください。"
+  }
+}

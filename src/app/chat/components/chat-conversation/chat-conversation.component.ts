@@ -10,6 +10,7 @@ import { CommonDropdownComponent, DropdownItem } from '../../../shared/component
 import { CommonTooltipDirective, TooltipPosition } from '../../../shared/components/common-tooltip';
 import { ScrollToBottomButtonComponent } from '../scroll-to-bottom-button';
 import { AutoScrollService } from '../../services/auto-scroll.service';
+import { TranslocoModule, TranslocoService } from '@jsverse/transloco';
 
 export interface ConversationData {
   groupId: string;
@@ -20,7 +21,7 @@ export interface ConversationData {
 
 @Component({
   selector: 'app-chat-conversation',
-  imports: [CommonModule, FormsModule, ChatMessageComponent, SkeletonLoaderComponent, GroupInfoDialogComponent, CommonDropdownComponent, CommonTooltipDirective, ScrollToBottomButtonComponent],
+  imports: [CommonModule, FormsModule, ChatMessageComponent, SkeletonLoaderComponent, GroupInfoDialogComponent, CommonDropdownComponent, CommonTooltipDirective, ScrollToBottomButtonComponent, TranslocoModule],
   providers: [AutoScrollService],
   templateUrl: './chat-conversation.component.html',
   styleUrls: ['./chat-conversation.component.scss']

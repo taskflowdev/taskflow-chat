@@ -1,0 +1,140 @@
+{
+  "common": {
+    "save": "Guardar",
+    "cancel": "Cancelar",
+    "search": "Buscar",
+    "loading": "Cargando...",
+    "error": "Error",
+    "success": "Éxito",
+    "confirm": "Confirmar",
+    "delete": "Eliminar",
+    "edit": "Editar",
+    "add": "Agregar",
+    "remove": "Quitar",
+    "close": "Cerrar",
+    "back": "Atrás",
+    "next": "Siguiente",
+    "previous": "Anterior",
+    "yes": "Sí",
+    "no": "No",
+    "ok": "Aceptar",
+    "apply": "Aplicar",
+    "reset": "Restablecer"
+  },
+  "settings": {
+    "title": "Configuración",
+    "categories": {
+      "language": "Idioma",
+      "appearance": "Apariencia",
+      "notifications": "Notificaciones",
+      "privacy": "Privacidad",
+      "accessibility": "Accesibilidad",
+      "media": "Medios",
+      "chat": "Chat"
+    },
+    "language": {
+      "title": "Configuración de Idioma",
+      "interface": "Idioma de la Interfaz",
+      "interfaceDescription": "Selecciona tu idioma preferido para la interfaz de la aplicación",
+      "dateFormat": "Formato de Fecha",
+      "dateFormatDescription": "Elige cómo se muestran las fechas en toda la aplicación",
+      "timeFormat": "Formato de Hora",
+      "timeFormatDescription": "Elige entre formato de 12 horas o 24 horas"
+    },
+    "appearance": {
+      "title": "Configuración de Apariencia",
+      "theme": "Tema",
+      "themeDescription": "Elige tu esquema de colores preferido",
+      "darkMode": "Modo Oscuro",
+      "lightMode": "Modo Claro",
+      "systemDefault": "Predeterminado del Sistema",
+      "fontSize": "Tamaño de Fuente",
+      "fontSizeDescription": "Ajusta el tamaño del texto para una mejor legibilidad",
+      "small": "Pequeño",
+      "medium": "Mediano",
+      "large": "Grande"
+    },
+    "notifications": {
+      "title": "Configuración de Notificaciones",
+      "enableNotifications": "Activar Notificaciones",
+      "enableNotificationsDescription": "Recibe notificaciones de nuevos mensajes y actualizaciones",
+      "soundEnabled": "Notificaciones de Sonido",
+      "soundEnabledDescription": "Reproduce un sonido cuando recibes una notificación",
+      "desktopNotifications": "Notificaciones de Escritorio",
+      "desktopNotificationsDescription": "Muestra notificaciones en tu escritorio"
+    },
+    "privacy": {
+      "title": "Configuración de Privacidad",
+      "readReceipts": "Confirmaciones de Lectura",
+      "readReceiptsDescription": "Permite que otros sepan cuando has leído sus mensajes",
+      "onlineStatus": "Estado en Línea",
+      "onlineStatusDescription": "Muestra cuando estás en línea a otros usuarios",
+      "typingIndicator": "Indicador de Escritura",
+      "typingIndicatorDescription": "Muestra a otros cuando estás escribiendo un mensaje"
+    },
+    "accessibility": {
+      "title": "Configuración de Accesibilidad",
+      "reducedMotion": "Movimiento Reducido",
+      "reducedMotionDescription": "Minimiza las animaciones en toda la interfaz",
+      "highContrast": "Alto Contraste",
+      "highContrastDescription": "Aumenta el contraste para una mejor visibilidad",
+      "screenReader": "Soporte para Lector de Pantalla",
+      "screenReaderDescription": "Optimiza la interfaz para lectores de pantalla"
+    },
+    "media": {
+      "title": "Configuración de Medios",
+      "autoPlayVideos": "Reproducción Automática de Videos",
+      "autoPlayVideosDescription": "Reproduce automáticamente los videos en el chat",
+      "autoDownloadImages": "Descarga Automática de Imágenes",
+      "autoDownloadImagesDescription": "Descarga automáticamente las imágenes en las conversaciones",
+      "imageQuality": "Calidad de Imagen",
+      "imageQualityDescription": "Establece la calidad de las imágenes subidas"
+    },
+    "chat": {
+      "title": "Configuración de Chat",
+      "enterToSend": "Enter para Enviar",
+      "enterToSendDescription": "Presiona Enter para enviar mensajes (Shift+Enter para nueva línea)",
+      "showTimestamps": "Mostrar Marcas de Tiempo",
+      "showTimestampsDescription": "Muestra las marcas de tiempo de los mensajes en las conversaciones",
+      "messagePreview": "Vista Previa de Mensajes",
+      "messagePreviewDescription": "Muestra vistas previas de mensajes en la lista de chat"
+    }
+  },
+  "navbar": {
+    "home": "Inicio",
+    "chats": "Chats",
+    "settings": "Configuración",
+    "profile": "Perfil",
+    "logout": "Cerrar Sesión",
+    "search": "Buscar...",
+    "notifications": "Notificaciones"
+  },
+  "chat": {
+    "newMessage": "Nuevo Mensaje",
+    "typeMessage": "Escribe un mensaje...",
+    "send": "Enviar",
+    "attachment": "Adjunto",
+    "emoji": "Emoji",
+    "noMessages": "Aún no hay mensajes",
+    "startConversation": "Inicia una conversación",
+    "members": "Miembros",
+    "online": "En línea",
+    "offline": "Desconectado",
+    "typing": "escribiendo...",
+    "delivered": "Entregado",
+    "read": "Leído",
+    "sent": "Enviado",
+    "createGroup": "Crear Grupo",
+    "groupName": "Nombre del Grupo",
+    "addMembers": "Agregar Miembros",
+    "leaveGroup": "Salir del Grupo",
+    "deleteChat": "Eliminar Chat"
+  },
+  "errors": {
+    "generic": "Algo salió mal. Por favor, inténtalo de nuevo.",
+    "network": "Error de red. Por favor, verifica tu conexión.",
+    "unauthorized": "No tienes autorización para realizar esta acción.",
+    "notFound": "El recurso solicitado no fue encontrado.",
+    "validation": "Por favor, verifica tu entrada e inténtalo de nuevo."
+  }
+}

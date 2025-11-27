@@ -1,5 +1,5 @@
 <div class="sidebar-container">
-  <h3 class="sidebar-title">Settings</h3>
+  <h3 class="sidebar-title" transloco="settings.title"></h3>
   <nav class="sidebar-nav">
     <a *ngFor="let category of sortedCategories$ | async" [routerLink]="['/settings', category.key]"
       routerLinkActive="active" #rla="routerLinkActive" class="sidebar-link">

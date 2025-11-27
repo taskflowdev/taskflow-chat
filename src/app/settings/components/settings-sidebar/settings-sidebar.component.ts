@@ -6,10 +6,11 @@ import { Observable } from 'rxjs';
 import { map, filter } from 'rxjs/operators';
 import { CatalogResponse } from '../../../api/models/catalog-response';
 import { CategoryWithKeys } from '../../../api/models/category-with-keys';
+import { TranslocoModule } from '@jsverse/transloco';
 
 @Component({
   selector: 'app-settings-sidebar',
-  imports: [CommonModule, RouterModule],
+  imports: [CommonModule, RouterModule, TranslocoModule],
   templateUrl: './settings-sidebar.component.html',
   styleUrls: ['./settings-sidebar.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
