@@ -35,18 +35,40 @@
   align-items: center;
   vertical-align: middle;
 
+  .default-icon {
+    display: inline-block;
+  }
+
+  .active-icon {
+    display: none;
+  }
+
   &:hover:not(.active) {
+    .default-icon {
+      display: none;
+    }
+    .active-icon {
+      display: inline-block;
+    }
+
     background-color: var(--taskflow-color-sidebar-hover);
     text-decoration: none;
   }
 
   &.active {
+    .default-icon {
+      display: none;
+    }
+    .active-icon {
+      display: inline-block;
+    }
+
     background-color: var(--taskflow-color-sidebar-active);
     color: var(--taskflow-color-sidebar-active-text);
     font-weight: 600;
 
     .sidebar-icon {
-      color: var(--taskflow-color-sidebar-icon-active, #0969da);
+      color: var(--taskflow-color-sidebar-icon-active);
     }
 
     // &::before {
