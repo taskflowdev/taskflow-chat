@@ -26,10 +26,13 @@ export interface NavLink {
         class="nav-link"
         [class.active]="isActiveRoute(link.path)"
         [title]="link.title">
-        <i
-          class="bi"
-          [ngClass]="isActiveRoute(link.path) ? link.activeIcon : link.icon">
-        </i>
+
+        <!-- Default Icon -->
+        <i class="bi default-icon" [ngClass]="link.icon"></i>
+
+        <!-- Active Icon -->
+        <i class="bi active-icon" [ngClass]="link.activeIcon"></i>
+
         <span class="nav-text">{{ link.label }}</span>
       </a>
     </nav>

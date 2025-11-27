@@ -3,8 +3,15 @@
   <nav class="sidebar-nav">
     <a *ngFor="let category of sortedCategories$ | async" [routerLink]="['/settings', category.key]"
       routerLinkActive="active" #rla="routerLinkActive" class="sidebar-link">
-      <i [class]="'bi ' + getIconClass(category, rla.isActive)" class="sidebar-icon"></i>
+
+      <!-- Default Icon -->
+      <i class="bi sidebar-icon default-icon" [ngClass]="'bi-' + category.icon"></i>
+
+      <!-- Active Icon -->
+      <i class="bi sidebar-icon active-icon" [ngClass]="'bi-' + category.iconSelected"></i>
+
       <span class="category-name">{{ category.displayName }}</span>
+
       <span *ngIf="category.beta" class="badge badge-beta">Beta</span>
     </a>
   </nav>
