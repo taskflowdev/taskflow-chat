@@ -3,24 +3,47 @@
  * @description HTTP-based translation loader for Transloco
  *
  * Implements TranslocoLoader interface to fetch translation JSON files
- * from the assets/i18n folder. Includes caching and error handling.
+ * from the assets/i18n folder. Includes caching, error handling, and SSR support.
  *
  * @version 1.0.0
  * @module CoreI18n
  */
 
-import { Injectable, inject } from '@angular/core';
+import { Injectable, inject, PLATFORM_ID } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { Translation, TranslocoLoader } from '@jsverse/transloco';
 import { Observable, of } from 'rxjs';
 import { catchError, shareReplay, tap } from 'rxjs/operators';
 import { TRANSLATIONS_PATH, DEFAULT_LANGUAGE } from './i18n.config';
 
+// Import static translations for SSR
+import enTranslations from '../../../../public/i18n/en.json';
+import esTranslations from '../../../../public/i18n/es.json';
+import frTranslations from '../../../../public/i18n/fr.json';
+import deTranslations from '../../../../public/i18n/de.json';
+import jaTranslations from '../../../../public/i18n/ja.json';
+import zhTranslations from '../../../../public/i18n/zh.json';
+
+/**
+ * Static translations map for SSR
+ * These are bundled with the server build to avoid HTTP calls during prerendering
+ */
+const STATIC_TRANSLATIONS: Record<string, Translation> = {
+  en: enTranslations as Translation,
+  es: esTranslations as Translation,
+  fr: frTranslations as Translation,
+  de: deTranslations as Translation,
+  ja: jaTranslations as Translation,
+  zh: zhTranslations as Translation
+};
+
 /**
  * TranslocoHttpLoader
  *
  * Enterprise-grade translation loader that:
- * - Fetches translation files via HTTP
+ * - Fetches translation files via HTTP (browser)
+ * - Uses static imports during SSR/prerendering
  * - Caches loaded translations in memory
  * - Provides fallback to default language on error
  * - Uses shareReplay for concurrent request optimization
@@ -34,6 +57,8 @@ import { TRANSLATIONS_PATH, DEFAULT_LANGUAGE } from './i18n.config';
 @Injectable({ providedIn: 'root' })
 export class TranslocoHttpLoader implements TranslocoLoader {
   private readonly http = inject(HttpClient);
+  private readonly platformId = inject(PLATFORM_ID);
+  private readonly isBrowser = isPlatformBrowser(this.platformId);
 
   /**
    * In-memory translation cache
@@ -48,6 +73,12 @@ export class TranslocoHttpLoader implements TranslocoLoader {
    * @returns Observable of translation object
    */
   getTranslation(lang: string): Observable<Translation> {
+    // For SSR/prerendering, use static translations
+    if (!this.isBrowser) {
+      const staticTranslation = STATIC_TRANSLATIONS[lang] || STATIC_TRANSLATIONS[DEFAULT_LANGUAGE] || {};
+      return of(staticTranslation);
+    }
+
     // Check cache first
     const cached = this.translationCache.get(lang);
     if (cached) {
