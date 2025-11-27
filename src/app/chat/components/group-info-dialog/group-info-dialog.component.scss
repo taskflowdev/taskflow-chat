@@ -54,27 +54,27 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 1rem;
+  padding: 0.8rem;
   border-bottom: 1px solid var(--taskflow-color-group-info-dialog-border);
   transition: border-color 0.2s ease;
 
   .dialog-header-text {
     display: flex;
     flex-direction: column;
-    padding-left: 0.5rem;
+    margin-left: 0.6rem;
   }
 
   .dialog-title {
     color: var(--taskflow-color-text-primary);
     transition: color 0.2s ease;
-    font-size: 1.5rem;
+    font-size: var(--taskflow-font-font-size-h2);
     font-weight: 600;
     margin: 0;
   }
 
   .dialog-subtitle {
     margin: 0.2rem 0 0 0;
-    font-size: 0.875rem;
+    font-size: var(--taskflow-font-font-size-normal);
     color: var(--taskflow-color-text-secondary);
     transition: color 0.2s ease;
     font-weight: 400;
@@ -86,7 +86,7 @@
   border: none;
   color: var(--taskflow-color-text-secondary);
   transition: color 0.2s ease;
-  font-size: 1.25rem;
+  font-size: var(--taskflow-font-icon-size-md);
   cursor: pointer;
   padding: 0.5rem;
   border-radius: 6px;
@@ -155,7 +155,7 @@
 .tab-title {
   color: var(--taskflow-color-text-primary);
   transition: color 0.2s ease;
-  font-size: 1.125rem;
+  font-size: var(--taskflow-font-font-size-h3);
   font-weight: 600;
   margin: 0 0 0.2rem 0;
 }
@@ -163,7 +163,7 @@
 .tab-description {
   color: var(--taskflow-color-text-secondary);
   transition: color 0.2s ease;
-  font-size: 0.875rem;
+  font-size: var(--taskflow-font-font-size-normal);
   margin: 0 0 1.5rem 0;
 }
 
@@ -188,7 +188,7 @@
   text-align: center;
   margin-bottom: 1rem;
   border: 1px solid var(--taskflow-color-group-info-dialog-avatar-border);
-  padding: 1rem 1.2rem;
+  padding: 0.8rem 1rem;
   border-radius: 10px;
 
   .avatar-info {
@@ -209,7 +209,7 @@
 
       .avatar-group-name {
         margin-bottom: 0;
-        font-size: 1.2rem;
+        font-size: var(--taskflow-font-font-size-large);
         font-weight: 600;
         text-align: center;
         color: var(--taskflow-color-text-primary);
@@ -218,7 +218,7 @@
 
       .group-member-count {
         margin: 0;
-        font-size: 0.8rem;
+        font-size: var(--taskflow-font-font-size-normal);
         color: var(--taskflow-color-text-secondary);
         transition: color 0.2s ease;
       }
@@ -231,7 +231,7 @@
     align-items: center;
 
     i {
-      font-size: 1.25rem;
+      font-size: var(--taskflow-font-icon-size-md);
       color: var(--taskflow-color-text-secondary);
       transition: color 0.2s ease;
       cursor: pointer;
@@ -249,8 +249,8 @@
 }
 
 .avatar-circle {
-  width: 80px;
-  height: 80px;
+  width: 75px;
+  height: 75px;
   border-radius: 50%;
   background: var(--taskflow-color-group-info-dialog-avatar-bg);
   transition: background 0.2s ease;
@@ -261,7 +261,7 @@
   text-align: center;
 
   i {
-    font-size: 2rem;
+    font-size: var(--taskflow-font-icon-size-xl);
     color: var(--taskflow-color-text-secondary);
     transition: color 0.2s ease;
   }
@@ -320,10 +320,10 @@
     var(--taskflow-color-group-info-dialog-danger-zone-border);
   color: var(--taskflow-color-group-info-dialog-danger-zone-text);
   font-weight: 600;
-  font-size: 0.9rem;
+  font-size: var(--taskflow-font-font-size-normal);
 
   i {
-    font-size: 1rem;
+    font-size: var(--taskflow-font-icon-size-md);
   }
 }
 
@@ -354,7 +354,7 @@
   h4 {
     color: var(--taskflow-color-text-primary);
     transition: color 0.2s ease;
-    font-size: 0.95rem;
+    font-size: var(--taskflow-font-font-size-normal);
     font-weight: 600;
     margin: 0 0 0.1rem 0;
   }
@@ -362,9 +362,9 @@
   p {
     color: var(--taskflow-color-text-secondary);
     transition: color 0.2s ease;
-    font-size: 0.813rem;
+    font-size: var(--taskflow-font-font-size-normal);
     margin: 0;
-    line-height: 1.5;
+    line-height: var(--taskflow-font-line-height-base);
   }
 }
 

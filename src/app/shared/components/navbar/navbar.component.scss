@@ -40,7 +40,7 @@
   }
 
   .logo-icon {
-    font-size: 2rem;
+    font-size: var(--taskflow-font-icon-size-xl);
     color: var(--taskflow-color-navbar-text);
     transition: color 0.2s ease;
   }
@@ -52,7 +52,7 @@
   }
 
   .logo-text {
-    font-size: 1.1rem;
+    font-size: var(--taskflow-font-font-size-large);
     font-weight: 600;
     color: var(--taskflow-color-navbar-text);
     letter-spacing: 0.5px;
@@ -82,7 +82,7 @@
 
   .logo-section {
     .logo-icon {
-      font-size: 1.5rem;
+      font-size: var(--taskflow-font-icon-size-xl);
     }
 
     .logo-text {
@@ -100,7 +100,7 @@
 
   .logo-section {
     .logo-icon {
-      font-size: 1.3rem;
+      font-size: var(--taskflow-font-icon-size-lg);
     }
   }
 }

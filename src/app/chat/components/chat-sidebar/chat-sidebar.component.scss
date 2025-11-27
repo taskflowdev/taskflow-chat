@@ -24,7 +24,7 @@
 
   .sidebar-title {
     color: var(--taskflow-color-text-primary);
-    font-size: 1.1rem;
+    font-size: var(--taskflow-font-font-size-large);
     font-weight: 600;
     margin: 0;
     transition: color 0.2s ease;
@@ -55,7 +55,7 @@
     }
 
     i {
-      font-size: 1.25rem;
+      font-size: var(--taskflow-font-icon-size-md);
     }
   }
 }
@@ -72,43 +72,6 @@
   overflow-y: auto;
 }
 
-// .no-chats {
-//   display: flex;
-//   flex-direction: column;
-//   align-items: center;
-//   justify-content: center;
-//   padding: 2rem 1rem;
-//   text-align: center;
-//   color: #9ca3af;
-
-//   .empty-icon {
-//     font-size: 3rem;
-//     margin-bottom: 1rem;
-//     color: #666666;
-//   }
-
-//   .empty-text {
-//     font-size: 0.9rem;
-//     margin-bottom: 1.5rem;
-//     color: #9ca3af;
-//   }
-
-//   .start-chat-btn {
-//     background: white;
-//     color: black;
-//     border: none;
-//     border-radius: 6px;
-//     padding: 0.5rem 1rem;
-//     font-size: 0.85rem;
-//     font-weight: 500;
-//     transition: all 0.2s ease;
-
-//     &:hover {
-//       background: #f3f4f6;
-//     }
-//   }
-// }
-
 .no-chats {
   display: flex;
   flex-direction: column;
@@ -120,13 +83,13 @@
   padding: 1rem;
 
   .empty-icon {
-    font-size: 3rem;
+    font-size: var(--taskflow-font-icon-size-3xl);
     margin-bottom: 0.75rem;
     color: var(--taskflow-color-text-tertiary);
   }
 
   .empty-text {
-    font-size: 0.85rem;
+    font-size: var(--taskflow-font-font-size-normal);
     margin-bottom: 1rem;
     color: var(--taskflow-color-text-secondary);
   }
@@ -137,9 +100,9 @@
     border: none;
     border-radius: 6px;
     padding: 0.4rem 0.75rem;
-    font-size: 0.8rem;
+    font-size: var(--taskflow-font-font-size-small);
     font-weight: bold;
-    line-height: 1.2;
+    line-height: var(--taskflow-font-line-height-compact);
     transition: all 0.2s ease;
 
     &:hover {
@@ -168,7 +131,7 @@
     padding: 0.75rem;
 
     .sidebar-title {
-      font-size: 1rem;
+      font-size: var(--taskflow-font-font-size-normal);
     }
 
     .search-btn {
@@ -186,12 +149,12 @@
     padding: 1rem;
 
     .empty-icon {
-      font-size: 2.5rem;
+      font-size: var(--taskflow-font-icon-size-2xl);
     }
 
     .start-chat-btn {
       padding: 0.4rem 0.8rem;
-      font-size: 0.8rem;
+      font-size: var(--taskflow-font-font-size-small);
     }
   }
 }
@@ -209,7 +172,7 @@
     padding: 0.7rem;
 
     .sidebar-title {
-      font-size: 1rem;
+      font-size: var(--taskflow-font-font-size-normal);
     }
 
     .search-btn {
@@ -227,12 +190,12 @@
     padding: 1rem;
 
     .empty-icon {
-      font-size: 2.5rem;
+      font-size: var(--taskflow-font-icon-size-2xl);
     }
 
     .start-chat-btn {
       padding: 0.4rem 0.8rem;
-      font-size: 0.8rem;
+      font-size: var(--taskflow-font-font-size-small);
     }
   }
 }
