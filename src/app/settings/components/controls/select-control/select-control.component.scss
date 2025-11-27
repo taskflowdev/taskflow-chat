@@ -13,7 +13,7 @@
     align-items: center;
     justify-content: space-between;
     padding: 8px 12px;
-    font-size: 14px;
+    font-size: var(--taskflow-font-font-size-normal);
     font-weight: 400;
     text-align: left;
     background-color: var(--taskflow-color-surface);
@@ -22,7 +22,7 @@
     border-radius: 6px;
     transition: all 0.15s cubic-bezier(0.2, 0, 0.38, 0.9);
     cursor: pointer;
-    line-height: 20px;
+    line-height: var(--taskflow-font-line-height-compact);
 
     &:hover:not(.disabled) {
       background-color: var(--taskflow-color-surface-hover);
@@ -57,7 +57,7 @@
     }
 
     .dropdown-icon {
-      font-size: 12px;
+      font-size: var(--taskflow-font-icon-size-xs);
       transition: transform 0.2s cubic-bezier(0.2, 0, 0.38, 0.9);
       color: var(--taskflow-color-text-secondary);
       flex-shrink: 0;
@@ -130,9 +130,9 @@
       align-items: center;
       justify-content: space-between;
       padding: 8px 10px;
-      font-size: 14px;
+      font-size: var(--taskflow-font-font-size-normal);
       font-weight: 400;
-      line-height: 20px;
+      line-height: var(--taskflow-font-line-height-compact);
       border-radius: 4px;
       cursor: pointer;
       transition: background-color 0.12s ease-out;
@@ -151,7 +151,7 @@
       }
 
       .option-icon {
-        font-size: 1rem;
+        font-size: var(--taskflow-font-icon-size-md);
         color: var(--taskflow-color-settings-icon, #57606a);
         flex-shrink: 0;
       }
@@ -168,7 +168,7 @@
       .check-icon {
         text-align: center;
         vertical-align: middle;
-        font-size: 16px;
+        font-size: var(--taskflow-font-icon-size-md);
         font-weight: 600;
         color: var(--taskflow-color-text-secondary);
         flex-shrink: 0;

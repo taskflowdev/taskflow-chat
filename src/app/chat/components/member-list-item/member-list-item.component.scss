@@ -42,7 +42,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 0.875rem;
+  font-size: var(--taskflow-font-font-size-small);
   font-weight: 600;
   color: var(--taskflow-color-member-avatar-text);
   border: 1px solid var(--taskflow-color-member-avatar-border);
@@ -59,7 +59,7 @@
 
 .member-name {
   color: var(--taskflow-color-member-name-text);
-  font-size: 0.9rem;
+  font-size: var(--taskflow-font-font-size-normal);
   font-weight: 500;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -70,7 +70,7 @@
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  font-size: 0.75rem;
+  font-size: var(--taskflow-font-font-size-x-small);
   color: var(--taskflow-color-member-meta-text);
 }
 
@@ -88,7 +88,7 @@
   // }
 
   i {
-    font-size: 0.75rem;
+    font-size: var(--taskflow-font-icon-size-xs);
   }
 }
 
@@ -115,14 +115,14 @@
   border: 1px solid var(--taskflow-color-action-btn-border);
   border-radius: 6px;
   color: var(--taskflow-color-action-btn-text);
-  font-size: 0.75rem;
+  font-size: var(--taskflow-font-font-size-x-small);
   font-weight: 500;
   cursor: pointer;
   transition: all 0.2s ease;
   white-space: nowrap;
 
   i {
-    font-size: 0.875rem;
+    font-size: var(--taskflow-font-icon-size-sm);
   }
 
   &:hover:not(.disabled) {
@@ -158,7 +158,7 @@
     padding: 0.5rem;
 
     i {
-      font-size: 1rem;
+      font-size: var(--taskflow-font-icon-size-md);
     }
   }
 }
@@ -171,15 +171,15 @@
   .member-avatar {
     width: 36px;
     height: 36px;
-    font-size: 0.813rem;
+    font-size: var(--taskflow-font-font-size-small);
   }
 
   .member-name {
-    font-size: 0.813rem;
+    font-size: var(--taskflow-font-font-size-small);
   }
 
   .member-meta {
-    font-size: 0.688rem;
+    font-size: var(--taskflow-font-font-size-x-small);
   }
 
   .member-actions {

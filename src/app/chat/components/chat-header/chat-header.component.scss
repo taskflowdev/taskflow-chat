@@ -36,7 +36,7 @@
   }
 
   .logo-text {
-    font-size: 1rem;
+    font-size: var(--taskflow-font-font-size-normal);
     font-weight: 600;
     color: var(--taskflow-color-navbar-text);
     letter-spacing: 0.5px;
@@ -45,7 +45,7 @@
 
 .center-title {
   text-align: center;
-  font-size: 2rem;
+  font-size: var(--taskflow-font-font-size-h1);
   color: var(--taskflow-color-navbar-text);
 }
 
@@ -59,7 +59,7 @@
     color: var(--taskflow-color-user-dropdown-text);
     border-radius: 6px;
     padding: 0.5rem 1rem;
-    font-size: 0.875rem;
+    font-size: var(--taskflow-font-font-size-small);
     transition: all 0.2s ease;
 
     &:hover {
@@ -84,7 +84,7 @@
 
   .dropdown-item {
     color: var(--taskflow-color-user-dropdown-text);
-    font-size: 0.875rem;
+    font-size: var(--taskflow-font-font-size-small);
     transition: all 0.2s ease;
 
     &:hover {
@@ -124,7 +124,7 @@
 
   .user-section .user-dropdown-btn {
     padding: 0.375rem 0.75rem;
-    font-size: 0.8rem;
+    font-size: var(--taskflow-font-font-size-small);
   }
 }
 

@@ -1,4 +1,4 @@
-// Chat item component styles - black and white theme
+// Chat item component styles - uses theme tokens
 .chat-item {
   display: flex;
   align-items: center;
@@ -37,7 +37,7 @@
 
   i {
     color: var(--taskflow-color-chat-sidebar-item-avatar-text);
-    font-size: 1.2rem;
+    font-size: var(--taskflow-font-icon-size-lg);
   }
 }
 
@@ -54,7 +54,7 @@
     .chat-name {
       color: var(--taskflow-color-text-primary);
       font-weight: 500;
-      font-size: 1rem;
+      font-size: var(--taskflow-font-font-size-normal);
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
@@ -63,7 +63,7 @@
 
     .chat-time {
       color: var(--taskflow-color-text-secondary);
-      font-size: 0.75rem;
+      font-size: var(--taskflow-font-font-size-x-small);
       white-space: nowrap;
       margin-left: 0.5rem;
     }
@@ -76,7 +76,7 @@
 
     .last-message {
       color: var(--taskflow-color-text-secondary);
-      font-size: 0.8rem;
+      font-size: var(--taskflow-font-font-size-small);
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
@@ -86,7 +86,7 @@
 
       .message-icon {
         margin-right: 0.3rem;
-        font-size: 0.75rem;
+        font-size: var(--taskflow-font-icon-size-xs);
         color: var(--taskflow-color-text-secondary);
         flex-shrink: 0;
       }
@@ -95,7 +95,7 @@
     .unread-count {
       background: var(--taskflow-color-button-secondary-bg);
       color: var(--taskflow-color-button-secondary-text);
-      font-size: 0.7rem;
+      font-size: var(--taskflow-font-font-size-x-small);
       font-weight: bold;
       padding: 0.15rem 0.4rem;
       border-radius: 10px;
@@ -132,30 +132,30 @@
       margin-right: 0.6rem;
 
       i {
-        font-size: 1.1rem;
+        font-size: var(--taskflow-font-icon-size-md);
       }
     }
 
     .chat-content {
       .chat-header {
         .chat-name {
-          font-size: 0.85rem;
+          font-size: var(--taskflow-font-font-size-small);
           max-width: 120px;
         }
 
         .chat-time {
-          font-size: 0.7rem;
+          font-size: var(--taskflow-font-font-size-x-small);
         }
       }
 
       .chat-preview {
         .last-message {
-          font-size: 0.75rem;
+          font-size: var(--taskflow-font-font-size-x-small);
           max-width: 140px;
         }
 
         .unread-count {
-          font-size: 0.65rem;
+          font-size: var(--taskflow-font-font-size-x-small);
           padding: 0.1rem 0.3rem;
         }
       }

@@ -3,7 +3,7 @@
 }
 
 .sidebar-title {
-  font-size: 1.5rem;
+  font-size: var(--taskflow-font-font-size-h3);
   font-weight: 600;
   margin-bottom: 1.2rem;
   padding: 0 0.5rem;
@@ -25,9 +25,9 @@
   border-radius: 6px;
   text-decoration: none;
   color: var(--taskflow-color-text-primary);
-  font-size: 0.875rem;
+  font-size: var(--taskflow-font-font-size-small);
   font-weight: 400;
-  line-height: 1.5;
+  line-height: var(--taskflow-font-line-height-base);
   position: relative;
   transition: background-color 0.12s cubic-bezier(0.2, 0, 0.38, 0.9),
     color 0.12s cubic-bezier(0.2, 0, 0.38, 0.9);
@@ -63,7 +63,7 @@
 }
 
 .sidebar-icon {
-  font-size: 1rem;
+  font-size: var(--taskflow-font-icon-size-md);
   color: var(--taskflow-color-sidebar-icon, #57606a);
   flex-shrink: 0;
   transition: color 0.12s cubic-bezier(0.2, 0, 0.38, 0.9);
@@ -75,7 +75,7 @@
 
 .badge {
   padding: 0.125rem 0.5rem;
-  font-size: 0.6875rem;
+  font-size: var(--taskflow-font-font-size-x-small);
   font-weight: 500;
   line-height: 1.4;
   border-radius: 12px;

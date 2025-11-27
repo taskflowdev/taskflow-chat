@@ -43,14 +43,14 @@
 }
 
 .empty-icon {
-  font-size: 3rem;
+  font-size: var(--taskflow-font-icon-size-3xl);
   color: var(--taskflow-color-text-secondary);
   margin-bottom: 1rem;
 }
 
 .empty-message {
   color: var(--taskflow-color-text-tertiary);
-  font-size: 0.875rem;
+  font-size: var(--taskflow-font-font-size-small);
   margin: 0;
 }
 
@@ -77,30 +77,6 @@
   }
 }
 
-// Virtual scroll viewport styles (for future implementation)
-// .member-list-viewport {
-//   height: 400px;
-//   overflow-y: auto;
-
-//   &::-webkit-scrollbar {
-//     width: 8px;
-//   }
-
-//   &::-webkit-scrollbar-track {
-//     background: rgba(255, 255, 255, 0.05);
-//     border-radius: 4px;
-//   }
-
-//   &::-webkit-scrollbar-thumb {
-//     background: #444444;
-//     border-radius: 4px;
-
-//     &:hover {
-//       background: #555555;
-//     }
-//   }
-// }
-
 // Responsive
 @media (max-width: 768px) {
   .skeleton-actions {
@@ -119,11 +95,11 @@
   }
 
   .empty-icon {
-    font-size: 2.5rem;
+    font-size: var(--taskflow-font-icon-size-2xl);
   }
 
   .empty-message {
-    font-size: 0.813rem;
+    font-size: var(--taskflow-font-font-size-small);
   }
 }
 

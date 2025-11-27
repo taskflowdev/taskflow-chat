@@ -5,7 +5,7 @@
       background: transparent;
       color: var(--taskflow-color-text-primary);
       font-weight: 500;
-      font-size: 0.85rem;
+      font-size: var(--taskflow-font-font-size-small);
       padding: 0.5rem 1rem;
       border-radius: 6px;
       transition: all 0.3s ease;
@@ -23,7 +23,7 @@
       }
 
       .dropdown-icon {
-        font-size: 0.7rem;
+        font-size: var(--taskflow-font-icon-size-xs);
         transition: transform 0.3s ease;
       }
 
@@ -63,7 +63,7 @@
         width: 100%;
         text-align: left;
         padding: 0.5rem 1rem;
-        font-size: 0.9rem;
+        font-size: var(--taskflow-font-font-size-small);
         transition: all 0.2s ease;
         display: flex;
         align-items: center;
@@ -76,7 +76,7 @@
         }
 
         i {
-          font-size: 0.9rem;
+          font-size: var(--taskflow-font-icon-size-sm);
           width: 16px;
         }
 
@@ -84,7 +84,7 @@
           background-color: var(--taskflow-color-badge-bg);
           border-radius: 8px;
           padding: 0.08rem 0.4rem;
-          font-size: 0.8rem;
+          font-size: var(--taskflow-font-font-size-small);
           color: var(--taskflow-color-badge-text);
           font-family: "JetBrains Mono", monospace;
           white-space: nowrap;
@@ -118,14 +118,14 @@
     .dropdown {
       .user-dropdown-btn {
         padding: 0.4rem 0.75rem;
-        font-size: 0.8rem;
+        font-size: var(--taskflow-font-font-size-small);
 
         .user-name {
           max-width: 100px;
         }
 
         .dropdown-icon {
-          font-size: 0.65rem;
+          font-size: var(--taskflow-font-icon-size-xs);
         }
       }
 
@@ -134,10 +134,10 @@
 
         .dropdown-item {
           padding: 0.4rem 0.75rem;
-          font-size: 0.75rem;
+          font-size: var(--taskflow-font-font-size-x-small);
 
           i {
-            font-size: 0.8rem;
+            font-size: var(--taskflow-font-icon-size-sm);
             width: 14px;
           }
         }
