@@ -19,6 +19,7 @@ import { Subscription } from 'rxjs';
 import { KeyboardShortcutService } from '../../../shared/services/keyboard-shortcut.service';
 import { ChatRealtimeService } from '../../../core/realtime';
 import { AppConfigService } from '../../../core/services/app-config.service';
+import { TranslocoModule } from '@jsverse/transloco';
 
 @Component({
   selector: 'app-main-chat',
@@ -30,7 +31,8 @@ import { AppConfigService } from '../../../core/services/app-config.service';
     CreateGroupDialogComponent,
     GroupSearchDialogComponent,
     KeyboardShortcutsDialogComponent,
-    GroupInfoDialogComponent
+    GroupInfoDialogComponent,
+    TranslocoModule
   ],
   templateUrl: './main-chat.component.html',
   styleUrl: './main-chat.component.scss'

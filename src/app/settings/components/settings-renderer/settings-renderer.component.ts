@@ -8,6 +8,7 @@ import { SelectControlComponent } from '../controls/select-control/select-contro
 import { RadioControlComponent } from '../controls/radio-control/radio-control.component';
 import { Subject, takeUntil } from 'rxjs';
 import { CommonTooltipDirective } from "../../../shared/components/common-tooltip";
+import { LanguageService, LANGUAGE_SETTINGS_KEY } from '../../../core/i18n';
 
 @Component({
   selector: 'app-settings-renderer',
@@ -29,7 +30,8 @@ export class SettingsRendererComponent implements OnInit, OnDestroy {
   constructor(
     private userSettingsService: UserSettingsService,
     private toastService: ToastService,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private languageService: LanguageService
   ) { }
 
   ngOnInit(): void {
@@ -71,6 +73,11 @@ export class SettingsRendererComponent implements OnInit, OnDestroy {
 
     // Silent auto-save - no UI feedback, just save
     this.userSettingsService.updateSetting(this.categoryKey, this.settingKey.key!, newValue);
+
+    // Handle language setting change - apply runtime language switch
+    if (this.settingKey.key === LANGUAGE_SETTINGS_KEY) {
+      this.languageService.setLanguage(newValue, false); // false = don't persist again, already done above
+    }
 
     // Update modified state
     this.isModified = this.userSettingsService.isModifiedFromDefault(

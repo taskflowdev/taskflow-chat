@@ -1,0 +1,140 @@
+{
+  "common": {
+    "save": "Enregistrer",
+    "cancel": "Annuler",
+    "search": "Rechercher",
+    "loading": "Chargement...",
+    "error": "Erreur",
+    "success": "Succès",
+    "confirm": "Confirmer",
+    "delete": "Supprimer",
+    "edit": "Modifier",
+    "add": "Ajouter",
+    "remove": "Retirer",
+    "close": "Fermer",
+    "back": "Retour",
+    "next": "Suivant",
+    "previous": "Précédent",
+    "yes": "Oui",
+    "no": "Non",
+    "ok": "OK",
+    "apply": "Appliquer",
+    "reset": "Réinitialiser"
+  },
+  "settings": {
+    "title": "Paramètres",
+    "categories": {
+      "language": "Langue",
+      "appearance": "Apparence",
+      "notifications": "Notifications",
+      "privacy": "Confidentialité",
+      "accessibility": "Accessibilité",
+      "media": "Médias",
+      "chat": "Discussion"
+    },
+    "language": {
+      "title": "Paramètres de Langue",
+      "interface": "Langue de l'Interface",
+      "interfaceDescription": "Sélectionnez votre langue préférée pour l'interface de l'application",
+      "dateFormat": "Format de Date",
+      "dateFormatDescription": "Choisissez comment les dates sont affichées dans l'application",
+      "timeFormat": "Format de l'Heure",
+      "timeFormatDescription": "Choisissez entre le format 12 heures ou 24 heures"
+    },
+    "appearance": {
+      "title": "Paramètres d'Apparence",
+      "theme": "Thème",
+      "themeDescription": "Choisissez votre palette de couleurs préférée",
+      "darkMode": "Mode Sombre",
+      "lightMode": "Mode Clair",
+      "systemDefault": "Par Défaut du Système",
+      "fontSize": "Taille de Police",
+      "fontSizeDescription": "Ajustez la taille du texte pour une meilleure lisibilité",
+      "small": "Petit",
+      "medium": "Moyen",
+      "large": "Grand"
+    },
+    "notifications": {
+      "title": "Paramètres de Notifications",
+      "enableNotifications": "Activer les Notifications",
+      "enableNotificationsDescription": "Recevez des notifications pour les nouveaux messages et mises à jour",
+      "soundEnabled": "Notifications Sonores",
+      "soundEnabledDescription": "Émettre un son lorsque vous recevez une notification",
+      "desktopNotifications": "Notifications de Bureau",
+      "desktopNotificationsDescription": "Afficher les notifications sur votre bureau"
+    },
+    "privacy": {
+      "title": "Paramètres de Confidentialité",
+      "readReceipts": "Confirmations de Lecture",
+      "readReceiptsDescription": "Informez les autres lorsque vous avez lu leurs messages",
+      "onlineStatus": "Statut en Ligne",
+      "onlineStatusDescription": "Montrez aux autres utilisateurs quand vous êtes en ligne",
+      "typingIndicator": "Indicateur de Saisie",
+      "typingIndicatorDescription": "Montrez aux autres quand vous êtes en train d'écrire un message"
+    },
+    "accessibility": {
+      "title": "Paramètres d'Accessibilité",
+      "reducedMotion": "Mouvement Réduit",
+      "reducedMotionDescription": "Minimiser les animations dans toute l'interface",
+      "highContrast": "Contraste Élevé",
+      "highContrastDescription": "Augmenter le contraste pour une meilleure visibilité",
+      "screenReader": "Support Lecteur d'Écran",
+      "screenReaderDescription": "Optimiser l'interface pour les lecteurs d'écran"
+    },
+    "media": {
+      "title": "Paramètres des Médias",
+      "autoPlayVideos": "Lecture Automatique des Vidéos",
+      "autoPlayVideosDescription": "Lire automatiquement les vidéos dans la discussion",
+      "autoDownloadImages": "Téléchargement Automatique des Images",
+      "autoDownloadImagesDescription": "Télécharger automatiquement les images dans les conversations",
+      "imageQuality": "Qualité d'Image",
+      "imageQualityDescription": "Définir la qualité des images téléchargées"
+    },
+    "chat": {
+      "title": "Paramètres de Discussion",
+      "enterToSend": "Entrée pour Envoyer",
+      "enterToSendDescription": "Appuyez sur Entrée pour envoyer des messages (Maj+Entrée pour une nouvelle ligne)",
+      "showTimestamps": "Afficher les Horodatages",
+      "showTimestampsDescription": "Afficher les horodatages des messages dans les conversations",
+      "messagePreview": "Aperçu des Messages",
+      "messagePreviewDescription": "Afficher les aperçus des messages dans la liste de discussion"
+    }
+  },
+  "navbar": {
+    "home": "Accueil",
+    "chats": "Discussions",
+    "settings": "Paramètres",
+    "profile": "Profil",
+    "logout": "Déconnexion",
+    "search": "Rechercher...",
+    "notifications": "Notifications"
+  },
+  "chat": {
+    "newMessage": "Nouveau Message",
+    "typeMessage": "Écrivez un message...",
+    "send": "Envoyer",
+    "attachment": "Pièce Jointe",
+    "emoji": "Emoji",
+    "noMessages": "Aucun message pour le moment",
+    "startConversation": "Commencez une conversation",
+    "members": "Membres",
+    "online": "En ligne",
+    "offline": "Hors ligne",
+    "typing": "en train d'écrire...",
+    "delivered": "Livré",
+    "read": "Lu",
+    "sent": "Envoyé",
+    "createGroup": "Créer un Groupe",
+    "groupName": "Nom du Groupe",
+    "addMembers": "Ajouter des Membres",
+    "leaveGroup": "Quitter le Groupe",
+    "deleteChat": "Supprimer la Discussion"
+  },
+  "errors": {
+    "generic": "Une erreur s'est produite. Veuillez réessayer.",
+    "network": "Erreur réseau. Veuillez vérifier votre connexion.",
+    "unauthorized": "Vous n'êtes pas autorisé à effectuer cette action.",
+    "notFound": "La ressource demandée n'a pas été trouvée.",
+    "validation": "Veuillez vérifier votre saisie et réessayer."
+  }
+}

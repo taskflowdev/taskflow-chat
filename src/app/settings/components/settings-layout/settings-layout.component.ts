@@ -5,10 +5,11 @@ import { UserSettingsService } from '../../../core/services/user-settings.servic
 import { SettingsSidebarComponent } from '../settings-sidebar/settings-sidebar.component';
 import { SkeletonLoaderComponent } from '../../../shared/components/skeleton-loader/skeleton-loader.component';
 import { map, Observable } from 'rxjs';
+import { TranslocoModule } from '@jsverse/transloco';
 
 @Component({
   selector: 'app-settings-layout',
-  imports: [CommonModule, RouterOutlet, SettingsSidebarComponent, SkeletonLoaderComponent],
+  imports: [CommonModule, RouterOutlet, SettingsSidebarComponent, SkeletonLoaderComponent, TranslocoModule],
   templateUrl: './settings-layout.component.html',
   styleUrls: ['./settings-layout.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush

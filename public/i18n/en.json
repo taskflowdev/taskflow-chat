@@ -1,0 +1,140 @@
+{
+  "common": {
+    "save": "Save",
+    "cancel": "Cancel",
+    "search": "Search",
+    "loading": "Loading...",
+    "error": "Error",
+    "success": "Success",
+    "confirm": "Confirm",
+    "delete": "Delete",
+    "edit": "Edit",
+    "add": "Add",
+    "remove": "Remove",
+    "close": "Close",
+    "back": "Back",
+    "next": "Next",
+    "previous": "Previous",
+    "yes": "Yes",
+    "no": "No",
+    "ok": "OK",
+    "apply": "Apply",
+    "reset": "Reset"
+  },
+  "settings": {
+    "title": "Settings",
+    "categories": {
+      "language": "Language",
+      "appearance": "Appearance",
+      "notifications": "Notifications",
+      "privacy": "Privacy",
+      "accessibility": "Accessibility",
+      "media": "Media",
+      "chat": "Chat"
+    },
+    "language": {
+      "title": "Language Settings",
+      "interface": "Interface Language",
+      "interfaceDescription": "Select your preferred language for the application interface",
+      "dateFormat": "Date Format",
+      "dateFormatDescription": "Choose how dates are displayed throughout the application",
+      "timeFormat": "Time Format",
+      "timeFormatDescription": "Choose between 12-hour or 24-hour time format"
+    },
+    "appearance": {
+      "title": "Appearance Settings",
+      "theme": "Theme",
+      "themeDescription": "Choose your preferred color scheme",
+      "darkMode": "Dark Mode",
+      "lightMode": "Light Mode",
+      "systemDefault": "System Default",
+      "fontSize": "Font Size",
+      "fontSizeDescription": "Adjust the text size for better readability",
+      "small": "Small",
+      "medium": "Medium",
+      "large": "Large"
+    },
+    "notifications": {
+      "title": "Notification Settings",
+      "enableNotifications": "Enable Notifications",
+      "enableNotificationsDescription": "Receive notifications for new messages and updates",
+      "soundEnabled": "Sound Notifications",
+      "soundEnabledDescription": "Play a sound when you receive a notification",
+      "desktopNotifications": "Desktop Notifications",
+      "desktopNotificationsDescription": "Show notifications on your desktop"
+    },
+    "privacy": {
+      "title": "Privacy Settings",
+      "readReceipts": "Read Receipts",
+      "readReceiptsDescription": "Let others know when you've read their messages",
+      "onlineStatus": "Online Status",
+      "onlineStatusDescription": "Show when you're online to other users",
+      "typingIndicator": "Typing Indicator",
+      "typingIndicatorDescription": "Show others when you're typing a message"
+    },
+    "accessibility": {
+      "title": "Accessibility Settings",
+      "reducedMotion": "Reduced Motion",
+      "reducedMotionDescription": "Minimize animations throughout the interface",
+      "highContrast": "High Contrast",
+      "highContrastDescription": "Increase contrast for better visibility",
+      "screenReader": "Screen Reader Support",
+      "screenReaderDescription": "Optimize the interface for screen readers"
+    },
+    "media": {
+      "title": "Media Settings",
+      "autoPlayVideos": "Auto-play Videos",
+      "autoPlayVideosDescription": "Automatically play videos in chat",
+      "autoDownloadImages": "Auto-download Images",
+      "autoDownloadImagesDescription": "Automatically download images in conversations",
+      "imageQuality": "Image Quality",
+      "imageQualityDescription": "Set the quality for uploaded images"
+    },
+    "chat": {
+      "title": "Chat Settings",
+      "enterToSend": "Enter to Send",
+      "enterToSendDescription": "Press Enter to send messages (Shift+Enter for new line)",
+      "showTimestamps": "Show Timestamps",
+      "showTimestampsDescription": "Display message timestamps in conversations",
+      "messagePreview": "Message Preview",
+      "messagePreviewDescription": "Show message previews in the chat list"
+    }
+  },
+  "navbar": {
+    "home": "Home",
+    "chats": "Chats",
+    "settings": "Settings",
+    "profile": "Profile",
+    "logout": "Logout",
+    "search": "Search...",
+    "notifications": "Notifications"
+  },
+  "chat": {
+    "newMessage": "New Message",
+    "typeMessage": "Type a message...",
+    "send": "Send",
+    "attachment": "Attachment",
+    "emoji": "Emoji",
+    "noMessages": "No messages yet",
+    "startConversation": "Start a conversation",
+    "members": "Members",
+    "online": "Online",
+    "offline": "Offline",
+    "typing": "typing...",
+    "delivered": "Delivered",
+    "read": "Read",
+    "sent": "Sent",
+    "createGroup": "Create Group",
+    "groupName": "Group Name",
+    "addMembers": "Add Members",
+    "leaveGroup": "Leave Group",
+    "deleteChat": "Delete Chat"
+  },
+  "errors": {
+    "generic": "Something went wrong. Please try again.",
+    "network": "Network error. Please check your connection.",
+    "unauthorized": "You are not authorized to perform this action.",
+    "notFound": "The requested resource was not found.",
+    "validation": "Please check your input and try again."
+  }
+}
