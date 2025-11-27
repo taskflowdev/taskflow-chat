@@ -18,7 +18,7 @@
 
   .form-check-label {
     cursor: pointer;
-    font-size: 0.9375rem;
+    font-size: var(--taskflow-font-font-size-normal);
     
     &:has(+ input:disabled) {
       cursor: not-allowed;

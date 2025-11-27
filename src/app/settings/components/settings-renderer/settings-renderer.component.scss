@@ -36,24 +36,24 @@
 }
 
 .setting-icon {
-  font-size: 1.8rem;
+  font-size: var(--taskflow-font-icon-size-xl);
   color: var(--taskflow-color-settings-icon, #57606a);
   margin-bottom: 0.2rem;
   flex-shrink: 0;
 }
 
 .setting-label {
-  font-size: 16px;
+  font-size: var(--taskflow-font-font-size-large);
   font-weight: 600;
   color: var(--taskflow-color-text-primary, #24292f);
   display: block;
-  line-height: 20px;
+  line-height: var(--taskflow-font-line-height-compact);
   margin: 0;
 }
 
 .setting-description {
-  font-size: 14px;
-  line-height: 16px;
+  font-size: var(--taskflow-font-font-size-normal);
+  line-height: var(--taskflow-font-line-height-compact);
   color: var(--taskflow-color-text-secondary, #57606a);
   margin: 4px 0 0 0;
 }
@@ -65,7 +65,7 @@
   width: 28px;
   height: 28px;
   padding: 0;
-  font-size: 14px;
+  font-size: var(--taskflow-font-font-size-normal);
   color: var(--taskflow-color-text-primary, #24292f);
   background-color: var(--taskflow-color-surface, #ffffff);
   border: 1px solid var(--taskflow-color-border, #d0d7de);
@@ -75,7 +75,7 @@
   flex-shrink: 0;
 
   i {
-    font-size: 14px;
+    font-size: var(--taskflow-font-icon-size-sm);
   }
 
   &:hover {

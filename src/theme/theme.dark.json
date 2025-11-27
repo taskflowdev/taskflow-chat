@@ -421,7 +421,14 @@
       "fontSizeXSmall": "11px",
       "lineHeightBase": "1.5",
       "lineHeightHeading": "1.25",
-      "lineHeightCompact": "1.3"
+      "lineHeightCompact": "1.3",
+      "iconSizeXs": "0.75rem",
+      "iconSizeSm": "0.875rem",
+      "iconSizeMd": "1rem",
+      "iconSizeLg": "1.25rem",
+      "iconSizeXl": "1.5rem",
+      "iconSize2xl": "2rem",
+      "iconSize3xl": "2.5rem"
     },
     "medium": {
       "fontSizeBase": "14px",
@@ -437,7 +444,14 @@
       "fontSizeXSmall": "11px",
       "lineHeightBase": "1.5",
       "lineHeightHeading": "1.25",
-      "lineHeightCompact": "1.3"
+      "lineHeightCompact": "1.3",
+      "iconSizeXs": "0.875rem",
+      "iconSizeSm": "1rem",
+      "iconSizeMd": "1.125rem",
+      "iconSizeLg": "1.375rem",
+      "iconSizeXl": "1.75rem",
+      "iconSize2xl": "2.25rem",
+      "iconSize3xl": "3rem"
     },
     "large": {
       "fontSizeBase": "16px",
@@ -453,7 +467,14 @@
       "fontSizeXSmall": "12px",
       "lineHeightBase": "1.6",
       "lineHeightHeading": "1.3",
-      "lineHeightCompact": "1.4"
+      "lineHeightCompact": "1.4",
+      "iconSizeXs": "1rem",
+      "iconSizeSm": "1.125rem",
+      "iconSizeMd": "1.25rem",
+      "iconSizeLg": "1.5rem",
+      "iconSizeXl": "2rem",
+      "iconSize2xl": "2.5rem",
+      "iconSize3xl": "3.5rem"
     }
   }
 }

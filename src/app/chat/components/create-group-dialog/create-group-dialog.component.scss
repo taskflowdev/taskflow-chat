@@ -106,7 +106,7 @@
   }
 
   i {
-    font-size: 1.5rem;
+    font-size: var(--taskflow-font-icon-size-xl);
   }
 }
 
@@ -114,7 +114,7 @@
   margin-bottom: 0.4rem;
 
   i {
-    font-size: 3.5rem;
+    font-size: var(--taskflow-font-icon-size-3xl);
     color: var(--taskflow-color-text-primary);
     transition: color 0.2s ease;
   }
@@ -123,19 +123,19 @@
 .main-title {
   color: var(--taskflow-color-text-primary);
   transition: color 0.2s ease;
-  font-size: 1.5rem;
+  font-size: var(--taskflow-font-font-size-h3);
   font-weight: 600;
   margin: 0 0 0.2rem 0;
-  line-height: 1.3;
+  line-height: var(--taskflow-font-line-height-heading);
 }
 
 .subtitle {
   color: var(--taskflow-color-text-secondary);
   transition: color 0.2s ease;
-  font-size: 0.875rem;
+  font-size: var(--taskflow-font-font-size-normal);
   font-weight: 400;
   margin: 0;
-  line-height: 1.4;
+  line-height: var(--taskflow-font-line-height-compact);
 }
 
 // Form styling
@@ -164,7 +164,7 @@
   }
 
   .main-title {
-    font-size: 1.375rem;
+    font-size: var(--taskflow-font-font-size-h4);
   }
 }
 
@@ -178,6 +178,6 @@
   }
 
   .main-title {
-    font-size: 1.25rem;
+    font-size: var(--taskflow-font-font-size-large);
   }
 }

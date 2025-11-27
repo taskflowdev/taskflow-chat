@@ -23,6 +23,13 @@ interface TypographyTokens {
   lineHeightBase: string;
   lineHeightHeading: string;
   lineHeightCompact: string;
+  iconSizeXs: string;
+  iconSizeSm: string;
+  iconSizeMd: string;
+  iconSizeLg: string;
+  iconSizeXl: string;
+  iconSize2xl: string;
+  iconSize3xl: string;
 }
 
 interface ThemeTokens {
