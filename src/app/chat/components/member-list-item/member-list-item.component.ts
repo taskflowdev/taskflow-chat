@@ -2,6 +2,7 @@ import { Component, Input, Output, EventEmitter, ChangeDetectionStrategy } from 
 import { CommonModule } from '@angular/common';
 import { GroupMemberDto } from '../../../api/models/group-member-dto';
 import { CommonTooltipDirective, TooltipPosition } from '../../../shared/components/common-tooltip/common-tooltip.component';
+import { TranslatePipe, I18nService } from '../../../core/i18n';
 
 /**
  * Member list item component for displaying individual group members
@@ -30,7 +31,7 @@ import { CommonTooltipDirective, TooltipPosition } from '../../../shared/compone
 @Component({
   selector: 'app-member-list-item',
   standalone: true,
-  imports: [CommonModule, CommonTooltipDirective],
+  imports: [CommonModule, CommonTooltipDirective, TranslatePipe],
   templateUrl: './member-list-item.component.html',
   styleUrls: ['./member-list-item.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -74,6 +75,8 @@ export class MemberListItemComponent {
   // Expose TooltipPosition enum to template
   readonly TooltipPosition = TooltipPosition;
 
+  constructor(private i18n: I18nService) {}
+
   /**
    * Check if member is an admin
    */
@@ -100,7 +103,7 @@ export class MemberListItemComponent {
    */
   get makeAdminTooltip(): string {
     if (!this.isActionAllowed) {
-      return 'Only group admins can manage members';
+      return this.i18n.t('dialogs.group-information.tabs.members.actions.promote-button.tooltip.member.disabled');
     }
     if (this.isSelf) {
       return 'You cannot change your own role';
@@ -109,9 +112,9 @@ export class MemberListItemComponent {
       return 'User is already an admin';
     }
     if (this.isProcessing) {
-      return 'Processing...';
+      return this.i18n.t('dialogs.group-information.tabs.members.actions.promote-button.loading-label');
     }
-    return 'Promote to admin';
+    return this.i18n.t('dialogs.group-information.tabs.members.actions.promote-button.tooltip.admin.enabled');
   }
 
   /**
@@ -119,15 +122,24 @@ export class MemberListItemComponent {
    */
   get removeTooltip(): string {
     if (!this.isActionAllowed) {
-      return 'Only group admins can manage members';
+      return this.i18n.t('dialogs.group-information.tabs.members.actions.remove-button.tooltip.member.disabled');
     }
     if (this.isSelf) {
-      return 'You cannot remove yourself';
+      return this.i18n.t('dialogs.group-information.tabs.members.actions.remove-button.tooltip.admin.disabled');
     }
     if (this.isProcessing) {
-      return 'Processing...';
+      return this.i18n.t('dialogs.group-information.tabs.members.actions.remove-button.loading-label');
     }
-    return 'Remove from group';
+    return this.i18n.t('dialogs.group-information.tabs.members.actions.remove-button.tooltip.admin.enabled');
+  }
+
+  /**
+   * Get translated role label
+   */
+  get roleLabel(): string {
+    return this.isAdmin 
+      ? this.i18n.t('dialogs.group-information.tabs.members.roles.admin')
+      : this.i18n.t('dialogs.group-information.tabs.members.roles.member');
   }
 
   /**
