@@ -1,7 +1,8 @@
-import { Component, OnInit, Input, Output, EventEmitter, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, OnDestroy, Input, Output, EventEmitter, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
+import { Subscription } from 'rxjs';
 import { GroupsService } from '../../../api/services/groups.service';
 import { ToastService } from '../../../shared/services/toast.service';
 import { CommonInputComponent } from '../../../shared/components/common-form-controls/common-input.component';
@@ -57,7 +58,7 @@ import { TranslatePipe, I18nService } from '../../../core/i18n';
   styleUrls: ['./group-info-dialog.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class GroupInfoDialogComponent implements OnInit {
+export class GroupInfoDialogComponent implements OnInit, OnDestroy {
   @Input() groupId!: string;
   @Input() currentUserId!: string;
   @Input() triggerDelete = false; // Auto-trigger delete confirmation when true
@@ -93,6 +94,8 @@ export class GroupInfoDialogComponent implements OnInit {
   memberToRemove: GroupMemberDto | null = null;
   pendingVisibilityValue: boolean | null = null;
 
+  private langSubscription?: Subscription;
+
   constructor(
     private fb: FormBuilder,
     private groupsService: GroupsService,
@@ -119,12 +122,22 @@ export class GroupInfoDialogComponent implements OnInit {
 
     this.loadGroupDetails();
 
+    // Subscribe to language changes to update tabs
+    this.langSubscription = this.i18n.languageChanged$.subscribe(() => {
+      this.updateTabs();
+      this.cdr.markForCheck();
+    });
+
     // Auto-trigger delete confirmation if requested
     if (this.triggerDelete) {
       setTimeout(() => {
         this.showDeleteDialog();
       }, 100);
     }
+  }
+
+  ngOnDestroy(): void {
+    this.langSubscription?.unsubscribe();
   }
 
   /**

@@ -106,10 +106,12 @@ export class MemberListItemComponent {
       return this.i18n.t('dialogs.group-information.tabs.members.actions.promote-button.tooltip.member.disabled');
     }
     if (this.isSelf) {
-      return 'You cannot change your own role';
+      // Same message as admin disabled - cannot change own role
+      return this.i18n.t('dialogs.group-information.tabs.members.actions.promote-button.tooltip.admin.disabled');
     }
     if (this.isAdmin) {
-      return 'User is already an admin';
+      // User is already an admin - use member enabled tooltip as fallback
+      return this.i18n.t('dialogs.group-information.tabs.members.actions.promote-button.tooltip.member.enabled');
     }
     if (this.isProcessing) {
       return this.i18n.t('dialogs.group-information.tabs.members.actions.promote-button.loading-label');

@@ -59,6 +59,8 @@ export class CreateGroupDialogComponent implements OnInit {
       return this.i18n.t('dialogs.create-group.controls.group-name.errors.required');
     }
     if (field.errors['minlength']) {
+      // Note: The JSON translation key for min-length validation uses 'max-length' key
+      // which contains the message "Group name must be at least 3 characters"
       return this.i18n.t('dialogs.create-group.controls.group-name.errors.max-length');
     }
     if (field.errors['maxlength']) {
