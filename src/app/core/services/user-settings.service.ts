@@ -1,4 +1,4 @@
-import { Injectable, OnDestroy } from '@angular/core';
+import { Injectable, OnDestroy, Injector } from '@angular/core';
 import { BehaviorSubject, Observable, Subject, throwError, timer, of } from 'rxjs';
 import { catchError, debounceTime, distinctUntilChanged, map, tap, switchMap, takeUntil } from 'rxjs/operators';
 import { SettingsService } from '../../api/services/settings.service';
@@ -8,6 +8,13 @@ import { CatalogResponse } from '../../api/models/catalog-response';
 import { UpdateSettingsRequest } from '../../api/models/update-settings-request';
 import { ThemeService, ThemeMode, FontSize } from './theme.service';
 import { SettingsCacheService } from './settings-cache.service';
+
+/**
+ * Settings keys for language preference
+ * Used by I18nService integration
+ */
+export const LANGUAGE_SETTING_CATEGORY = 'language-region';
+export const LANGUAGE_SETTING_KEY = 'language-region.interfaceLanguage';
 
 @Injectable({
   providedIn: 'root'
@@ -33,11 +40,21 @@ export class UserSettingsService implements OnDestroy {
     private settingsService: SettingsService,
     private catalogService: CatalogService,
     private themeService: ThemeService,
-    private settingsCacheService: SettingsCacheService
+    private settingsCacheService: SettingsCacheService,
+    private injector: Injector
   ) {
     // Initialize save queue subscription
     // This is intentional for a singleton service and will live for app lifetime
     this.initializeSaveQueue();
+  }
+
+  /**
+   * Lazily get I18nService to avoid circular dependency
+   */
+  private get i18nService() {
+    // Import dynamically to avoid circular dependency
+    const { I18nService } = require('../i18n/i18n.service');
+    return this.injector.get(I18nService);
   }
 
   /**
@@ -330,10 +347,19 @@ export class UserSettingsService implements OnDestroy {
     if (category === 'appearance' && key === 'appearance.fontSize') {
       this.themeService.setFontSize(value);
     }
+
+    // Apply language changes
+    if (category === LANGUAGE_SETTING_CATEGORY && key === LANGUAGE_SETTING_KEY) {
+      try {
+        this.i18nService.setLanguage(value);
+      } catch (e) {
+        console.error('Failed to apply language change:', e);
+      }
+    }
   }
 
   /**
-   * Apply theme and typography from loaded settings
+   * Apply theme, typography, and language from loaded settings
    * This is the single source of truth for applying user preferences
    */
   private applyThemeFromSettings(settings: EffectiveSettingsResponse | null): void {
@@ -344,6 +370,7 @@ export class UserSettingsService implements OnDestroy {
     }
 
     const appearanceSettings = settings.settings['appearance'];
+    const languageSettings = settings.settings[LANGUAGE_SETTING_CATEGORY];
 
     // Extract theme and fontSize from settings, with fallbacks
     // Keys are stored under the 'appearance' category (e.g. settings.appearance.theme)
@@ -353,6 +380,16 @@ export class UserSettingsService implements OnDestroy {
     // Initialize theme service with user preferences
     // This ensures theme is applied only once with correct values
     this.themeService.initialize(theme, fontSize);
+
+    // Apply language setting if available
+    const language = languageSettings?.[LANGUAGE_SETTING_KEY];
+    if (language) {
+      try {
+        this.i18nService.setLanguage(language);
+      } catch (e) {
+        console.error('Failed to apply language from settings:', e);
+      }
+    }
   }
 
   /**

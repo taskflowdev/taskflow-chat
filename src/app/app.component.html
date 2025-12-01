@@ -1,3 +1,5 @@
-<app-loading-screen *ngIf="isAppInitializing$ | async"></app-loading-screen>
-<router-outlet />
-<app-toast-container></app-toast-container>
+<div appRtl>
+  <app-loading-screen *ngIf="isAppInitializing$ | async"></app-loading-screen>
+  <router-outlet />
+  <app-toast-container></app-toast-container>
+</div>

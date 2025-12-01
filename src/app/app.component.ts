@@ -6,11 +6,12 @@ import { LoadingScreenComponent } from './shared/components/loading-screen/loadi
 import { KeyboardShortcutService } from './shared/services/keyboard-shortcut.service';
 import { AuthService } from './auth/services/auth.service';
 import { UserSettingsService } from './core/services/user-settings.service';
+import { RtlDirective } from './core/i18n';
 import { Observable, combineLatest, map } from 'rxjs';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, ToastContainerComponent, LoadingScreenComponent, CommonModule],
+  imports: [RouterOutlet, ToastContainerComponent, LoadingScreenComponent, CommonModule, RtlDirective],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss'
 })
