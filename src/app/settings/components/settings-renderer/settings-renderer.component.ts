@@ -135,32 +135,46 @@ export class SettingsRendererComponent implements OnInit, OnDestroy {
 
     const settingName = this.getSettingName();
     return this.settingKey.options.map(option => {
-      const optionKey = this.normalizeOptionValue(option.value);
+      const optionKey = this.normalizeOptionKey(option.value);
       const translationKey = `settings.${this.categoryKey}.sections.${settingName}.options.${optionKey}`;
       const translated = this.i18n.t(translationKey);
       
+      // If translation found, use it; otherwise fall back to API-provided label
+      // This ensures user-facing text comes from i18n or the API, not internal values
       return {
         ...option,
-        label: translated !== translationKey ? translated : (option.label || option.value || '')
+        label: translated !== translationKey ? translated : (option.label || '')
       };
     });
   }
 
   /**
    * Extract the setting name from the full key
-   * e.g., 'appearance.theme' -> 'theme'
+   * The key format is expected to be '{category}.{setting-name}' (e.g., 'appearance.theme')
+   * 
+   * @returns The last segment of the key, or the full key if no dot separator exists
    */
   private getSettingName(): string {
     const fullKey = this.settingKey.key || '';
+    if (!fullKey) {
+      return '';
+    }
     const parts = fullKey.split('.');
     return parts.length > 1 ? parts[parts.length - 1] : fullKey;
   }
 
   /**
-   * Normalize option value for use in translation key
-   * e.g., 'sync-with-system' stays as 'sync-with-system'
+   * Normalize option value for use as a translation key segment
+   * Handles common cases like kebab-case values (e.g., 'sync-with-system')
+   * 
+   * @param value The option value to normalize
+   * @returns Normalized value safe for use in translation keys
    */
-  private normalizeOptionValue(value: string | undefined): string {
-    return value || '';
+  private normalizeOptionKey(value: string | undefined): string {
+    if (!value) {
+      return '';
+    }
+    // Kebab-case and alphanumeric values are kept as-is since they're valid translation key segments
+    return value;
   }
 }
