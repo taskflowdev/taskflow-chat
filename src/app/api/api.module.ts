@@ -10,6 +10,8 @@ import { AuthService } from './services/auth.service';
 import { CatalogService } from './services/catalog.service';
 import { GroupsService } from './services/groups.service';
 import { HealthService } from './services/health.service';
+import { I18NService } from './services/i-18-n.service';
+import { I18NAdminService } from './services/i-18-n-admin.service';
 import { MessageMetadataService } from './services/message-metadata.service';
 import { MessagesService } from './services/messages.service';
 import { SettingsService } from './services/settings.service';
@@ -26,6 +28,8 @@ import { SettingsService } from './services/settings.service';
     CatalogService,
     GroupsService,
     HealthService,
+    I18NService,
+    I18NAdminService,
     MessageMetadataService,
     MessagesService,
     SettingsService,
