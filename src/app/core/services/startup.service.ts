@@ -1,9 +1,10 @@
 import { Injectable, Inject, PLATFORM_ID } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { Router } from '@angular/router';
-import { Observable, of, catchError, tap, map, switchMap } from 'rxjs';
+import { Observable, of, catchError, tap, map, switchMap, forkJoin } from 'rxjs';
 import { AuthService } from '../../auth/services/auth.service';
-import { UserSettingsService } from './user-settings.service';
+import { UserSettingsService, LANGUAGE_SETTING_CATEGORY, LANGUAGE_SETTING_KEY } from './user-settings.service';
+import { I18nService, DEFAULT_LANGUAGE } from '../i18n/i18n.service';
 
 /**
  * StartupService - Centralized application startup initialization
@@ -12,7 +13,8 @@ import { UserSettingsService } from './user-settings.service';
  * 1. Token verification and /me profile fetch
  * 2. User settings load
  * 3. Theme initialization
- * 4. Proper error handling with redirect to login
+ * 4. Translation loading (i18n)
+ * 5. Proper error handling with redirect to login
  * 
  * Creates a startup flow similar to Teams/Gmail/Slack where:
  * - User sees splash screen immediately
@@ -30,8 +32,12 @@ export class StartupService {
     @Inject(PLATFORM_ID) private platformId: Object,
     private authService: AuthService,
     private userSettingsService: UserSettingsService,
+    private i18nService: I18nService,
     private router: Router
-  ) {}
+  ) {
+    // Register I18nService with UserSettingsService to break circular dependency
+    this.userSettingsService.setI18nService(this.i18nService);
+  }
 
   /**
    * Initialize the application
@@ -67,18 +73,18 @@ export class StartupService {
 
   /**
    * Run the complete initialization pipeline
-   * 1. Verify authentication (fetch /me if token exists)
-   * 2. Load user settings (if authenticated)
-   * 3. Apply theme
+   * 1. Load default translations (in parallel with auth check)
+   * 2. Verify authentication (fetch /me if token exists)
+   * 3. Load user settings (if authenticated)
+   * 4. Apply theme and language from settings
    */
   private runInitializationPipeline(): Observable<void> {
     const token = this.authService.getToken();
 
-    // If no token, initialize default theme and allow navigation to login
+    // If no token, initialize defaults (theme + translations)
     if (!token) {
       console.log('Startup: No token found, initializing defaults');
-      this.userSettingsService.initializeDefaultTheme();
-      return of(void 0);
+      return this.initializeDefaults();
     }
 
     // Have token - verify with server by fetching /me
@@ -89,28 +95,75 @@ export class StartupService {
           // Auth failed, clear token and initialize defaults
           console.log('Startup: Authentication failed, clearing session');
           this.authService.logout();
-          this.userSettingsService.initializeDefaultTheme();
-          return of(void 0);
+          return this.initializeDefaults();
         }
 
-        // Auth successful, load user settings
-        console.log('Startup: Authentication successful, loading settings');
-        return this.userSettingsService.loadUserSettings().pipe(
-          map(() => void 0),
-          catchError(err => {
-            console.error('Startup: Failed to load user settings:', err);
-            // Initialize default theme even if settings fail
-            this.userSettingsService.initializeDefaultTheme();
-            return of(void 0);
-          })
-        );
+        // Auth successful, load user settings and translations
+        console.log('Startup: Authentication successful, loading settings and translations');
+        return this.loadSettingsAndTranslations();
       }),
       catchError(err => {
         console.error('Startup: Pipeline error:', err);
         // Clean up and initialize defaults
         this.authService.logout();
+        return this.initializeDefaults();
+      })
+    );
+  }
+
+  /**
+   * Initialize default settings when user is not authenticated
+   * Loads default theme and default language translations
+   */
+  private initializeDefaults(): Observable<void> {
+    this.userSettingsService.initializeDefaultTheme();
+    
+    // Load default language translations
+    return new Observable(observer => {
+      this.i18nService.initialize(DEFAULT_LANGUAGE).then(() => {
+        console.log('Startup: Default translations loaded');
+        observer.next();
+        observer.complete();
+      }).catch(err => {
+        console.error('Startup: Failed to load default translations:', err);
+        observer.next(); // Continue even if translations fail
+        observer.complete();
+      });
+    });
+  }
+
+  /**
+   * Load user settings and translations
+   * Settings are loaded first to get user's language preference,
+   * then translations are loaded for that language
+   */
+  private loadSettingsAndTranslations(): Observable<void> {
+    return this.userSettingsService.loadUserSettings().pipe(
+      switchMap(settings => {
+        // Get user's language preference from settings
+        const languageSettings = settings?.settings?.[LANGUAGE_SETTING_CATEGORY];
+        const userLanguage = languageSettings?.[LANGUAGE_SETTING_KEY] || DEFAULT_LANGUAGE;
+        
+        console.log(`Startup: Loading translations for language: ${userLanguage}`);
+        
+        // Load translations for user's preferred language
+        return new Observable<void>(observer => {
+          this.i18nService.initialize(userLanguage).then(() => {
+            console.log('Startup: Translations loaded successfully');
+            observer.next();
+            observer.complete();
+          }).catch(err => {
+            console.error('Startup: Failed to load translations:', err);
+            observer.next(); // Continue even if translations fail
+            observer.complete();
+          });
+        });
+      }),
+      catchError(err => {
+        console.error('Startup: Failed to load user settings:', err);
+        // Initialize defaults if settings fail
         this.userSettingsService.initializeDefaultTheme();
-        return of(void 0);
+        return this.initializeDefaults();
       })
     );
   }

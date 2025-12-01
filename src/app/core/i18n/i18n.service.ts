@@ -1,4 +1,4 @@
-import { Injectable, Inject, PLATFORM_ID, OnDestroy } from '@angular/core';
+import { Injectable, Inject, PLATFORM_ID, OnDestroy, Injector } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { BehaviorSubject, Observable, of, Subject, catchError, tap, map, takeUntil, timer, switchMap } from 'rxjs';
 import { I18NService as ApiI18NService } from '../../api/services/i-18-n.service';
@@ -96,8 +96,32 @@ export class I18nService implements OnDestroy {
 
   constructor(
     @Inject(PLATFORM_ID) private platformId: Object,
-    private apiI18NService: ApiI18NService
-  ) {}
+    private apiI18NService: ApiI18NService,
+    private injector: Injector
+  ) {
+    // Register with UserSettingsService to break circular dependency
+    // This allows UserSettingsService to call setLanguage on us
+    this.registerWithUserSettingsService();
+  }
+
+  /**
+   * Register this service with UserSettingsService
+   * This breaks the circular dependency by allowing UserSettingsService to find us
+   */
+  private registerWithUserSettingsService(): void {
+    // Delay registration to avoid issues during construction
+    setTimeout(() => {
+      try {
+        // Dynamic import to avoid compile-time circular dependency
+        const userSettingsService = this.injector.get<any>('UserSettingsService' as any, null);
+        if (userSettingsService && typeof userSettingsService.setI18nService === 'function') {
+          userSettingsService.setI18nService(this);
+        }
+      } catch (e) {
+        // UserSettingsService not available, that's OK
+      }
+    }, 0);
+  }
 
   /**
    * Initialize the i18n service with default language

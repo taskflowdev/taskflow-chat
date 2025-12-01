@@ -12,7 +12,7 @@ import { AppConfigService } from './core/services/app-config.service';
 import { appConfigInitializerFactory } from './core/config-initializer';
 import { StartupService } from './core/services/startup.service';
 import { startupServiceFactory } from './core/startup-service.factory';
-import { I18nService, I18nInterceptor, i18nInitializerFactory } from './core/i18n';
+import { I18nService, I18nInterceptor } from './core/i18n';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -37,12 +37,6 @@ export const appConfig: ApplicationConfig = {
       provide: APP_INITIALIZER,
       useFactory: startupServiceFactory,
       deps: [StartupService],
-      multi: true
-    },
-    {
-      provide: APP_INITIALIZER,
-      useFactory: i18nInitializerFactory,
-      deps: [I18nService],
       multi: true
     },
     { provide: UrlSerializer, useClass: CustomUrlSerializer }

@@ -16,6 +16,14 @@ import { SettingsCacheService } from './settings-cache.service';
 export const LANGUAGE_SETTING_CATEGORY = 'language-region';
 export const LANGUAGE_SETTING_KEY = 'language-region.interfaceLanguage';
 
+/**
+ * Interface for I18nService to avoid circular dependency
+ * Only the methods used by UserSettingsService are defined here
+ */
+interface I18nServiceInterface {
+  setLanguage(lang: string): void;
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -36,6 +44,9 @@ export class UserSettingsService implements OnDestroy {
   private stopBackgroundRefresh$ = new Subject<void>();
   private destroy$ = new Subject<void>();
 
+  // Cached I18nService reference to avoid repeated lookups
+  private _i18nService: I18nServiceInterface | null = null;
+
   constructor(
     private settingsService: SettingsService,
     private catalogService: CatalogService,
@@ -50,11 +61,38 @@ export class UserSettingsService implements OnDestroy {
 
   /**
    * Lazily get I18nService to avoid circular dependency
+   * Uses Injector.get() with class name lookup
    */
-  private get i18nService() {
-    // Import dynamically to avoid circular dependency
-    const { I18nService } = require('../i18n/i18n.service');
-    return this.injector.get(I18nService);
+  private getI18nService(): I18nServiceInterface | null {
+    if (!this._i18nService) {
+      try {
+        // Use string token to break circular dependency at compile time
+        // The actual I18nService is registered with providedIn: 'root'
+        this._i18nService = this.injector.get('I18nService' as any, null);
+        
+        // If string token doesn't work, try the class directly
+        if (!this._i18nService) {
+          // Dynamic import to avoid compile-time circular dependency
+          const i18nModule = this.injector.get<any>(
+            (window as any).__I18N_SERVICE_TOKEN__ || 'I18nService',
+            null
+          );
+          this._i18nService = i18nModule;
+        }
+      } catch (e) {
+        console.warn('I18nService not available yet');
+        return null;
+      }
+    }
+    return this._i18nService;
+  }
+
+  /**
+   * Set the I18nService reference (called from I18nService during initialization)
+   * This breaks the circular dependency by allowing I18nService to register itself
+   */
+  setI18nService(service: I18nServiceInterface): void {
+    this._i18nService = service;
   }
 
   /**
@@ -350,10 +388,13 @@ export class UserSettingsService implements OnDestroy {
 
     // Apply language changes
     if (category === LANGUAGE_SETTING_CATEGORY && key === LANGUAGE_SETTING_KEY) {
-      try {
-        this.i18nService.setLanguage(value);
-      } catch (e) {
-        console.error('Failed to apply language change:', e);
+      const i18n = this.getI18nService();
+      if (i18n) {
+        try {
+          i18n.setLanguage(value);
+        } catch (e) {
+          console.error('Failed to apply language change:', e);
+        }
       }
     }
   }
@@ -384,10 +425,13 @@ export class UserSettingsService implements OnDestroy {
     // Apply language setting if available
     const language = languageSettings?.[LANGUAGE_SETTING_KEY];
     if (language) {
-      try {
-        this.i18nService.setLanguage(language);
-      } catch (e) {
-        console.error('Failed to apply language from settings:', e);
+      const i18n = this.getI18nService();
+      if (i18n) {
+        try {
+          i18n.setLanguage(language);
+        } catch (e) {
+          console.error('Failed to apply language from settings:', e);
+        }
       }
     }
   }
