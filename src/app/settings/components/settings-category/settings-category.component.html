@@ -14,9 +14,9 @@
   <div class="category-container" *ngIf="category$ | async as category; else notFound">
     <div class="category-header">
       <i [class]="'bi bi-' + (category.icon)" class="category-icon"></i>
-      <h2 class="category-title">{{ category.displayName }}</h2>
-      <p class="category-description" *ngIf="category.description">
-        {{ category.description }}
+      <h2 class="category-title">{{ getCategoryTitle(category) }}</h2>
+      <p class="category-description" *ngIf="getCategoryDescription(category)">
+        {{ getCategoryDescription(category) }}
       </p>
     </div>
 

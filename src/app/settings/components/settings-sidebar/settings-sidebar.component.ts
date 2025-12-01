@@ -6,7 +6,7 @@ import { Observable } from 'rxjs';
 import { map, filter } from 'rxjs/operators';
 import { CatalogResponse } from '../../../api/models/catalog-response';
 import { CategoryWithKeys } from '../../../api/models/category-with-keys';
-import { TranslatePipe } from '../../../core/i18n';
+import { TranslatePipe, I18nService } from '../../../core/i18n';
 
 @Component({
   selector: 'app-settings-sidebar',
@@ -22,7 +22,8 @@ export class SettingsSidebarComponent {
 
   constructor(
     private userSettingsService: UserSettingsService,
-    private router: Router
+    private router: Router,
+    private i18n: I18nService
   ) {
     this.catalog$ = this.userSettingsService.catalog$;
     
@@ -60,5 +61,16 @@ export class SettingsSidebarComponent {
       return 'bi-' + category.iconSelected;
     }
     return 'bi-' + (category.icon || 'box');
+  }
+
+  /**
+   * Get translated category display name
+   * Uses translation key: settings.{category-key}.title
+   */
+  getCategoryName(category: CategoryWithKeys): string {
+    const key = `settings.${category.key}.title`;
+    const translated = this.i18n.t(key);
+    // If translation not found (returns key), fall back to displayName
+    return translated !== key ? translated : (category.displayName || category.key || '');
   }
 }

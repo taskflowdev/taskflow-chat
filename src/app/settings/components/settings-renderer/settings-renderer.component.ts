@@ -8,6 +8,8 @@ import { SelectControlComponent } from '../controls/select-control/select-contro
 import { RadioControlComponent } from '../controls/radio-control/radio-control.component';
 import { Subject, takeUntil } from 'rxjs';
 import { CommonTooltipDirective } from "../../../shared/components/common-tooltip";
+import { I18nService } from '../../../core/i18n';
+import { SettingOption } from '../../../api/models/setting-option';
 
 @Component({
   selector: 'app-settings-renderer',
@@ -29,7 +31,8 @@ export class SettingsRendererComponent implements OnInit, OnDestroy {
   constructor(
     private userSettingsService: UserSettingsService,
     private toastService: ToastService,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private i18n: I18nService
   ) { }
 
   ngOnInit(): void {
@@ -96,5 +99,68 @@ export class SettingsRendererComponent implements OnInit, OnDestroy {
 
   getIconClass(): string {
     return this.settingKey.icon || 'box';
+  }
+
+  /**
+   * Get translated setting label
+   * Uses translation key: settings.{category-key}.sections.{setting-key}.title
+   */
+  getSettingLabel(): string {
+    // Extract setting name from full key (e.g., 'appearance.theme' -> 'theme')
+    const settingName = this.getSettingName();
+    const key = `settings.${this.categoryKey}.sections.${settingName}.title`;
+    const translated = this.i18n.t(key);
+    return translated !== key ? translated : (this.settingKey.label || this.settingKey.key || '');
+  }
+
+  /**
+   * Get translated setting description
+   * Uses translation key: settings.{category-key}.sections.{setting-key}.description
+   */
+  getSettingDescription(): string {
+    const settingName = this.getSettingName();
+    const key = `settings.${this.categoryKey}.sections.${settingName}.description`;
+    const translated = this.i18n.t(key);
+    return translated !== key ? translated : (this.settingKey.description || '');
+  }
+
+  /**
+   * Get translated options with translated labels
+   * Uses translation key: settings.{category-key}.sections.{setting-key}.options.{option-value}
+   */
+  getTranslatedOptions(): SettingOption[] {
+    if (!this.settingKey.options) {
+      return [];
+    }
+
+    const settingName = this.getSettingName();
+    return this.settingKey.options.map(option => {
+      const optionKey = this.normalizeOptionValue(option.value);
+      const translationKey = `settings.${this.categoryKey}.sections.${settingName}.options.${optionKey}`;
+      const translated = this.i18n.t(translationKey);
+      
+      return {
+        ...option,
+        label: translated !== translationKey ? translated : (option.label || option.value || '')
+      };
+    });
+  }
+
+  /**
+   * Extract the setting name from the full key
+   * e.g., 'appearance.theme' -> 'theme'
+   */
+  private getSettingName(): string {
+    const fullKey = this.settingKey.key || '';
+    const parts = fullKey.split('.');
+    return parts.length > 1 ? parts[parts.length - 1] : fullKey;
+  }
+
+  /**
+   * Normalize option value for use in translation key
+   * e.g., 'sync-with-system' stays as 'sync-with-system'
+   */
+  private normalizeOptionValue(value: string | undefined): string {
+    return value || '';
   }
 }

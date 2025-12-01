@@ -3,10 +3,10 @@
     <div class="setting-info">
       <div class="setting-label-container">
         <i [class]="'bi bi-' + getIconClass()" class="setting-icon"></i>
-        <label class="setting-label">{{ settingKey.label }}</label>
+        <label class="setting-label">{{ getSettingLabel() }}</label>
       </div>
-      <p class="setting-description" *ngIf="settingKey.description">
-        {{ settingKey.description }}
+      <p class="setting-description" *ngIf="getSettingDescription()">
+        {{ getSettingDescription() }}
       </p>
     </div>
     <button *ngIf="isModified" type="button" class="reset-btn" (click)="onResetToDefault()"
@@ -22,11 +22,11 @@
 
     <!-- Select type - Dropdown -->
     <app-select-control *ngIf="controlType === 'select' && hasOptions" [value]="currentValue"
-      [options]="settingKey.options!" [disabled]="false" (valueChange)="onValueChange($event)"></app-select-control>
+      [options]="getTranslatedOptions()" [disabled]="false" (valueChange)="onValueChange($event)"></app-select-control>
 
     <!-- Radio type - Radio Group -->
     <app-radio-control *ngIf="controlType === 'radio' && hasOptions" [value]="currentValue"
-      [options]="settingKey.options!" [name]="settingKey.key!" [disabled]="false"
+      [options]="getTranslatedOptions()" [name]="settingKey.key!" [disabled]="false"
       (valueChange)="onValueChange($event)"></app-radio-control>
   </div>
 </div>

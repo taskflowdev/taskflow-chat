@@ -10,7 +10,7 @@
       <!-- Active Icon -->
       <i class="bi sidebar-icon active-icon" [ngClass]="'bi-' + category.iconSelected"></i>
 
-      <span class="category-name">{{ category.displayName }}</span>
+      <span class="category-name">{{ getCategoryName(category) }}</span>
 
       <span *ngIf="category.beta" class="badge badge-beta">{{ 'settings.beta-tag' | translate }}</span>
     </a>
