@@ -1,4 +1,4 @@
-import { Injectable, Inject, PLATFORM_ID, OnDestroy, Injector } from '@angular/core';
+import { Injectable, Inject, PLATFORM_ID, OnDestroy } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { BehaviorSubject, Observable, of, Subject, catchError, tap, map, takeUntil, timer, switchMap } from 'rxjs';
 import { I18NService as ApiI18NService } from '../../api/services/i-18-n.service';
@@ -96,39 +96,14 @@ export class I18nService implements OnDestroy {
 
   constructor(
     @Inject(PLATFORM_ID) private platformId: Object,
-    private apiI18NService: ApiI18NService,
-    private injector: Injector
-  ) {
-    // Register with UserSettingsService to break circular dependency
-    // This allows UserSettingsService to call setLanguage on us
-    this.registerWithUserSettingsService();
-  }
-
-  /**
-   * Register this service with UserSettingsService
-   * This breaks the circular dependency by allowing UserSettingsService to find us
-   */
-  private registerWithUserSettingsService(): void {
-    // Delay registration to avoid issues during construction
-    setTimeout(() => {
-      try {
-        // Dynamic import to avoid compile-time circular dependency
-        const userSettingsService = this.injector.get<any>('UserSettingsService' as any, null);
-        if (userSettingsService && typeof userSettingsService.setI18nService === 'function') {
-          userSettingsService.setI18nService(this);
-        }
-      } catch (e) {
-        // UserSettingsService not available, that's OK
-      }
-    }, 0);
-  }
+    private apiI18NService: ApiI18NService
+  ) {}
 
   /**
    * Initialize the i18n service with default language
-   * Called during app initialization
-   * The actual language will be set by UserSettingsService after settings load
+   * Called by StartupService during app initialization
    * 
-   * @param lang Optional initial language (defaults to 'en')
+   * @param lang Language to load (from user settings or default 'en')
    * @returns Promise that resolves when initialization is complete
    */
   initialize(lang: string = DEFAULT_LANGUAGE): Promise<void> {
@@ -352,23 +327,38 @@ export class I18nService implements OnDestroy {
    * Interpolate placeholders in translation string
    * Supports both {{key}} and {key} formats
    * 
+   * For {key} format with kebab-case (e.g., {date-time}), 
+   * the parameter can be passed as either 'date-time' or 'dateTime'
+   * 
    * @param template Translation template
    * @param params Parameters to interpolate
    */
   private interpolate(template: string, params: Record<string, any>): string {
     let result = template;
 
-    // Handle {{key}} format (double braces)
+    // Handle {{key}} format (double braces) - for simple keys
     result = result.replace(/\{\{(\w+)\}\}/g, (_, key) => {
       return params[key] !== undefined ? String(params[key]) : `{{${key}}}`;
     });
 
-    // Handle {key} format (single braces)
-    result = result.replace(/\{(\w+(?:-\w+)*)\}/g, (_, key) => {
-      // Handle kebab-case keys like {date-time}
-      const normalizedKey = key.replace(/-/g, '');
-      const value = params[key] ?? params[normalizedKey];
-      return value !== undefined ? String(value) : `{${key}}`;
+    // Handle {key} format (single braces) - supports kebab-case
+    // e.g., {date-time} can match param 'date-time' or 'dateTime'
+    result = result.replace(/\{([\w-]+)\}/g, (match, key) => {
+      // Try exact key first
+      if (params[key] !== undefined) {
+        return String(params[key]);
+      }
+      
+      // Try camelCase version for kebab-case keys
+      if (key.includes('-')) {
+        const camelKey = key.replace(/-([a-z])/g, (_: string, letter: string) => letter.toUpperCase());
+        if (params[camelKey] !== undefined) {
+          return String(params[camelKey]);
+        }
+      }
+      
+      // Return original placeholder if no match
+      return match;
     });
 
     return result;

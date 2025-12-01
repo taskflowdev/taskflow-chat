@@ -1,4 +1,4 @@
-import { Injectable, OnDestroy, Injector } from '@angular/core';
+import { Injectable, OnDestroy } from '@angular/core';
 import { BehaviorSubject, Observable, Subject, throwError, timer, of } from 'rxjs';
 import { catchError, debounceTime, distinctUntilChanged, map, tap, switchMap, takeUntil } from 'rxjs/operators';
 import { SettingsService } from '../../api/services/settings.service';
@@ -44,15 +44,14 @@ export class UserSettingsService implements OnDestroy {
   private stopBackgroundRefresh$ = new Subject<void>();
   private destroy$ = new Subject<void>();
 
-  // Cached I18nService reference to avoid repeated lookups
+  // Cached I18nService reference to avoid circular dependency
   private _i18nService: I18nServiceInterface | null = null;
 
   constructor(
     private settingsService: SettingsService,
     private catalogService: CatalogService,
     private themeService: ThemeService,
-    private settingsCacheService: SettingsCacheService,
-    private injector: Injector
+    private settingsCacheService: SettingsCacheService
   ) {
     // Initialize save queue subscription
     // This is intentional for a singleton service and will live for app lifetime
@@ -60,36 +59,17 @@ export class UserSettingsService implements OnDestroy {
   }
 
   /**
-   * Lazily get I18nService to avoid circular dependency
-   * Uses Injector.get() with class name lookup
+   * Get I18nService reference
+   * The reference is set by StartupService during initialization
+   * This breaks the circular dependency cleanly
    */
   private getI18nService(): I18nServiceInterface | null {
-    if (!this._i18nService) {
-      try {
-        // Use string token to break circular dependency at compile time
-        // The actual I18nService is registered with providedIn: 'root'
-        this._i18nService = this.injector.get('I18nService' as any, null);
-        
-        // If string token doesn't work, try the class directly
-        if (!this._i18nService) {
-          // Dynamic import to avoid compile-time circular dependency
-          const i18nModule = this.injector.get<any>(
-            (window as any).__I18N_SERVICE_TOKEN__ || 'I18nService',
-            null
-          );
-          this._i18nService = i18nModule;
-        }
-      } catch (e) {
-        console.warn('I18nService not available yet');
-        return null;
-      }
-    }
     return this._i18nService;
   }
 
   /**
-   * Set the I18nService reference (called from I18nService during initialization)
-   * This breaks the circular dependency by allowing I18nService to register itself
+   * Set the I18nService reference (called from StartupService during initialization)
+   * This breaks the circular dependency by allowing external registration
    */
   setI18nService(service: I18nServiceInterface): void {
     this._i18nService = service;

@@ -5,9 +5,17 @@ import { I18nService } from './i18n.service';
 /**
  * TranslatePipe - Pipe for translating keys in templates
  * 
- * This pipe is impure to enable automatic updates when:
- * - Language changes
- * - Translations are loaded
+ * This pipe is impure to enable automatic updates when language changes.
+ * 
+ * Performance note: While impure pipes run on every change detection cycle,
+ * this pipe uses internal caching (lastKey, lastParams) to avoid unnecessary
+ * translation lookups. The actual translation is only recalculated when:
+ * - The key changes
+ * - The params change
+ * - The language changes (via subscription)
+ * 
+ * For optimal performance in components with many translations,
+ * consider using OnPush change detection strategy.
  * 
  * Usage in templates:
  * ```html
@@ -24,7 +32,7 @@ import { I18nService } from './i18n.service';
 @Pipe({
   name: 'translate',
   standalone: true,
-  pure: false // Impure to detect language changes
+  pure: false // Impure to detect language changes; uses internal caching for performance
 })
 export class TranslatePipe implements PipeTransform, OnDestroy {
   private value = '';
