@@ -16,7 +16,7 @@
 
     <div class="conversation-actions">
       <app-common-dropdown [items]="dropdownItems" buttonIcon="bi-three-dots-vertical" buttonClass="action-btn"
-        [appCommonTooltip]="'More options'" (itemSelected)="onDropdownItemSelected($event)">
+        [appCommonTooltip]="'chats.conversation-window.header.more-options.title' | translate" (itemSelected)="onDropdownItemSelected($event)">
       </app-common-dropdown>
     </div>
   </div>
@@ -72,7 +72,7 @@
     </div>
 
     <div class="input-wrapper">
-      <textarea [(ngModel)]="newMessage" (keydown)="onKeyDown($event)" placeholder="Type a message..."
+      <textarea [(ngModel)]="newMessage" (keydown)="onKeyDown($event)" [placeholder]="'chats.conversation-window.conversations.composer.placeholder' | translate"
         class="message-input" rows="1" [disabled]="loading">
       </textarea>
       <button class="btn send-btn" (click)="onSendMessage()" [disabled]="!newMessage.trim() || loading"
@@ -80,7 +80,7 @@
         <i class="bi" [ngClass]="newMessage.trim() && !loading ? 'bi-send-check' : 'bi-send'"></i>
       </button>
       <ng-template #btnSendTooltip>
-        Send <span class="shortcut-key-tooltip">Enter</span>
+        {{ 'chats.conversation-window.conversations.composer.send-button.tooltip.label' | translate }} <span class="shortcut-key-tooltip">{{ 'chats.conversation-window.conversations.composer.send-button.tooltip.shortcut' | translate }}</span>
       </ng-template>
     </div>
   </div>
@@ -90,10 +90,10 @@
   <div class="no-conversation">
     <div class="placeholder-content">
       <i class="bi bi-chat-quote placeholder-icon"></i>
-      <h3 class="placeholder-title">No Chat Selected</h3>
-      <p class="placeholder-subtitle">Pick a chat to continue</p>
+      <h3 class="placeholder-title">{{ 'chats.conversation-window.conversations.empty-state.title' | translate }}</h3>
+      <p class="placeholder-subtitle">{{ 'chats.conversation-window.conversations.empty-state.subtitle' | translate }}</p>
       <p class="placeholder-footer" [appCommonTooltip]="encryptionTooltip" [tooltipPosition]="TooltipPosition.BOTTOM">
-        <i class="bi bi-lock"></i> Messages are end-to-end encrypted
+        <i class="bi bi-lock"></i> {{ 'chats.conversation-window.conversations.empty-state.encryption.title' | translate }}
       </p>
     </div>
   </div>
@@ -101,10 +101,9 @@
     <div class="p-1">
       <strong class="fs-6">
         <i class="bi bi-lock-fill"></i>
-        End-to-End Encryption
+        {{ 'chats.conversation-window.conversations.empty-state.encryption.tooltip.title' | translate }}
       </strong>
-      <p>Only you and the recipient can read these messages. Data is encrypted on your device and decrypted on the
-        recipient’s device.</p>
+      <p>{{ 'chats.conversation-window.conversations.empty-state.encryption.tooltip.text' | translate }}</p>
     </div>
   </ng-template>
 </ng-template>

@@ -5,7 +5,7 @@
       <div class="header-content">
         <i class="bi bi-keyboard"></i>
         <h2 class="dialog-title">
-          Keyboard Shortcuts
+          {{ 'dialogs.keyboard-shortcuts.title' | translate }}
         </h2>
       </div>
       <button class="close-btn" (click)="onClose()" aria-label="Close dialog">
@@ -36,7 +36,7 @@
       <div *ngIf="!shortcutsEnabled" class="disabled-overlay">
         <div class="disabled-message">
           <i class="bi bi-keyboard-fill"></i>
-          <span>Keyboard shortcuts are disabled<br />Enable them from Settings → Accessibility</span>
+          <span>{{ 'dialogs.keyboard-shortcuts.shortcuts-disable-overlay.message-line-1' | translate }}<br />{{ 'dialogs.keyboard-shortcuts.shortcuts-disable-overlay.message-line-2' | translate }}</span>
         </div>
       </div>
     </div>
@@ -44,8 +44,7 @@
     <!-- Footer -->
     <div class="dialog-footer" [class.disabled]="!shortcutsEnabled">
       <div class="footer-hint">
-        <!-- <i class="bi bi-info-circle"></i> -->
-        Press <span class="shortcut-key-dialog-footer">Shift + ?</span> anytime to view the keyboard shortcuts.
+        {{ 'dialogs.keyboard-shortcuts.footer-message' | translate }}
       </div>
     </div>
   </div>

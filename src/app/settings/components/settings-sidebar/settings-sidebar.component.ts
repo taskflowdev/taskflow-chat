@@ -1,27 +1,30 @@
-import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { Component, ChangeDetectionStrategy, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, NavigationEnd, RouterModule } from '@angular/router';
 import { UserSettingsService } from '../../../core/services/user-settings.service';
-import { Observable } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { map, filter } from 'rxjs/operators';
 import { CatalogResponse } from '../../../api/models/catalog-response';
 import { CategoryWithKeys } from '../../../api/models/category-with-keys';
+import { TranslatePipe, I18nService } from '../../../core/i18n';
 
 @Component({
   selector: 'app-settings-sidebar',
-  imports: [CommonModule, RouterModule],
+  imports: [CommonModule, RouterModule, TranslatePipe],
   templateUrl: './settings-sidebar.component.html',
   styleUrls: ['./settings-sidebar.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class SettingsSidebarComponent {
+export class SettingsSidebarComponent implements OnDestroy {
   catalog$: Observable<CatalogResponse | null>;
   sortedCategories$: Observable<CategoryWithKeys[]>;
   currentRoute$: Observable<string>;
+  private langSubscription?: Subscription;
 
   constructor(
     private userSettingsService: UserSettingsService,
-    private router: Router
+    private router: Router,
+    private i18n: I18nService
   ) {
     this.catalog$ = this.userSettingsService.catalog$;
     
@@ -45,6 +48,10 @@ export class SettingsSidebarComponent {
         return urlSegments[urlSegments.length - 1] || '';
       })
     );
+  }
+
+  ngOnDestroy(): void {
+    this.langSubscription?.unsubscribe();
   }
 
   isActive(categoryKey: string | undefined): boolean {

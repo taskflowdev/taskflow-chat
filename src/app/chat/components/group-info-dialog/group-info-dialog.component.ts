@@ -13,6 +13,7 @@ import { CompactMemberListComponent } from '../compact-member-list/compact-membe
 import { GroupDto } from '../../../api/models/group-dto';
 import { GroupMemberDto } from '../../../api/models/group-member-dto';
 import { CommonTooltipDirective } from '../../../shared/components/common-tooltip';
+import { TranslatePipe, I18nService } from '../../../core/i18n';
 
 /**
  * Production-ready Group Info Dialog Component with MNC coding standards
@@ -49,7 +50,8 @@ import { CommonTooltipDirective } from '../../../shared/components/common-toolti
     ConfirmationDialogComponent,
     TabsComponent,
     CompactMemberListComponent,
-    CommonTooltipDirective
+    CommonTooltipDirective,
+    TranslatePipe
   ],
   templateUrl: './group-info-dialog.component.html',
   styleUrls: ['./group-info-dialog.component.scss'],
@@ -65,12 +67,8 @@ export class GroupInfoDialogComponent implements OnInit {
   @Output() leftGroup = new EventEmitter<string>();
   @Output() membershipChange = new EventEmitter<{ userId: string; action: 'remove' | 'makeAdmin' }>();
 
-  // Tabs configuration
-  tabs: Tab[] = [
-    { id: 'general', label: 'General', icon: 'bi-info-circle' },
-    { id: 'members', label: 'Members', icon: 'bi-people' },
-    { id: 'settings', label: 'Settings', icon: 'bi-gear' }
-  ];
+  // Tabs configuration - will be updated with translations
+  tabs: Tab[] = [];
   activeTab: string = 'general';
 
   // Data
@@ -100,8 +98,19 @@ export class GroupInfoDialogComponent implements OnInit {
     private groupsService: GroupsService,
     private toastService: ToastService,
     private router: Router,
-    private cdr: ChangeDetectorRef
-  ) {}
+    private cdr: ChangeDetectorRef,
+    private i18n: I18nService
+  ) {
+    this.updateTabs();
+  }
+
+  private updateTabs(): void {
+    this.tabs = [
+      { id: 'general', label: this.i18n.t('dialogs.group-information.navigation.general'), icon: 'bi-info-circle' },
+      { id: 'members', label: this.i18n.t('dialogs.group-information.navigation.members'), icon: 'bi-people' },
+      { id: 'settings', label: this.i18n.t('dialogs.group-information.navigation.settings'), icon: 'bi-gear' }
+    ];
+  }
 
   ngOnInit(): void {
     this.groupInfoForm = this.fb.group({

@@ -7,6 +7,7 @@ import { ToastService } from '../../../shared/services/toast.service';
 import { CommonInputComponent } from '../../../shared/components/common-form-controls/common-input.component';
 import { CommonButtonComponent } from '../../../shared/components/common-form-controls/common-button.component';
 import { CommonToggleComponent } from '../../../shared/components/common-form-controls/common-toggle.component';
+import { TranslatePipe, I18nService } from '../../../core/i18n';
 
 @Component({
   selector: 'app-create-group-dialog',
@@ -16,7 +17,8 @@ import { CommonToggleComponent } from '../../../shared/components/common-form-co
     ReactiveFormsModule,
     CommonInputComponent,
     CommonButtonComponent,
-    CommonToggleComponent
+    CommonToggleComponent,
+    TranslatePipe
   ],
   templateUrl: './create-group-dialog.component.html',
   styleUrls: ['./create-group-dialog.component.scss']
@@ -31,7 +33,8 @@ export class CreateGroupDialogComponent implements OnInit {
     private fb: FormBuilder,
     private groupsService: GroupsService,
     private toastService: ToastService,
-    private router: Router
+    private router: Router,
+    private i18n: I18nService
   ) {}
 
   ngOnInit(): void {
@@ -53,13 +56,13 @@ export class CreateGroupDialogComponent implements OnInit {
     }
 
     if (field.errors['required']) {
-      return 'Group name is required';
+      return this.i18n.t('dialogs.create-group.controls.group-name.errors.required');
     }
     if (field.errors['minlength']) {
-      return 'Group name must be at least 3 characters';
+      return this.i18n.t('dialogs.create-group.controls.group-name.errors.max-length');
     }
     if (field.errors['maxlength']) {
-      return 'Group name must not exceed 50 characters';
+      return this.i18n.t('dialogs.create-group.controls.group-name.errors.max-length');
     }
     return '';
   }

@@ -4,10 +4,11 @@ import { Router } from '@angular/router';
 import { ChatItemComponent, ChatItemData } from '../chat-item/chat-item.component';
 import { SkeletonLoaderComponent } from '../../../shared/components/skeleton-loader/skeleton-loader.component';
 import { CommonTooltipDirective, TooltipPosition } from '../../../shared/components/common-tooltip';
+import { TranslatePipe } from '../../../core/i18n';
 
 @Component({
   selector: 'app-chat-sidebar',
-  imports: [CommonModule, ChatItemComponent, SkeletonLoaderComponent, CommonTooltipDirective],
+  imports: [CommonModule, ChatItemComponent, SkeletonLoaderComponent, CommonTooltipDirective, TranslatePipe],
   templateUrl: './chat-sidebar.component.html',
   styleUrl: './chat-sidebar.component.scss'
 })

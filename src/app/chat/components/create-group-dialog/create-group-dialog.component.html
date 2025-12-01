@@ -7,11 +7,8 @@
         <div class="main-title-icon">
           <i class="bi bi-people"></i>
         </div>
-        <h1 class="main-title">Create Group</h1>
-        <p class="subtitle">Create a place for collaboration and meaningful connections.</p>
-        <!-- <button type="button" class="btn-close" (click)="closeDialog()" aria-label="Close">
-          <i class="bi bi-x"></i>
-        </button> -->
+        <h1 class="main-title">{{ 'dialogs.create-group.title' | translate }}</h1>
+        <p class="subtitle">{{ 'dialogs.create-group.subtitle' | translate }}</p>
       </div>
 
       <hr class="border-2" />
@@ -20,24 +17,24 @@
       <form [formGroup]="createGroupForm" (ngSubmit)="onSubmit()" novalidate class="create-group-form">
         <div class="input-form-group">
           <!-- Group Name Field using Common Input -->
-          <app-common-input label="Group Name" placeholder="Enter group name" formControlName="groupName"
+          <app-common-input [label]="'dialogs.create-group.controls.group-name.label' | translate" [placeholder]="'dialogs.create-group.controls.group-name.placeholder' | translate" formControlName="groupName"
             [isInvalid]="getFieldError('groupName')" [errorMessage]="getErrorMessage('groupName')"></app-common-input>
 
           <!-- Public/Private Toggle using Common Toggle -->
           <div>
-            <app-common-toggle label="Group Visibility" [description]="'Allow anyone to view and join this group.'"
-              formControlName="isPublic" [onText]="'Public'" [offText]="'Private'"></app-common-toggle>
+            <app-common-toggle [label]="'dialogs.create-group.controls.group-visibility.label' | translate" [description]="'dialogs.create-group.controls.group-visibility.description' | translate"
+              formControlName="isPublic" [onText]="'dialogs.create-group.controls.group-visibility.public-toggle' | translate" [offText]="'dialogs.create-group.controls.group-visibility.private-toggle' | translate"></app-common-toggle>
           </div>
           </div>
 
         <div class="button-group">
           <app-common-button type="submit" variant="primary" [fullWidth]="true" [loading]="isLoading"
             [disabled]="createGroupForm.invalid">
-            {{ isLoading ? 'Creating...' : 'Create Group' }}
+            {{ isLoading ? ('dialogs.create-group.actions.create-group-button.loading-label' | translate) : ('dialogs.create-group.actions.create-group-button.label' | translate) }}
           </app-common-button>
           <app-common-button type="button" variant="secondary" [fullWidth]="true" [disabled]="isLoading"
             (clicked)="closeDialog()">
-            Cancel
+            {{ 'dialogs.create-group.actions.cancel-button.label' | translate }}
           </app-common-button>
         </div>
       </form>
