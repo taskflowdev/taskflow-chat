@@ -13,8 +13,11 @@ import { SettingsCacheService } from './settings-cache.service';
  * Settings keys for language preference
  * Used by I18nService integration
  */
-export const LANGUAGE_SETTING_CATEGORY = 'language-region';
-export const LANGUAGE_SETTING_KEY = 'language-region.interfaceLanguage';
+export const APPEARANCE_SETTING_CATEGORY = 'appearance';
+export const THEME_SETTING_KEY = 'appearance.theme';
+export const FONTSIZE_SETTING_KEY = 'appearance.fontSize';
+export const LANGUAGE_SETTING_CATEGORY = 'language';
+export const LANGUAGE_SETTING_KEY = 'language.interface';
 
 /**
  * Interface for I18nService to avoid circular dependency
@@ -357,12 +360,12 @@ export class UserSettingsService implements OnDestroy {
    */
   private applySettingEffect(category: string, key: string, value: any): void {
     // Apply theme changes
-    if (category === 'appearance' && key === 'appearance.theme') {
+    if (category === APPEARANCE_SETTING_CATEGORY && key === THEME_SETTING_KEY) {
       this.themeService.setTheme(value);
     }
 
     // Apply font size changes
-    if (category === 'appearance' && key === 'appearance.fontSize') {
+    if (category === APPEARANCE_SETTING_CATEGORY && key === FONTSIZE_SETTING_KEY) {
       this.themeService.setFontSize(value);
     }
 
@@ -390,13 +393,13 @@ export class UserSettingsService implements OnDestroy {
       return;
     }
 
-    const appearanceSettings = settings.settings['appearance'];
+    const appearanceSettings = settings.settings[APPEARANCE_SETTING_CATEGORY];
     const languageSettings = settings.settings[LANGUAGE_SETTING_CATEGORY];
 
     // Extract theme and fontSize from settings, with fallbacks
     // Keys are stored under the 'appearance' category (e.g. settings.appearance.theme)
-    const theme = (appearanceSettings?.['appearance.theme'] || 'system') as ThemeMode;
-    const fontSize = (appearanceSettings?.['appearance.fontSize'] || 'medium') as FontSize;
+    const theme = (appearanceSettings?.[THEME_SETTING_KEY] || 'system') as ThemeMode;
+    const fontSize = (appearanceSettings?.[FONTSIZE_SETTING_KEY] || 'medium') as FontSize;
 
     // Initialize theme service with user preferences
     // This ensures theme is applied only once with correct values

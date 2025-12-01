@@ -8,14 +8,14 @@ import { I18nService, DEFAULT_LANGUAGE } from '../i18n/i18n.service';
 
 /**
  * StartupService - Centralized application startup initialization
- * 
+ *
  * This service runs during APP_INITIALIZER and handles:
  * 1. Token verification and /me profile fetch
  * 2. User settings load
  * 3. Theme initialization
  * 4. Translation loading (i18n)
  * 5. Proper error handling with redirect to login
- * 
+ *
  * Creates a startup flow similar to Teams/Gmail/Slack where:
  * - User sees splash screen immediately
  * - All initialization happens in background
@@ -42,7 +42,7 @@ export class StartupService {
   /**
    * Initialize the application
    * Called by APP_INITIALIZER to ensure proper startup sequence
-   * 
+   *
    * @returns Promise that resolves when initialization is complete
    */
   initialize(): Promise<void> {
@@ -117,7 +117,7 @@ export class StartupService {
    */
   private initializeDefaults(): Observable<void> {
     this.userSettingsService.initializeDefaultTheme();
-    
+
     // Load default language translations
     return new Observable(observer => {
       this.i18nService.initialize(DEFAULT_LANGUAGE).then(() => {
@@ -143,9 +143,9 @@ export class StartupService {
         // Get user's language preference from settings
         const languageSettings = settings?.settings?.[LANGUAGE_SETTING_CATEGORY];
         const userLanguage = languageSettings?.[LANGUAGE_SETTING_KEY] || DEFAULT_LANGUAGE;
-        
+
         console.log(`Startup: Loading translations for language: ${userLanguage}`);
-        
+
         // Load translations for user's preferred language
         return new Observable<void>(observer => {
           this.i18nService.initialize(userLanguage).then(() => {

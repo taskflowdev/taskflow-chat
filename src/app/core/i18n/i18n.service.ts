@@ -24,14 +24,14 @@ export const DEFAULT_LANGUAGE = 'en';
 
 /**
  * Settings key for language preference
- * This follows the pattern used by theme settings: 'language-region.interfaceLanguage'
+ * This follows the pattern used by theme settings: 'language.interface'
  */
-export const LANGUAGE_SETTING_CATEGORY = 'language-region';
-export const LANGUAGE_SETTING_KEY = 'language-region.interfaceLanguage';
+export const LANGUAGE_SETTING_CATEGORY = 'language';
+export const LANGUAGE_SETTING_KEY = 'language.interface';
 
 /**
  * I18nService - Enterprise-grade internationalization service for Angular
- * 
+ *
  * Features:
  * - Fetches translations from API endpoint
  * - Integrates with UserSettingsService for persisting language preference
@@ -40,18 +40,18 @@ export const LANGUAGE_SETTING_KEY = 'language-region.interfaceLanguage';
  * - Supports nested key lookup with dot notation
  * - Supports placeholder interpolation ({{key}}, {key})
  * - SSR compatible
- * 
+ *
  * Usage:
  * ```typescript
  * // In component
  * constructor(private i18n: I18nService) {}
- * 
+ *
  * // Get translation
  * const text = this.i18n.t('navbar.settings');
- * 
+ *
  * // With interpolation
  * const text = this.i18n.t('sidebar.last-message.types.text', { sender: 'John', message: 'Hello' });
- * 
+ *
  * // Change language via UserSettingsService (recommended)
  * this.userSettingsService.updateSetting('language-region', 'language-region.interfaceLanguage', 'ar');
  * ```
@@ -97,12 +97,12 @@ export class I18nService implements OnDestroy {
   constructor(
     @Inject(PLATFORM_ID) private platformId: Object,
     private apiI18NService: ApiI18NService
-  ) {}
+  ) { }
 
   /**
    * Initialize the i18n service with default language
    * Called by StartupService during app initialization
-   * 
+   *
    * @param lang Language to load (from user settings or default 'en')
    * @returns Promise that resolves when initialization is complete
    */
@@ -148,7 +148,7 @@ export class I18nService implements OnDestroy {
   /**
    * Set the current language
    * Called by UserSettingsService when language setting changes
-   * 
+   *
    * @param lang Language code (e.g., 'en', 'ar')
    */
   setLanguage(lang: string): void {
@@ -174,7 +174,7 @@ export class I18nService implements OnDestroy {
   /**
    * Get translation by key with optional interpolation
    * Supports nested keys using dot notation
-   * 
+   *
    * @param key Translation key (e.g., 'navbar.settings')
    * @param params Interpolation parameters
    * @returns Translated string or the key if not found
@@ -198,7 +198,7 @@ export class I18nService implements OnDestroy {
 
   /**
    * Get translation as Observable for async pipe usage
-   * 
+   *
    * @param key Translation key
    * @param params Interpolation parameters
    */
@@ -266,7 +266,7 @@ export class I18nService implements OnDestroy {
           this.translationsSubject.next(payload.data || {});
           this.metaSubject.next(payload.meta || null);
           this.currentLanguageSubject.next(lang);
-          
+
           // Cache translations
           this.cacheTranslations(lang, payload);
         }
@@ -305,7 +305,7 @@ export class I18nService implements OnDestroy {
 
   /**
    * Get nested value from object using dot notation
-   * 
+   *
    * @param obj Source object
    * @param path Dot-notation path (e.g., 'navbar.settings')
    */
@@ -326,10 +326,10 @@ export class I18nService implements OnDestroy {
   /**
    * Interpolate placeholders in translation string
    * Supports both {{key}} and {key} formats
-   * 
-   * For {key} format with kebab-case (e.g., {date-time}), 
+   *
+   * For {key} format with kebab-case (e.g., {date-time}),
    * the parameter can be passed as either 'date-time' or 'dateTime'
-   * 
+   *
    * @param template Translation template
    * @param params Parameters to interpolate
    */
@@ -348,7 +348,7 @@ export class I18nService implements OnDestroy {
       if (params[key] !== undefined) {
         return String(params[key]);
       }
-      
+
       // Try camelCase version for kebab-case keys
       if (key.includes('-')) {
         const camelKey = key.replace(/-([a-z])/g, (_: string, letter: string) => letter.toUpperCase());
@@ -356,7 +356,7 @@ export class I18nService implements OnDestroy {
           return String(params[camelKey]);
         }
       }
-      
+
       // Return original placeholder if no match
       return match;
     });
@@ -375,7 +375,7 @@ export class I18nService implements OnDestroy {
     try {
       const cacheKey = `${TRANSLATIONS_CACHE_KEY}_${lang}`;
       const metaKey = `${TRANSLATIONS_META_KEY}_${lang}`;
-      
+
       localStorage.setItem(cacheKey, JSON.stringify(payload.data || {}));
       localStorage.setItem(metaKey, JSON.stringify(payload.meta || {}));
     } catch (e) {
@@ -394,18 +394,18 @@ export class I18nService implements OnDestroy {
     try {
       const cacheKey = `${TRANSLATIONS_CACHE_KEY}_${lang}`;
       const metaKey = `${TRANSLATIONS_META_KEY}_${lang}`;
-      
+
       const cachedData = localStorage.getItem(cacheKey);
       const cachedMeta = localStorage.getItem(metaKey);
 
       if (cachedData) {
         this.translationsSubject.next(JSON.parse(cachedData));
         this.currentLanguageSubject.next(lang);
-        
+
         if (cachedMeta) {
           this.metaSubject.next(JSON.parse(cachedMeta));
         }
-        
+
         return true;
       }
     } catch (e) {
