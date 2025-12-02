@@ -26,7 +26,7 @@ export class SettingsSidebarComponent {
     private i18n: I18nService
   ) {
     this.catalog$ = this.userSettingsService.catalog$;
-    
+
     this.sortedCategories$ = this.catalog$.pipe(
       map(catalog => {
         if (!catalog || !catalog.categories) {
@@ -87,5 +87,20 @@ export class SettingsSidebarComponent {
   getCategoryName(category: CategoryWithKeys): string {
     const i18nKey = category.i18n?.fields?.['displayName'];
     return this.getTranslatedValue(i18nKey, category.displayName || category.key || '');
+  }
+
+  /**
+   * Get translated beta label for category
+   * Uses i18n key from API if available, falls back to "Beta"
+   */
+  getCategoryBetaLabel(category: CategoryWithKeys): string | null {
+    const i18nKey = category.i18n?.fields?.['beta'];
+    if (i18nKey) {
+      const translated = this.i18n.t(i18nKey);
+      if (translated !== i18nKey) {
+        return translated;
+      }
+    }
+    return "Beta";
   }
 }
