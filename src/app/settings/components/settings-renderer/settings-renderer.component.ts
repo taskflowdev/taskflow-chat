@@ -8,6 +8,8 @@ import { SelectControlComponent } from '../controls/select-control/select-contro
 import { RadioControlComponent } from '../controls/radio-control/radio-control.component';
 import { Subject, takeUntil } from 'rxjs';
 import { CommonTooltipDirective } from "../../../shared/components/common-tooltip";
+import { I18nService } from '../../../core/i18n';
+import { SettingOption } from '../../../api/models/setting-option';
 
 @Component({
   selector: 'app-settings-renderer',
@@ -29,7 +31,8 @@ export class SettingsRendererComponent implements OnInit, OnDestroy {
   constructor(
     private userSettingsService: UserSettingsService,
     private toastService: ToastService,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private i18n: I18nService
   ) { }
 
   ngOnInit(): void {
@@ -96,5 +99,67 @@ export class SettingsRendererComponent implements OnInit, OnDestroy {
 
   getIconClass(): string {
     return this.settingKey.icon || 'box';
+  }
+
+  /**
+   * Get translated value using i18n key or fallback
+   * @param i18nKey Translation key from API
+   * @param fallback Fallback value if translation not found
+   * @returns Translated string or fallback
+   */
+  private getTranslatedValue(i18nKey: string | undefined | null, fallback: string): string {
+    if (i18nKey) {
+      const translated = this.i18n.t(i18nKey);
+      // Only use translation if it's different from the key (meaning it was found)
+      if (translated !== i18nKey) {
+        return translated;
+      }
+    }
+    return fallback;
+  }
+
+  /**
+   * Get translated setting label
+   * Uses i18n key from API if available, falls back to label
+   */
+  getSettingLabel(): string {
+    const i18nKey = this.settingKey.i18n?.fields?.['label'];
+    return this.getTranslatedValue(i18nKey, this.settingKey.label || this.settingKey.key || '');
+  }
+
+  /**
+   * Get translated setting description
+   * Uses i18n key from API if available, falls back to description
+   */
+  getSettingDescription(): string {
+    const i18nKey = this.settingKey.i18n?.fields?.['description'];
+    return this.getTranslatedValue(i18nKey, this.settingKey.description || '');
+  }
+
+  /**
+   * Get translated options with translated labels
+   * Uses i18n keys from API if available, falls back to option labels
+   */
+  getTranslatedOptions(): SettingOption[] {
+    if (!this.settingKey.options) {
+      return [];
+    }
+
+    return this.settingKey.options.map(option => {
+      // Skip i18n lookup if option value is null or undefined
+      if (option.value == null) {
+        return { ...option };
+      }
+
+      // Use i18n key from API response if available
+      const optionI18n = this.settingKey.i18n?.options?.[option.value];
+      const i18nKey = optionI18n?.fields?.['label'];
+      const label = this.getTranslatedValue(i18nKey, option.label ?? '');
+      
+      return {
+        ...option,
+        label
+      };
+    });
   }
 }

@@ -5,8 +5,8 @@
       <div class="header-content">
         <i class="bi bi-search header-icon"></i>
         <div class="header-text">
-          <h2 class="dialog-title">Search</h2>
-          <p class="dialog-subtitle">Explore groups and collaborate with peers.</p>
+          <h2 class="dialog-title">{{ 'dialogs.search-dialog.title' | translate }}</h2>
+          <p class="dialog-subtitle">{{ 'dialogs.search-dialog.subtitle' | translate }}</p>
         </div>
       </div>
       <button type="button" class="close-btn" (click)="closeDialog()" aria-label="Close dialog">
@@ -25,7 +25,7 @@
             type="text"
             class="search-input"
             formControlName="searchQuery"
-            placeholder="Search for groups by name..."
+            [placeholder]="'dialogs.search-dialog.controls.search-input.placeholder' | translate"
             autocomplete="off"
           />
           <i *ngIf="isSearching" class="bi bi-arrow-repeat spin-icon"></i>
@@ -36,7 +36,7 @@
       <div *ngIf="!hasSearched && recentSearches.length > 0" class="recent-searches">
         <div class="section-header">
           <i class="bi bi-clock-history"></i>
-          <span>Recent Searches</span>
+          <span>{{ 'dialogs.search-dialog.sections.recent-searches' | translate }}</span>
         </div>
         <div class="recent-list">
           <div
@@ -80,7 +80,7 @@
       <div *ngIf="!isSearching && hasSearched && searchResults.length > 0" class="search-results">
         <div class="section-header">
           <i class="bi bi-view-list"></i>
-          <span>Search Results ({{ searchResults.length }})</span>
+          <span>{{ searchResults.length === 1 ? ('dialogs.search-dialog.sections.search-results-singular' | translate) : ('dialogs.search-dialog.sections.search-results-plural' | translate:{ count: searchResults.length }) }}</span>
         </div>
         <div class="results-list">
           <div
@@ -98,11 +98,7 @@
               <div class="result-name">{{ result.name }}</div>
               <div class="result-description">
                 <i class="bi bi-people-fill"></i>
-                <span>{{ result.memberCount }} {{ result.memberCount === 1 ? 'member' : 'members' }}</span>
-                <!-- <span *ngIf="result.isPublic" class="public-badge">
-                  <i class="bi bi-globe"></i>
-                  Public
-                </span> -->
+                <span>{{ result.memberCount === 1 ? ('dialogs.search-dialog.result-item.members-count-singular' | translate) : ('dialogs.search-dialog.result-item.members-count-plural' | translate:{ count: result.memberCount }) }}</span>
               </div>
             </div>
             <div class="result-action">
@@ -114,15 +110,15 @@
                 (click)="onJoinGroup($event, result)"
               >
                 <span *ngIf="!isJoiningGroup(result.groupId)">
-                  Join Group
+                  {{ 'dialogs.search-dialog.result-item.actions.join-button.label' | translate }}
                 </span>
                 <span *ngIf="isJoiningGroup(result.groupId)">
-                  Joining...
+                  {{ 'dialogs.search-dialog.result-item.actions.join-button.loading-label' | translate }}
                 </span>
               </app-common-button>
               <div *ngIf="result.hasJoined" class="joined-badge">
                 <i class="bi bi-check-circle-fill"></i>
-                <span>Joined</span>
+                <span>{{ 'dialogs.search-dialog.result-item.badges.joined' | translate }}</span>
               </div>
             </div>
           </div>
@@ -132,15 +128,15 @@
       <!-- No Results -->
       <div *ngIf="!isSearching && showNoResults" class="no-results">
         <i class="bi bi-box-seam-fill"></i>
-        <p class="no-results-title">No results found</p>
-        <p class="no-results-text">Try searching with different keywords</p>
+        <p class="no-results-title">{{ 'dialogs.search-dialog.states.no-results-state.heading' | translate }}</p>
+        <p class="no-results-text">{{ 'dialogs.search-dialog.states.no-results-state.message' | translate }}</p>
       </div>
 
       <!-- Initial State -->
       <div *ngIf="!hasSearched && recentSearches.length === 0 && !showNoResults" class="initial-state">
         <i class="bi bi-binoculars-fill"></i>
         <p class="initial-text">
-          Start typing to search for groups.
+          {{ 'dialogs.search-dialog.states.initial-state.message' | translate }}
         </p>
       </div>
     </div>

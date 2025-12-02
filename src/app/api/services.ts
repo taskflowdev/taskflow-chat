@@ -6,6 +6,8 @@ export { AuthService } from './services/auth.service';
 export { CatalogService } from './services/catalog.service';
 export { GroupsService } from './services/groups.service';
 export { HealthService } from './services/health.service';
+export { I18NService } from './services/i-18-n.service';
+export { I18NAdminService } from './services/i-18-n-admin.service';
 export { MessageMetadataService } from './services/message-metadata.service';
 export { MessagesService } from './services/messages.service';
 export { SettingsService } from './services/settings.service';

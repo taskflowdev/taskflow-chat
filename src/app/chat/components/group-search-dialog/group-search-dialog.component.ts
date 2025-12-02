@@ -10,6 +10,7 @@ import { ToastService } from '../../../shared/services/toast.service';
 import { CommonInputComponent } from '../../../shared/components/common-form-controls/common-input.component';
 import { CommonButtonComponent } from '../../../shared/components/common-form-controls/common-button.component';
 import { SkeletonLoaderComponent } from '../../../shared/components/skeleton-loader/skeleton-loader.component';
+import { TranslatePipe, I18nService } from '../../../core/i18n';
 
 /**
  * Interface for search result item
@@ -44,7 +45,8 @@ export interface RecentSearchItem {
     CommonModule,
     ReactiveFormsModule,
     CommonButtonComponent,
-    SkeletonLoaderComponent
+    SkeletonLoaderComponent,
+    TranslatePipe
   ],
   templateUrl: './group-search-dialog.component.html',
   styleUrl: './group-search-dialog.component.scss'
@@ -73,7 +75,8 @@ export class GroupSearchDialogComponent implements OnInit, OnDestroy, OnChanges,
     private router: Router,
     private route: ActivatedRoute,
     private groupsService: GroupsService,
-    private toastService: ToastService
+    private toastService: ToastService,
+    private i18n: I18nService
   ) {
     this.searchForm = this.fb.group({
       searchQuery: ['']
