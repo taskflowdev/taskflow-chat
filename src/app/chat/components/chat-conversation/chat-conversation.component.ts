@@ -10,6 +10,7 @@ import { CommonDropdownComponent, DropdownItem } from '../../../shared/component
 import { CommonTooltipDirective, TooltipPosition } from '../../../shared/components/common-tooltip';
 import { ScrollToBottomButtonComponent } from '../scroll-to-bottom-button';
 import { AutoScrollService } from '../../services/auto-scroll.service';
+import { TranslatePipe, I18nService } from '../../../core/i18n';
 
 export interface ConversationData {
   groupId: string;
@@ -20,7 +21,7 @@ export interface ConversationData {
 
 @Component({
   selector: 'app-chat-conversation',
-  imports: [CommonModule, FormsModule, ChatMessageComponent, SkeletonLoaderComponent, GroupInfoDialogComponent, CommonDropdownComponent, CommonTooltipDirective, ScrollToBottomButtonComponent],
+  imports: [CommonModule, FormsModule, ChatMessageComponent, SkeletonLoaderComponent, GroupInfoDialogComponent, CommonDropdownComponent, CommonTooltipDirective, ScrollToBottomButtonComponent, TranslatePipe],
   providers: [AutoScrollService],
   templateUrl: './chat-conversation.component.html',
   styleUrls: ['./chat-conversation.component.scss']
@@ -55,27 +56,8 @@ export class ChatConversationComponent implements AfterViewChecked, OnInit, OnDe
   // Export enum for template use
   TooltipPosition = TooltipPosition;
 
-  // Dropdown items
-  dropdownItems: DropdownItem[] = [
-    {
-      id: 'group-info',
-      label: 'Group Info',
-      icon: 'bi-info-circle',
-      shortcutKey: 'Ctrl + i'
-    },
-    {
-      id: '',
-      label: '',
-      divider: true
-    },
-    {
-      id: 'delete-group',
-      label: 'Delete Group',
-      icon: 'bi-trash',
-      variant: 'danger',
-      isQuick: true
-    }
-  ];
+  // Dropdown items - will be updated with translations
+  dropdownItems: DropdownItem[] = [];
 
   // Generate varied message skeleton items
   get messageSkeletonItems(): Array<{ index: number }> {
@@ -91,8 +73,34 @@ export class ChatConversationComponent implements AfterViewChecked, OnInit, OnDe
     private route: ActivatedRoute,
     private autoScrollService: AutoScrollService,
     private cdr: ChangeDetectorRef,
+    private i18n: I18nService,
     @Inject(PLATFORM_ID) private platformId: Object
-  ) { }
+  ) {
+    this.updateTranslations();
+  }
+
+  private updateTranslations(): void {
+    this.dropdownItems = [
+      {
+        id: 'group-info',
+        label: this.i18n.t('chats.conversation-window.header.more-options.options.group-info.title'),
+        icon: 'bi-info-circle',
+        shortcutKey: this.i18n.t('chats.conversation-window.header.more-options.options.group-info.shortcut')
+      },
+      {
+        id: '',
+        label: '',
+        divider: true
+      },
+      {
+        id: 'delete-group',
+        label: this.i18n.t('chats.conversation-window.header.more-options.options.group-delete.title'),
+        icon: 'bi-trash',
+        variant: 'danger',
+        isQuick: true
+      }
+    ];
+  }
 
   ngOnInit(): void {
     if (isPlatformBrowser(this.platformId)) {
@@ -328,9 +336,9 @@ export class ChatConversationComponent implements AfterViewChecked, OnInit, OnDe
     const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
 
     if (diffDays === 0) {
-      return 'Today';
+      return this.i18n.t('chats.conversation-window.conversations.message-list.date-separator.today');
     } else if (diffDays === 1) {
-      return 'Yesterday';
+      return this.i18n.t('chats.conversation-window.conversations.message-list.date-separator.yesterday');
     } else if (diffDays < 7) {
       // Return day name for last week
       return date.toLocaleDateString([], { weekday: 'long' });

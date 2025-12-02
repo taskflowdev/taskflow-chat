@@ -17,3 +17,6 @@ export * from './directives/keyboard-shortcut.directive';
 export * from './services/keyboard-shortcut.service';
 export * from './services/shortcut-handler.service';
 export * from './services/shortcut-registry.service';
+
+// i18n (re-exported from core for convenience)
+export { I18nService, TranslatePipe, RtlDirective } from '../core/i18n';

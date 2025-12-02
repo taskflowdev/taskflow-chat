@@ -8,6 +8,7 @@ import { CategoryWithKeys } from '../../../api/models/category-with-keys';
 import { CatalogEntryDto } from '../../../api/models/catalog-entry-dto';
 import { SettingsRendererComponent } from '../settings-renderer/settings-renderer.component';
 import { SkeletonLoaderComponent } from '../../../shared/components/skeleton-loader/skeleton-loader.component';
+import { I18nService } from '../../../core/i18n';
 
 @Component({
   selector: 'app-settings-category',
@@ -25,7 +26,8 @@ export class SettingsCategoryComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private userSettingsService: UserSettingsService,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private i18n: I18nService
   ) {
     this.loading$ = this.userSettingsService.loading$;
     // Check if catalog has been loaded (catalog$ emits non-null value)
@@ -63,5 +65,25 @@ export class SettingsCategoryComponent implements OnInit {
         });
       })
     );
+  }
+
+  /**
+   * Get translated category title
+   * Uses translation key: settings.{category-key}.title
+   */
+  getCategoryTitle(category: CategoryWithKeys): string {
+    const key = `settings.${category.key}.title`;
+    const translated = this.i18n.t(key);
+    return translated !== key ? translated : (category.displayName || category.key || '');
+  }
+
+  /**
+   * Get translated category description
+   * Uses translation key: settings.{category-key}.description
+   */
+  getCategoryDescription(category: CategoryWithKeys): string {
+    const key = `settings.${category.key}.description`;
+    const translated = this.i18n.t(key);
+    return translated !== key ? translated : (category.description || '');
   }
 }

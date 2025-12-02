@@ -13,10 +13,10 @@
       <div class="member-meta">
         <span class="member-role" [class.admin-role]="isAdmin">
           <i [class]="isAdmin ? 'bi bi-shield-fill' : 'bi bi-person-fill'"></i>
-          {{ isAdmin ? 'Admin' : 'Member' }}
+          {{ roleLabel }}
         </span>
         <span *ngIf="member.joinedAt" class="member-joined">
-          • Joined on {{ getDateTimeTooltip(member.joinedAt) }}
+          • {{ 'dialogs.group-information.tabs.members.status.joined-on' | translate:{ 'date-time': getDateTimeTooltip(member.joinedAt) } }}
         </span>
       </div>
     </div>
@@ -36,7 +36,7 @@
       (click)="onMakeAdminClick()"
       aria-label="Make admin">
       <i class="bi bi-shield-plus"></i>
-      <span class="action-label">Make Admin</span>
+      <span class="action-label">{{ 'dialogs.group-information.tabs.members.actions.promote-button.label' | translate }}</span>
     </button>
 
     <!-- Remove Button -->
@@ -50,7 +50,7 @@
       (click)="onRemoveClick()"
       aria-label="Remove member">
       <i class="bi bi-x-circle"></i>
-      <span class="action-label">Remove</span>
+      <span class="action-label">{{ 'dialogs.group-information.tabs.members.actions.remove-button.label' | translate }}</span>
     </button>
   </div>
 </div>

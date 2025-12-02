@@ -1,7 +1,8 @@
-import { Component, OnInit, Input, Output, EventEmitter, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, OnDestroy, Input, Output, EventEmitter, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
+import { Subscription } from 'rxjs';
 import { GroupsService } from '../../../api/services/groups.service';
 import { ToastService } from '../../../shared/services/toast.service';
 import { CommonInputComponent } from '../../../shared/components/common-form-controls/common-input.component';
@@ -13,6 +14,7 @@ import { CompactMemberListComponent } from '../compact-member-list/compact-membe
 import { GroupDto } from '../../../api/models/group-dto';
 import { GroupMemberDto } from '../../../api/models/group-member-dto';
 import { CommonTooltipDirective } from '../../../shared/components/common-tooltip';
+import { TranslatePipe, I18nService } from '../../../core/i18n';
 
 /**
  * Production-ready Group Info Dialog Component with MNC coding standards
@@ -49,13 +51,14 @@ import { CommonTooltipDirective } from '../../../shared/components/common-toolti
     ConfirmationDialogComponent,
     TabsComponent,
     CompactMemberListComponent,
-    CommonTooltipDirective
+    CommonTooltipDirective,
+    TranslatePipe
   ],
   templateUrl: './group-info-dialog.component.html',
   styleUrls: ['./group-info-dialog.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class GroupInfoDialogComponent implements OnInit {
+export class GroupInfoDialogComponent implements OnInit, OnDestroy {
   @Input() groupId!: string;
   @Input() currentUserId!: string;
   @Input() triggerDelete = false; // Auto-trigger delete confirmation when true
@@ -65,12 +68,8 @@ export class GroupInfoDialogComponent implements OnInit {
   @Output() leftGroup = new EventEmitter<string>();
   @Output() membershipChange = new EventEmitter<{ userId: string; action: 'remove' | 'makeAdmin' }>();
 
-  // Tabs configuration
-  tabs: Tab[] = [
-    { id: 'general', label: 'General', icon: 'bi-info-circle' },
-    { id: 'members', label: 'Members', icon: 'bi-people' },
-    { id: 'settings', label: 'Settings', icon: 'bi-gear' }
-  ];
+  // Tabs configuration - will be updated with translations
+  tabs: Tab[] = [];
   activeTab: string = 'general';
 
   // Data
@@ -95,13 +94,26 @@ export class GroupInfoDialogComponent implements OnInit {
   memberToRemove: GroupMemberDto | null = null;
   pendingVisibilityValue: boolean | null = null;
 
+  private langSubscription?: Subscription;
+
   constructor(
     private fb: FormBuilder,
     private groupsService: GroupsService,
     private toastService: ToastService,
     private router: Router,
-    private cdr: ChangeDetectorRef
-  ) {}
+    private cdr: ChangeDetectorRef,
+    private i18n: I18nService
+  ) {
+    this.updateTabs();
+  }
+
+  private updateTabs(): void {
+    this.tabs = [
+      { id: 'general', label: this.i18n.t('dialogs.group-information.navigation.general'), icon: 'bi-info-circle' },
+      { id: 'members', label: this.i18n.t('dialogs.group-information.navigation.members'), icon: 'bi-people' },
+      { id: 'settings', label: this.i18n.t('dialogs.group-information.navigation.settings'), icon: 'bi-gear' }
+    ];
+  }
 
   ngOnInit(): void {
     this.groupInfoForm = this.fb.group({
@@ -110,12 +122,22 @@ export class GroupInfoDialogComponent implements OnInit {
 
     this.loadGroupDetails();
 
+    // Subscribe to language changes to update tabs
+    this.langSubscription = this.i18n.languageChanged$.subscribe(() => {
+      this.updateTabs();
+      this.cdr.markForCheck();
+    });
+
     // Auto-trigger delete confirmation if requested
     if (this.triggerDelete) {
       setTimeout(() => {
         this.showDeleteDialog();
       }, 100);
     }
+  }
+
+  ngOnDestroy(): void {
+    this.langSubscription?.unsubscribe();
   }
 
   /**

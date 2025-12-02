@@ -9,6 +9,24 @@ import { UpdateSettingsRequest } from '../../api/models/update-settings-request'
 import { ThemeService, ThemeMode, FontSize } from './theme.service';
 import { SettingsCacheService } from './settings-cache.service';
 
+/**
+ * Settings keys for language preference
+ * Used by I18nService integration
+ */
+export const APPEARANCE_SETTING_CATEGORY = 'appearance';
+export const THEME_SETTING_KEY = 'appearance.theme';
+export const FONTSIZE_SETTING_KEY = 'appearance.fontSize';
+export const LANGUAGE_SETTING_CATEGORY = 'language';
+export const LANGUAGE_SETTING_KEY = 'language.interface';
+
+/**
+ * Interface for I18nService to avoid circular dependency
+ * Only the methods used by UserSettingsService are defined here
+ */
+interface I18nServiceInterface {
+  setLanguage(lang: string): void;
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -29,6 +47,9 @@ export class UserSettingsService implements OnDestroy {
   private stopBackgroundRefresh$ = new Subject<void>();
   private destroy$ = new Subject<void>();
 
+  // Cached I18nService reference to avoid circular dependency
+  private _i18nService: I18nServiceInterface | null = null;
+
   constructor(
     private settingsService: SettingsService,
     private catalogService: CatalogService,
@@ -38,6 +59,23 @@ export class UserSettingsService implements OnDestroy {
     // Initialize save queue subscription
     // This is intentional for a singleton service and will live for app lifetime
     this.initializeSaveQueue();
+  }
+
+  /**
+   * Get I18nService reference
+   * The reference is set by StartupService during initialization
+   * This breaks the circular dependency cleanly
+   */
+  private getI18nService(): I18nServiceInterface | null {
+    return this._i18nService;
+  }
+
+  /**
+   * Set the I18nService reference (called from StartupService during initialization)
+   * This breaks the circular dependency by allowing external registration
+   */
+  setI18nService(service: I18nServiceInterface): void {
+    this._i18nService = service;
   }
 
   /**
@@ -322,18 +360,30 @@ export class UserSettingsService implements OnDestroy {
    */
   private applySettingEffect(category: string, key: string, value: any): void {
     // Apply theme changes
-    if (category === 'appearance' && key === 'appearance.theme') {
+    if (category === APPEARANCE_SETTING_CATEGORY && key === THEME_SETTING_KEY) {
       this.themeService.setTheme(value);
     }
 
     // Apply font size changes
-    if (category === 'appearance' && key === 'appearance.fontSize') {
+    if (category === APPEARANCE_SETTING_CATEGORY && key === FONTSIZE_SETTING_KEY) {
       this.themeService.setFontSize(value);
+    }
+
+    // Apply language changes
+    if (category === LANGUAGE_SETTING_CATEGORY && key === LANGUAGE_SETTING_KEY) {
+      const i18n = this.getI18nService();
+      if (i18n) {
+        try {
+          i18n.setLanguage(value);
+        } catch (e) {
+          console.error('Failed to apply language change:', e);
+        }
+      }
     }
   }
 
   /**
-   * Apply theme and typography from loaded settings
+   * Apply theme, typography, and language from loaded settings
    * This is the single source of truth for applying user preferences
    */
   private applyThemeFromSettings(settings: EffectiveSettingsResponse | null): void {
@@ -343,16 +393,30 @@ export class UserSettingsService implements OnDestroy {
       return;
     }
 
-    const appearanceSettings = settings.settings['appearance'];
+    const appearanceSettings = settings.settings[APPEARANCE_SETTING_CATEGORY];
+    const languageSettings = settings.settings[LANGUAGE_SETTING_CATEGORY];
 
     // Extract theme and fontSize from settings, with fallbacks
     // Keys are stored under the 'appearance' category (e.g. settings.appearance.theme)
-    const theme = (appearanceSettings?.['appearance.theme'] || 'system') as ThemeMode;
-    const fontSize = (appearanceSettings?.['appearance.fontSize'] || 'medium') as FontSize;
+    const theme = (appearanceSettings?.[THEME_SETTING_KEY] || 'system') as ThemeMode;
+    const fontSize = (appearanceSettings?.[FONTSIZE_SETTING_KEY] || 'medium') as FontSize;
 
     // Initialize theme service with user preferences
     // This ensures theme is applied only once with correct values
     this.themeService.initialize(theme, fontSize);
+
+    // Apply language setting if available
+    const language = languageSettings?.[LANGUAGE_SETTING_KEY];
+    if (language) {
+      const i18n = this.getI18nService();
+      if (i18n) {
+        try {
+          i18n.setLanguage(language);
+        } catch (e) {
+          console.error('Failed to apply language from settings:', e);
+        }
+      }
+    }
   }
 
   /**
