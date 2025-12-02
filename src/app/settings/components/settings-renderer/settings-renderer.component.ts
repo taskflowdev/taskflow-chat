@@ -147,8 +147,8 @@ export class SettingsRendererComponent implements OnInit, OnDestroy {
     }
 
     return this.settingKey.options.map(option => {
-      // Skip i18n lookup if option value is not available
-      if (!option.value) {
+      // Skip i18n lookup if option value is null or undefined
+      if (option.value == null) {
         return { ...option };
       }
 
@@ -156,7 +156,7 @@ export class SettingsRendererComponent implements OnInit, OnDestroy {
       const optionI18n = this.settingKey.i18n?.options?.[option.value];
       const i18nKey = optionI18n?.fields?.['label'];
       
-      let label = option.label || '';
+      let label = option.label ?? '';
       if (i18nKey) {
         const translated = this.i18n.t(i18nKey);
         // Only use translation if it's different from the key (meaning it was found)
