@@ -12,7 +12,7 @@
 
       <span class="category-name">{{ getCategoryName(category) }}</span>
 
-      <span *ngIf="category.beta" class="badge badge-beta">{{ 'settings.beta-tag' | translate }}</span>
+      <span *ngIf="category.beta" class="badge badge-beta">{{ getCategoryBetaLabel(category) }}</span>
     </a>
   </nav>
 </div>

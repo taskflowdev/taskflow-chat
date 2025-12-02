@@ -1,4 +1,4 @@
-import { Directive, Input, HostListener, ElementRef, Renderer2, OnDestroy, TemplateRef } from '@angular/core';
+import { Directive, Input, HostListener, ElementRef, Renderer2, OnDestroy, TemplateRef, ViewContainerRef } from '@angular/core';
 
 /**
  * Enum for tooltip position
@@ -65,8 +65,9 @@ export class CommonTooltipDirective implements OnDestroy {
 
   constructor(
     private elementRef: ElementRef,
-    private renderer: Renderer2
-  ) {}
+    private renderer: Renderer2,
+    private viewContainerRef: ViewContainerRef
+  ) { }
 
   @HostListener('mouseenter')
   onMouseEnter(): void {
@@ -126,9 +127,13 @@ export class CommonTooltipDirective implements OnDestroy {
       this.renderer.setProperty(this.tooltipElement, 'textContent', this.tooltipContent);
     } else {
       // HTML template content
-      const view = this.tooltipContent.createEmbeddedView(null);
+      const view = this.viewContainerRef.createEmbeddedView(this.tooltipContent);
+
+      // VERY IMPORTANT — run change detection
+      view.detectChanges();
+
       view.rootNodes.forEach(node => {
-        this.renderer.appendChild(this.tooltipElement, node);
+        this.renderer.appendChild(this.tooltipElement!, node);
       });
     }
 

@@ -423,9 +423,9 @@ export class GroupInfoDialogComponent implements OnInit, OnDestroy {
       return 'Deleting group...';
     }
     if (!this.isAdmin) {
-      return 'Only group admins can delete this group';
+      return this.i18n.t('dialogs.group-information.tabs.settings.danger-zone.delete-group.actions.delete-button.tooltip.member.disabled');
     }
-    return 'Permanently delete this group';
+    return this.i18n.t('dialogs.group-information.tabs.settings.danger-zone.delete-group.actions.delete-button.tooltip.admin.enabled');
   }
 
   /**
@@ -436,9 +436,9 @@ export class GroupInfoDialogComponent implements OnInit, OnDestroy {
       return 'Leaving group...';
     }
     if (this.isLastAdmin) {
-      return 'You are the last admin. Please assign another admin before leaving or delete the group';
+      return this.i18n.t('dialogs.group-information.tabs.settings.danger-zone.leave-group.actions.leave-group-button.tooltip.admin.disabled');
     }
-    return 'Leave this group';
+    return this.i18n.t('dialogs.group-information.tabs.settings.danger-zone.leave-group.actions.leave-group-button.tooltip.member.enabled');
   }
 
   /**
@@ -449,11 +449,14 @@ export class GroupInfoDialogComponent implements OnInit, OnDestroy {
       return 'Updating visibility...';
     }
     if (!this.isAdmin) {
-      return 'Only group admins can change visibility';
+      return this.i18n.t('dialogs.group-information.tabs.settings.danger-zone.change-visibility.actions.change-visibility-button.tooltip.private.member.disabled');
     }
-    const currentState = this.group?.isPublic ? 'public' : 'private';
-    const newState = this.group?.isPublic ? 'private' : 'public';
-    return `Change group visibility from ${currentState} to ${newState}`;
+
+    if (this.group?.isPublic) {
+      return this.i18n.t('dialogs.group-information.tabs.settings.danger-zone.change-visibility.actions.change-visibility-button.tooltip.public.admin.enabled');
+    } else {
+      return this.i18n.t('dialogs.group-information.tabs.settings.danger-zone.change-visibility.actions.change-visibility-button.tooltip.private.admin.enabled');
+    }
   }
 
   /**

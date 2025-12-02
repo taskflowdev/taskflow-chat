@@ -26,7 +26,7 @@ export class SettingsSidebarComponent {
     private i18n: I18nService
   ) {
     this.catalog$ = this.userSettingsService.catalog$;
-    
+
     this.sortedCategories$ = this.catalog$.pipe(
       map(catalog => {
         if (!catalog || !catalog.categories) {
@@ -64,13 +64,43 @@ export class SettingsSidebarComponent {
   }
 
   /**
+   * Get translated value using i18n key or fallback
+   * @param i18nKey Translation key from API
+   * @param fallback Fallback value if translation not found
+   * @returns Translated string or fallback
+   */
+  private getTranslatedValue(i18nKey: string | undefined | null, fallback: string): string {
+    if (i18nKey) {
+      const translated = this.i18n.t(i18nKey);
+      // Only use translation if it's different from the key (meaning it was found)
+      if (translated !== i18nKey) {
+        return translated;
+      }
+    }
+    return fallback;
+  }
+
+  /**
    * Get translated category display name
-   * Uses translation key: settings.{category-key}.title
+   * Uses i18n key from API if available, falls back to displayName
    */
   getCategoryName(category: CategoryWithKeys): string {
-    const key = `settings.${category.key}.title`;
-    const translated = this.i18n.t(key);
-    // If translation not found (returns key), fall back to displayName
-    return translated !== key ? translated : (category.displayName || category.key || '');
+    const i18nKey = category.i18n?.fields?.['displayName'];
+    return this.getTranslatedValue(i18nKey, category.displayName || category.key || '');
+  }
+
+  /**
+   * Get translated beta label for category
+   * Uses i18n key from API if available, falls back to "Beta"
+   */
+  getCategoryBetaLabel(category: CategoryWithKeys): string | null {
+    const i18nKey = category.i18n?.fields?.['beta'];
+    if (i18nKey) {
+      const translated = this.i18n.t(i18nKey);
+      if (translated !== i18nKey) {
+        return translated;
+      }
+    }
+    return "Beta";
   }
 }

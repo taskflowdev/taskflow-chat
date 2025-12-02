@@ -12,8 +12,8 @@
       </ng-template>
 
       <!-- New Chat Button -->
-      <button class="btn new-chat-btn" [appCommonTooltip]="btnCreateGroupTooltip" [tooltipPosition]="TooltipPosition.BOTTOM"
-        (click)="onCreateGroup()">
+      <button class="btn new-chat-btn" [appCommonTooltip]="btnCreateGroupTooltip"
+        [tooltipPosition]="TooltipPosition.BOTTOM" (click)="onCreateGroup()">
         <i class="bi bi-plus-lg"></i>
       </button>
       <ng-template #btnCreateGroupTooltip>
@@ -25,9 +25,7 @@
   <div class="sidebar-content">
     <!-- Loading State -->
     <div *ngIf="loading" class="chats-list">
-      <app-skeleton-loader
-        *ngFor="let item of skeletonItems; trackBy: trackBySkeletonIndex"
-        type="chat-item"
+      <app-skeleton-loader *ngFor="let item of skeletonItems; trackBy: trackBySkeletonIndex" type="chat-item"
         [fadeOpacity]="item.opacity">
       </app-skeleton-loader>
     </div>
