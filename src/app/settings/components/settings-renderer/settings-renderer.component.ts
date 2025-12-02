@@ -147,8 +147,13 @@ export class SettingsRendererComponent implements OnInit, OnDestroy {
     }
 
     return this.settingKey.options.map(option => {
+      // Skip i18n lookup if option value is not available
+      if (!option.value) {
+        return { ...option };
+      }
+
       // Use i18n key from API response if available
-      const optionI18n = this.settingKey.i18n?.options?.[option.value || ''];
+      const optionI18n = this.settingKey.i18n?.options?.[option.value];
       const i18nKey = optionI18n?.fields?.['label'];
       
       let label = option.label || '';
