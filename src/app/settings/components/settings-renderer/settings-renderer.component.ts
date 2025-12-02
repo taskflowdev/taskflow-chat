@@ -10,6 +10,7 @@ import { Subject, takeUntil } from 'rxjs';
 import { CommonTooltipDirective } from "../../../shared/components/common-tooltip";
 import { I18nService } from '../../../core/i18n';
 import { SettingOption } from '../../../api/models/setting-option';
+import { camelToKebab } from '../../../core/utils/settings.utils';
 
 @Component({
   selector: 'app-settings-renderer',
@@ -152,7 +153,7 @@ export class SettingsRendererComponent implements OnInit, OnDestroy {
    * Extract the setting name from the full key and convert to kebab-case for translation lookup
    * The key format is expected to be '{category}.{setting-name}' (e.g., 'appearance.displayDensity')
    * 
-   * Converts camelCase to kebab-case: 'displayDensity' -> 'display-density'
+   * Converts camelCase to kebab-case using the shared utility: 'displayDensity' -> 'display-density'
    * 
    * @returns The last segment of the key in kebab-case format
    */
@@ -165,24 +166,7 @@ export class SettingsRendererComponent implements OnInit, OnDestroy {
     const lastSegment = parts.length > 1 ? parts[parts.length - 1] : fullKey;
     
     // Convert camelCase to kebab-case for translation key lookup
-    return this.toKebabCase(lastSegment);
-  }
-
-  /**
-   * Convert camelCase or PascalCase string to kebab-case
-   * Examples:
-   * - 'displayDensity' -> 'display-density'
-   * - 'fontSize' -> 'font-size'
-   * - 'autoplay' -> 'autoplay' (unchanged if already lowercase)
-   * 
-   * @param str The string to convert
-   * @returns The kebab-case version of the string
-   */
-  private toKebabCase(str: string): string {
-    return str
-      .replace(/([a-z])([A-Z])/g, '$1-$2')  // Add hyphen between lowercase and uppercase
-      .replace(/([A-Z])([A-Z][a-z])/g, '$1-$2')  // Handle consecutive capitals
-      .toLowerCase();
+    return camelToKebab(lastSegment);
   }
 
   /**
@@ -200,7 +184,7 @@ export class SettingsRendererComponent implements OnInit, OnDestroy {
     if (!value) {
       return '';
     }
-    // Convert to kebab-case if needed
-    return this.toKebabCase(value);
+    // Convert to kebab-case if needed using shared utility
+    return camelToKebab(value);
   }
 }
