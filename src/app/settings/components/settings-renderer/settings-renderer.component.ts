@@ -149,10 +149,12 @@ export class SettingsRendererComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Extract the setting name from the full key
-   * The key format is expected to be '{category}.{setting-name}' (e.g., 'appearance.theme')
+   * Extract the setting name from the full key and convert to kebab-case for translation lookup
+   * The key format is expected to be '{category}.{setting-name}' (e.g., 'appearance.displayDensity')
    * 
-   * @returns The last segment of the key, or the full key if no dot separator exists
+   * Converts camelCase to kebab-case: 'displayDensity' -> 'display-density'
+   * 
+   * @returns The last segment of the key in kebab-case format
    */
   private getSettingName(): string {
     const fullKey = this.settingKey.key || '';
@@ -160,12 +162,36 @@ export class SettingsRendererComponent implements OnInit, OnDestroy {
       return '';
     }
     const parts = fullKey.split('.');
-    return parts.length > 1 ? parts[parts.length - 1] : fullKey;
+    const lastSegment = parts.length > 1 ? parts[parts.length - 1] : fullKey;
+    
+    // Convert camelCase to kebab-case for translation key lookup
+    return this.toKebabCase(lastSegment);
+  }
+
+  /**
+   * Convert camelCase or PascalCase string to kebab-case
+   * Examples:
+   * - 'displayDensity' -> 'display-density'
+   * - 'fontSize' -> 'font-size'
+   * - 'autoplay' -> 'autoplay' (unchanged if already lowercase)
+   * 
+   * @param str The string to convert
+   * @returns The kebab-case version of the string
+   */
+  private toKebabCase(str: string): string {
+    return str
+      .replace(/([a-z])([A-Z])/g, '$1-$2')  // Add hyphen between lowercase and uppercase
+      .replace(/([A-Z])([A-Z][a-z])/g, '$1-$2')  // Handle consecutive capitals
+      .toLowerCase();
   }
 
   /**
    * Normalize option value for use as a translation key segment
-   * Handles common cases like kebab-case values (e.g., 'sync-with-system')
+   * Converts camelCase option values to kebab-case to match translation keys
+   * Examples:
+   * - 'syncWithSystem' -> 'sync-with-system'
+   * - 'autoplay' -> 'autoplay' (already lowercase)
+   * - 'sync-with-system' -> 'sync-with-system' (already kebab-case)
    * 
    * @param value The option value to normalize
    * @returns Normalized value safe for use in translation keys
@@ -174,7 +200,7 @@ export class SettingsRendererComponent implements OnInit, OnDestroy {
     if (!value) {
       return '';
     }
-    // Kebab-case and alphanumeric values are kept as-is since they're valid translation key segments
-    return value;
+    // Convert to kebab-case if needed
+    return this.toKebabCase(value);
   }
 }
