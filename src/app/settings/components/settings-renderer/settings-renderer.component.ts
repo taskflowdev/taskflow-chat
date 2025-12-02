@@ -102,12 +102,12 @@ export class SettingsRendererComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Get translated setting label
-   * Uses i18n key from API if available, falls back to label
+   * Get translated value using i18n key or fallback
+   * @param i18nKey Translation key from API
+   * @param fallback Fallback value if translation not found
+   * @returns Translated string or fallback
    */
-  getSettingLabel(): string {
-    // Use i18n key from API response if available
-    const i18nKey = this.settingKey.i18n?.fields?.['label'];
+  private getTranslatedValue(i18nKey: string | undefined | null, fallback: string): string {
     if (i18nKey) {
       const translated = this.i18n.t(i18nKey);
       // Only use translation if it's different from the key (meaning it was found)
@@ -115,8 +115,16 @@ export class SettingsRendererComponent implements OnInit, OnDestroy {
         return translated;
       }
     }
-    // Fall back to label from API
-    return this.settingKey.label || this.settingKey.key || '';
+    return fallback;
+  }
+
+  /**
+   * Get translated setting label
+   * Uses i18n key from API if available, falls back to label
+   */
+  getSettingLabel(): string {
+    const i18nKey = this.settingKey.i18n?.fields?.['label'];
+    return this.getTranslatedValue(i18nKey, this.settingKey.label || this.settingKey.key || '');
   }
 
   /**
@@ -124,17 +132,8 @@ export class SettingsRendererComponent implements OnInit, OnDestroy {
    * Uses i18n key from API if available, falls back to description
    */
   getSettingDescription(): string {
-    // Use i18n key from API response if available
     const i18nKey = this.settingKey.i18n?.fields?.['description'];
-    if (i18nKey) {
-      const translated = this.i18n.t(i18nKey);
-      // Only use translation if it's different from the key (meaning it was found)
-      if (translated !== i18nKey) {
-        return translated;
-      }
-    }
-    // Fall back to description from API
-    return this.settingKey.description || '';
+    return this.getTranslatedValue(i18nKey, this.settingKey.description || '');
   }
 
   /**
@@ -155,15 +154,7 @@ export class SettingsRendererComponent implements OnInit, OnDestroy {
       // Use i18n key from API response if available
       const optionI18n = this.settingKey.i18n?.options?.[option.value];
       const i18nKey = optionI18n?.fields?.['label'];
-      
-      let label = option.label ?? '';
-      if (i18nKey) {
-        const translated = this.i18n.t(i18nKey);
-        // Only use translation if it's different from the key (meaning it was found)
-        if (translated !== i18nKey) {
-          label = translated;
-        }
-      }
+      const label = this.getTranslatedValue(i18nKey, option.label ?? '');
       
       return {
         ...option,

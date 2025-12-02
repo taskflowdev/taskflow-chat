@@ -64,12 +64,12 @@ export class SettingsSidebarComponent {
   }
 
   /**
-   * Get translated category display name
-   * Uses i18n key from API if available, falls back to displayName
+   * Get translated value using i18n key or fallback
+   * @param i18nKey Translation key from API
+   * @param fallback Fallback value if translation not found
+   * @returns Translated string or fallback
    */
-  getCategoryName(category: CategoryWithKeys): string {
-    // Use i18n key from API response if available
-    const i18nKey = category.i18n?.fields?.['displayName'];
+  private getTranslatedValue(i18nKey: string | undefined | null, fallback: string): string {
     if (i18nKey) {
       const translated = this.i18n.t(i18nKey);
       // Only use translation if it's different from the key (meaning it was found)
@@ -77,7 +77,15 @@ export class SettingsSidebarComponent {
         return translated;
       }
     }
-    // Fall back to displayName from API
-    return category.displayName || category.key || '';
+    return fallback;
+  }
+
+  /**
+   * Get translated category display name
+   * Uses i18n key from API if available, falls back to displayName
+   */
+  getCategoryName(category: CategoryWithKeys): string {
+    const i18nKey = category.i18n?.fields?.['displayName'];
+    return this.getTranslatedValue(i18nKey, category.displayName || category.key || '');
   }
 }
