@@ -103,78 +103,67 @@ export class SettingsRendererComponent implements OnInit, OnDestroy {
 
   /**
    * Get translated setting label
-   * Uses translation key: settings.{category-key}.sections.{setting-key}.title
+   * Uses i18n key from API if available, falls back to label
    */
   getSettingLabel(): string {
-    // Extract setting name from full key (e.g., 'appearance.theme' -> 'theme')
-    const settingName = this.getSettingName();
-    const key = `settings.${this.categoryKey}.sections.${settingName}.title`;
-    const translated = this.i18n.t(key);
-    return translated !== key ? translated : (this.settingKey.label || this.settingKey.key || '');
+    // Use i18n key from API response if available
+    const i18nKey = this.settingKey.i18n?.fields?.['label'];
+    if (i18nKey) {
+      const translated = this.i18n.t(i18nKey);
+      // Only use translation if it's different from the key (meaning it was found)
+      if (translated !== i18nKey) {
+        return translated;
+      }
+    }
+    // Fall back to label from API
+    return this.settingKey.label || this.settingKey.key || '';
   }
 
   /**
    * Get translated setting description
-   * Uses translation key: settings.{category-key}.sections.{setting-key}.description
+   * Uses i18n key from API if available, falls back to description
    */
   getSettingDescription(): string {
-    const settingName = this.getSettingName();
-    const key = `settings.${this.categoryKey}.sections.${settingName}.description`;
-    const translated = this.i18n.t(key);
-    return translated !== key ? translated : (this.settingKey.description || '');
+    // Use i18n key from API response if available
+    const i18nKey = this.settingKey.i18n?.fields?.['description'];
+    if (i18nKey) {
+      const translated = this.i18n.t(i18nKey);
+      // Only use translation if it's different from the key (meaning it was found)
+      if (translated !== i18nKey) {
+        return translated;
+      }
+    }
+    // Fall back to description from API
+    return this.settingKey.description || '';
   }
 
   /**
    * Get translated options with translated labels
-   * Uses translation key: settings.{category-key}.sections.{setting-key}.options.{option-value}
+   * Uses i18n keys from API if available, falls back to option labels
    */
   getTranslatedOptions(): SettingOption[] {
     if (!this.settingKey.options) {
       return [];
     }
 
-    const settingName = this.getSettingName();
     return this.settingKey.options.map(option => {
-      const optionKey = this.normalizeOptionKey(option.value);
-      const translationKey = `settings.${this.categoryKey}.sections.${settingName}.options.${optionKey}`;
-      const translated = this.i18n.t(translationKey);
+      // Use i18n key from API response if available
+      const optionI18n = this.settingKey.i18n?.options?.[option.value || ''];
+      const i18nKey = optionI18n?.fields?.['label'];
       
-      // If translation found, use it; otherwise fall back to API-provided label
-      // This ensures user-facing text comes from i18n or the API, not internal values
+      let label = option.label || '';
+      if (i18nKey) {
+        const translated = this.i18n.t(i18nKey);
+        // Only use translation if it's different from the key (meaning it was found)
+        if (translated !== i18nKey) {
+          label = translated;
+        }
+      }
+      
       return {
         ...option,
-        label: translated !== translationKey ? translated : (option.label || '')
+        label
       };
     });
-  }
-
-  /**
-   * Extract the setting name from the full key
-   * The key format is expected to be '{category}.{setting-name}' (e.g., 'appearance.theme')
-   * 
-   * @returns The last segment of the key, or the full key if no dot separator exists
-   */
-  private getSettingName(): string {
-    const fullKey = this.settingKey.key || '';
-    if (!fullKey) {
-      return '';
-    }
-    const parts = fullKey.split('.');
-    return parts.length > 1 ? parts[parts.length - 1] : fullKey;
-  }
-
-  /**
-   * Normalize option value for use as a translation key segment
-   * Handles common cases like kebab-case values (e.g., 'sync-with-system')
-   * 
-   * @param value The option value to normalize
-   * @returns Normalized value safe for use in translation keys
-   */
-  private normalizeOptionKey(value: string | undefined): string {
-    if (!value) {
-      return '';
-    }
-    // Kebab-case and alphanumeric values are kept as-is since they're valid translation key segments
-    return value;
   }
 }

@@ -69,21 +69,37 @@ export class SettingsCategoryComponent implements OnInit {
 
   /**
    * Get translated category title
-   * Uses translation key: settings.{category-key}.title
+   * Uses i18n key from API if available, falls back to displayName
    */
   getCategoryTitle(category: CategoryWithKeys): string {
-    const key = `settings.${category.key}.title`;
-    const translated = this.i18n.t(key);
-    return translated !== key ? translated : (category.displayName || category.key || '');
+    // Use i18n key from API response if available
+    const i18nKey = category.i18n?.fields?.['displayName'];
+    if (i18nKey) {
+      const translated = this.i18n.t(i18nKey);
+      // Only use translation if it's different from the key (meaning it was found)
+      if (translated !== i18nKey) {
+        return translated;
+      }
+    }
+    // Fall back to displayName from API
+    return category.displayName || category.key || '';
   }
 
   /**
    * Get translated category description
-   * Uses translation key: settings.{category-key}.description
+   * Uses i18n key from API if available, falls back to description
    */
   getCategoryDescription(category: CategoryWithKeys): string {
-    const key = `settings.${category.key}.description`;
-    const translated = this.i18n.t(key);
-    return translated !== key ? translated : (category.description || '');
+    // Use i18n key from API response if available
+    const i18nKey = category.i18n?.fields?.['description'];
+    if (i18nKey) {
+      const translated = this.i18n.t(i18nKey);
+      // Only use translation if it's different from the key (meaning it was found)
+      if (translated !== i18nKey) {
+        return translated;
+      }
+    }
+    // Fall back to description from API
+    return category.description || '';
   }
 }

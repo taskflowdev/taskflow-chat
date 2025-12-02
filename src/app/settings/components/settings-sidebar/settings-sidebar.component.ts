@@ -65,12 +65,19 @@ export class SettingsSidebarComponent {
 
   /**
    * Get translated category display name
-   * Uses translation key: settings.{category-key}.title
+   * Uses i18n key from API if available, falls back to displayName
    */
   getCategoryName(category: CategoryWithKeys): string {
-    const key = `settings.${category.key}.title`;
-    const translated = this.i18n.t(key);
-    // If translation not found (returns key), fall back to displayName
-    return translated !== key ? translated : (category.displayName || category.key || '');
+    // Use i18n key from API response if available
+    const i18nKey = category.i18n?.fields?.['displayName'];
+    if (i18nKey) {
+      const translated = this.i18n.t(i18nKey);
+      // Only use translation if it's different from the key (meaning it was found)
+      if (translated !== i18nKey) {
+        return translated;
+      }
+    }
+    // Fall back to displayName from API
+    return category.displayName || category.key || '';
   }
 }
