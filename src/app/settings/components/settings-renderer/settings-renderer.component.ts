@@ -45,6 +45,14 @@ export class SettingsRendererComponent implements OnInit, OnDestroy {
         this.loadCurrentValue();
         this.cdr.markForCheck();
       });
+
+    // Subscribe to language changes to trigger change detection
+    // This ensures translated text updates immediately when language changes
+    this.i18n.languageChanged$.pipe(
+      takeUntil(this.destroy$)
+    ).subscribe(() => {
+      this.cdr.markForCheck();
+    });
   }
 
   ngOnDestroy(): void {

@@ -1,9 +1,9 @@
-import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { Component, ChangeDetectionStrategy, ChangeDetectorRef, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, NavigationEnd, RouterModule } from '@angular/router';
 import { UserSettingsService } from '../../../core/services/user-settings.service';
-import { Observable } from 'rxjs';
-import { map, filter } from 'rxjs/operators';
+import { Observable, Subject } from 'rxjs';
+import { map, filter, takeUntil } from 'rxjs/operators';
 import { CatalogResponse } from '../../../api/models/catalog-response';
 import { CategoryWithKeys } from '../../../api/models/category-with-keys';
 import { TranslatePipe, I18nService } from '../../../core/i18n';
@@ -15,15 +15,18 @@ import { TranslatePipe, I18nService } from '../../../core/i18n';
   styleUrls: ['./settings-sidebar.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class SettingsSidebarComponent {
+export class SettingsSidebarComponent implements OnInit, OnDestroy {
   catalog$: Observable<CatalogResponse | null>;
   sortedCategories$: Observable<CategoryWithKeys[]>;
   currentRoute$: Observable<string>;
 
+  private destroy$ = new Subject<void>();
+
   constructor(
     private userSettingsService: UserSettingsService,
     private router: Router,
-    private i18n: I18nService
+    private i18n: I18nService,
+    private cdr: ChangeDetectorRef
   ) {
     this.catalog$ = this.userSettingsService.catalog$;
 
@@ -47,6 +50,21 @@ export class SettingsSidebarComponent {
         return urlSegments[urlSegments.length - 1] || '';
       })
     );
+  }
+
+  ngOnInit(): void {
+    // Subscribe to language changes to trigger change detection
+    // This ensures translated text updates immediately when language changes
+    this.i18n.languageChanged$.pipe(
+      takeUntil(this.destroy$)
+    ).subscribe(() => {
+      this.cdr.markForCheck();
+    });
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 
   isActive(categoryKey: string | undefined): boolean {
