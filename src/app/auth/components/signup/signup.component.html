@@ -60,6 +60,7 @@
 
         <!-- Sign Up Button -->
         <button type="submit" class="btn btn-signup fw-bold" [disabled]="isLoading || signupForm.invalid">
+          <span *ngIf="isLoading" class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
           {{ isLoading ? 'Creating Account...' : 'Create Account' }}
         </button>
       </form>

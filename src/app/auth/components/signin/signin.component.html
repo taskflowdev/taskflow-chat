@@ -42,7 +42,8 @@
 
         <!-- Login Button -->
         <button type="submit" class="btn btn-login fw-bold" [disabled]="isLoading || signinForm.invalid">
-          {{ isLoading ? 'Please wait...' : 'Continue' }}
+          <span *ngIf="isLoading" class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+          {{ isLoading ? 'Signing in...' : 'Continue' }}
         </button>
 
       </form>
