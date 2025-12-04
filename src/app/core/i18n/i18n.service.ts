@@ -5,9 +5,10 @@ import { I18NService as ApiI18NService } from '../../api/services/i-18-n.service
 import { TranslationPayloadDto } from '../../api/models/translation-payload-dto';
 import { TranslationPayloadMeta } from '../../api/models/translation-payload-meta';
 import { LanguageDto } from '../../api/models/language-dto';
+import { TranslationCacheService } from '../services/translation-cache.service';
 
 /**
- * Storage key for caching translations locally
+ * Storage key for caching translations locally (DEPRECATED - use TranslationCacheService)
  */
 const TRANSLATIONS_CACHE_KEY = 'i18n_translations';
 const TRANSLATIONS_META_KEY = 'i18n_meta';
@@ -33,12 +34,14 @@ export const LANGUAGE_SETTING_KEY = 'language.interface';
  * I18nService - Enterprise-grade internationalization service for Angular
  *
  * Features:
- * - Fetches translations from API endpoint
+ * - Fetches translations from API endpoint with version-based cache busting
  * - Integrates with UserSettingsService for persisting language preference
- * - Caches translations in memory and localStorage
+ * - Encrypted caching with TTL support via TranslationCacheService
+ * - Caches translations in memory and encrypted localStorage
  * - Reactive language switching using BehaviorSubject
  * - Supports nested key lookup with dot notation
  * - Supports placeholder interpolation ({{key}}, {key})
+ * - Smooth UX with loading states during language changes
  * - SSR compatible
  *
  * Usage:
@@ -54,6 +57,9 @@ export const LANGUAGE_SETTING_KEY = 'language.interface';
  *
  * // Change language via UserSettingsService (recommended)
  * this.userSettingsService.updateSetting('language-region', 'language-region.interfaceLanguage', 'ar');
+ *
+ * // Subscribe to loading state during language change
+ * this.i18n.loading$.subscribe(loading => console.log('Loading:', loading));
  * ```
  */
 @Injectable({
@@ -93,10 +99,15 @@ export class I18nService implements OnDestroy {
 
   // Background refresh configuration
   private readonly BACKGROUND_REFRESH_INTERVAL = 5 * 60 * 1000; // 5 minutes
+  private readonly CACHE_TTL_MS = 24 * 60 * 60 * 1000; // 24 hours
+
+  // Translation version for cache busting (can be updated from config)
+  private translationVersion: string = '1.0';
 
   constructor(
     @Inject(PLATFORM_ID) private platformId: Object,
-    private apiI18NService: ApiI18NService
+    private apiI18NService: ApiI18NService,
+    private translationCacheService: TranslationCacheService
   ) { }
 
   /**
@@ -116,7 +127,7 @@ export class I18nService implements OnDestroy {
       }
 
       // Load translations for the specified language
-      this.loadTranslations(lang).subscribe({
+      this.loadTranslations(lang, true).subscribe({
         next: () => {
           this.initializedSubject.next(true);
           this.startBackgroundRefresh();
@@ -125,7 +136,8 @@ export class I18nService implements OnDestroy {
         error: (err) => {
           console.error('I18n: Failed to load translations:', err);
           // Try to use cached translations
-          if (this.loadFromCache(lang)) {
+          const cached = this.loadFromNewCache(lang);
+          if (cached) {
             console.log('I18n: Using cached translations as fallback');
           }
           this.initializedSubject.next(true);
@@ -148,26 +160,32 @@ export class I18nService implements OnDestroy {
   /**
    * Set the current language
    * Called by UserSettingsService when language setting changes
+   * Returns a Promise that resolves when language change is complete
    *
    * @param lang Language code (e.g., 'en', 'ar')
+   * @returns Promise that resolves when translations are loaded
    */
-  setLanguage(lang: string): void {
+  setLanguage(lang: string): Promise<void> {
     if (!lang || lang === this.currentLanguageSubject.value) {
-      return;
+      return Promise.resolve();
     }
 
-    this.loadingSubject.next(true);
-    this.loadTranslations(lang).subscribe({
-      next: () => {
-        this.currentLanguageSubject.next(lang);
-        this.languageChangedSubject.next(lang);
-        this.loadingSubject.next(false);
-        console.log(`I18n: Language changed to ${lang}`);
-      },
-      error: (err) => {
-        console.error(`I18n: Failed to load translations for ${lang}:`, err);
-        this.loadingSubject.next(false);
-      }
+    return new Promise((resolve, reject) => {
+      this.loadingSubject.next(true);
+      this.loadTranslations(lang, false).subscribe({
+        next: () => {
+          this.currentLanguageSubject.next(lang);
+          this.languageChangedSubject.next(lang);
+          this.loadingSubject.next(false);
+          console.log(`I18n: Language changed to ${lang}`);
+          resolve();
+        },
+        error: (err) => {
+          console.error(`I18n: Failed to load translations for ${lang}:`, err);
+          this.loadingSubject.next(false);
+          reject(err);
+        }
+      });
     });
   }
 
@@ -256,10 +274,42 @@ export class I18nService implements OnDestroy {
   // ===== Private Methods =====
 
   /**
-   * Load translations from API
+   * Load translations from API with smart caching
+   * 
+   * Strategy:
+   * 1. Check encrypted cache first
+   * 2. If valid cache exists (not expired, version matches), use it
+   * 3. Otherwise, fetch from API with version parameter for HTTP cache busting
+   * 4. Cache the fresh translations with encryption
+   *
+   * @param lang Language code
+   * @param useCache Whether to try loading from cache first
    */
-  private loadTranslations(lang: string): Observable<TranslationPayloadDto | null> {
-    return this.apiI18NService.apiI18NLangGet$Json({ lang }).pipe(
+  private loadTranslations(lang: string, useCache: boolean = true): Observable<TranslationPayloadDto | null> {
+    // Try to load from encrypted cache first
+    if (useCache && isPlatformBrowser(this.platformId)) {
+      const cachedPayload = this.translationCacheService.getCachedTranslations(
+        lang,
+        this.translationVersion,
+        this.CACHE_TTL_MS
+      );
+
+      if (cachedPayload) {
+        console.log(`I18n: Using cached translations for ${lang}`);
+        // Apply cached data immediately
+        this.translationsSubject.next(cachedPayload.data || {});
+        this.metaSubject.next(cachedPayload.meta || null);
+        this.currentLanguageSubject.next(lang);
+        return of(cachedPayload);
+      }
+    }
+
+    // Fetch from API with version parameter for cache busting
+    console.log(`I18n: Fetching translations from API for ${lang}`);
+    return this.apiI18NService.apiI18NLangGet$Json({
+      lang,
+      version: this.translationVersion
+    }).pipe(
       map(response => response.data || null),
       tap(payload => {
         if (payload) {
@@ -267,15 +317,20 @@ export class I18nService implements OnDestroy {
           this.metaSubject.next(payload.meta || null);
           this.currentLanguageSubject.next(lang);
 
-          // Cache translations
-          this.cacheTranslations(lang, payload);
+          // Cache translations with encryption
+          this.translationCacheService.setCachedTranslations(
+            lang,
+            payload,
+            this.translationVersion
+          );
         }
       }),
       catchError(err => {
         console.error('I18n: API error:', err);
-        // Try to use cached translations
-        if (this.loadFromCache(lang)) {
-          console.log('I18n: Using cached translations');
+        // Try to use cached translations as fallback
+        const cached = this.loadFromNewCache(lang);
+        if (cached) {
+          console.log('I18n: Using cached translations as fallback after API error');
           return of(null);
         }
         throw err;
@@ -365,51 +420,29 @@ export class I18nService implements OnDestroy {
   }
 
   /**
-   * Cache translations to localStorage
+   * Load translations from encrypted cache (new cache service)
+   * Used as fallback when API fails
    */
-  private cacheTranslations(lang: string, payload: TranslationPayloadDto): void {
-    if (!isPlatformBrowser(this.platformId)) {
-      return;
-    }
-
-    try {
-      const cacheKey = `${TRANSLATIONS_CACHE_KEY}_${lang}`;
-      const metaKey = `${TRANSLATIONS_META_KEY}_${lang}`;
-
-      localStorage.setItem(cacheKey, JSON.stringify(payload.data || {}));
-      localStorage.setItem(metaKey, JSON.stringify(payload.meta || {}));
-    } catch (e) {
-      console.warn('I18n: Failed to cache translations:', e);
-    }
-  }
-
-  /**
-   * Load translations from localStorage cache
-   */
-  private loadFromCache(lang: string): boolean {
+  private loadFromNewCache(lang: string): boolean {
     if (!isPlatformBrowser(this.platformId)) {
       return false;
     }
 
     try {
-      const cacheKey = `${TRANSLATIONS_CACHE_KEY}_${lang}`;
-      const metaKey = `${TRANSLATIONS_META_KEY}_${lang}`;
+      const cachedPayload = this.translationCacheService.getCachedTranslations(
+        lang,
+        undefined, // Don't validate version on fallback
+        this.CACHE_TTL_MS
+      );
 
-      const cachedData = localStorage.getItem(cacheKey);
-      const cachedMeta = localStorage.getItem(metaKey);
-
-      if (cachedData) {
-        this.translationsSubject.next(JSON.parse(cachedData));
+      if (cachedPayload) {
+        this.translationsSubject.next(cachedPayload.data || {});
+        this.metaSubject.next(cachedPayload.meta || null);
         this.currentLanguageSubject.next(lang);
-
-        if (cachedMeta) {
-          this.metaSubject.next(JSON.parse(cachedMeta));
-        }
-
         return true;
       }
     } catch (e) {
-      console.warn('I18n: Failed to load from cache:', e);
+      console.warn('I18n: Failed to load from new cache:', e);
     }
 
     return false;
@@ -424,7 +457,7 @@ export class I18nService implements OnDestroy {
       switchMap(() => {
         const lang = this.currentLanguageSubject.value;
         console.log('I18n: Background refresh for', lang);
-        return this.loadTranslations(lang).pipe(
+        return this.loadTranslations(lang, false).pipe(
           catchError(() => of(null))
         );
       })

@@ -24,7 +24,8 @@ export const LANGUAGE_SETTING_KEY = 'language.interface';
  * Only the methods used by UserSettingsService are defined here
  */
 interface I18nServiceInterface {
-  setLanguage(lang: string): void;
+  setLanguage(lang: string): Promise<void>;
+  loading$: Observable<boolean>;
 }
 
 @Injectable({
@@ -369,15 +370,15 @@ export class UserSettingsService implements OnDestroy {
       this.themeService.setFontSize(value);
     }
 
-    // Apply language changes
+    // Apply language changes (async with loading state)
     if (category === LANGUAGE_SETTING_CATEGORY && key === LANGUAGE_SETTING_KEY) {
       const i18n = this.getI18nService();
       if (i18n) {
-        try {
-          i18n.setLanguage(value);
-        } catch (e) {
+        // The language change will trigger loading state in I18nService
+        // which will be reflected in the UI through AppComponent
+        i18n.setLanguage(value).catch(e => {
           console.error('Failed to apply language change:', e);
-        }
+        });
       }
     }
   }
@@ -410,11 +411,10 @@ export class UserSettingsService implements OnDestroy {
     if (language) {
       const i18n = this.getI18nService();
       if (i18n) {
-        try {
-          i18n.setLanguage(language);
-        } catch (e) {
+        // Use async language loading, but don't block theme initialization
+        i18n.setLanguage(language).catch(e => {
           console.error('Failed to apply language from settings:', e);
-        }
+        });
       }
     }
   }

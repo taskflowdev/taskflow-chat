@@ -1,8 +1,10 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 /**
- * Full-screen loading splash screen with app logo and elegant white bar loader
+ * Full-screen loading splash screen with app logo and elegant gradient text
+ * Matches the design used in index.html for consistent user experience
+ * Supports dynamic loading messages for different contexts
  */
 @Component({
   selector: 'app-loading-screen',
@@ -12,19 +14,19 @@ import { CommonModule } from '@angular/common';
     <div class="loading-screen" role="status" aria-live="polite" aria-label="Loading application">
       <div class="loading-content">
         <div class="logo-container">
-          <i class="bi bi-chat-quote"></i>
+          <i class="bi bi-chat-quote app-logo"></i>
         </div>
-        <div class="loader"></div>
-        <p class="loading-text">Preparing your workspace...</p>
+        <p class="loading-text">{{ message }}</p>
         <span class="visually-hidden">Loading, please wait...</span>
       </div>
     </div>
   `,
   styles: [`
+    /* Loading screen - matches index.html design exactly */
     .loading-screen {
       position: fixed;
       inset: 0;
-      background-color: var(--taskflow-color-loading-screen-bg, #000);
+      background-color: var(--taskflow-color-loading-screen-bg, var(--taskflow-color-startup-loading-screen-bg, #000000));
       display: flex;
       align-items: center;
       justify-content: center;
@@ -36,8 +38,8 @@ import { CommonModule } from '@angular/common';
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 2rem;
-      animation: fadeIn var(--taskflow-color-loading-fade-duration, 0.3s) ease-in-out;
+      gap: 1rem;
+      animation: fadeIn var(--taskflow-color-loading-fade-duration, var(--taskflow-color-startup-loading-fade-duration, 0.3s)) ease-in-out;
     }
 
     @keyframes fadeIn {
@@ -52,79 +54,57 @@ import { CommonModule } from '@angular/common';
     }
 
     .logo-container {
-      // animation: pulse 2s ease-in-out infinite;
+      /* Container for logo */
     }
 
     .app-logo {
-      font-size: 80px;
-      color: var(--taskflow-color-loading-logo, #fff);
-      // filter: drop-shadow(0 0 20px rgba(255, 255, 255, 0.3));
+      font-size: 5rem;
+      color: var(--taskflow-color-loading-logo, var(--taskflow-color-startup-loading-logo, #ffffff));
     }
 
-    /* Loader bar */
-    .loader {
-      display: block;
-      --height-of-loader: 4.5px;
-      --loader-color: var(--taskflow-color-loading-loader, #fff);
-      width: 120px;
-      height: var(--height-of-loader);
-      border-radius: 30px;
-      background-color: var(--taskflow-color-loading-loader-track, rgba(255,255,255,0.1));
-      position: relative;
-      overflow: hidden;
-    }
-
-    .loader::before {
-      content: "";
-      position: absolute;
-      background: var(--loader-color);
-      top: 0;
-      left: 0;
-      width: 0%;
-      height: 100%;
-      border-radius: 30px;
-      animation: moving var(--taskflow-color-loading-moving-duration, 1.2s) ease-in-out infinite;
-    }
-
-    @keyframes moving {
-      50% {
-        width: 100%;
-      }
-      100% {
-        width: 0;
-        right: 0;
-        left: unset;
-      }
-    }
-
-    @keyframes pulse {
-      0%, 100% {
-        opacity: 1;
-        transform: scale(1);
-      }
-      50% {
-        opacity: 0.8;
-        transform: scale(0.98);
-      }
-    }
-
+    /* Elegant gradient text animation - matches index.html exactly */
     .loading-text {
       position: relative;
       display: inline-block;
       background: linear-gradient(90deg,
-        var(--taskflow-color-loading-gradient-start, rgba(255,255,255,0.4)),
-        var(--taskflow-color-loading-gradient-mid, rgba(255,255,255,1)),
-        var(--taskflow-color-loading-gradient-end, rgba(255,255,255,0.4))
+        var(--taskflow-color-loading-gradient-one, var(--taskflow-color-startup-loading-gradient-one, rgba(0, 0, 0))),
+        var(--taskflow-color-loading-gradient-two, var(--taskflow-color-startup-loading-gradient-two, rgba(0, 0, 0))),
+        var(--taskflow-color-loading-gradient-three, var(--taskflow-color-startup-loading-gradient-three, rgb(77, 77, 77))),
+        var(--taskflow-color-loading-gradient-four, var(--taskflow-color-startup-loading-gradient-four, rgb(255, 255, 255))),
+        var(--taskflow-color-loading-gradient-five, var(--taskflow-color-startup-loading-gradient-five, rgb(255, 255, 255)))
       );
       background-size: 200% auto;
       -webkit-background-clip: text;
       background-clip: text;
       -webkit-text-fill-color: transparent;
-      animation: shine var(--taskflow-color-loading-shine-duration, 2.5s) linear infinite;
-      font-size: 14px;
+      font-size: 16px;
       font-weight: 400;
-      margin: 0;
       letter-spacing: 0.3px;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      margin: 0;
+      animation:
+        textFadeIn 0.6s ease-out forwards,
+        shine var(--taskflow-color-loading-shine-duration, var(--taskflow-color-startup-loading-shine-duration, 2.5s)) linear infinite;
+    }
+
+    @keyframes textFadeIn {
+      0% {
+        opacity: 0;
+        transform: translateY(6px);
+      }
+      100% {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes shine {
+      0% {
+        background-position: 200% center;
+      }
+      100% {
+        background-position: -200% center;
+      }
     }
 
     .visually-hidden {
@@ -140,4 +120,10 @@ import { CommonModule } from '@angular/common';
     }
   `]
 })
-export class LoadingScreenComponent { }
+export class LoadingScreenComponent {
+  /**
+   * Loading message to display
+   * Default: "Setting things up for you…"
+   */
+  @Input() message: string = 'Setting things up for you…';
+}
