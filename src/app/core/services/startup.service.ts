@@ -72,6 +72,37 @@ export class StartupService {
   }
 
   /**
+   * Reinitialize after login
+   * Called after successful login to load user settings and translations
+   * 
+   * @returns Promise that resolves when reinitialization is complete
+   */
+  reinitializeAfterLogin(): Promise<void> {
+    return new Promise((resolve) => {
+      // Skip during SSR
+      if (!isPlatformBrowser(this.platformId)) {
+        resolve();
+        return;
+      }
+
+      console.log('Startup: Reinitializing after login');
+      
+      // Load user settings and translations
+      this.loadSettingsAndTranslations().subscribe({
+        next: () => {
+          console.log('Startup: Post-login reinitialization complete');
+          resolve();
+        },
+        error: (err) => {
+          console.error('Startup: Post-login reinitialization error:', err);
+          // Continue even on error to not block navigation
+          resolve();
+        }
+      });
+    });
+  }
+
+  /**
    * Run the complete initialization pipeline
    * 1. Load default translations (in parallel with auth check)
    * 2. Verify authentication (fetch /me if token exists)

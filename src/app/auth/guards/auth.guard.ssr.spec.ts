@@ -59,22 +59,22 @@ describe('AuthGuard Client-side', () => {
     router = TestBed.inject(Router) as jasmine.SpyObj<Router>;
   });
 
-  it('should redirect to login when no token is present', () => {
+  it('should redirect to signin when no token is present', () => {
     authService.getToken.and.returnValue(null);
     authService.getCurrentUser.and.returnValue(null);
     
     const result = guard.canActivate();
     expect(result).toBe(false);
-    expect(router.navigate).toHaveBeenCalledWith(['/auth/login']);
+    expect(router.navigate).toHaveBeenCalledWith(['/auth/signin']);
   });
 
-  it('should redirect to login when token exists but no user data', () => {
+  it('should redirect to signin when token exists but no user data', () => {
     authService.getToken.and.returnValue('valid-token');
     authService.getCurrentUser.and.returnValue(null);
     
     const result = guard.canActivate();
     expect(result).toBe(false);
-    expect(router.navigate).toHaveBeenCalledWith(['/auth/login']);
+    expect(router.navigate).toHaveBeenCalledWith(['/auth/signin']);
   });
 
   it('should allow access when token and user data both exist', () => {

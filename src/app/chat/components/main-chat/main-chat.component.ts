@@ -90,7 +90,7 @@ export class MainChatComponent implements OnInit, OnDestroy {
       this.authService.currentUser$.subscribe(user => {
         this.user = user;
         if (!user) {
-          this.router.navigate(['/auth/login']);
+          this.router.navigate(['/auth/signin']);
         } else {
           this.loadUserGroups();
         }

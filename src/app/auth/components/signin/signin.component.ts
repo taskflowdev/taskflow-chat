@@ -5,6 +5,8 @@ import { CommonModule } from '@angular/common';
 import { AuthService } from '../../services/auth.service';
 import { RedirectUrlService } from '../../services/redirect-url.service';
 import { ToastService } from '../../../shared/services/toast.service';
+import { StartupService } from '../../../core/services/startup.service';
+import { filter, take } from 'rxjs';
 
 @Component({
   selector: 'app-signin',
@@ -23,7 +25,8 @@ export class SigninComponent implements OnInit {
     private router: Router,
     private route: ActivatedRoute,
     private toastService: ToastService,
-    private redirectUrlService: RedirectUrlService
+    private redirectUrlService: RedirectUrlService,
+    private startupService: StartupService
   ) {
     this.signinForm = this.fb.group({
       userName: ['', [Validators.required, Validators.minLength(3)]],
@@ -80,16 +83,25 @@ export class SigninComponent implements OnInit {
     this.authService.login({ userName, password }).subscribe({
       next: (result) => {
         if (result.success) {
-          // Wait for currentUser$ to emit before navigating
-          // This ensures the user data is loaded before redirecting
-          this.authService.currentUser$.subscribe(user => {
-            if (user) {
+          // Wait for currentUser$ to emit a non-null user before loading settings
+          // Use filter and take(1) to avoid memory leaks and multiple executions
+          this.authService.currentUser$.pipe(
+            filter(user => user !== null),
+            take(1)
+          ).subscribe(user => {
+            // Load user settings and translations after successful login
+            this.startupService.reinitializeAfterLogin().then(() => {
               this.isLoading = false;
               this.toastService.showSuccess('Welcome back!', 'Login Successful');
 
               // Redirect to intended URL or default
               this.redirectUrlService.redirectAfterLogin(this.route, '/chats');
-            }
+            }).catch(err => {
+              console.error('Failed to load settings after login:', err);
+              this.isLoading = false;
+              // Still redirect even if settings load fails
+              this.redirectUrlService.redirectAfterLogin(this.route, '/chats');
+            });
           });
         } else {
           this.isLoading = false;

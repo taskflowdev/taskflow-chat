@@ -1,9 +1,9 @@
-import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, OnDestroy, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
 import { UserSettingsService } from '../../../core/services/user-settings.service';
-import { Observable, combineLatest } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { Observable, combineLatest, Subject } from 'rxjs';
+import { map, takeUntil } from 'rxjs/operators';
 import { CategoryWithKeys } from '../../../api/models/category-with-keys';
 import { CatalogEntryDto } from '../../../api/models/catalog-entry-dto';
 import { SettingsRendererComponent } from '../settings-renderer/settings-renderer.component';
@@ -17,11 +17,13 @@ import { I18nService } from '../../../core/i18n';
   styleUrls: ['./settings-category.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class SettingsCategoryComponent implements OnInit {
+export class SettingsCategoryComponent implements OnInit, OnDestroy {
   category$!: Observable<CategoryWithKeys | undefined>;
   sortedKeys$!: Observable<CatalogEntryDto[]>;
   loading$: Observable<boolean>;
   catalogLoaded$: Observable<boolean>;
+
+  private destroy$ = new Subject<void>();
 
   constructor(
     private route: ActivatedRoute,
@@ -65,6 +67,19 @@ export class SettingsCategoryComponent implements OnInit {
         });
       })
     );
+
+    // Subscribe to language changes to trigger change detection
+    // This ensures translated text updates immediately when language changes
+    this.i18n.languageChanged$.pipe(
+      takeUntil(this.destroy$)
+    ).subscribe(() => {
+      this.cdr.markForCheck();
+    });
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 
   /**
