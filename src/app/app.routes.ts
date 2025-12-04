@@ -4,7 +4,7 @@ import { GuestGuard } from './auth/guards/guest.guard';
 import { MainLayoutComponent } from './shared/components/layout/main-layout.component';
 
 export const routes: Routes = [
-  { path: '', redirectTo: '/auth/login', pathMatch: 'full' },
+  { path: '', redirectTo: '/auth/signin', pathMatch: 'full' },
   {
     path: 'auth',
     canActivate: [GuestGuard],
@@ -27,5 +27,5 @@ export const routes: Routes = [
       // { path: 'dashboard', component: DashboardComponent },
     ]
   },
-  { path: '**', redirectTo: '/auth/login' }
+  { path: '**', redirectTo: '/auth/signin' }
 ];

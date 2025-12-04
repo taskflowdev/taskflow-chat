@@ -1,5 +1,8 @@
 <div appRtl>
-  <app-loading-screen *ngIf="isAppInitializing$ | async"></app-loading-screen>
+  <app-loading-screen 
+    *ngIf="isAppInitializing$ | async" 
+    [message]="(loadingMessage$ | async) || 'Preparing your workspace...'">
+  </app-loading-screen>
   <router-outlet />
   <app-toast-container></app-toast-container>
 </div>

@@ -5,10 +5,12 @@ import { SignupComponent } from './components/signup/signup.component';
 import { ForgotPasswordComponent } from './components/forgot-password/forgot-password.component';
 
 const routes: Routes = [
-  { path: '', redirectTo: 'login', pathMatch: 'full' },
-  { path: 'login', component: SigninComponent },
+  { path: '', redirectTo: 'signin', pathMatch: 'full' },
+  { path: 'signin', component: SigninComponent },
   { path: 'signup', component: SignupComponent },
-  { path: 'forgot-password', component: ForgotPasswordComponent }
+  { path: 'forgot-password', component: ForgotPasswordComponent },
+  // Keep legacy route for backwards compatibility
+  { path: 'login', redirectTo: 'signin', pathMatch: 'full' }
 ];
 
 @NgModule({

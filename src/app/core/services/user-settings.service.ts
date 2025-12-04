@@ -21,10 +21,20 @@ export const LANGUAGE_SETTING_KEY = 'language.interface';
 
 /**
  * Interface for I18nService to avoid circular dependency
- * Only the methods used by UserSettingsService are defined here
+ * Defines the minimal contract needed by UserSettingsService
  */
 interface I18nServiceInterface {
-  setLanguage(lang: string): void;
+  /**
+   * Change the current language
+   * Returns a Promise that resolves when the language change is complete
+   */
+  setLanguage(lang: string): Promise<void>;
+  
+  /**
+   * Observable indicating if translations are currently loading
+   * Used to show loading states in the UI during language changes
+   */
+  loading$: Observable<boolean>;
 }
 
 @Injectable({
@@ -369,15 +379,15 @@ export class UserSettingsService implements OnDestroy {
       this.themeService.setFontSize(value);
     }
 
-    // Apply language changes
+    // Apply language changes (async with loading state)
     if (category === LANGUAGE_SETTING_CATEGORY && key === LANGUAGE_SETTING_KEY) {
       const i18n = this.getI18nService();
       if (i18n) {
-        try {
-          i18n.setLanguage(value);
-        } catch (e) {
+        // The language change will trigger loading state in I18nService
+        // which will be reflected in the UI through AppComponent
+        i18n.setLanguage(value).catch(e => {
           console.error('Failed to apply language change:', e);
-        }
+        });
       }
     }
   }
@@ -410,11 +420,10 @@ export class UserSettingsService implements OnDestroy {
     if (language) {
       const i18n = this.getI18nService();
       if (i18n) {
-        try {
-          i18n.setLanguage(language);
-        } catch (e) {
+        // Use async language loading, but don't block theme initialization
+        i18n.setLanguage(language).catch(e => {
           console.error('Failed to apply language from settings:', e);
-        }
+        });
       }
     }
   }

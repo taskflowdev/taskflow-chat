@@ -6,6 +6,7 @@ import { LoadingScreenComponent } from './shared/components/loading-screen/loadi
 import { KeyboardShortcutService } from './shared/services/keyboard-shortcut.service';
 import { AuthService } from './auth/services/auth.service';
 import { UserSettingsService } from './core/services/user-settings.service';
+import { I18nService } from './core/i18n';
 import { RtlDirective } from './core/i18n';
 import { Observable, combineLatest, map } from 'rxjs';
 
@@ -18,8 +19,11 @@ import { Observable, combineLatest, map } from 'rxjs';
 export class AppComponent {
   title = 'taskflow-chat';
   
-  // Observable to track if app is still initializing (auth + settings)
+  // Observable to track if app is still initializing (auth + settings + i18n)
   isAppInitializing$: Observable<boolean>;
+  
+  // Observable for loading message to show different messages for different states
+  loadingMessage$: Observable<string>;
 
   /**
    * Inject KeyboardShortcutService to ensure it's initialized at app startup
@@ -31,16 +35,36 @@ export class AppComponent {
   constructor(
     private keyboardShortcutService: KeyboardShortcutService,
     private authService: AuthService,
-    private userSettingsService: UserSettingsService
+    private userSettingsService: UserSettingsService,
+    private i18nService: I18nService
   ) {
     // Service is now initialized and listening for keyboard events
     
-    // Combine auth and settings loading states for loading screen
+    // Combine auth, settings, and i18n loading states for loading screen
     this.isAppInitializing$ = combineLatest([
       this.authService.authInitializing$,
-      this.userSettingsService.loading$
+      this.userSettingsService.loading$,
+      this.i18nService.loading$
     ]).pipe(
-      map(([authLoading, settingsLoading]) => authLoading || settingsLoading)
+      map(([authLoading, settingsLoading, i18nLoading]) => 
+        authLoading || settingsLoading || i18nLoading
+      )
+    );
+
+    // Dynamic loading message based on what's loading
+    this.loadingMessage$ = combineLatest([
+      this.authService.authInitializing$,
+      this.i18nService.loading$
+    ]).pipe(
+      map(([authLoading, i18nLoading]) => {
+        if (i18nLoading) {
+          return 'Setting up language for you...';
+        }
+        if (authLoading) {
+          return 'Preparing your workspace...';
+        }
+        return 'Preparing your workspace...';
+      })
     );
 
     // Hide the initial loader from index.html after Angular bootstrap

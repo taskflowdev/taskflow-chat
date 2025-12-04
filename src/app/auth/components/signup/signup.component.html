@@ -59,15 +59,25 @@
         </div>
 
         <!-- Sign Up Button -->
-        <button type="submit" class="btn btn-signup fw-bold" [disabled]="isLoading || signupForm.invalid">
-          {{ isLoading ? 'Creating Account...' : 'Create Account' }}
+        <button type="submit" class="btn btn-signup" [disabled]="isLoading || signupForm.invalid"
+          [class.loading]="isLoading">
+          <span class="btn-content">
+            <span class="btn-text">
+              <span *ngIf="isLoading" class="spinner-border spinner-border-sm me-2" role="status"
+                aria-hidden="true"></span>
+              {{ isLoading ? 'Creating Account...' : 'Create Account' }}
+            </span>
+            <span class="btn-icon">
+              <i class="bi" [ngClass]="isLoading ? 'bi-arrow-right-circle-fill' : 'bi-arrow-right-circle-fill'"></i>
+            </span>
+          </span>
         </button>
       </form>
 
       <!-- Sign In Link -->
       <div class="signin-link-container">
         <span class="signin-text">Already have an account? </span>
-        <a routerLink="/auth/login" class="signin-link">Sign in</a>
+        <a routerLink="/auth/signin" class="signin-link">Sign in</a>
       </div>
     </div>
   </div>

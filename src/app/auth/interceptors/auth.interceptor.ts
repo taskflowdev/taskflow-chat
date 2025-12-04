@@ -116,16 +116,16 @@ export class AuthInterceptor implements HttpInterceptor {
             // Retry the original request with new token
             return next.handle(this.addAuthHeader(request, newToken!));
           } else {
-            // Refresh failed, logout and redirect to login
+            // Refresh failed, logout and redirect to signin
             this.authService.logout();
-            this.router.navigate(['/auth/login']);
+            this.router.navigate(['/auth/signin']);
             return throwError(() => new Error('Token refresh failed'));
           }
         }),
         catchError((error) => {
           this.isRefreshing = false;
           this.authService.logout();
-          this.router.navigate(['/auth/login']);
+          this.router.navigate(['/auth/signin']);
           return throwError(() => error);
         })
       );

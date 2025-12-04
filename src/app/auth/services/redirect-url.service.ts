@@ -9,13 +9,13 @@ export class RedirectUrlService {
     constructor(private router: Router) { }
 
     /**
-     * Navigates to the login page with the redirect query parameter.
+     * Navigates to the signin page with the redirect query parameter.
      * Uses navigateByUrl to preserve slash readability (avoids %2F).
-     * @param returnUrl The URL to redirect back to after login.
+     * @param returnUrl The URL to redirect back to after signin.
      */
     navigateToLogin(returnUrl: string): void {
         // Manually construct the URL to keep it readable
-        this.router.navigateByUrl(`/auth/login?redirect=${returnUrl}`);
+        this.router.navigateByUrl(`/auth/signin?redirect=${returnUrl}`);
     }
 
     /**

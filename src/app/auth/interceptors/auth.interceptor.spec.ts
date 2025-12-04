@@ -110,7 +110,7 @@ describe('AuthInterceptor', () => {
     req.flush({ message: 'Unauthorized' }, { status: 401, statusText: 'Unauthorized' });
 
     expect(authService.logout).toHaveBeenCalled();
-    expect(router.navigate).toHaveBeenCalledWith(['/auth/login']);
+    expect(router.navigate).toHaveBeenCalledWith(['/auth/signin']);
   });
 
   it('should not add Authorization header in server-side rendering', () => {
