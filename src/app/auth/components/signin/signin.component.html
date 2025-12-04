@@ -41,9 +41,16 @@
         </div>
 
         <!-- Login Button -->
-        <button type="submit" class="btn btn-login fw-bold" [disabled]="isLoading || signinForm.invalid">
-          <span *ngIf="isLoading" class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
-          {{ isLoading ? 'Signing in...' : 'Continue' }}
+        <button type="submit" class="btn btn-login" [disabled]="isLoading || signinForm.invalid" [class.loading]="isLoading">
+          <span class="btn-content">
+            <span class="btn-text">
+              <span *ngIf="isLoading" class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+              {{ isLoading ? 'Signing in...' : 'Continue' }}
+            </span>
+            <span class="btn-icon">
+              <i class="bi" [ngClass]="isLoading ? 'bi-arrow-right' : 'bi-arrow-right'"></i>
+            </span>
+          </span>
         </button>
 
       </form>
