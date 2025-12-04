@@ -123,7 +123,7 @@ import { CommonModule } from '@angular/common';
 export class LoadingScreenComponent {
   /**
    * Loading message to display
-   * Default: "Setting things up for you…"
+   * Default: "Setting things up for you..."
    */
   @Input() message: string = 'Setting things up for you…';
 
