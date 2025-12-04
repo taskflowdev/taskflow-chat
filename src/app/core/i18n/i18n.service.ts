@@ -8,12 +8,6 @@ import { LanguageDto } from '../../api/models/language-dto';
 import { TranslationCacheService } from '../services/translation-cache.service';
 
 /**
- * Storage key for caching translations locally (DEPRECATED - use TranslationCacheService)
- */
-const TRANSLATIONS_CACHE_KEY = 'i18n_translations';
-const TRANSLATIONS_META_KEY = 'i18n_meta';
-
-/**
  * RTL language codes
  */
 const RTL_LANGUAGES = ['ar', 'he', 'fa', 'ur', 'ps', 'sd', 'yi'];

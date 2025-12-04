@@ -14,7 +14,7 @@ import { CommonModule } from '@angular/common';
     <div class="loading-screen" role="status" aria-live="polite" aria-label="Loading application">
       <div class="loading-content">
         <div class="logo-container">
-          <i class="bi bi-chat-quote app-logo"></i>
+          <i [class]="iconClass"></i>
         </div>
         <p class="loading-text">{{ message }}</p>
         <span class="visually-hidden">Loading, please wait...</span>
@@ -126,4 +126,10 @@ export class LoadingScreenComponent {
    * Default: "Setting things up for you…"
    */
   @Input() message: string = 'Setting things up for you…';
+
+  /**
+   * Icon class to display
+   * Default: "bi bi-chat-quote app-logo" (Bootstrap icon chat-quote with app-logo styling)
+   */
+  @Input() iconClass: string = 'bi bi-chat-quote app-logo';
 }

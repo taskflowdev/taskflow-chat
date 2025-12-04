@@ -21,10 +21,19 @@ export const LANGUAGE_SETTING_KEY = 'language.interface';
 
 /**
  * Interface for I18nService to avoid circular dependency
- * Only the methods used by UserSettingsService are defined here
+ * Defines the minimal contract needed by UserSettingsService
  */
 interface I18nServiceInterface {
+  /**
+   * Change the current language
+   * Returns a Promise that resolves when the language change is complete
+   */
   setLanguage(lang: string): Promise<void>;
+  
+  /**
+   * Observable indicating if translations are currently loading
+   * Used to show loading states in the UI during language changes
+   */
   loading$: Observable<boolean>;
 }
 

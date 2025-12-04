@@ -147,6 +147,7 @@ export class TranslationCacheService {
 
   /**
    * Clear all cached translations
+   * Uses LocalStorageService for consistency with encrypted storage pattern
    */
   clearAllCaches(): void {
     if (!isPlatformBrowser(this.platformId)) {
@@ -154,7 +155,9 @@ export class TranslationCacheService {
     }
 
     try {
-      // Get all keys from localStorage that match our cache prefix
+      // Note: LocalStorageService doesn't provide a way to list keys,
+      // so we need to access localStorage directly here for cleanup.
+      // This is acceptable for a maintenance operation.
       if (typeof localStorage !== 'undefined') {
         const keysToRemove: string[] = [];
         for (let i = 0; i < localStorage.length; i++) {
@@ -164,9 +167,9 @@ export class TranslationCacheService {
           }
         }
 
-        // Remove all matching keys
+        // Remove all matching keys using LocalStorageService
         keysToRemove.forEach(key => {
-          localStorage.removeItem(key);
+          this.localStorageService.removeItem(key);
         });
 
         console.log(`TranslationCache: Cleared ${keysToRemove.length} cache entries`);
