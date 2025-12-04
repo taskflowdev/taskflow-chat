@@ -4,6 +4,8 @@ import { Router, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { AuthService } from '../../services/auth.service';
 import { ToastService } from '../../../shared/services/toast.service';
+import { StartupService } from '../../../core/services/startup.service';
+import { filter, take } from 'rxjs';
 
 @Component({
   selector: 'app-signup',
@@ -20,7 +22,8 @@ export class SignupComponent implements OnInit {
     private fb: FormBuilder,
     private authService: AuthService,
     private router: Router,
-    private toastService: ToastService
+    private toastService: ToastService,
+    private startupService: StartupService
   ) {
     this.signupForm = this.fb.group({
       fullName: ['', [Validators.required, Validators.minLength(2)]],
@@ -103,15 +106,24 @@ export class SignupComponent implements OnInit {
     this.authService.register({ fullName, userName, email, password }).subscribe({
       next: (result) => {
         if (result.success) {
-          // Wait for currentUser$ to emit before navigating
-          // This ensures the user data is loaded before redirecting
-          this.authService.currentUser$.subscribe(user => {
-            if (user) {
+          // Wait for currentUser$ to emit a non-null user before loading settings
+          // Use filter and take(1) to avoid memory leaks and multiple executions
+          this.authService.currentUser$.pipe(
+            filter(user => user !== null),
+            take(1)
+          ).subscribe(user => {
+            // Load user settings and translations after successful registration
+            this.startupService.reinitializeAfterLogin().then(() => {
               this.isLoading = false;
               this.toastService.showSuccess('Account created successfully! Welcome to TaskFlow Chat.', 'Registration Successful');
               // Use replaceUrl to prevent back button returning to signup
               this.router.navigate(['/chats'], { replaceUrl: true });
-            }
+            }).catch(err => {
+              console.error('Failed to load settings after registration:', err);
+              this.isLoading = false;
+              // Still redirect even if settings load fails
+              this.router.navigate(['/chats'], { replaceUrl: true });
+            });
           });
         } else {
           this.isLoading = false;
