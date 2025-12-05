@@ -2,7 +2,7 @@ import { Injectable, Inject, PLATFORM_ID } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { BehaviorSubject, Observable, catchError, map, of, tap, shareReplay, finalize } from 'rxjs';
 import { AuthService as ApiAuthService } from '../../api/services/auth.service';
-import { LoginDto, RegisterDto, UserDto } from '../../api/models';
+import { LoginDto, RegisterDto, UserDto, ForgotPasswordDto, ResetPasswordDto } from '../../api/models';
 import { LocalStorageService } from './local-storage.service';
 import { ToastService } from '../../shared/services/toast.service';
 
@@ -328,5 +328,88 @@ export class AuthService {
     return this.getUserProfile().pipe(
       map(user => user !== null)
     );
+  }
+
+  /**
+   * Request a password reset email.
+   * @param email User's email address
+   * @returns Observable with success status and message
+   */
+  requestPasswordReset(email: string): Observable<{ success: boolean; message?: string; requiresSecurityCode?: boolean }> {
+    const payload: ForgotPasswordDto = { email };
+    return this.apiAuthService.apiAuthForgotPasswordPost({ body: payload }).pipe(
+      map(response => ({
+        success: response.success || false,
+        message: response.data?.message || response.message || undefined,
+        requiresSecurityCode: response.data?.requiresSecurityCode || false
+      })),
+      catchError(error => {
+        console.error('Password reset request error:', error);
+        const errorMessage = error.error?.message || 'Failed to send reset email. Please try again.';
+        return of({
+          success: false,
+          message: errorMessage
+        });
+      })
+    );
+  }
+
+  /**
+   * Reset password using token from email.
+   * @param payload Object containing email, token, and newPassword
+   * @returns Observable with success status and message
+   */
+  resetPassword(payload: { email: string; token: string; newPassword: string }): Observable<{ success: boolean; message?: string }> {
+    const resetDto: ResetPasswordDto = {
+      email: payload.email,
+      token: payload.token,
+      newPassword: payload.newPassword,
+      confirmPassword: payload.newPassword
+    };
+    return this.apiAuthService.apiAuthResetPasswordPost({ body: resetDto }).pipe(
+      map(response => ({
+        success: response.success || false,
+        message: response.data?.message || response.message || undefined
+      })),
+      catchError(error => {
+        console.error('Password reset error:', error);
+        const errorMessage = error.error?.message || 'Failed to reset password. Please try again.';
+        return of({
+          success: false,
+          message: errorMessage
+        });
+      })
+    );
+  }
+
+  /**
+   * Validate a password reset token.
+   * @param email User's email address
+   * @param token Reset token from email
+   * @returns Observable with validation status
+   */
+  validateResetToken(email: string, token: string): Observable<{ valid: boolean; message?: string }> {
+    return this.apiAuthService.apiAuthValidateResetTokenGet({ email, token }).pipe(
+      map(response => ({
+        valid: response.data || false,
+        message: response.message || undefined
+      })),
+      catchError(error => {
+        console.error('Token validation error:', error);
+        return of({
+          valid: false,
+          message: error.error?.message || 'Invalid or expired reset token.'
+        });
+      })
+    );
+  }
+
+  /**
+   * Resend reset link (same as requestPasswordReset).
+   * @param email User's email address
+   * @returns Observable with success status and message
+   */
+  resendResetLink(email: string): Observable<{ success: boolean; message?: string }> {
+    return this.requestPasswordReset(email);
   }
 }
