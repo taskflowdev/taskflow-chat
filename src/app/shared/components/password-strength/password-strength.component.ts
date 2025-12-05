@@ -9,6 +9,9 @@ export interface PasswordStrength {
   feedback: string[];
 }
 
+const MIN_PASSWORD_LENGTH = 8;
+const BONUS_PASSWORD_LENGTH = 12;
+
 @Component({
   selector: 'app-password-strength',
   standalone: true,
@@ -47,10 +50,10 @@ export class PasswordStrengthComponent implements OnChanges {
     const feedback: string[] = [];
 
     // Length check
-    if (password.length >= 8) {
+    if (password.length >= MIN_PASSWORD_LENGTH) {
       score++;
     } else {
-      feedback.push('At least 8 characters');
+      feedback.push(`At least ${MIN_PASSWORD_LENGTH} characters`);
     }
 
     // Uppercase check
@@ -82,7 +85,7 @@ export class PasswordStrengthComponent implements OnChanges {
     }
 
     // Bonus for length
-    if (password.length >= 12) {
+    if (password.length >= BONUS_PASSWORD_LENGTH) {
       score = Math.min(score + 1, 5);
     }
 
