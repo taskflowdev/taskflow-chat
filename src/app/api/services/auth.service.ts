@@ -11,6 +11,9 @@ import { BaseService } from '../base-service';
 import { ApiConfiguration } from '../api-configuration';
 import { StrictHttpResponse } from '../strict-http-response';
 
+import { ActiveSessionDtoIEnumerableApiResponse } from '../models/active-session-dto-i-enumerable-api-response';
+import { apiAuthForgotPasswordPost } from '../fn/auth/api-auth-forgot-password-post';
+import { ApiAuthForgotPasswordPost$Params } from '../fn/auth/api-auth-forgot-password-post';
 import { apiAuthLoginPost } from '../fn/auth/api-auth-login-post';
 import { ApiAuthLoginPost$Params } from '../fn/auth/api-auth-login-post';
 import { apiAuthMeGet } from '../fn/auth/api-auth-me-get';
@@ -19,6 +22,20 @@ import { apiAuthRefreshPost } from '../fn/auth/api-auth-refresh-post';
 import { ApiAuthRefreshPost$Params } from '../fn/auth/api-auth-refresh-post';
 import { apiAuthRegisterPost } from '../fn/auth/api-auth-register-post';
 import { ApiAuthRegisterPost$Params } from '../fn/auth/api-auth-register-post';
+import { apiAuthResetPasswordPost } from '../fn/auth/api-auth-reset-password-post';
+import { ApiAuthResetPasswordPost$Params } from '../fn/auth/api-auth-reset-password-post';
+import { apiAuthSessionsGet } from '../fn/auth/api-auth-sessions-get';
+import { ApiAuthSessionsGet$Params } from '../fn/auth/api-auth-sessions-get';
+import { apiAuthSessionsRevokeAllPost } from '../fn/auth/api-auth-sessions-revoke-all-post';
+import { ApiAuthSessionsRevokeAllPost$Params } from '../fn/auth/api-auth-sessions-revoke-all-post';
+import { apiAuthSessionsRevokePost } from '../fn/auth/api-auth-sessions-revoke-post';
+import { ApiAuthSessionsRevokePost$Params } from '../fn/auth/api-auth-sessions-revoke-post';
+import { apiAuthValidateResetTokenGet } from '../fn/auth/api-auth-validate-reset-token-get';
+import { ApiAuthValidateResetTokenGet$Params } from '../fn/auth/api-auth-validate-reset-token-get';
+import { apiAuthVerifySecurityCodePost } from '../fn/auth/api-auth-verify-security-code-post';
+import { ApiAuthVerifySecurityCodePost$Params } from '../fn/auth/api-auth-verify-security-code-post';
+import { BooleanApiResponse } from '../models/boolean-api-response';
+import { PasswordResetResponseDtoApiResponse } from '../models/password-reset-response-dto-api-response';
 import { TokenDtoApiResponse } from '../models/token-dto-api-response';
 import { UserDtoApiResponse } from '../models/user-dto-api-response';
 
@@ -157,6 +174,237 @@ export class AuthService extends BaseService {
   apiAuthMeGet(params?: ApiAuthMeGet$Params, context?: HttpContext): Observable<UserDtoApiResponse> {
     return this.apiAuthMeGet$Response(params, context).pipe(
       map((r: StrictHttpResponse<UserDtoApiResponse>): UserDtoApiResponse => r.body)
+    );
+  }
+
+  /** Path part for operation `apiAuthForgotPasswordPost()` */
+  static readonly ApiAuthForgotPasswordPostPath = '/api/auth/forgot-password';
+
+  /**
+   * Request a password reset email.
+   *
+   *
+   *
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `apiAuthForgotPasswordPost()` instead.
+   *
+   * This method sends `application/*+json` and handles request body of type `application/*+json`.
+   */
+  apiAuthForgotPasswordPost$Response(params?: ApiAuthForgotPasswordPost$Params, context?: HttpContext): Observable<StrictHttpResponse<PasswordResetResponseDtoApiResponse>> {
+    return apiAuthForgotPasswordPost(this.http, this.rootUrl, params, context);
+  }
+
+  /**
+   * Request a password reset email.
+   *
+   *
+   *
+   * This method provides access only to the response body.
+   * To access the full response (for headers, for example), `apiAuthForgotPasswordPost$Response()` instead.
+   *
+   * This method sends `application/*+json` and handles request body of type `application/*+json`.
+   */
+  apiAuthForgotPasswordPost(params?: ApiAuthForgotPasswordPost$Params, context?: HttpContext): Observable<PasswordResetResponseDtoApiResponse> {
+    return this.apiAuthForgotPasswordPost$Response(params, context).pipe(
+      map((r: StrictHttpResponse<PasswordResetResponseDtoApiResponse>): PasswordResetResponseDtoApiResponse => r.body)
+    );
+  }
+
+  /** Path part for operation `apiAuthResetPasswordPost()` */
+  static readonly ApiAuthResetPasswordPostPath = '/api/auth/reset-password';
+
+  /**
+   * Reset password using token.
+   *
+   *
+   *
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `apiAuthResetPasswordPost()` instead.
+   *
+   * This method sends `application/*+json` and handles request body of type `application/*+json`.
+   */
+  apiAuthResetPasswordPost$Response(params?: ApiAuthResetPasswordPost$Params, context?: HttpContext): Observable<StrictHttpResponse<PasswordResetResponseDtoApiResponse>> {
+    return apiAuthResetPasswordPost(this.http, this.rootUrl, params, context);
+  }
+
+  /**
+   * Reset password using token.
+   *
+   *
+   *
+   * This method provides access only to the response body.
+   * To access the full response (for headers, for example), `apiAuthResetPasswordPost$Response()` instead.
+   *
+   * This method sends `application/*+json` and handles request body of type `application/*+json`.
+   */
+  apiAuthResetPasswordPost(params?: ApiAuthResetPasswordPost$Params, context?: HttpContext): Observable<PasswordResetResponseDtoApiResponse> {
+    return this.apiAuthResetPasswordPost$Response(params, context).pipe(
+      map((r: StrictHttpResponse<PasswordResetResponseDtoApiResponse>): PasswordResetResponseDtoApiResponse => r.body)
+    );
+  }
+
+  /** Path part for operation `apiAuthValidateResetTokenGet()` */
+  static readonly ApiAuthValidateResetTokenGetPath = '/api/auth/validate-reset-token';
+
+  /**
+   * Validate a password reset token.
+   *
+   *
+   *
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `apiAuthValidateResetTokenGet()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  apiAuthValidateResetTokenGet$Response(params?: ApiAuthValidateResetTokenGet$Params, context?: HttpContext): Observable<StrictHttpResponse<BooleanApiResponse>> {
+    return apiAuthValidateResetTokenGet(this.http, this.rootUrl, params, context);
+  }
+
+  /**
+   * Validate a password reset token.
+   *
+   *
+   *
+   * This method provides access only to the response body.
+   * To access the full response (for headers, for example), `apiAuthValidateResetTokenGet$Response()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  apiAuthValidateResetTokenGet(params?: ApiAuthValidateResetTokenGet$Params, context?: HttpContext): Observable<BooleanApiResponse> {
+    return this.apiAuthValidateResetTokenGet$Response(params, context).pipe(
+      map((r: StrictHttpResponse<BooleanApiResponse>): BooleanApiResponse => r.body)
+    );
+  }
+
+  /** Path part for operation `apiAuthVerifySecurityCodePost()` */
+  static readonly ApiAuthVerifySecurityCodePostPath = '/api/auth/verify-security-code';
+
+  /**
+   * Verify a security code.
+   *
+   *
+   *
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `apiAuthVerifySecurityCodePost()` instead.
+   *
+   * This method sends `application/*+json` and handles request body of type `application/*+json`.
+   */
+  apiAuthVerifySecurityCodePost$Response(params?: ApiAuthVerifySecurityCodePost$Params, context?: HttpContext): Observable<StrictHttpResponse<BooleanApiResponse>> {
+    return apiAuthVerifySecurityCodePost(this.http, this.rootUrl, params, context);
+  }
+
+  /**
+   * Verify a security code.
+   *
+   *
+   *
+   * This method provides access only to the response body.
+   * To access the full response (for headers, for example), `apiAuthVerifySecurityCodePost$Response()` instead.
+   *
+   * This method sends `application/*+json` and handles request body of type `application/*+json`.
+   */
+  apiAuthVerifySecurityCodePost(params?: ApiAuthVerifySecurityCodePost$Params, context?: HttpContext): Observable<BooleanApiResponse> {
+    return this.apiAuthVerifySecurityCodePost$Response(params, context).pipe(
+      map((r: StrictHttpResponse<BooleanApiResponse>): BooleanApiResponse => r.body)
+    );
+  }
+
+  /** Path part for operation `apiAuthSessionsGet()` */
+  static readonly ApiAuthSessionsGetPath = '/api/auth/sessions';
+
+  /**
+   * Get active sessions for the current user.
+   *
+   *
+   *
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `apiAuthSessionsGet()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  apiAuthSessionsGet$Response(params?: ApiAuthSessionsGet$Params, context?: HttpContext): Observable<StrictHttpResponse<ActiveSessionDtoIEnumerableApiResponse>> {
+    return apiAuthSessionsGet(this.http, this.rootUrl, params, context);
+  }
+
+  /**
+   * Get active sessions for the current user.
+   *
+   *
+   *
+   * This method provides access only to the response body.
+   * To access the full response (for headers, for example), `apiAuthSessionsGet$Response()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  apiAuthSessionsGet(params?: ApiAuthSessionsGet$Params, context?: HttpContext): Observable<ActiveSessionDtoIEnumerableApiResponse> {
+    return this.apiAuthSessionsGet$Response(params, context).pipe(
+      map((r: StrictHttpResponse<ActiveSessionDtoIEnumerableApiResponse>): ActiveSessionDtoIEnumerableApiResponse => r.body)
+    );
+  }
+
+  /** Path part for operation `apiAuthSessionsRevokePost()` */
+  static readonly ApiAuthSessionsRevokePostPath = '/api/auth/sessions/revoke';
+
+  /**
+   * Revoke a specific session.
+   *
+   *
+   *
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `apiAuthSessionsRevokePost()` instead.
+   *
+   * This method sends `application/*+json` and handles request body of type `application/*+json`.
+   */
+  apiAuthSessionsRevokePost$Response(params?: ApiAuthSessionsRevokePost$Params, context?: HttpContext): Observable<StrictHttpResponse<BooleanApiResponse>> {
+    return apiAuthSessionsRevokePost(this.http, this.rootUrl, params, context);
+  }
+
+  /**
+   * Revoke a specific session.
+   *
+   *
+   *
+   * This method provides access only to the response body.
+   * To access the full response (for headers, for example), `apiAuthSessionsRevokePost$Response()` instead.
+   *
+   * This method sends `application/*+json` and handles request body of type `application/*+json`.
+   */
+  apiAuthSessionsRevokePost(params?: ApiAuthSessionsRevokePost$Params, context?: HttpContext): Observable<BooleanApiResponse> {
+    return this.apiAuthSessionsRevokePost$Response(params, context).pipe(
+      map((r: StrictHttpResponse<BooleanApiResponse>): BooleanApiResponse => r.body)
+    );
+  }
+
+  /** Path part for operation `apiAuthSessionsRevokeAllPost()` */
+  static readonly ApiAuthSessionsRevokeAllPostPath = '/api/auth/sessions/revoke-all';
+
+  /**
+   * Revoke all other sessions (logout from all devices except current).
+   *
+   *
+   *
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `apiAuthSessionsRevokeAllPost()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  apiAuthSessionsRevokeAllPost$Response(params?: ApiAuthSessionsRevokeAllPost$Params, context?: HttpContext): Observable<StrictHttpResponse<BooleanApiResponse>> {
+    return apiAuthSessionsRevokeAllPost(this.http, this.rootUrl, params, context);
+  }
+
+  /**
+   * Revoke all other sessions (logout from all devices except current).
+   *
+   *
+   *
+   * This method provides access only to the response body.
+   * To access the full response (for headers, for example), `apiAuthSessionsRevokeAllPost$Response()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  apiAuthSessionsRevokeAllPost(params?: ApiAuthSessionsRevokeAllPost$Params, context?: HttpContext): Observable<BooleanApiResponse> {
+    return this.apiAuthSessionsRevokeAllPost$Response(params, context).pipe(
+      map((r: StrictHttpResponse<BooleanApiResponse>): BooleanApiResponse => r.body)
     );
   }
 
