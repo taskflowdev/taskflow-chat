@@ -61,7 +61,8 @@ export class SettingsRendererComponent implements OnInit, OnDestroy {
             this.showSuccessIndicator = false;
             this.cdr.markForCheck();
           } else if (saveState.state === 'success') {
-            this.isSaving = false;
+            // Keep showing spinner until settings are refreshed from API
+            // isSaving will be cleared when effectiveSettings$ emits
             this.showSuccessIndicator = true;
             this.cdr.markForCheck();
           } else if (saveState.state === 'error') {
