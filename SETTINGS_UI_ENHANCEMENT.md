@@ -16,7 +16,7 @@ This enhancement adds visual feedback to the Angular settings page, showing user
 ### 2. Success Indicator
 - **Visual**: Green checkmark icon
 - **When**: Shown when API save request succeeds
-- **Duration**: Displays for 1.2 seconds then auto-hides
+- **Duration**: **Stays visible permanently until settings are refreshed from API**
 - **Animation**: Smooth fade-in with scale effect
 - **Color**: Theme-aware green color
   - Light theme: `#1a7f37`
@@ -46,13 +46,13 @@ New theme tokens added to both `theme.light.json` and `theme.dark.json`:
 **State Management:**
 - `isSaving`: boolean - tracks if currently saving
 - `showSuccessIndicator`: boolean - controls success checkmark visibility
-- `SUCCESS_INDICATOR_DURATION_MS`: constant (1200ms)
 
 **Lifecycle:**
 - Subscribes to `saveState$` in `ngOnInit()`
 - Filters events to only react to this specific setting
 - Manages loading/success state transitions
-- Cleans up timeout in `ngOnDestroy()` to prevent memory leaks
+- Clears indicators when `effectiveSettings$` emits (settings refreshed from API)
+- **No timeout cleanup needed** - success indicator stays visible until settings refresh
 
 **Visual Indicators:**
 ```html
@@ -74,7 +74,7 @@ New theme tokens added to both `theme.light.json` and `theme.dark.json`:
 **Layout:**
 - Uses flexbox with 12px gap between control and indicators
 - Indicators display inline beside the control (not positioned absolutely)
-- Control wrapper: `flex: 0 0 auto` (doesn't grow or shrink)
+- Control wrapper: `flex: 1; min-width: 0` (takes available space, allows proper dropdown width)
 - Indicators container: `flex-shrink: 0` (fixed 24x24px size)
 
 **Spinner:**
@@ -118,10 +118,11 @@ New theme tokens added to both `theme.light.json` and `theme.dark.json`:
    - Loading spinner disappears
    - Green checkmark appears with smooth animation
    - User sees immediate confirmation
+   - **Checkmark stays visible permanently**
 
-4. **After 1.2 seconds**
-   - Checkmark automatically fades out
-   - UI returns to normal state
+4. **When settings are refreshed from API**
+   - All indicators are cleared
+   - Settings are updated with fresh data from server
 
 5. **On error** (if API fails)
    - Loading spinner disappears
