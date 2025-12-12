@@ -16,11 +16,12 @@ This enhancement adds visual feedback to the Angular settings page, showing user
 ### 2. Success Indicator
 - **Visual**: Green checkmark icon
 - **When**: Shown when API save request succeeds
-- **Duration**: **Stays visible permanently until settings are refreshed from API**
+- **Duration**: **Stays visible until settings are refreshed from API** (shows alongside spinner)
 - **Animation**: Smooth fade-in with scale effect
 - **Color**: Theme-aware green color
   - Light theme: `#1a7f37`
   - Dark theme: `#2ea043`
+- **Note**: Both spinner and checkmark can show simultaneously during the refetch period
 
 ## Implementation Details
 
@@ -76,6 +77,7 @@ New theme tokens added to both `theme.light.json` and `theme.dark.json`:
 - Indicators display inline beside the control (not positioned absolutely)
 - Control wrapper: `flex: 1; min-width: 0` (takes available space, allows proper dropdown width)
 - Indicators container: `flex-shrink: 0` (fixed 24x24px size)
+- **Dropdown controls**: No max-width constraint - take full available space
 
 **Spinner:**
 - 18x18px size
@@ -115,14 +117,14 @@ New theme tokens added to both `theme.light.json` and `theme.dark.json`:
    - API request is sent to backend
 
 3. **On successful API response**
-   - Loading spinner disappears
-   - Green checkmark appears with smooth animation
-   - User sees immediate confirmation
-   - **Checkmark stays visible permanently**
+   - Success checkmark appears with smooth animation
+   - **Loading spinner continues showing** (waiting for settings refetch)
+   - User sees both spinner and checkmark
 
 4. **When settings are refreshed from API**
-   - All indicators are cleared
+   - Both loading spinner and success checkmark are cleared
    - Settings are updated with fresh data from server
+   - UI returns to normal state
 
 5. **On error** (if API fails)
    - Loading spinner disappears
