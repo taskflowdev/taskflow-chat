@@ -383,6 +383,9 @@
     "settingsIcon": "#57606a",
     "settingsIconActive": "#000000",
 
+    "settingsLoadingSpinner": "#0969da",
+    "settingsSuccessCheck": "#1a7f37",
+
     "badgeBetaBg": "#198754",
     "badgeBetaBorder": "transparent",
     "badgeBetaText": "#ffffff",

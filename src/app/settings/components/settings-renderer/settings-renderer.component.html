@@ -28,5 +28,13 @@
     <app-radio-control *ngIf="controlType === 'radio' && hasOptions" [value]="currentValue"
       [options]="getTranslatedOptions()" [name]="settingKey.key!" [disabled]="false"
       (valueChange)="onValueChange($event)"></app-radio-control>
+
+    <!-- Loading and Success Indicators -->
+    <div class="setting-indicators">
+      <div class="spinner-border spinner-border-sm setting-spinner" *ngIf="isSaving" role="status">
+        <span class="visually-hidden">Saving...</span>
+      </div>
+      <i class="bi bi-check-circle-fill setting-success-icon" *ngIf="showSuccessIndicator"></i>
+    </div>
   </div>
 </div>

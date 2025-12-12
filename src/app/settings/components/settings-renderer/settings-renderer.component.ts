@@ -25,6 +25,7 @@ export class SettingsRendererComponent implements OnInit, OnDestroy {
   currentValue: any;
   isSaving: boolean = false;
   isModified: boolean = false;
+  showSuccessIndicator: boolean = false;
 
   private destroy$ = new Subject<void>();
 
@@ -44,6 +45,34 @@ export class SettingsRendererComponent implements OnInit, OnDestroy {
       .subscribe(() => {
         this.loadCurrentValue();
         this.cdr.markForCheck();
+      });
+
+    // Subscribe to save state changes to show loading/success indicators
+    this.userSettingsService.saveState$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((saveState) => {
+        // Only react to events for this specific setting
+        if (saveState.category === this.categoryKey && saveState.key === this.settingKey.key) {
+          if (saveState.state === 'loading') {
+            this.isSaving = true;
+            this.showSuccessIndicator = false;
+            this.cdr.markForCheck();
+          } else if (saveState.state === 'success') {
+            this.isSaving = false;
+            this.showSuccessIndicator = true;
+            this.cdr.markForCheck();
+
+            // Auto-hide success indicator after 1.2 seconds
+            setTimeout(() => {
+              this.showSuccessIndicator = false;
+              this.cdr.markForCheck();
+            }, 1200);
+          } else if (saveState.state === 'error') {
+            this.isSaving = false;
+            this.showSuccessIndicator = false;
+            this.cdr.markForCheck();
+          }
+        }
       });
 
     // Subscribe to language changes to trigger change detection

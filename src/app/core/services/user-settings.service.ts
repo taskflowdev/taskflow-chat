@@ -51,6 +51,10 @@ export class UserSettingsService implements OnDestroy {
   private loadingSubject = new BehaviorSubject<boolean>(false);
   public loading$: Observable<boolean> = this.loadingSubject.asObservable();
 
+  // Setting save state tracking
+  private saveStateSubject = new Subject<{ category: string; key: string; state: 'loading' | 'success' | 'error' }>();
+  public saveState$: Observable<{ category: string; key: string; state: 'loading' | 'success' | 'error' }> = this.saveStateSubject.asObservable();
+
   // Background refresh management
   private readonly BACKGROUND_REFRESH_INTERVAL = 5 * 60 * 1000; // 5 minutes
   private backgroundRefreshSubscription?: any;
@@ -320,9 +324,15 @@ export class UserSettingsService implements OnDestroy {
       payload: { [key]: value }
     };
 
+    // Emit loading state
+    this.saveStateSubject.next({ category, key, state: 'loading' });
+
     this.settingsService.apiSettingsMePut$Json({ body: request }).subscribe({
       next: (response) => {
         if (response.success) {
+          // Emit success state
+          this.saveStateSubject.next({ category, key, state: 'success' });
+
           // Setting saved successfully - update cache with current state
           const currentSettings = this.effectiveSettingsSubject.value;
           if (currentSettings) {
@@ -333,10 +343,15 @@ export class UserSettingsService implements OnDestroy {
           this.refreshSettings().subscribe({
             error: (err) => console.error('Failed to refresh after save:', err)
           });
+        } else {
+          // Emit error state if response indicates failure
+          this.saveStateSubject.next({ category, key, state: 'error' });
         }
       },
       error: (err) => {
         console.error('Failed to save setting:', err);
+        // Emit error state
+        this.saveStateSubject.next({ category, key, state: 'error' });
         // Could revert in-memory cache here if needed
       }
     });

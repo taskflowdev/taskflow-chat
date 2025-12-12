@@ -100,3 +100,42 @@
   position: relative;
   // max-width: auto;
 }
+
+.setting-indicators {
+  position: absolute;
+  right: -32px;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+}
+
+.setting-spinner {
+  color: var(--taskflow-color-settings-loading-spinner, #0969da);
+  width: 18px;
+  height: 18px;
+  border-width: 2px;
+}
+
+.setting-success-icon {
+  color: var(--taskflow-color-settings-success-check, #1a7f37);
+  font-size: var(--taskflow-font-icon-size-md);
+  animation: fadeInScale 0.3s ease-in-out;
+}
+
+@keyframes fadeInScale {
+  0% {
+    opacity: 0;
+    transform: scale(0.5);
+  }
+  50% {
+    transform: scale(1.1);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
