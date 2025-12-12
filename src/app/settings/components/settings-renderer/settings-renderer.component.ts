@@ -27,9 +27,7 @@ export class SettingsRendererComponent implements OnInit, OnDestroy {
   isModified = false;
   showSuccessIndicator = false;
 
-  private readonly SUCCESS_INDICATOR_DURATION_MS = 1200;
   private destroy$ = new Subject<void>();
-  private successTimeoutId?: ReturnType<typeof setTimeout>;
 
   constructor(
     private userSettingsService: UserSettingsService,
@@ -46,6 +44,9 @@ export class SettingsRendererComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.destroy$))
       .subscribe(() => {
         this.loadCurrentValue();
+        // Clear indicators when settings are refreshed from API
+        this.isSaving = false;
+        this.showSuccessIndicator = false;
         this.cdr.markForCheck();
       });
 
@@ -56,11 +57,6 @@ export class SettingsRendererComponent implements OnInit, OnDestroy {
         // Only react to events for this specific setting
         if (saveState.category === this.categoryKey && saveState.key === this.settingKey.key) {
           if (saveState.state === 'loading') {
-            // Clear any existing success timeout
-            if (this.successTimeoutId) {
-              clearTimeout(this.successTimeoutId);
-              this.successTimeoutId = undefined;
-            }
             this.isSaving = true;
             this.showSuccessIndicator = false;
             this.cdr.markForCheck();
@@ -68,19 +64,7 @@ export class SettingsRendererComponent implements OnInit, OnDestroy {
             this.isSaving = false;
             this.showSuccessIndicator = true;
             this.cdr.markForCheck();
-
-            // Auto-hide success indicator after configured duration
-            this.successTimeoutId = setTimeout(() => {
-              this.showSuccessIndicator = false;
-              this.cdr.markForCheck();
-              this.successTimeoutId = undefined;
-            }, this.SUCCESS_INDICATOR_DURATION_MS);
           } else if (saveState.state === 'error') {
-            // Clear any existing success timeout
-            if (this.successTimeoutId) {
-              clearTimeout(this.successTimeoutId);
-              this.successTimeoutId = undefined;
-            }
             this.isSaving = false;
             this.showSuccessIndicator = false;
             this.cdr.markForCheck();
@@ -98,11 +82,6 @@ export class SettingsRendererComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    // Clear any pending success timeout
-    if (this.successTimeoutId) {
-      clearTimeout(this.successTimeoutId);
-      this.successTimeoutId = undefined;
-    }
     this.destroy$.next();
     this.destroy$.complete();
   }
