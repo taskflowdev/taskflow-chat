@@ -28,6 +28,7 @@ export class SettingsRendererComponent implements OnInit, OnDestroy {
   showSuccessIndicator: boolean = false;
 
   private destroy$ = new Subject<void>();
+  private successTimeoutId?: ReturnType<typeof setTimeout>;
 
   constructor(
     private userSettingsService: UserSettingsService,
@@ -54,6 +55,11 @@ export class SettingsRendererComponent implements OnInit, OnDestroy {
         // Only react to events for this specific setting
         if (saveState.category === this.categoryKey && saveState.key === this.settingKey.key) {
           if (saveState.state === 'loading') {
+            // Clear any existing success timeout
+            if (this.successTimeoutId) {
+              clearTimeout(this.successTimeoutId);
+              this.successTimeoutId = undefined;
+            }
             this.isSaving = true;
             this.showSuccessIndicator = false;
             this.cdr.markForCheck();
@@ -63,11 +69,17 @@ export class SettingsRendererComponent implements OnInit, OnDestroy {
             this.cdr.markForCheck();
 
             // Auto-hide success indicator after 1.2 seconds
-            setTimeout(() => {
+            this.successTimeoutId = setTimeout(() => {
               this.showSuccessIndicator = false;
               this.cdr.markForCheck();
+              this.successTimeoutId = undefined;
             }, 1200);
           } else if (saveState.state === 'error') {
+            // Clear any existing success timeout
+            if (this.successTimeoutId) {
+              clearTimeout(this.successTimeoutId);
+              this.successTimeoutId = undefined;
+            }
             this.isSaving = false;
             this.showSuccessIndicator = false;
             this.cdr.markForCheck();
@@ -85,6 +97,11 @@ export class SettingsRendererComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
+    // Clear any pending success timeout
+    if (this.successTimeoutId) {
+      clearTimeout(this.successTimeoutId);
+      this.successTimeoutId = undefined;
+    }
     this.destroy$.next();
     this.destroy$.complete();
   }
