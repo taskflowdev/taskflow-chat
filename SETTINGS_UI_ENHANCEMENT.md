@@ -56,20 +56,26 @@ New theme tokens added to both `theme.light.json` and `theme.dark.json`:
 
 **Visual Indicators:**
 ```html
-<div class="setting-indicators">
-  <div class="spinner-border spinner-border-sm setting-spinner" *ngIf="isSaving">
-    <span class="visually-hidden">Saving...</span>
+<div class="setting-control">
+  <div class="setting-control-wrapper">
+    <!-- Control component (toggle/select/radio) -->
   </div>
-  <i class="bi bi-check-circle-fill setting-success-icon" *ngIf="showSuccessIndicator"></i>
+  <div class="setting-indicators">
+    <div class="spinner-border spinner-border-sm setting-spinner" *ngIf="isSaving">
+      <span class="visually-hidden">Saving...</span>
+    </div>
+    <i class="bi bi-check-circle-fill setting-success-icon" *ngIf="showSuccessIndicator"></i>
+  </div>
 </div>
 ```
 
 ### Styling
 
-**Positioning:**
-- Indicators positioned absolutely to the right of controls (-32px)
-- Centered vertically relative to the control
-- Fixed 24x24px container size
+**Layout:**
+- Uses flexbox with 12px gap between control and indicators
+- Indicators display inline beside the control (not positioned absolutely)
+- Control wrapper: `flex: 0 0 auto` (doesn't grow or shrink)
+- Indicators container: `flex-shrink: 0` (fixed 24x24px size)
 
 **Spinner:**
 - 18x18px size
