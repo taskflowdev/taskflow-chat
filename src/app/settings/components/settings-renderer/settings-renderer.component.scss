@@ -114,14 +114,14 @@
 }
 
 .setting-spinner {
-  color: var(--taskflow-color-settings-loading-spinner, #0969da);
+  color: var(--taskflow-color-settings-loading-spinner);
   width: 18px;
   height: 18px;
   border-width: 2px;
 }
 
 .setting-success-icon {
-  color: var(--taskflow-color-settings-success-check, #1a7f37);
+  color: var(--taskflow-color-settings-success-check);
   font-size: var(--taskflow-font-icon-size-md);
   animation: fadeInScale 0.3s ease-in-out;
 }

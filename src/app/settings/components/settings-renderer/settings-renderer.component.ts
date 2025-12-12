@@ -23,10 +23,11 @@ export class SettingsRendererComponent implements OnInit, OnDestroy {
   @Input() settingKey!: CatalogEntryDto;
 
   currentValue: any;
-  isSaving: boolean = false;
-  isModified: boolean = false;
-  showSuccessIndicator: boolean = false;
+  isSaving = false;
+  isModified = false;
+  showSuccessIndicator = false;
 
+  private readonly SUCCESS_INDICATOR_DURATION_MS = 1200;
   private destroy$ = new Subject<void>();
   private successTimeoutId?: ReturnType<typeof setTimeout>;
 
@@ -68,12 +69,12 @@ export class SettingsRendererComponent implements OnInit, OnDestroy {
             this.showSuccessIndicator = true;
             this.cdr.markForCheck();
 
-            // Auto-hide success indicator after 1.2 seconds
+            // Auto-hide success indicator after configured duration
             this.successTimeoutId = setTimeout(() => {
               this.showSuccessIndicator = false;
               this.cdr.markForCheck();
               this.successTimeoutId = undefined;
-            }, 1200);
+            }, this.SUCCESS_INDICATOR_DURATION_MS);
           } else if (saveState.state === 'error') {
             // Clear any existing success timeout
             if (this.successTimeoutId) {
