@@ -16,18 +16,20 @@
   </div>
 
   <div class="setting-control">
-    <!-- Boolean type - Toggle Switch -->
-    <app-toggle-control *ngIf="controlType === 'toggle'" [value]="currentValue" [disabled]="false"
-      (valueChange)="onValueChange($event)"></app-toggle-control>
+    <div class="setting-control-wrapper">
+      <!-- Boolean type - Toggle Switch -->
+      <app-toggle-control *ngIf="controlType === 'toggle'" [value]="currentValue" [disabled]="false"
+        (valueChange)="onValueChange($event)"></app-toggle-control>
 
-    <!-- Select type - Dropdown -->
-    <app-select-control *ngIf="controlType === 'select' && hasOptions" [value]="currentValue"
-      [options]="getTranslatedOptions()" [disabled]="false" (valueChange)="onValueChange($event)"></app-select-control>
+      <!-- Select type - Dropdown -->
+      <app-select-control *ngIf="controlType === 'select' && hasOptions" [value]="currentValue"
+        [options]="getTranslatedOptions()" [disabled]="false" (valueChange)="onValueChange($event)"></app-select-control>
 
-    <!-- Radio type - Radio Group -->
-    <app-radio-control *ngIf="controlType === 'radio' && hasOptions" [value]="currentValue"
-      [options]="getTranslatedOptions()" [name]="settingKey.key!" [disabled]="false"
-      (valueChange)="onValueChange($event)"></app-radio-control>
+      <!-- Radio type - Radio Group -->
+      <app-radio-control *ngIf="controlType === 'radio' && hasOptions" [value]="currentValue"
+        [options]="getTranslatedOptions()" [name]="settingKey.key!" [disabled]="false"
+        (valueChange)="onValueChange($event)"></app-radio-control>
+    </div>
 
     <!-- Loading and Success Indicators -->
     <div class="setting-indicators">

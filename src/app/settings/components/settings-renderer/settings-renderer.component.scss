@@ -97,20 +97,22 @@
 }
 
 .setting-control {
-  position: relative;
-  // max-width: auto;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.setting-control-wrapper {
+  flex: 0 0 auto;
 }
 
 .setting-indicators {
-  position: absolute;
-  right: -32px;
-  top: 50%;
-  transform: translateY(-50%);
   display: flex;
   align-items: center;
   justify-content: center;
   width: 24px;
   height: 24px;
+  flex-shrink: 0;
 }
 
 .setting-spinner {
