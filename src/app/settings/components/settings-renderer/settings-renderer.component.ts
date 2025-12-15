@@ -23,8 +23,9 @@ export class SettingsRendererComponent implements OnInit, OnDestroy {
   @Input() settingKey!: CatalogEntryDto;
 
   currentValue: any;
-  isSaving: boolean = false;
-  isModified: boolean = false;
+  isSaving = false;
+  isModified = false;
+  showSuccessIndicator = false;
 
   private destroy$ = new Subject<void>();
 
@@ -43,7 +44,34 @@ export class SettingsRendererComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.destroy$))
       .subscribe(() => {
         this.loadCurrentValue();
+        // Clear indicators when settings are refreshed from API
+        this.isSaving = false;
+        this.showSuccessIndicator = false;
         this.cdr.markForCheck();
+      });
+
+    // Subscribe to save state changes to show loading/success indicators
+    this.userSettingsService.saveState$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((saveState) => {
+        // Only react to events for this specific setting
+        if (saveState.category === this.categoryKey && saveState.key === this.settingKey.key) {
+          if (saveState.state === 'loading') {
+            this.isSaving = true;
+            this.showSuccessIndicator = false;
+            this.cdr.markForCheck();
+          } else if (saveState.state === 'success') {
+            // Keep showing spinner until settings are refreshed from API
+            // isSaving will be cleared in effectiveSettings$ subscription (line 48)
+            // when the background refresh completes and fresh settings are received
+            this.showSuccessIndicator = true;
+            this.cdr.markForCheck();
+          } else if (saveState.state === 'error') {
+            this.isSaving = false;
+            this.showSuccessIndicator = false;
+            this.cdr.markForCheck();
+          }
+        }
       });
 
     // Subscribe to language changes to trigger change detection
