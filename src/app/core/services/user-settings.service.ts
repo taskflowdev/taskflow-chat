@@ -1,6 +1,6 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { BehaviorSubject, Observable, Subject, throwError, timer, of } from 'rxjs';
-import { catchError, debounceTime, distinctUntilChanged, map, tap, switchMap, takeUntil } from 'rxjs/operators';
+import { catchError, debounceTime, distinctUntilChanged, map, tap, switchMap, takeUntil, finalize } from 'rxjs/operators';
 import { SettingsService } from '../../api/services/settings.service';
 import { CatalogService } from '../../api/services/catalog.service';
 import { EffectiveSettingsResponse } from '../../api/models/effective-settings-response';
@@ -8,6 +8,20 @@ import { CatalogResponse } from '../../api/models/catalog-response';
 import { UpdateSettingsRequest } from '../../api/models/update-settings-request';
 import { ThemeService, ThemeMode, FontSize } from './theme.service';
 import { SettingsCacheService } from './settings-cache.service';
+
+/**
+ * Sync status for individual settings
+ */
+export type SyncStatus = 'idle' | 'saving' | 'saved' | 'error';
+
+/**
+ * Sync state for a specific setting
+ */
+export interface SettingSyncState {
+  status: SyncStatus;
+  errorMessage?: string;
+  timestamp?: number;
+}
 
 /**
  * Settings keys for language preference
@@ -29,7 +43,7 @@ interface I18nServiceInterface {
    * Returns a Promise that resolves when the language change is complete
    */
   setLanguage(lang: string): Promise<void>;
-  
+
   /**
    * Observable indicating if translations are currently loading
    * Used to show loading states in the UI during language changes
@@ -50,6 +64,13 @@ export class UserSettingsService implements OnDestroy {
   private saveQueue = new Subject<{ category: string; key: string; value: any }>();
   private loadingSubject = new BehaviorSubject<boolean>(false);
   public loading$: Observable<boolean> = this.loadingSubject.asObservable();
+
+  // Sync state management for individual settings
+  private syncStateSubject = new BehaviorSubject<Map<string, SettingSyncState>>(new Map());
+  public syncState$: Observable<Map<string, SettingSyncState>> = this.syncStateSubject.asObservable();
+
+  // Track pending save operations to prevent duplicate API calls
+  private pendingSaves = new Set<string>();
 
   // Background refresh management
   private readonly BACKGROUND_REFRESH_INTERVAL = 5 * 60 * 1000; // 5 minutes
@@ -247,6 +268,13 @@ export class UserSettingsService implements OnDestroy {
    * Update a single setting (queues for auto-save with debounce)
    */
   updateSetting(category: string, key: string, value: any): void {
+    const settingId = this.getSettingId(category, key);
+
+    // Prevent duplicate saves for the same setting
+    if (this.pendingSaves.has(settingId)) {
+      return;
+    }
+
     // Update in-memory cache immediately
     this.updateInMemoryCache(category, key, value);
 
@@ -315,29 +343,50 @@ export class UserSettingsService implements OnDestroy {
    * Save setting to backend and update cache
    */
   private saveSetting(category: string, key: string, value: any): void {
+    const settingId = this.getSettingId(category, key);
+
+    // Mark as saving and add to pending saves
+    this.updateSyncState(settingId, 'saving');
+    this.pendingSaves.add(settingId);
+
     const request: UpdateSettingsRequest = {
       category: category,
       payload: { [key]: value }
     };
 
-    this.settingsService.apiSettingsMePut$Json({ body: request }).subscribe({
+    this.settingsService.apiSettingsMePut$Json({ body: request }).pipe(
+      finalize(() => {
+        // Remove from pending saves when complete (success or error)
+        this.pendingSaves.delete(settingId);
+      })
+    ).subscribe({
       next: (response) => {
         if (response.success) {
+          // Mark as saved
+          this.updateSyncState(settingId, 'saved');
+
           // Setting saved successfully - update cache with current state
           const currentSettings = this.effectiveSettingsSubject.value;
           if (currentSettings) {
             this.settingsCacheService.setCachedSettings(currentSettings);
           }
 
-          // Trigger background refresh to get any server-side computed values
-          this.refreshSettings().subscribe({
-            error: (err) => console.error('Failed to refresh after save:', err)
-          });
+          // No need to refresh - optimistic update already applied
+          // Background refresh (5min) ensures eventual consistency
+        } else {
+          // API returned unsuccessful response
+          this.updateSyncState(settingId, 'error', 'Save failed');
         }
       },
       error: (err) => {
         console.error('Failed to save setting:', err);
+
+        // Mark as error with message
+        const errorMessage = err?.error?.message || err?.message || 'Failed to save';
+        this.updateSyncState(settingId, 'error', errorMessage);
+
         // Could revert in-memory cache here if needed
+        // For now, keep optimistic update
       }
     });
   }
@@ -434,6 +483,69 @@ export class UserSettingsService implements OnDestroy {
    */
   initializeDefaultTheme(): void {
     this.themeService.initialize('system', 'medium');
+  }
+
+  /**
+   * Get unique setting ID for sync state tracking
+   */
+  private getSettingId(category: string, key: string): string {
+    return `${category}.${key}`;
+  }
+
+  /**
+   * Update sync state for a specific setting
+   */
+  private updateSyncState(settingId: string, status: SyncStatus, errorMessage?: string): void {
+    const currentStates = this.syncStateSubject.value;
+    const newStates = new Map(currentStates);
+
+    newStates.set(settingId, {
+      status,
+      errorMessage,
+      timestamp: Date.now()
+    });
+
+    this.syncStateSubject.next(newStates);
+  }
+
+  /**
+   * Get sync state for a specific setting
+   */
+  getSyncState(category: string, key: string): Observable<SettingSyncState | undefined> {
+    const settingId = this.getSettingId(category, key);
+    return this.syncState$.pipe(
+      map(states => states.get(settingId))
+    );
+  }
+
+  /**
+   * Get sync status for a specific setting (convenience method)
+   */
+  getSyncStatus(category: string, key: string): Observable<SyncStatus> {
+    return this.getSyncState(category, key).pipe(
+      map(state => state?.status || 'idle')
+    );
+  }
+
+  /**
+   * Check if a setting is currently saving
+   */
+  isSettingSaving(category: string, key: string): Observable<boolean> {
+    return this.getSyncStatus(category, key).pipe(
+      map(status => status === 'saving')
+    );
+  }
+
+  /**
+   * Clear sync state for a specific setting
+   */
+  clearSyncState(category: string, key: string): void {
+    const settingId = this.getSettingId(category, key);
+    const currentStates = this.syncStateSubject.value;
+    const newStates = new Map(currentStates);
+
+    newStates.delete(settingId);
+    this.syncStateSubject.next(newStates);
   }
 
   /**

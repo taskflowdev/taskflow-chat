@@ -1,0 +1,7 @@
+<div class="sync-indicator" [class]="getStatusClass()" [attr.data-status]="status"
+  [attr.aria-live]="status === 'error' ? 'assertive' : 'polite'" [attr.aria-label]="getTooltipText()">
+
+  <i [class]="getIconClass()" [appCommonTooltip]="getTooltipText()" [tooltipPosition]="TooltipPosition.LEFT"
+    [tooltipDelay]="500">
+  </i>
+</div>

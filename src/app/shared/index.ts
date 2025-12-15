@@ -9,6 +9,7 @@ export * from './components/footer/footer.component';
 export * from './components/toast-container.component';
 export * from './components/skeleton-loader/skeleton-loader.component';
 export * from './components/loading-screen/loading-screen.component';
+export * from './components/sync-indicator';
 
 // Directives
 export * from './directives/keyboard-shortcut.directive';

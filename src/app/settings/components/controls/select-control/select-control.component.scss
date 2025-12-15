@@ -2,6 +2,7 @@
   position: relative;
   width: 100%;
   max-width: 320px;
+  transition: opacity 0.2s ease-in-out;
 
   &.disabled {
     opacity: 0.5;
