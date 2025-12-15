@@ -1,5 +1,6 @@
 .form-switch {
   padding-left: 2.5em;
+  transition: opacity 0.2s ease-in-out;
 
   .form-check-input {
     width: 3em;
@@ -7,10 +8,12 @@
     cursor: pointer;
     background-color: var(--taskflow-color-toggle-off-bg);
     border-color: var(--taskflow-color-toggle-off-border);
-    transition: background-color 0.2s ease, border-color 0.2s ease;
+    transition: background-color 0.2s ease, border-color 0.2s ease,
+      opacity 0.2s ease-in-out;
 
     &::before {
       background-color: var(--taskflow-color-toggle-off-handle) !important;
+      transition: transform 0.2s ease;
     }
 
     &:checked {
@@ -26,6 +29,7 @@
       background-color: var(--taskflow-color-toggle-disabled-bg);
       border-color: var(--taskflow-color-toggle-disabled-border);
       cursor: not-allowed;
+      opacity: 0.5;
 
       &::before {
         background-color: var(

@@ -3,13 +3,18 @@
     <div class="setting-info">
       <div class="setting-label-container">
         <i [class]="'bi bi-' + getIconClass()" class="setting-icon"></i>
-        <label class="setting-label">{{ getSettingLabel() }}</label>
+        <label class="setting-label">
+          {{ getSettingLabel() }}
+          <!-- Sync Indicator next to label -->
+          <app-sync-indicator [status]="syncStatus" [errorMessage]="syncErrorMessage">
+          </app-sync-indicator>
+        </label>
       </div>
       <p class="setting-description" *ngIf="getSettingDescription()">
         {{ getSettingDescription() }}
       </p>
     </div>
-    <button *ngIf="isModified" type="button" class="reset-btn" (click)="onResetToDefault()"
+    <button *ngIf="isModified" type="button" class="reset-btn" (click)="onResetToDefault()" [disabled]="isSaving"
       appCommonTooltip="Reset to default">
       <i class="bi bi-arrow-counterclockwise"></i>
     </button>
@@ -17,16 +22,19 @@
 
   <div class="setting-control">
     <!-- Boolean type - Toggle Switch -->
-    <app-toggle-control *ngIf="controlType === 'toggle'" [value]="currentValue" [disabled]="false"
-      (valueChange)="onValueChange($event)"></app-toggle-control>
+    <app-toggle-control *ngIf="controlType === 'toggle'" [value]="currentValue" [disabled]="isSaving"
+      (valueChange)="onValueChange($event)">
+    </app-toggle-control>
 
     <!-- Select type - Dropdown -->
     <app-select-control *ngIf="controlType === 'select' && hasOptions" [value]="currentValue"
-      [options]="getTranslatedOptions()" [disabled]="false" (valueChange)="onValueChange($event)"></app-select-control>
+      [options]="getTranslatedOptions()" [disabled]="isSaving" (valueChange)="onValueChange($event)">
+    </app-select-control>
 
     <!-- Radio type - Radio Group -->
     <app-radio-control *ngIf="controlType === 'radio' && hasOptions" [value]="currentValue"
-      [options]="getTranslatedOptions()" [name]="settingKey.key!" [disabled]="false"
-      (valueChange)="onValueChange($event)"></app-radio-control>
+      [options]="getTranslatedOptions()" [name]="settingKey.key!" [disabled]="isSaving"
+      (valueChange)="onValueChange($event)">
+    </app-radio-control>
   </div>
 </div>

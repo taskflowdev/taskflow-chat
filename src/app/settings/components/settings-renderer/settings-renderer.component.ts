@@ -1,11 +1,12 @@
 import { Component, Input, OnInit, OnDestroy, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { UserSettingsService } from '../../../core/services/user-settings.service';
+import { UserSettingsService, SyncStatus } from '../../../core/services/user-settings.service';
 import { CatalogEntryDto } from '../../../api/models/catalog-entry-dto';
 import { ToastService } from '../../../shared/services/toast.service';
 import { ToggleControlComponent } from '../controls/toggle-control/toggle-control.component';
 import { SelectControlComponent } from '../controls/select-control/select-control.component';
 import { RadioControlComponent } from '../controls/radio-control/radio-control.component';
+import { SyncIndicatorComponent } from '../../../shared/components/sync-indicator';
 import { Subject, takeUntil } from 'rxjs';
 import { CommonTooltipDirective } from "../../../shared/components/common-tooltip";
 import { I18nService } from '../../../core/i18n';
@@ -13,7 +14,14 @@ import { SettingOption } from '../../../api/models/setting-option';
 
 @Component({
   selector: 'app-settings-renderer',
-  imports: [CommonModule, ToggleControlComponent, SelectControlComponent, RadioControlComponent, CommonTooltipDirective],
+  imports: [
+    CommonModule,
+    ToggleControlComponent,
+    SelectControlComponent,
+    RadioControlComponent,
+    SyncIndicatorComponent,
+    CommonTooltipDirective
+  ],
   templateUrl: './settings-renderer.component.html',
   styleUrls: ['./settings-renderer.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -25,6 +33,10 @@ export class SettingsRendererComponent implements OnInit, OnDestroy {
   currentValue: any;
   isSaving: boolean = false;
   isModified: boolean = false;
+
+  // Sync state
+  syncStatus: SyncStatus = 'idle';
+  syncErrorMessage: string = '';
 
   private destroy$ = new Subject<void>();
 
@@ -43,6 +55,16 @@ export class SettingsRendererComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.destroy$))
       .subscribe(() => {
         this.loadCurrentValue();
+        this.cdr.markForCheck();
+      });
+
+    // Subscribe to sync state changes for this setting
+    this.userSettingsService.getSyncState(this.categoryKey, this.settingKey.key!)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(syncState => {
+        this.syncStatus = syncState?.status || 'idle';
+        this.syncErrorMessage = syncState?.errorMessage || '';
+        this.isSaving = this.syncStatus === 'saving';
         this.cdr.markForCheck();
       });
 
@@ -77,10 +99,15 @@ export class SettingsRendererComponent implements OnInit, OnDestroy {
   }
 
   onValueChange(newValue: any): void {
+    // Prevent changes while saving
+    if (this.isSaving) {
+      return;
+    }
+
     this.currentValue = newValue;
     this.cdr.markForCheck();
 
-    // Silent auto-save - no UI feedback, just save
+    // Silent auto-save - sync indicator will show the status
     this.userSettingsService.updateSetting(this.categoryKey, this.settingKey.key!, newValue);
 
     // Update modified state
@@ -92,6 +119,11 @@ export class SettingsRendererComponent implements OnInit, OnDestroy {
   }
 
   onResetToDefault(): void {
+    // Prevent reset while saving
+    if (this.isSaving) {
+      return;
+    }
+
     this.userSettingsService.resetToDefault(this.categoryKey, this.settingKey.key!);
     this.loadCurrentValue();
     this.cdr.markForCheck();
@@ -163,7 +195,7 @@ export class SettingsRendererComponent implements OnInit, OnDestroy {
       const optionI18n = this.settingKey.i18n?.options?.[option.value];
       const i18nKey = optionI18n?.fields?.['label'];
       const label = this.getTranslatedValue(i18nKey, option.label ?? '');
-      
+
       return {
         ...option,
         label
