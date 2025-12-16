@@ -1,6 +1,18 @@
 <div class="sidebar-container">
   <h3 class="sidebar-title">{{ 'settings.title' | translate }}</h3>
   <nav class="sidebar-nav">
+    <!-- Profile Link (Static) -->
+    <a [routerLink]="['/settings', 'profile']"
+      routerLinkActive="active"
+      class="sidebar-link">
+      <!-- Default Icon -->
+      <i class="bi sidebar-icon default-icon bi-person"></i>
+      <!-- Active Icon -->
+      <i class="bi sidebar-icon active-icon bi-person-fill"></i>
+      <span class="category-name">{{ 'settings.profile.title' | translate }}</span>
+    </a>
+
+    <!-- Dynamic Categories from Catalog -->
     <a *ngFor="let category of sortedCategories$ | async" [routerLink]="['/settings', category.key]"
       routerLinkActive="active" #rla="routerLinkActive" class="sidebar-link">
 

@@ -11,6 +11,7 @@ export interface AuthUser {
   userName: string;
   email: string;
   fullName: string;
+  createdAt?: string;
 }
 
 @Injectable({
@@ -187,7 +188,8 @@ export class AuthService {
             id: response.data.id || '',
             userName: response.data.userName || '',
             email: response.data.email || '',
-            fullName: response.data.fullName || ''
+            fullName: response.data.fullName || '',
+            createdAt: response.data.createdAt
           };
 
           // Store user data

@@ -1,0 +1,75 @@
+<div class="profile-container" *ngIf="currentUser$ | async as user; else loading">
+  <!-- Profile Header -->
+  <div class="profile-header">
+    <div class="profile-avatar">
+      <div class="avatar-circle">
+        {{ getUserInitials(user) }}
+      </div>
+    </div>
+    <div class="profile-title-section">
+      <h1 class="profile-name">{{ user.fullName || user.userName }}</h1>
+      <p class="profile-username">&#64;{{ user.userName }}</p>
+    </div>
+  </div>
+
+  <!-- Profile Content -->
+  <div class="profile-content">
+    <!-- Personal Information Section -->
+    <div class="profile-section">
+      <h2 class="section-title">{{ 'settings.profile.personal-info' | translate }}</h2>
+      <div class="profile-details">
+        <div class="detail-row">
+          <div class="detail-label">
+            <i class="bi bi-person detail-icon"></i>
+            <span>{{ 'settings.profile.full-name' | translate }}</span>
+          </div>
+          <div class="detail-value">{{ user.fullName || 'N/A' }}</div>
+        </div>
+
+        <div class="detail-row">
+          <div class="detail-label">
+            <i class="bi bi-person-badge detail-icon"></i>
+            <span>{{ 'settings.profile.username' | translate }}</span>
+          </div>
+          <div class="detail-value">{{ user.userName }}</div>
+        </div>
+
+        <div class="detail-row">
+          <div class="detail-label">
+            <i class="bi bi-envelope detail-icon"></i>
+            <span>{{ 'settings.profile.email' | translate }}</span>
+          </div>
+          <div class="detail-value">{{ user.email }}</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Account Information Section -->
+    <div class="profile-section">
+      <h2 class="section-title">{{ 'settings.profile.account-info' | translate }}</h2>
+      <div class="profile-details">
+        <div class="detail-row">
+          <div class="detail-label">
+            <i class="bi bi-key detail-icon"></i>
+            <span>{{ 'settings.profile.user-id' | translate }}</span>
+          </div>
+          <div class="detail-value user-id">{{ user.id }}</div>
+        </div>
+
+        <div class="detail-row">
+          <div class="detail-label">
+            <i class="bi bi-calendar-check detail-icon"></i>
+            <span>{{ 'settings.profile.joined' | translate }}</span>
+          </div>
+          <div class="detail-value">{{ formatDate(user.createdAt) }}</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<ng-template #loading>
+  <div class="profile-container">
+    <app-skeleton-loader type="settings-category"></app-skeleton-loader>
+  </div>
+</ng-template>
