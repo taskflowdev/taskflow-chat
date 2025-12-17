@@ -8,6 +8,7 @@ import { map, filter, takeUntil } from 'rxjs/operators';
 import { CatalogResponse } from '../../../api/models/catalog-response';
 import { CategoryWithKeys } from '../../../api/models/category-with-keys';
 import { TranslatePipe, I18nService } from '../../../core/i18n';
+import { getUserInitials } from '../../../shared/utils/user.utils';
 
 @Component({
   selector: 'app-settings-sidebar',
@@ -89,14 +90,7 @@ export class SettingsSidebarComponent implements OnInit, OnDestroy {
    * Get user initials for avatar display
    */
   getUserInitials(user: AuthUser): string {
-    if (user.fullName) {
-      const names = user.fullName.trim().split(' ');
-      if (names.length >= 2) {
-        return (names[0][0] + names[names.length - 1][0]).toUpperCase();
-      }
-      return user.fullName.substring(0, 2).toUpperCase();
-    }
-    return user.userName?.substring(0, 2).toUpperCase() || 'U';
+    return getUserInitials(user);
   }
 
   /**
