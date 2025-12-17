@@ -16,12 +16,12 @@
   <div class="profile-content">
     <!-- Personal Information Section -->
     <div class="profile-section">
-      <h2 class="section-title">{{ 'settings.profile.personal-info' | translate }}</h2>
+      <h2 class="section-title">{{ 'settings.profile.sections.personal-info.label' | translate }}</h2>
       <div class="profile-details">
         <div class="detail-row">
           <div class="detail-label">
             <i class="bi bi-person detail-icon"></i>
-            <span>{{ 'settings.profile.full-name' | translate }}</span>
+            <span>{{ 'settings.profile.sections.personal-info.fields.full-name.label' | translate }}</span>
           </div>
           <div class="detail-value">{{ user.fullName || 'N/A' }}</div>
         </div>
@@ -29,7 +29,7 @@
         <div class="detail-row">
           <div class="detail-label">
             <i class="bi bi-person-badge detail-icon"></i>
-            <span>{{ 'settings.profile.username' | translate }}</span>
+            <span>{{ 'settings.profile.sections.personal-info.fields.username.label' | translate }}</span>
           </div>
           <div class="detail-value">{{ user.userName }}</div>
         </div>
@@ -37,7 +37,7 @@
         <div class="detail-row">
           <div class="detail-label">
             <i class="bi bi-envelope detail-icon"></i>
-            <span>{{ 'settings.profile.email' | translate }}</span>
+            <span>{{ 'settings.profile.sections.personal-info.fields.email.label' | translate }}</span>
           </div>
           <div class="detail-value">{{ user.email }}</div>
         </div>
@@ -46,12 +46,12 @@
 
     <!-- Account Information Section -->
     <div class="profile-section">
-      <h2 class="section-title">{{ 'settings.profile.account-info' | translate }}</h2>
+      <h2 class="section-title">{{ 'settings.profile.sections.account-info.label' | translate }}</h2>
       <div class="profile-details">
         <div class="detail-row">
           <div class="detail-label">
             <i class="bi bi-key detail-icon"></i>
-            <span>{{ 'settings.profile.user-id' | translate }}</span>
+            <span>{{ 'settings.profile.sections.account-info.fields.user-id.label' | translate }}</span>
           </div>
           <div class="detail-value user-id">{{ user.id }}</div>
         </div>
@@ -59,7 +59,7 @@
         <div class="detail-row">
           <div class="detail-label">
             <i class="bi bi-calendar-check detail-icon"></i>
-            <span>{{ 'settings.profile.joined' | translate }}</span>
+            <span>{{ 'settings.profile.sections.account-info.fields.joined.label' | translate }}</span>
           </div>
           <div class="detail-value">{{ formatDate(user.createdAt) }}</div>
         </div>

@@ -17,11 +17,13 @@
 .profile-header {
   display: flex;
   align-items: center;
-  gap: 24px;
-  padding-bottom: 24px;
-  margin-bottom: 32px;
-  border-bottom: 1px solid var(--taskflow-color-profile-header-border);
-  background: var(--taskflow-color-profile-header-bg);
+  gap: 18px;
+  padding: 20px;
+  margin-bottom: 24px;
+  border: 1px solid var(--taskflow-color-profile-header-border);
+  background: transparent;
+  border-radius: 14px;
+  // box-shadow: 0 6px 18px var(--taskflow-color-shadow-medium);
 }
 
 .profile-avatar {
@@ -38,10 +40,10 @@
   align-items: center;
   justify-content: center;
   font-size: 32px;
-  font-weight: 600;
+  font-weight: 700;
   letter-spacing: 1px;
   border: 3px solid var(--taskflow-color-profile-avatar-border);
-  box-shadow: 0 2px 8px var(--taskflow-color-shadow-medium);
+  // box-shadow: 0 6px 18px var(--taskflow-color-shadow-medium);
 }
 
 .profile-title-section {
@@ -49,7 +51,7 @@
 }
 
 .profile-name {
-  font-size: var(--taskflow-font-font-size-h1);
+  font-size: var(--taskflow-font-font-size-h2);
   font-weight: 600;
   margin: 0;
   color: var(--taskflow-color-text-primary);
@@ -70,7 +72,7 @@
 }
 
 .profile-section {
-  background: var(--taskflow-color-profile-section-bg);
+  background: transparent;
   border: 1px solid var(--taskflow-color-profile-section-border);
   border-radius: 8px;
   padding: 24px;
@@ -126,7 +128,7 @@
 }
 
 .user-id {
-  font-family: 'Courier New', Courier, monospace;
+  font-family: "Courier New", Courier, monospace;
   font-size: var(--taskflow-font-font-size-small);
   background: var(--taskflow-color-profile-code-bg);
   padding: 4px 8px;
