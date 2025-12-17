@@ -223,5 +223,44 @@
   }
 }
 
+// Profile page skeleton
+.skeleton-profile-page {
+  max-width: 900px;
+  animation: fadeIn 0.2s cubic-bezier(0.2, 0, 0.38, 0.9);
+
+  .skeleton-profile-header {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    padding-bottom: 24px;
+    margin-bottom: 32px;
+    border-bottom: 1px solid var(--taskflow-color-profile-header-border);
+
+    .skeleton-profile-header-text {
+      flex: 1;
+    }
+  }
+
+  .skeleton-profile-section {
+    background: var(--taskflow-color-profile-section-bg);
+    border: 1px solid var(--taskflow-color-profile-section-border);
+    border-radius: 8px;
+    padding: 24px;
+    margin-bottom: 32px;
+
+    .skeleton-detail-row {
+      display: grid;
+      grid-template-columns: 200px 1fr;
+      gap: 24px;
+      padding: 12px 0;
+      border-bottom: 1px solid var(--taskflow-color-profile-detail-border);
+
+      &:last-child {
+        border-bottom: none;
+      }
+    }
+  }
+}
+
 /* Skeleton visuals are driven by centralized theme tokens (`--taskflow-color-*`).
    Local fallback variables were removed to centralize colors in the theme JSON files. */

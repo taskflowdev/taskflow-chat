@@ -20,7 +20,8 @@
   gap: 24px;
   padding-bottom: 24px;
   margin-bottom: 32px;
-  border-bottom: 1px solid var(--taskflow-color-border-subtle, #d0d7de);
+  border-bottom: 1px solid var(--taskflow-color-profile-header-border);
+  background: var(--taskflow-color-profile-header-bg);
 }
 
 .profile-avatar {
@@ -31,16 +32,16 @@
   width: 80px;
   height: 80px;
   border-radius: 50%;
-  background: linear-gradient(135deg, var(--taskflow-color-primary, #0969da), var(--taskflow-color-accent-emphasis, #8250df));
-  color: white;
+  background: var(--taskflow-color-profile-avatar-bg);
+  color: var(--taskflow-color-profile-avatar-text);
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: 32px;
   font-weight: 600;
   letter-spacing: 1px;
-  border: 3px solid var(--taskflow-color-border-default, #d0d7de);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  border: 3px solid var(--taskflow-color-profile-avatar-border);
+  box-shadow: 0 2px 8px var(--taskflow-color-shadow-medium);
 }
 
 .profile-title-section {
@@ -51,13 +52,13 @@
   font-size: var(--taskflow-font-font-size-h1);
   font-weight: 600;
   margin: 0;
-  color: var(--taskflow-color-text-primary, #24292f);
+  color: var(--taskflow-color-text-primary);
   line-height: var(--taskflow-font-line-height-heading);
 }
 
 .profile-username {
   font-size: var(--taskflow-font-font-size-large);
-  color: var(--taskflow-color-text-secondary, #57606a);
+  color: var(--taskflow-color-text-secondary);
   margin: 4px 0 0 0;
   line-height: var(--taskflow-font-line-height-compact);
 }
@@ -69,17 +70,18 @@
 }
 
 .profile-section {
-  background: var(--taskflow-color-canvas-subtle, #f6f8fa);
-  border: 1px solid var(--taskflow-color-border-default, #d0d7de);
+  background: var(--taskflow-color-profile-section-bg);
+  border: 1px solid var(--taskflow-color-profile-section-border);
   border-radius: 8px;
   padding: 24px;
+  box-shadow: 0 1px 3px var(--taskflow-color-shadow);
 }
 
 .section-title {
   font-size: var(--taskflow-font-font-size-h3);
   font-weight: 600;
   margin: 0 0 20px 0;
-  color: var(--taskflow-color-text-primary, #24292f);
+  color: var(--taskflow-color-profile-section-title-text);
   line-height: var(--taskflow-font-line-height-heading);
 }
 
@@ -95,7 +97,7 @@
   gap: 24px;
   align-items: center;
   padding: 12px 0;
-  border-bottom: 1px solid var(--taskflow-color-border-subtle, #d0d7de);
+  border-bottom: 1px solid var(--taskflow-color-profile-detail-border);
 }
 
 .detail-row:last-child {
@@ -108,17 +110,17 @@
   align-items: center;
   gap: 8px;
   font-weight: 600;
-  color: var(--taskflow-color-text-primary, #24292f);
+  color: var(--taskflow-color-profile-label-text);
   font-size: var(--taskflow-font-font-size-base);
 }
 
 .detail-icon {
   font-size: 18px;
-  color: var(--taskflow-color-text-secondary, #57606a);
+  color: var(--taskflow-color-text-secondary);
 }
 
 .detail-value {
-  color: var(--taskflow-color-text-secondary, #57606a);
+  color: var(--taskflow-color-profile-value-text);
   font-size: var(--taskflow-font-font-size-base);
   word-break: break-word;
 }
@@ -126,10 +128,11 @@
 .user-id {
   font-family: 'Courier New', Courier, monospace;
   font-size: var(--taskflow-font-font-size-small);
-  background: var(--taskflow-color-canvas-default, #ffffff);
+  background: var(--taskflow-color-profile-code-bg);
   padding: 4px 8px;
   border-radius: 4px;
-  border: 1px solid var(--taskflow-color-border-default, #d0d7de);
+  border: 1px solid var(--taskflow-color-profile-code-border);
+  color: var(--taskflow-color-profile-code-text);
   display: inline-block;
 }
 

@@ -1,7 +1,7 @@
 import { Component, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
-export type SkeletonType = 'text' | 'circle' | 'rectangle' | 'chat-item' | 'message' | 'chat-header' | 'settings-sidebar' | 'settings-item' | 'settings-category';
+export type SkeletonType = 'text' | 'circle' | 'rectangle' | 'chat-item' | 'message' | 'chat-header' | 'settings-sidebar' | 'settings-item' | 'settings-category' | 'profile-page';
 
 /**
  * Reusable skeleton loader component with dark theme support
@@ -128,6 +128,43 @@ export type SkeletonType = 'text' | 'circle' | 'rectangle' | 'chat-item' | 'mess
         </div>
         <div class="skeleton-item-control">
           <div class="skeleton skeleton-rectangle" style="width: 160px; height: 38px;"></div>
+        </div>
+      </div>
+
+      <!-- Profile page skeleton -->
+      <div *ngSwitchCase="'profile-page'" class="skeleton-profile-page" [style.opacity]="fadeOpacity">
+        <div class="skeleton-profile-header">
+          <div class="skeleton skeleton-circle" style="width: 80px; height: 80px;"></div>
+          <div class="skeleton-profile-header-text">
+            <div class="skeleton skeleton-text" style="width: 200px; height: 2rem; margin-bottom: 0.5rem;"></div>
+            <div class="skeleton skeleton-text" style="width: 150px; height: 1.25rem;"></div>
+          </div>
+        </div>
+        <div class="skeleton-profile-section">
+          <div class="skeleton skeleton-text" style="width: 180px; height: 1.5rem; margin-bottom: 1rem;"></div>
+          <div class="skeleton-detail-row">
+            <div class="skeleton skeleton-text" style="width: 120px; height: 1rem;"></div>
+            <div class="skeleton skeleton-text" style="width: 60%; height: 1rem;"></div>
+          </div>
+          <div class="skeleton-detail-row">
+            <div class="skeleton skeleton-text" style="width: 120px; height: 1rem;"></div>
+            <div class="skeleton skeleton-text" style="width: 50%; height: 1rem;"></div>
+          </div>
+          <div class="skeleton-detail-row">
+            <div class="skeleton skeleton-text" style="width: 120px; height: 1rem;"></div>
+            <div class="skeleton skeleton-text" style="width: 70%; height: 1rem;"></div>
+          </div>
+        </div>
+        <div class="skeleton-profile-section">
+          <div class="skeleton skeleton-text" style="width: 180px; height: 1.5rem; margin-bottom: 1rem;"></div>
+          <div class="skeleton-detail-row">
+            <div class="skeleton skeleton-text" style="width: 120px; height: 1rem;"></div>
+            <div class="skeleton skeleton-text" style="width: 55%; height: 1rem;"></div>
+          </div>
+          <div class="skeleton-detail-row">
+            <div class="skeleton skeleton-text" style="width: 120px; height: 1rem;"></div>
+            <div class="skeleton skeleton-text" style="width: 45%; height: 1rem;"></div>
+          </div>
         </div>
       </div>
 
