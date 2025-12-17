@@ -1,7 +1,8 @@
-import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, OnDestroy, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
-import { Observable } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 import { AuthService, AuthUser } from '../../../auth/services/auth.service';
 import { SkeletonLoaderComponent } from '../../../shared/components/skeleton-loader/skeleton-loader.component';
 import { TranslatePipe } from '../../../core/i18n';
@@ -24,11 +25,12 @@ import { CommonButtonComponent } from '../../../shared/components/common-form-co
   styleUrls: ['./profile.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ProfileComponent implements OnInit {
+export class ProfileComponent implements OnInit, OnDestroy {
   currentUser$: Observable<AuthUser | null>;
   profileForm!: FormGroup;
-  isEditing = false;
   isSaving = false;
+  
+  private destroy$ = new Subject<void>();
   
   constructor(
     private authService: AuthService,
@@ -39,25 +41,32 @@ export class ProfileComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    // Initialize form
+    // Initialize form with better URL validation
     this.profileForm = this.fb.group({
       fullName: ['', [Validators.required, Validators.minLength(2)]],
       email: ['', [Validators.required, Validators.email]],
       bio: ['', [Validators.maxLength(500)]],
-      url: ['', [Validators.pattern('https?://.+')]]
+      url: ['', [Validators.pattern(/^https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)$/)]]
     });
 
-    // Load user data into form
-    this.currentUser$.subscribe(user => {
+    // Load user data into form (with takeUntil to prevent memory leak)
+    this.currentUser$.pipe(
+      takeUntil(this.destroy$)
+    ).subscribe(user => {
       if (user) {
         this.profileForm.patchValue({
           fullName: user.fullName || '',
           email: user.email || '',
-          bio: '',
-          url: ''
+          bio: '',  // TODO: Add bio field to AuthUser interface when backend supports it
+          url: ''   // TODO: Add url field to AuthUser interface when backend supports it
         });
       }
     });
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 
   /**
