@@ -1,6 +1,24 @@
 <div class="sidebar-container">
   <h3 class="sidebar-title">{{ 'settings.title' | translate }}</h3>
   <nav class="sidebar-nav">
+    <!-- Profile Link with Avatar (Static) -->
+    <a [routerLink]="['/settings', 'profile']" routerLinkActive="active" class="sidebar-link profile-link"
+      *ngIf="currentUser$ | async as user">
+      <div class="profile-avatar-small">
+        <div class="avatar-circle-small">
+          {{ getUserInitials(user) }}
+        </div>
+      </div>
+      <div class="profile-info">
+        <div class="profile-name">{{ user.fullName || user.userName }}</div>
+        <div class="profile-subtitle">{{ 'settings.profile.account-manager' | translate }}</div>
+      </div>
+    </a>
+
+    <!-- Divider -->
+    <div class="sidebar-divider"></div>
+
+    <!-- Dynamic Categories from Catalog -->
     <a *ngFor="let category of sortedCategories$ | async" [routerLink]="['/settings', category.key]"
       routerLinkActive="active" #rla="routerLinkActive" class="sidebar-link">
 

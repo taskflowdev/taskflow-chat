@@ -2,11 +2,13 @@ import { Component, ChangeDetectionStrategy, ChangeDetectorRef, OnInit, OnDestro
 import { CommonModule } from '@angular/common';
 import { Router, NavigationEnd, RouterModule } from '@angular/router';
 import { UserSettingsService } from '../../../core/services/user-settings.service';
+import { AuthService, AuthUser } from '../../../auth/services/auth.service';
 import { Observable, Subject } from 'rxjs';
 import { map, filter, takeUntil } from 'rxjs/operators';
 import { CatalogResponse } from '../../../api/models/catalog-response';
 import { CategoryWithKeys } from '../../../api/models/category-with-keys';
 import { TranslatePipe, I18nService } from '../../../core/i18n';
+import { getUserInitials } from '../../../shared/utils/user.utils';
 
 @Component({
   selector: 'app-settings-sidebar',
@@ -19,16 +21,19 @@ export class SettingsSidebarComponent implements OnInit, OnDestroy {
   catalog$: Observable<CatalogResponse | null>;
   sortedCategories$: Observable<CategoryWithKeys[]>;
   currentRoute$: Observable<string>;
+  currentUser$: Observable<AuthUser | null>;
 
   private destroy$ = new Subject<void>();
 
   constructor(
     private userSettingsService: UserSettingsService,
+    private authService: AuthService,
     private router: Router,
     private i18n: I18nService,
     private cdr: ChangeDetectorRef
   ) {
     this.catalog$ = this.userSettingsService.catalog$;
+    this.currentUser$ = this.authService.currentUser$;
 
     this.sortedCategories$ = this.catalog$.pipe(
       map(catalog => {
@@ -79,6 +84,13 @@ export class SettingsSidebarComponent implements OnInit, OnDestroy {
       return 'bi-' + category.iconSelected;
     }
     return 'bi-' + (category.icon || 'box');
+  }
+
+  /**
+   * Get user initials for avatar display
+   */
+  getUserInitials(user: AuthUser): string {
+    return getUserInitials(user);
   }
 
   /**
