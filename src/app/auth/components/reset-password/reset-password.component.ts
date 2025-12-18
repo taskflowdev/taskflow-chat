@@ -113,12 +113,9 @@ export class ResetPasswordComponent implements OnInit {
     const password = form.get('newPassword');
     const confirmPassword = form.get('confirmPassword');
 
-    if (password && confirmPassword && password.value !== confirmPassword.value) {
-      confirmPassword.setErrors({ passwordMismatch: true });
-    } else if (confirmPassword?.errors?.['passwordMismatch']) {
-      delete confirmPassword.errors['passwordMismatch'];
-      if (Object.keys(confirmPassword.errors).length === 0) {
-        confirmPassword.setErrors(null);
+    if (password && confirmPassword && password.value && confirmPassword.value) {
+      if (password.value !== confirmPassword.value) {
+        return { passwordMismatch: true };
       }
     }
     return null;
@@ -128,11 +125,12 @@ export class ResetPasswordComponent implements OnInit {
     const password = this.resetPasswordForm.get('newPassword')?.value || '';
     let strength = 0;
 
-    if (password.length >= this.passwordPolicy.minLength) strength++;
-    if (/[A-Z]/.test(password)) strength++;
-    if (/[a-z]/.test(password)) strength++;
-    if (/[0-9]/.test(password)) strength++;
-    if (/[!@#$%^&*(),.?":{}|<>]/.test(password)) strength++;
+    // Reuse helper methods for consistency
+    if (this.hasMinLength()) strength++;
+    if (this.hasUpperCase()) strength++;
+    if (this.hasLowerCase()) strength++;
+    if (this.hasNumber()) strength++;
+    if (this.hasSpecialChar()) strength++;
 
     const strengthMap = [
       { strength: 0, label: 'Very Weak', color: '#e74c3c' },
@@ -167,9 +165,10 @@ export class ResetPasswordComponent implements OnInit {
       if (field.errors['requireSymbol']) {
         return 'Password must contain at least one special character';
       }
-      if (field.errors['passwordMismatch']) {
-        return 'Passwords do not match';
-      }
+    }
+    // Check form-level validation for password mismatch
+    if (fieldName === 'confirmPassword' && this.resetPasswordForm.errors?.['passwordMismatch']) {
+      return 'Passwords do not match';
     }
     return null;
   }
