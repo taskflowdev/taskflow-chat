@@ -331,4 +331,72 @@ export class AuthService {
       map(user => user !== null)
     );
   }
+
+  /**
+   * Request password reset email.
+   * Always shows success message for security (no email disclosure).
+   * @param email User's email address
+   * @returns Observable with success status and message
+   */
+  requestPasswordReset(email: string): Observable<{ success: boolean; message?: string; error?: string }> {
+    return this.apiAuthService.apiAuthForgotPasswordPost({ body: { email } }).pipe(
+      map(response => ({
+        success: response.success || false,
+        message: response.data?.message || 'If an account exists with this email, you will receive password reset instructions.'
+      })),
+      catchError(error => {
+        console.error('Password reset request error:', error);
+        // Always show generic message for security
+        return of({
+          success: true,
+          message: 'If an account exists with this email, you will receive password reset instructions.'
+        });
+      })
+    );
+  }
+
+  /**
+   * Reset password using token from email.
+   * @param payload Contains email, token, and newPassword
+   * @returns Observable with success status and message
+   */
+  resetPassword(payload: { email: string; token: string; newPassword: string }): Observable<{ success: boolean; message?: string; error?: string }> {
+    return this.apiAuthService.apiAuthResetPasswordPost({ 
+      body: { 
+        email: payload.email, 
+        token: payload.token, 
+        newPassword: payload.newPassword,
+        confirmPassword: payload.newPassword 
+      } 
+    }).pipe(
+      map(response => ({
+        success: response.success || false,
+        message: response.data?.message || (response.success ? 'Password reset successfully' : 'Password reset failed')
+      })),
+      catchError(error => {
+        console.error('Password reset error:', error);
+        const errorMessage = error.error?.message || error.error?.data?.message || 'Password reset failed. The link may be expired or invalid.';
+        return of({
+          success: false,
+          error: errorMessage
+        });
+      })
+    );
+  }
+
+  /**
+   * Validate password reset token.
+   * @param email User's email address
+   * @param token Reset token from URL
+   * @returns Observable<boolean> indicating if token is valid
+   */
+  validateResetToken(email: string, token: string): Observable<boolean> {
+    return this.apiAuthService.apiAuthValidateResetTokenGet({ email, token }).pipe(
+      map(response => response.data || false),
+      catchError(error => {
+        console.error('Token validation error:', error);
+        return of(false);
+      })
+    );
+  }
 }
