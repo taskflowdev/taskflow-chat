@@ -4,6 +4,7 @@
 
 export { AuthService } from './services/auth.service';
 export { CatalogService } from './services/catalog.service';
+export { EmailProviderAdminService } from './services/email-provider-admin.service';
 export { GroupsService } from './services/groups.service';
 export { HealthService } from './services/health.service';
 export { I18NService } from './services/i-18-n.service';
