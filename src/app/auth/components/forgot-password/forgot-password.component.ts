@@ -69,7 +69,7 @@ export class ForgotPasswordComponent {
     });
   }
 
-  resetForm(): void {
+  tryAgain(): void {
     this.isEmailSent = false;
     this.forgotPasswordForm.reset();
   }

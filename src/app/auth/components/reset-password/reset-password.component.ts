@@ -239,4 +239,30 @@ export class ResetPasswordComponent implements OnInit {
   goToLogin(): void {
     this.router.navigate(['/auth/signin']);
   }
+
+  // Helper methods for template to avoid complex regex in HTML
+  hasMinLength(): boolean {
+    const password = this.resetPasswordForm.get('newPassword')?.value || '';
+    return password.length >= this.passwordPolicy.minLength;
+  }
+
+  hasUpperCase(): boolean {
+    const password = this.resetPasswordForm.get('newPassword')?.value || '';
+    return /[A-Z]/.test(password);
+  }
+
+  hasLowerCase(): boolean {
+    const password = this.resetPasswordForm.get('newPassword')?.value || '';
+    return /[a-z]/.test(password);
+  }
+
+  hasNumber(): boolean {
+    const password = this.resetPasswordForm.get('newPassword')?.value || '';
+    return /[0-9]/.test(password);
+  }
+
+  hasSpecialChar(): boolean {
+    const password = this.resetPasswordForm.get('newPassword')?.value || '';
+    return /[!@#$%^&*(),.?":{}|<>]/.test(password);
+  }
 }
