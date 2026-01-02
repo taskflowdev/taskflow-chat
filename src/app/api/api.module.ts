@@ -8,6 +8,7 @@ import { ApiConfiguration, ApiConfigurationParams } from './api-configuration';
 
 import { AuthService } from './services/auth.service';
 import { CatalogService } from './services/catalog.service';
+import { EmailProviderAdminService } from './services/email-provider-admin.service';
 import { GroupsService } from './services/groups.service';
 import { HealthService } from './services/health.service';
 import { I18NService } from './services/i-18-n.service';
@@ -26,6 +27,7 @@ import { SettingsService } from './services/settings.service';
   providers: [
     AuthService,
     CatalogService,
+    EmailProviderAdminService,
     GroupsService,
     HealthService,
     I18NService,

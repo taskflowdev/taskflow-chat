@@ -60,16 +60,9 @@
   </div>
 
   <!-- Message Input - Always visible -->
-  <div class="message-input-container" [class.has-typing]="typingUsersText">
+  <div class="message-input-container" [class.has-typing]="shouldShowTypingIndicator">
     <!-- Typing Indicator -->
-    <div class="typing-indicator" *ngIf="typingUsersText">
-      <div class="typing-dots">
-        <span class="dot"></span>
-        <span class="dot"></span>
-        <span class="dot"></span>
-      </div>
-      <span class="typing-text">{{ typingUsersText }}</span>
-    </div>
+    <app-typing-indicator *ngIf="shouldShowTypingIndicator" [typingUsers]="typingUsers"></app-typing-indicator>
 
     <div class="input-wrapper">
       <textarea [(ngModel)]="newMessage" (keydown)="onKeyDown($event)" [placeholder]="'chats.conversation-window.conversations.composer.placeholder' | translate"

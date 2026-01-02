@@ -15,9 +15,13 @@ export type { CatalogResponseApiResponse } from './models/catalog-response-api-r
 export type { CategoryWithKeys } from './models/category-with-keys';
 export type { ClearCacheResultDto } from './models/clear-cache-result-dto';
 export type { ClearCacheResultDtoApiResponse } from './models/clear-cache-result-dto-api-response';
+export type { CreateEmailProviderDto } from './models/create-email-provider-dto';
 export type { CreateGroupDto } from './models/create-group-dto';
 export type { EffectiveSettingsResponse } from './models/effective-settings-response';
 export type { EffectiveSettingsResponseApiResponse } from './models/effective-settings-response-api-response';
+export type { EmailProviderDto } from './models/email-provider-dto';
+export type { EmailProviderDtoApiResponse } from './models/email-provider-dto-api-response';
+export type { EmailProviderDtoIEnumerableApiResponse } from './models/email-provider-dto-i-enumerable-api-response';
 export type { FlatTranslationDto } from './models/flat-translation-dto';
 export type { FlatTranslationDtoApiResponse } from './models/flat-translation-dto-api-response';
 export type { ForgotPasswordDto } from './models/forgot-password-dto';
@@ -73,6 +77,7 @@ export type { TranslationPayloadDtoApiResponse } from './models/translation-payl
 export type { TranslationPayloadMeta } from './models/translation-payload-meta';
 export type { TranslationSearchResultDto } from './models/translation-search-result-dto';
 export type { TranslationSearchResultDtoApiResponse } from './models/translation-search-result-dto-api-response';
+export type { UpdateEmailProviderDto } from './models/update-email-provider-dto';
 export type { UpdateGroupNameDto } from './models/update-group-name-dto';
 export type { UpdateGroupVisibilityDto } from './models/update-group-visibility-dto';
 export type { UpdateSettingsRequest } from './models/update-settings-request';
