@@ -49,11 +49,4 @@ export class TypingIndicatorComponent {
       return `${this.typingUsers[0]} and ${this.typingUsers.length - 1} others are typing...`;
     }
   }
-
-  /**
-   * Check if indicator should be visible
-   */
-  get isVisible(): boolean {
-    return this.typingUsers && this.typingUsers.length > 0;
-  }
 }

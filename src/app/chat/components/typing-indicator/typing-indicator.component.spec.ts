@@ -21,25 +21,27 @@ describe('TypingIndicatorComponent', () => {
 
   it('should not be visible when no users are typing', () => {
     component.typingUsers = [];
-    expect(component.isVisible).toBe(false);
+    fixture.detectChanges();
     expect(component.typingText).toBe('');
+    const element = fixture.nativeElement.querySelector('.typing-indicator');
+    expect(element).toBeFalsy();
   });
 
   it('should display single user typing', () => {
     component.typingUsers = ['John'];
-    expect(component.isVisible).toBe(true);
+    fixture.detectChanges();
     expect(component.typingText).toBe('John is typing...');
   });
 
   it('should display two users typing', () => {
     component.typingUsers = ['John', 'Jane'];
-    expect(component.isVisible).toBe(true);
+    fixture.detectChanges();
     expect(component.typingText).toBe('John and Jane are typing...');
   });
 
   it('should display multiple users typing', () => {
     component.typingUsers = ['John', 'Jane', 'Bob'];
-    expect(component.isVisible).toBe(true);
+    fixture.detectChanges();
     expect(component.typingText).toBe('John and 2 others are typing...');
   });
 });
