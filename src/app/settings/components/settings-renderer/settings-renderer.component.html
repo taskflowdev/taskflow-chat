@@ -1,4 +1,12 @@
-<div class="setting-card">
+<div class="setting-card" [class.is-disabled]="isDisabled">
+  <span *ngIf="isDisabled" class="setting-badge">
+    <i class="bi bi-x-circle"></i>
+    Disabled
+  </span>
+  <span *ngIf="!isDisabled && isDeprecated" class="setting-badge deprecated">
+    <i class="bi bi-exclamation-triangle"></i>
+    Deprecated
+  </span>
   <div class="setting-header">
     <div class="setting-info">
       <div class="setting-label-container">
@@ -14,27 +22,37 @@
         {{ getSettingDescription() }}
       </p>
     </div>
-    <button *ngIf="isModified" type="button" class="reset-btn" (click)="onResetToDefault()" [disabled]="isSaving"
-      appCommonTooltip="Reset to default">
+    <button *ngIf="isModified" type="button" class="reset-btn" (click)="onResetToDefault()"
+      [disabled]="isSaving || isDisabled" appCommonTooltip="Reset to default">
       <i class="bi bi-arrow-counterclockwise"></i>
     </button>
   </div>
 
   <div class="setting-control">
     <!-- Boolean type - Toggle Switch -->
-    <app-toggle-control *ngIf="controlType === 'toggle'" [value]="currentValue" [disabled]="isSaving"
+    <app-toggle-control *ngIf="controlType === 'toggle'" [value]="currentValue" [disabled]="isSaving || isDisabled"
       (valueChange)="onValueChange($event)">
     </app-toggle-control>
 
     <!-- Select type - Dropdown -->
     <app-select-control *ngIf="controlType === 'select' && hasOptions" [value]="currentValue"
-      [options]="getTranslatedOptions()" [disabled]="isSaving" (valueChange)="onValueChange($event)">
+      [options]="getTranslatedOptions()" [disabled]="isSaving || isDisabled" (valueChange)="onValueChange($event)">
     </app-select-control>
 
     <!-- Radio type - Radio Group -->
     <app-radio-control *ngIf="controlType === 'radio' && hasOptions" [value]="currentValue"
-      [options]="getTranslatedOptions()" [name]="settingKey.key!" [disabled]="isSaving"
+      [options]="getTranslatedOptions()" [name]="settingKey.key!" [disabled]="isSaving || isDisabled"
       (valueChange)="onValueChange($event)">
     </app-radio-control>
+  </div>
+
+  <!-- Tags Section -->
+  <div *ngIf="hasTags()" class="tags-section">
+    <hr>
+    <div class="tags-container">
+      <span *ngFor="let tag of settingKey.tags" class="tag">
+        #{{ tag }}
+      </span>
+    </div>
   </div>
 </div>

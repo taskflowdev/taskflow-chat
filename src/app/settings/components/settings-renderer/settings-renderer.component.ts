@@ -99,8 +99,8 @@ export class SettingsRendererComponent implements OnInit, OnDestroy {
   }
 
   onValueChange(newValue: any): void {
-    // Prevent changes while saving
-    if (this.isSaving) {
+    // Prevent changes while saving or when disabled
+    if (this.isSaving || this.isDisabled) {
       return;
     }
 
@@ -119,8 +119,8 @@ export class SettingsRendererComponent implements OnInit, OnDestroy {
   }
 
   onResetToDefault(): void {
-    // Prevent reset while saving
-    if (this.isSaving) {
+    // Prevent reset while saving or when disabled
+    if (this.isSaving || this.isDisabled) {
       return;
     }
 
@@ -131,6 +131,14 @@ export class SettingsRendererComponent implements OnInit, OnDestroy {
 
   get controlType(): string {
     return this.settingKey.type || 'text';
+  }
+
+  get isDisabled(): boolean {
+    return !!this.settingKey?.disabled;
+  }
+
+  get isDeprecated(): boolean {
+    return !!this.settingKey?.deprecated;
   }
 
   get hasOptions(): boolean {
@@ -201,5 +209,12 @@ export class SettingsRendererComponent implements OnInit, OnDestroy {
         label
       };
     });
+  }
+
+  /**
+   * Check if the setting has tags to display
+   */
+  hasTags(): boolean {
+    return !!this.settingKey.tags && this.settingKey.tags.length > 0;
   }
 }
