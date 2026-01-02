@@ -1,6 +1,7 @@
 import { Component, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { CommonTooltipDirective } from "../../../shared/components/common-tooltip";
+import { DateTimeFormatService } from '../../../core/services/datetime-format.service';
 
 export interface ChatMessageData {
   messageId: string;
@@ -24,33 +25,14 @@ export interface ChatMessageData {
 export class ChatMessageComponent {
   @Input() message!: ChatMessageData;
 
+  constructor(private dateTimeFormatService: DateTimeFormatService) {}
+
   getTimeDisplay(timeString: string): string {
-    const messageTime = new Date(timeString);
-    return messageTime.toLocaleTimeString([], {
-      hour: 'numeric',
-      minute: '2-digit',
-      hour12: true
-    })
-      .replace('am', 'AM')
-      .replace('pm', 'PM');
+    return this.dateTimeFormatService.formatTime(timeString);
   }
 
   getDateDisplay(timeString: string): string {
-    const messageTime = new Date(timeString);
-    const now = new Date();
-    const diffInDays = Math.floor((now.getTime() - messageTime.getTime()) / (1000 * 60 * 60 * 24));
-
-    if (diffInDays === 0) {
-      return 'Today';
-    } else if (diffInDays === 1) {
-      return 'Yesterday';
-    } else {
-      return messageTime.toLocaleDateString([], {
-        month: 'short',
-        day: 'numeric',
-        year: 'numeric'
-      });
-    }
+    return this.dateTimeFormatService.formatDate(timeString);
   }
 
   /**
@@ -73,34 +55,17 @@ export class ChatMessageComponent {
   }
 
   /**
-   * Formats a given date-time string into a professional tooltip with:
-   * - Day of the week (e.g., "Monday")
-   * - Day of the month (e.g., 29)
-   * - Full month name (e.g., "October")
-   * - Full year (e.g., 2025)
-   * - Time in 12-hour format with AM/PM in a concise style (e.g., "6:46 PM")
+   * Formats a given date-time string into a professional tooltip with user's time format
    *
    * @param {string} [timeString] - The ISO 8601 date-time string (e.g., "2025-10-29T14:30:00").
    *                                If no string is provided, returns an empty string.
    *
    * @returns {string} A formatted string for display in a tooltip.
-   *                   Example: "Wednesday 29 October 2025 at 6:46 PM"
+   *                   Example: "Wednesday 29 October 2025 at 6:46 PM" (12h format)
+   *                            "Wednesday 29 October 2025 at 18:46" (24h format)
    */
   getDateTimeTooltip(timeString?: string): string {
     if (!timeString) return '';
-
-    const messageTime = new Date(timeString);
-
-    // Format date components
-    const weekday = messageTime.toLocaleString([], { weekday: 'long' });
-    const day = messageTime.getDate();
-    const month = messageTime.toLocaleString([], { month: 'long' });
-    const year = messageTime.getFullYear();
-
-    // Format time in 12-hour format with concise AM/PM (e.g., "6:46 PM")
-    const time = messageTime.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit', hour12: true }).replace('am', 'AM').replace('pm', 'PM');
-
-    // Return formatted string
-    return `${weekday} ${day} ${month} ${year} at ${time}`;
+    return this.dateTimeFormatService.formatDateTimeTooltip(timeString);
   }
 }
