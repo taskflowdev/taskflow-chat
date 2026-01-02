@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { GroupMemberDto } from '../../../api/models/group-member-dto';
 import { CommonTooltipDirective, TooltipPosition } from '../../../shared/components/common-tooltip/common-tooltip.component';
 import { TranslatePipe, I18nService } from '../../../core/i18n';
+import { DateTimeFormatService } from '../../../core/services/datetime-format.service';
 
 /**
  * Member list item component for displaying individual group members
@@ -75,7 +76,10 @@ export class MemberListItemComponent {
   // Expose TooltipPosition enum to template
   readonly TooltipPosition = TooltipPosition;
 
-  constructor(private i18n: I18nService) {}
+  constructor(
+    private i18n: I18nService,
+    private dateTimeFormatService: DateTimeFormatService
+  ) {}
 
   /**
    * Check if member is an admin
@@ -189,34 +193,17 @@ export class MemberListItemComponent {
   }
 
   /**
-   * Formats a given date-time string into a professional tooltip with:
-   * - Day of the week (e.g., "Monday")
-   * - Day of the month (e.g., 29)
-   * - Full month name (e.g., "October")
-   * - Full year (e.g., 2025)
-   * - Time in 12-hour format with AM/PM in a concise style (e.g., "6:46 PM")
+   * Formats a given date-time string into a professional tooltip with user's time format
    *
    * @param {string} [timeString] - The ISO 8601 date-time string (e.g., "2025-10-29T14:30:00").
    *                                If no string is provided, returns an empty string.
    *
    * @returns {string} A formatted string for display in a tooltip.
-   *                   Example: "Wednesday 29 October 2025 at 6:46 PM"
+   *                   Example: "2 January 2025, 2:30 PM" (12h format)
+   *                            "2 January 2025, 14:30" (24h format)
    */
   getDateTimeTooltip(timeString?: string): string {
     if (!timeString) return '';
-
-    const messageTime = new Date(timeString);
-
-    // Format date components
-    const weekday = messageTime.toLocaleString([], { weekday: 'long' });
-    const day = messageTime.getDate();
-    const month = messageTime.toLocaleString([], { month: 'long' });
-    const year = messageTime.getFullYear();
-
-    // Format time in 12-hour format with concise AM/PM (e.g., "6:46 PM")
-    const time = messageTime.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit', hour12: true }).replace('am', 'AM').replace('pm', 'PM');
-
-    // Return formatted string
-    return `${day} ${month} ${year}, ${time}`;
+    return this.dateTimeFormatService.formatDateTimeTooltip(timeString);
   }
 }

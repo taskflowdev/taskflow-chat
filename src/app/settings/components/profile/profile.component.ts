@@ -5,6 +5,7 @@ import { AuthService, AuthUser } from '../../../auth/services/auth.service';
 import { SkeletonLoaderComponent } from '../../../shared/components/skeleton-loader/skeleton-loader.component';
 import { TranslatePipe } from '../../../core/i18n';
 import { getUserInitials } from '../../../shared/utils/user.utils';
+import { DateTimeFormatService } from '../../../core/services/datetime-format.service';
 
 @Component({
   selector: 'app-profile',
@@ -18,7 +19,8 @@ export class ProfileComponent implements OnInit {
   currentUser$: Observable<AuthUser | null>;
   
   constructor(
-    private authService: AuthService
+    private authService: AuthService,
+    private dateTimeFormatService: DateTimeFormatService
   ) {
     this.currentUser$ = this.authService.currentUser$;
   }
@@ -38,19 +40,6 @@ export class ProfileComponent implements OnInit {
    * Format date to readable string
    */
   formatDate(dateString: string | undefined): string {
-    if (!dateString) {
-      return 'N/A';
-    }
-    
-    try {
-      const date = new Date(dateString);
-      return date.toLocaleDateString('en-US', {
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric'
-      });
-    } catch {
-      return 'N/A';
-    }
+    return this.dateTimeFormatService.formatFullDate(dateString);
   }
 }

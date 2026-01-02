@@ -8,6 +8,7 @@ import { CatalogResponse } from '../../api/models/catalog-response';
 import { UpdateSettingsRequest } from '../../api/models/update-settings-request';
 import { ThemeService, ThemeMode, FontSize } from './theme.service';
 import { SettingsCacheService } from './settings-cache.service';
+import { DateTimeFormatService, TimeFormat } from './datetime-format.service';
 
 /**
  * Sync status for individual settings
@@ -30,6 +31,7 @@ export interface SettingSyncState {
 export const APPEARANCE_SETTING_CATEGORY = 'appearance';
 export const THEME_SETTING_KEY = 'appearance.theme';
 export const FONTSIZE_SETTING_KEY = 'appearance.fontSize';
+export const TIMEFORMAT_SETTING_KEY = 'appearance.timeFormat';
 export const LANGUAGE_SETTING_CATEGORY = 'language';
 export const LANGUAGE_SETTING_KEY = 'language.interface';
 
@@ -85,7 +87,8 @@ export class UserSettingsService implements OnDestroy {
     private settingsService: SettingsService,
     private catalogService: CatalogService,
     private themeService: ThemeService,
-    private settingsCacheService: SettingsCacheService
+    private settingsCacheService: SettingsCacheService,
+    private dateTimeFormatService: DateTimeFormatService
   ) {
     // Initialize save queue subscription
     // This is intentional for a singleton service and will live for app lifetime
@@ -428,6 +431,11 @@ export class UserSettingsService implements OnDestroy {
       this.themeService.setFontSize(value);
     }
 
+    // Apply time format changes
+    if (category === APPEARANCE_SETTING_CATEGORY && key === TIMEFORMAT_SETTING_KEY) {
+      this.dateTimeFormatService.setTimeFormat(value as TimeFormat);
+    }
+
     // Apply language changes (async with loading state)
     if (category === LANGUAGE_SETTING_CATEGORY && key === LANGUAGE_SETTING_KEY) {
       const i18n = this.getI18nService();
@@ -442,7 +450,7 @@ export class UserSettingsService implements OnDestroy {
   }
 
   /**
-   * Apply theme, typography, and language from loaded settings
+   * Apply theme, typography, language, and time format from loaded settings
    * This is the single source of truth for applying user preferences
    */
   private applyThemeFromSettings(settings: EffectiveSettingsResponse | null): void {
@@ -455,14 +463,18 @@ export class UserSettingsService implements OnDestroy {
     const appearanceSettings = settings.settings[APPEARANCE_SETTING_CATEGORY];
     const languageSettings = settings.settings[LANGUAGE_SETTING_CATEGORY];
 
-    // Extract theme and fontSize from settings, with fallbacks
+    // Extract theme, fontSize, and timeFormat from settings, with fallbacks
     // Keys are stored under the 'appearance' category (e.g. settings.appearance.theme)
     const theme = (appearanceSettings?.[THEME_SETTING_KEY] || 'system') as ThemeMode;
     const fontSize = (appearanceSettings?.[FONTSIZE_SETTING_KEY] || 'medium') as FontSize;
+    const timeFormat = (appearanceSettings?.[TIMEFORMAT_SETTING_KEY] || '12h') as TimeFormat;
 
     // Initialize theme service with user preferences
     // This ensures theme is applied only once with correct values
     this.themeService.initialize(theme, fontSize);
+
+    // Apply time format preference
+    this.dateTimeFormatService.setTimeFormat(timeFormat);
 
     // Apply language setting if available
     const language = languageSettings?.[LANGUAGE_SETTING_KEY];
