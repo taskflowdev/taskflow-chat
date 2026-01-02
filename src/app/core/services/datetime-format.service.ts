@@ -119,7 +119,12 @@ export class DateTimeFormatService {
       }
 
       const now = new Date();
-      const diffInDays = Math.floor((now.getTime() - date.getTime()) / (1000 * 60 * 60 * 24));
+      
+      // Compare dates at midnight to avoid timezone issues
+      const dateAtMidnight = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+      const nowAtMidnight = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+      
+      const diffInDays = Math.floor((nowAtMidnight.getTime() - dateAtMidnight.getTime()) / (1000 * 60 * 60 * 24));
 
       if (diffInDays === 0) {
         return 'Today';
@@ -160,11 +165,17 @@ export class DateTimeFormatService {
       }
 
       const now = new Date();
-      const diffInHours = Math.abs(now.getTime() - date.getTime()) / (1000 * 60 * 60);
+      
+      // Compare using date objects at midnight to avoid DST issues
+      const dateAtMidnight = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+      const nowAtMidnight = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+      const daysDiff = Math.floor((nowAtMidnight.getTime() - dateAtMidnight.getTime()) / (1000 * 60 * 60 * 24));
 
-      if (diffInHours < 24) {
+      if (daysDiff === 0) {
+        // Same day, show time
         return this.formatTime(timeString, format);
       } else {
+        // Different day, show date
         return date.toLocaleDateString([], { month: 'long', day: 'numeric' });
       }
     } catch (error) {
@@ -274,8 +285,9 @@ export class DateTimeFormatService {
       hour12: true
     });
     
-    // Ensure consistent AM/PM capitalization
-    return formatted.replace('am', 'AM').replace('pm', 'PM');
+    // Ensure consistent AM/PM capitalization using regex with word boundaries
+    // This prevents incorrect replacements in locales that might have 'am' or 'pm' as substrings
+    return formatted.replace(/\bam\b/gi, 'AM').replace(/\bpm\b/gi, 'PM');
   }
 
   /**
