@@ -1,41 +1,59 @@
 .form-switch {
-  padding-left: 2.5em;
+  display: inline-flex;
+  align-items: center;
+  padding-left: 0;
   transition: opacity 0.2s ease-in-out;
+}
 
-  .form-check-input {
-    width: 3em;
-    height: 1.5em;
-    cursor: pointer;
-    background-color: var(--taskflow-color-toggle-off-bg);
-    border-color: var(--taskflow-color-toggle-off-border);
-    transition: background-color 0.2s ease, border-color 0.2s ease,
-      opacity 0.2s ease-in-out;
+.form-check-input {
+  appearance: none;
+  -webkit-appearance: none;
+  position: relative;
+  width: 44px;
+  height: 24px;
+  margin: 0;
+  border-radius: 6px;
+  border: 1px solid var(--taskflow-color-toggle-off-border);
+  background-color: var(--taskflow-color-toggle-off-bg);
+  background-image: none;
+  cursor: pointer;
+  outline: none;
+  transition: background-color 0.2s ease, border-color 0.2s ease,
+    box-shadow 0.2s ease, opacity 0.2s ease-in-out;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 3px;
+    left: 4px;
+    width: 16px;
+    height: 16px;
+    border-radius: 4px;
+    background-color: var(--taskflow-color-toggle-off-handle);
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08);
+    transition: transform 0.2s ease, background-color 0.2s ease,
+      box-shadow 0.2s ease;
+  }
+
+  &:checked {
+    background-color: var(--taskflow-color-toggle-on-bg);
+    border-color: var(--taskflow-color-toggle-on-border);
 
     &::before {
-      background-color: var(--taskflow-color-toggle-off-handle) !important;
-      transition: transform 0.2s ease;
+      transform: translateX(18px);
+      background-color: var(--taskflow-color-toggle-on-handle);
     }
+  }
 
-    &:checked {
-      background-color: var(--taskflow-color-toggle-on-bg);
-      border-color: var(--taskflow-color-toggle-on-border);
+  &:disabled {
+    background-color: var(--taskflow-color-toggle-disabled-bg);
+    border-color: var(--taskflow-color-toggle-disabled-border);
+    cursor: not-allowed;
+    opacity: 0.6;
 
-      &::before {
-        background-color: var(--taskflow-color-toggle-on-handle) !important;
-      }
-    }
-
-    &:disabled {
-      background-color: var(--taskflow-color-toggle-disabled-bg);
-      border-color: var(--taskflow-color-toggle-disabled-border);
-      cursor: not-allowed;
-      opacity: 0.5;
-
-      &::before {
-        background-color: var(
-          --taskflow-color-toggle-disabled-handle
-        ) !important;
-      }
+    &::before {
+      background-color: var(--taskflow-color-toggle-disabled-handle);
+      box-shadow: none;
     }
   }
 }

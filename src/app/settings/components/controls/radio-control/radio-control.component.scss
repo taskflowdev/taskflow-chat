@@ -1,32 +1,83 @@
-.radio-group {
-  display: flex;
-  flex-direction: column;
-  gap: 0.75rem;
-  transition: opacity 0.2s ease-in-out;
+.radio-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 12px;
+  width: 100%;
 }
 
-.form-check {
-  padding-left: 1.5em;
-  transition: opacity 0.2s ease-in-out;
+.radio-tile {
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  padding: 12px;
+  border: none;
+  border-radius: 8px;
+  background-color: var(--taskflow-color-surface-hover, #f6f8fa);
+  font-size: var(--taskflow-font-font-size-normal);
+  color: var(--taskflow-color-text-primary, #24292f);
+  cursor: pointer !important;
+  user-select: none;
+  text-align: left;
 
-  .form-check-input {
-    cursor: pointer;
-    transition: opacity 0.2s ease-in-out;
+  // &:hover:not(.disabled) {
+  //   background-color: var(--taskflow-color-surface-hover, #e1e4e8);
+  // }
 
-    &:disabled {
-      cursor: not-allowed;
-      opacity: 0.5;
+  &.selected {
+    border: 1px solid var(--taskflow-color-badge-beta-bg, #0969da);
+    .radio-icon {
+      color: var(--taskflow-color-badge-beta-bg, #0969da);
     }
   }
 
-  .form-check-label {
-    cursor: pointer;
-    font-size: var(--taskflow-font-font-size-normal);
-    transition: opacity 0.2s ease-in-out;
-
-    &:has(+ input:disabled) {
-      cursor: not-allowed;
-      opacity: 0.5;
-    }
+  &.disabled {
+    cursor: not-allowed;
+    opacity: 0.6;
   }
+}
+
+.radio-input {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.radio-tile.disabled .radio-input {
+  cursor: not-allowed;
+}
+
+.radio-content {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 6px;
+}
+
+.radio-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--taskflow-color-text-secondary, #57606a);
+  font-size: var(--taskflow-font-icon-size-lg);
+}
+
+.radio-label {
+  font-weight: 600;
+  color: var(--taskflow-color-text-primary, #24292f);
+  line-height: var(--taskflow-font-line-height-compact);
+}
+
+.radio-check {
+  position: absolute;
+  top: 50%;
+  right: 18px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transform: translateY(-50%);
+  color: var(--taskflow-color-badge-beta-bg, #0969da);
+  font-size: var(--taskflow-font-icon-size-lg);
+  pointer-events: none;
 }
