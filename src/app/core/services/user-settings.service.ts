@@ -31,7 +31,7 @@ export interface SettingSyncState {
 export const APPEARANCE_SETTING_CATEGORY = 'appearance';
 export const THEME_SETTING_KEY = 'appearance.theme';
 export const FONTSIZE_SETTING_KEY = 'appearance.fontSize';
-export const TIMEFORMAT_SETTING_KEY = 'appearance.timeFormat';
+export const TIMEFORMAT_SETTING_KEY = 'language.timeFormat';
 export const LANGUAGE_SETTING_CATEGORY = 'language';
 export const LANGUAGE_SETTING_KEY = 'language.interface';
 
@@ -432,7 +432,7 @@ export class UserSettingsService implements OnDestroy {
     }
 
     // Apply time format changes
-    if (category === APPEARANCE_SETTING_CATEGORY && key === TIMEFORMAT_SETTING_KEY) {
+    if (category === LANGUAGE_SETTING_CATEGORY && key === TIMEFORMAT_SETTING_KEY) {
       this.dateTimeFormatService.setTimeFormat(value as TimeFormat);
     }
 
@@ -467,7 +467,7 @@ export class UserSettingsService implements OnDestroy {
     // Keys are stored under the 'appearance' category (e.g. settings.appearance.theme)
     const theme = (appearanceSettings?.[THEME_SETTING_KEY] || 'system') as ThemeMode;
     const fontSize = (appearanceSettings?.[FONTSIZE_SETTING_KEY] || 'medium') as FontSize;
-    const timeFormat = (appearanceSettings?.[TIMEFORMAT_SETTING_KEY] || '12h') as TimeFormat;
+    const timeFormat = (languageSettings?.[TIMEFORMAT_SETTING_KEY] || '12h') as TimeFormat;
 
     // Initialize theme service with user preferences
     // This ensures theme is applied only once with correct values
