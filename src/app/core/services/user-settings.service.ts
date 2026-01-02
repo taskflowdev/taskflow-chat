@@ -9,6 +9,7 @@ import { UpdateSettingsRequest } from '../../api/models/update-settings-request'
 import { ThemeService, ThemeMode, FontSize } from './theme.service';
 import { SettingsCacheService } from './settings-cache.service';
 import { DateTimeFormatService, TimeFormat } from './datetime-format.service';
+import { TypingIndicatorSettingsService } from './typing-indicator-settings.service';
 
 /**
  * Sync status for individual settings
@@ -34,6 +35,8 @@ export const FONTSIZE_SETTING_KEY = 'appearance.fontSize';
 export const TIMEFORMAT_SETTING_KEY = 'language.timeFormat';
 export const LANGUAGE_SETTING_CATEGORY = 'language';
 export const LANGUAGE_SETTING_KEY = 'language.interface';
+export const CHAT_SETTING_CATEGORY = 'chat';
+export const SHOW_TYPING_INDICATOR_KEY = 'chat.showTypingIndicator';
 
 /**
  * Interface for I18nService to avoid circular dependency
@@ -88,7 +91,8 @@ export class UserSettingsService implements OnDestroy {
     private catalogService: CatalogService,
     private themeService: ThemeService,
     private settingsCacheService: SettingsCacheService,
-    private dateTimeFormatService: DateTimeFormatService
+    private dateTimeFormatService: DateTimeFormatService,
+    private typingIndicatorSettingsService: TypingIndicatorSettingsService
   ) {
     // Initialize save queue subscription
     // This is intentional for a singleton service and will live for app lifetime
@@ -436,6 +440,11 @@ export class UserSettingsService implements OnDestroy {
       this.dateTimeFormatService.setTimeFormat(value as TimeFormat);
     }
 
+    // Apply typing indicator changes
+    if (category === CHAT_SETTING_CATEGORY && key === SHOW_TYPING_INDICATOR_KEY) {
+      this.typingIndicatorSettingsService.setEnabled(value === true);
+    }
+
     // Apply language changes (async with loading state)
     if (category === LANGUAGE_SETTING_CATEGORY && key === LANGUAGE_SETTING_KEY) {
       const i18n = this.getI18nService();
@@ -450,7 +459,7 @@ export class UserSettingsService implements OnDestroy {
   }
 
   /**
-   * Apply theme, typography, language, and time format from loaded settings
+   * Apply theme, typography, language, time format, and chat settings from loaded settings
    * This is the single source of truth for applying user preferences
    */
   private applyThemeFromSettings(settings: EffectiveSettingsResponse | null): void {
@@ -462,12 +471,14 @@ export class UserSettingsService implements OnDestroy {
 
     const appearanceSettings = settings.settings[APPEARANCE_SETTING_CATEGORY];
     const languageSettings = settings.settings[LANGUAGE_SETTING_CATEGORY];
+    const chatSettings = settings.settings[CHAT_SETTING_CATEGORY];
 
     // Extract theme, fontSize, and timeFormat from settings, with fallbacks
     // Keys are stored under the 'appearance' category (e.g. settings.appearance.theme)
     const theme = (appearanceSettings?.[THEME_SETTING_KEY] || 'system') as ThemeMode;
     const fontSize = (appearanceSettings?.[FONTSIZE_SETTING_KEY] || 'medium') as FontSize;
     const timeFormat = (languageSettings?.[TIMEFORMAT_SETTING_KEY] || '12h') as TimeFormat;
+    const showTypingIndicator = chatSettings?.[SHOW_TYPING_INDICATOR_KEY] !== false; // Default to true
 
     // Initialize theme service with user preferences
     // This ensures theme is applied only once with correct values
@@ -475,6 +486,9 @@ export class UserSettingsService implements OnDestroy {
 
     // Apply time format preference
     this.dateTimeFormatService.setTimeFormat(timeFormat);
+
+    // Apply typing indicator preference
+    this.typingIndicatorSettingsService.setEnabled(showTypingIndicator);
 
     // Apply language setting if available
     const language = languageSettings?.[LANGUAGE_SETTING_KEY];

@@ -9,8 +9,10 @@ import { GroupInfoDialogComponent } from '../group-info-dialog/group-info-dialog
 import { CommonDropdownComponent, DropdownItem } from '../../../shared/components/common-dropdown/common-dropdown.component';
 import { CommonTooltipDirective, TooltipPosition } from '../../../shared/components/common-tooltip';
 import { ScrollToBottomButtonComponent } from '../scroll-to-bottom-button';
+import { TypingIndicatorComponent } from '../typing-indicator';
 import { AutoScrollService } from '../../services/auto-scroll.service';
 import { TranslatePipe, I18nService } from '../../../core/i18n';
+import { TypingIndicatorSettingsService } from '../../../core/services/typing-indicator-settings.service';
 
 export interface ConversationData {
   groupId: string;
@@ -21,7 +23,7 @@ export interface ConversationData {
 
 @Component({
   selector: 'app-chat-conversation',
-  imports: [CommonModule, FormsModule, ChatMessageComponent, SkeletonLoaderComponent, GroupInfoDialogComponent, CommonDropdownComponent, CommonTooltipDirective, ScrollToBottomButtonComponent, TranslatePipe],
+  imports: [CommonModule, FormsModule, ChatMessageComponent, SkeletonLoaderComponent, GroupInfoDialogComponent, CommonDropdownComponent, CommonTooltipDirective, ScrollToBottomButtonComponent, TypingIndicatorComponent, TranslatePipe],
   providers: [AutoScrollService],
   templateUrl: './chat-conversation.component.html',
   styleUrls: ['./chat-conversation.component.scss']
@@ -47,6 +49,7 @@ export class ChatConversationComponent implements AfterViewChecked, OnInit, OnDe
   private fragmentSubscription?: Subscription;
   private autoScrollSubscription?: Subscription;
   private typingTimeout?: number; // Typing indicator timeout
+  showTypingIndicator = true; // Whether to show typing indicator based on user setting
 
   // Auto-scroll state
   showScrollButton = false;
@@ -74,6 +77,7 @@ export class ChatConversationComponent implements AfterViewChecked, OnInit, OnDe
     private autoScrollService: AutoScrollService,
     private cdr: ChangeDetectorRef,
     private i18n: I18nService,
+    private typingIndicatorSettingsService: TypingIndicatorSettingsService,
     @Inject(PLATFORM_ID) private platformId: Object
   ) {
     this.updateTranslations();
@@ -111,6 +115,12 @@ export class ChatConversationComponent implements AfterViewChecked, OnInit, OnDe
       // Subscribe to auto-scroll state
       this.autoScrollSubscription = this.autoScrollService.isNearBottom$.subscribe(isNear => {
         this.showScrollButton = !isNear;
+        this.cdr.markForCheck();
+      });
+
+      // Subscribe to typing indicator setting
+      this.typingIndicatorSettingsService.isEnabled$().subscribe(enabled => {
+        this.showTypingIndicator = enabled;
         this.cdr.markForCheck();
       });
     }
@@ -252,20 +262,11 @@ export class ChatConversationComponent implements AfterViewChecked, OnInit, OnDe
   }
 
   /**
-   * Get typing users display text
+   * Get whether typing indicator should be visible
+   * Combines user setting with actual typing state
    */
-  get typingUsersText(): string {
-    if (!this.typingUsers || this.typingUsers.length === 0) {
-      return '';
-    }
-
-    if (this.typingUsers.length === 1) {
-      return `${this.typingUsers[0]} is typing...`;
-    } else if (this.typingUsers.length === 2) {
-      return `${this.typingUsers[0]} and ${this.typingUsers[1]} are typing...`;
-    } else {
-      return `${this.typingUsers[0]} and ${this.typingUsers.length - 1} others are typing...`;
-    }
+  get shouldShowTypingIndicator(): boolean {
+    return this.showTypingIndicator && this.typingUsers && this.typingUsers.length > 0;
   }
 
   /**
