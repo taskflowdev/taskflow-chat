@@ -1,8 +1,14 @@
-<div class="radio-group">
-  <div class="form-check" *ngFor="let option of options">
+<div class="radio-grid" role="radiogroup" [attr.aria-disabled]="disabled">
+  <label
+    class="radio-tile"
+    *ngFor="let option of options"
+    [class.selected]="value === option.value"
+    [class.disabled]="disabled"
+    [attr.for]="name + '-' + option.value"
+  >
     <input
-      class="form-check-input"
       type="radio"
+      class="radio-input"
       [name]="name"
       [id]="name + '-' + option.value"
       [value]="option.value"
@@ -10,8 +16,14 @@
       [disabled]="disabled"
       (change)="onChange(option.value)"
     />
-    <label class="form-check-label" [for]="name + '-' + option.value">
-      {{ option.label }}
-    </label>
-  </div>
+    <span class="radio-content">
+      <span class="radio-icon" *ngIf="option.icon">
+        <i class="bi" [ngClass]="'bi-' + option.icon"></i>
+      </span>
+      <span class="radio-label">{{ option.label }}</span>
+    </span>
+    <span class="radio-check" *ngIf="value === option.value">
+      <i class="bi bi-check-circle-fill"></i>
+    </span>
+  </label>
 </div>
