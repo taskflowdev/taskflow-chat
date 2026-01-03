@@ -89,18 +89,27 @@ export type SkeletonType = 'text' | 'circle' | 'rectangle' | 'chat-item' | 'mess
 
       <!-- Settings sidebar skeleton -->
       <div *ngSwitchCase="'settings-sidebar'" class="skeleton-settings-sidebar" [style.opacity]="fadeOpacity">
-        <div class="skeleton skeleton-text" style="width: 120px; height: 1.75rem; margin-bottom: 1.5rem;"></div>
-        <div class="skeleton-sidebar-item" style="margin-bottom: 0.25rem;">
-          <div class="skeleton skeleton-text" style="width: 85%; height: 1.5rem;"></div>
+        <!-- Title -->
+        <div class="skeleton skeleton-text" style="width: 120px; height: 1.75rem; margin-bottom: 1rem;"></div>
+
+        <!-- Profile Section -->
+        <div class="skeleton-profile-section skeleton skeleton-text" style="padding: 0.5rem; border-radius: 6px; margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem;">
+          <!-- <div class="skeleton skeleton-circle" style="width: 40px; height: 40px; flex-shrink: 0;"></div>
+          <div style="flex: 1;">
+            <div class="skeleton skeleton-text" style="width: 70%; height: 1rem; margin-bottom: 0.25rem;"></div>
+            <div class="skeleton skeleton-text" style="width: 50%; height: 0.875rem;"></div>
+          </div> -->
+            <div style="width: 50px; height: 50px; flex-shrink: 0;">
+          </div>
         </div>
-        <div class="skeleton-sidebar-item" style="margin-bottom: 0.25rem;">
-          <div class="skeleton skeleton-text" style="width: 75%; height: 1.5rem;"></div>
-        </div>
-        <div class="skeleton-sidebar-item" style="margin-bottom: 0.25rem;">
-          <div class="skeleton skeleton-text" style="width: 80%; height: 1.5rem;"></div>
-        </div>
-        <div class="skeleton-sidebar-item" style="margin-bottom: 0.25rem;">
-          <div class="skeleton skeleton-text" style="width: 70%; height: 1.5rem;"></div>
+
+        <!-- Divider -->
+        <div style="height: 1px; background-color: var(--taskflow-color-profile-divider, #2d333b); margin-bottom: 1rem;"></div>
+
+        <!-- Menu Items Spinner -->
+        <div class="skeleton-settings-sidebar-spinner">
+          <div class="skeleton-spinner" aria-label="Loading settings categories"></div>
+          <span class="skeleton-spinner-text">Loading...</span>
         </div>
       </div>
 
