@@ -41,7 +41,7 @@
         spellcheck="false">
       <i *ngIf="searchTerm" 
          class="bi bi-x-circle clear-icon" 
-         (click)="searchTerm = ''; onSearchInput($any({target: {value: ''}}))"
+         (click)="clearSearch()"
          role="button"
          tabindex="0"
          aria-label="Clear search"></i>

@@ -22,7 +22,7 @@ export class SelectControlComponent {
   isOpen = false;
   searchTerm = '';
   focusedIndex = -1;
-  private debounceTimer?: number;
+  private debounceTimer?: ReturnType<typeof setTimeout>;
 
   constructor(private cdr: ChangeDetectorRef) {}
 
@@ -140,15 +140,24 @@ export class SelectControlComponent {
     
     // Clear existing timer
     if (this.debounceTimer) {
-      window.clearTimeout(this.debounceTimer);
+      clearTimeout(this.debounceTimer);
     }
 
     // Debounce search for performance (300ms)
-    this.debounceTimer = window.setTimeout(() => {
+    this.debounceTimer = setTimeout(() => {
       this.searchTerm = input.value;
       this.focusedIndex = 0; // Reset focus to first result
       this.cdr.markForCheck();
     }, 300);
+  }
+
+  /**
+   * Clear the search term and reset filters
+   */
+  clearSearch(): void {
+    this.searchTerm = '';
+    this.focusedIndex = 0;
+    this.cdr.markForCheck();
   }
 
   /**
