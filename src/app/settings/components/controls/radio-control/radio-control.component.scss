@@ -53,6 +53,7 @@
   flex-direction: column;
   align-items: flex-start;
   gap: 6px;
+  flex: 1;
 }
 
 .radio-icon {
@@ -63,20 +64,32 @@
   font-size: var(--taskflow-font-icon-size-lg);
 }
 
+.radio-text {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
 .radio-label {
   font-weight: 600;
   color: var(--taskflow-color-text-primary, #24292f);
   line-height: var(--taskflow-font-line-height-compact);
 }
 
+.radio-description {
+  font-size: var(--taskflow-font-font-size-small, 0.875rem);
+  color: var(--taskflow-color-text-secondary, #57606a);
+  line-height: var(--taskflow-font-line-height-normal);
+  font-weight: 400;
+}
+
 .radio-check {
   position: absolute;
-  top: 50%;
-  right: 18px;
+  top: 12px;
+  right: 12px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  transform: translateY(-50%);
   color: var(--taskflow-color-badge-beta-bg, #0969da);
   font-size: var(--taskflow-font-icon-size-lg);
   pointer-events: none;
