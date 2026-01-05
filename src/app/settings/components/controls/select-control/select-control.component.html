@@ -1,6 +1,14 @@
 <div class="custom-dropdown" [class.disabled]="disabled">
-  <button class="btn" [class.disabled]="disabled" type="button" [attr.aria-expanded]="isOpen" (click)="toggleDropdown()"
-    (blur)="closeDropdown()">
+  <button 
+    class="btn" 
+    [class.disabled]="disabled" 
+    type="button" 
+    role="combobox"
+    [attr.aria-expanded]="isOpen"
+    [attr.aria-haspopup]="true"
+    [attr.aria-controls]="'dropdown-menu'"
+    [attr.aria-label]="'Select option: ' + selectedLabel"
+    (click)="toggleDropdown()">
     <span class="dropdown-text">
       <i *ngIf="selectedIcon" [class]="'bi bi-' + selectedIcon" class="option-icon"></i>
       {{ selectedLabel }}
@@ -8,16 +16,63 @@
     <i class="bi bi-chevron-down dropdown-icon" [class.rotated]="isOpen"></i>
   </button>
 
-  <ul class="dropdown-menu" [class.show]="isOpen">
-    <li *ngFor="let option of options">
-      <button class="dropdown-item" [class.active]="isSelected(option)" type="button"
-        (mousedown)="selectOption(option)">
-        <span class="option-content">
-          <i *ngIf="option.icon" [class]="'bi bi-' + option.icon" class="option-icon"></i>
-          <span class="option-label">{{ option.label }}</span>
-        </span>
-        <i *ngIf="isSelected(option)" class="bi bi-check-circle-fill check-icon"></i>
-      </button>
-    </li>
-  </ul>
+  <div 
+    #dropdownMenu
+    id="dropdown-menu"
+    class="dropdown-menu" 
+    [class.show]="isOpen"
+    role="listbox"
+    [attr.aria-label]="'Available options'"
+    (click)="onDropdownClick($event)"
+    (keydown)="onKeyDown($event)">
+    
+    <!-- Search Input -->
+    <div class="search-container">
+      <i class="bi bi-search search-icon"></i>
+      <input 
+        #searchInput
+        type="text"
+        class="search-input"
+        placeholder="Search options..."
+        [value]="searchTerm"
+        (input)="onSearchInput($event)"
+        aria-label="Search options"
+        autocomplete="off"
+        spellcheck="false">
+      <i *ngIf="searchTerm" 
+         class="bi bi-x-circle clear-icon" 
+         (click)="searchTerm = ''; onSearchInput($any({target: {value: ''}}))"
+         role="button"
+         tabindex="0"
+         aria-label="Clear search"></i>
+    </div>
+
+    <!-- Options List -->
+    <ul class="options-list" *ngIf="filteredOptions.length > 0">
+      <li *ngFor="let option of filteredOptions; let i = index">
+        <button 
+          class="dropdown-item" 
+          [class.active]="isSelected(option)"
+          [class.focused]="isFocused(i)"
+          type="button"
+          role="option"
+          [attr.aria-selected]="isSelected(option)"
+          (mousedown)="selectOption(option)"
+          (mouseenter)="onOptionMouseEnter(i)">
+          <span class="option-content">
+            <i *ngIf="option.icon" [class]="'bi bi-' + option.icon" class="option-icon"></i>
+            <span class="option-label">{{ option.label }}</span>
+          </span>
+          <i *ngIf="isSelected(option)" class="bi bi-check-circle-fill check-icon"></i>
+        </button>
+      </li>
+    </ul>
+
+    <!-- No Results State -->
+    <div class="no-results" *ngIf="hasNoResults">
+      <i class="bi bi-search"></i>
+      <p>No results found</p>
+      <span class="no-results-hint">Try a different search term</span>
+    </div>
+  </div>
 </div>
