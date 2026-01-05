@@ -2,6 +2,7 @@ import { Component, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 export type SkeletonType = 'text' | 'circle' | 'rectangle' | 'chat-item' | 'message' | 'chat-header' | 'settings-sidebar' | 'settings-item' | 'settings-category' | 'profile-page';
+export type ControlType = 'select' | 'radio';
 
 /**
  * Reusable skeleton loader component with dark theme support
@@ -136,7 +137,40 @@ export type SkeletonType = 'text' | 'circle' | 'rectangle' | 'chat-item' | 'mess
           </div>
         </div>
         <div class="skeleton-item-control">
-          <div class="skeleton skeleton-rectangle" style="width: 160px; height: 38px;"></div>
+          <!-- Select control skeleton -->
+          <div *ngIf="controlType === 'select'" class="skeleton-select-control">
+            <div class="skeleton skeleton-rectangle" style="width: 160px; height: 38px;"></div>
+          </div>
+          <!-- Radio control skeleton -->
+          <div *ngIf="controlType === 'radio'" class="skeleton-radio-control">
+            <div class="skeleton-radio-group">
+              <div class="skeleton-radio-option">
+                <div class="skeleton skeleton-rectangle" style="width: 100%; height: 80px;"></div>
+              </div>
+              <div class="skeleton-radio-option">
+                <div class="skeleton skeleton-rectangle" style="width: 100%; height: 80px;"></div>
+              </div>
+              <div class="skeleton-radio-option">
+                <div class="skeleton skeleton-rectangle" style="width: 100%; height: 80px;"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tags Section -->
+        <div *ngIf="showTags" class="skeleton-tags-section">
+          <hr>
+          <div class="skeleton-tags-container">
+            <div class="skeleton-tag">
+              <div style="width: 60px; height: 1.25rem;"></div>
+            </div>
+            <div class="skeleton-tag">
+              <div style="width: 75px; height: 1.25rem;"></div>
+            </div>
+            <div class="skeleton-tag">
+              <div style="width: 50px; height: 1.25rem;"></div>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -188,6 +222,8 @@ export class SkeletonLoaderComponent {
   @Input() count: number = 1;
   @Input() fadeOpacity: number = 1; // For progressive fade effect
   @Input() showBackButton: boolean = false; // For chat-header skeleton
+  @Input() controlType: ControlType = 'select'; // For settings-item skeleton
+  @Input() showTags: boolean = true; // For settings-item skeleton with tags
 
   constructor() { }
 }

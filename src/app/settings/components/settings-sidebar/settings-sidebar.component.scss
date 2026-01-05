@@ -22,7 +22,7 @@
   display: flex;
   align-items: center;
   padding: 0.5rem 0.75rem;
-  border-radius: 6px;
+  border-radius: 8px;
   text-decoration: none;
   color: var(--taskflow-color-text-primary);
   font-size: var(--taskflow-font-font-size-normal);
@@ -107,8 +107,8 @@
 }
 
 .avatar-circle-small {
-  width: 42px;
-  height: 42px;
+  width: 45px;
+  height: 45px;
   border-radius: 50%;
   background: var(--taskflow-color-profile-sidebar-avatar-bg);
   color: var(--taskflow-color-profile-sidebar-avatar-text);
@@ -168,7 +168,7 @@
   font-size: var(--taskflow-font-font-size-x-small);
   font-weight: 500;
   line-height: 1.4;
-  border-radius: 12px;
+  border-radius: 8px;
   text-transform: uppercase;
   letter-spacing: 0.03em;
   flex-shrink: 0;

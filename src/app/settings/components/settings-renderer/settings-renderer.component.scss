@@ -2,7 +2,7 @@
   position: relative;
   padding: 20px;
   border: 1px solid var(--taskflow-color-border, #d0d7de);
-  border-radius: 6px;
+  border-radius: 8px;
   background-color: var(--taskflow-color-surface, #ffffff);
   transition: border-color 0.12s cubic-bezier(0.2, 0, 0.38, 0.9),
     box-shadow 0.12s cubic-bezier(0.2, 0, 0.38, 0.9), opacity 0.2s ease-in-out;
