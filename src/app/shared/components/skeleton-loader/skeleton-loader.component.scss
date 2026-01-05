@@ -35,7 +35,7 @@
 }
 
 .skeleton-rectangle {
-  border-radius: 4px;
+  border-radius: 6px;
 }
 
 .skeleton-chat-item {
@@ -242,6 +242,54 @@
 
   .skeleton-item-control {
     margin-top: 0;
+  }
+
+  .skeleton-select-control {
+    display: flex;
+    justify-content: flex-start;
+  }
+
+  .skeleton-radio-control {
+    display: flex;
+    justify-content: flex-start;
+    width: 100%;
+  }
+
+  .skeleton-radio-group {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+    width: 100%;
+  }
+
+  .skeleton-radio-option {
+    flex: 1;
+    display: flex;
+    min-width: 0;
+  }
+
+  .skeleton-tags-section {
+    margin-top: 16px;
+
+    // hr {
+    //   border: none;
+    //   border-top: 1px solid var(--taskflow-color-border, #d0d7de) !important;
+    //   margin-bottom: 1rem;
+    // }
+  }
+
+  .skeleton-tags-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .skeleton-tag {
+    display: inline-flex;
+    align-items: center;
+    padding: 4px 8px;
+    border-radius: 8px;
+    background-color: var(--taskflow-color-surface-hover, #f6f8fa);
   }
 }
 
