@@ -127,7 +127,7 @@
       display: flex;
       align-items: center;
       margin-bottom: 6px;
-      padding: 0 4px;
+      padding: 0 0;
 
       .search-icon {
         position: absolute;
@@ -185,7 +185,7 @@
     .options-list {
       display: flex;
       flex-direction: column;
-      gap: 2px;
+      gap: 6px;
       list-style: none;
       padding: 0;
       margin: 0;
@@ -245,7 +245,6 @@
         text-align: center;
         vertical-align: middle;
         font-size: var(--taskflow-font-icon-size-sm);
-        font-weight: 600;
         color: var(--taskflow-color-text-secondary);
         flex-shrink: 0;
       }
@@ -253,8 +252,6 @@
       // Keyboard focus state (ArrowDown/ArrowUp)
       &.focused:not(.active) {
         background-color: var(--taskflow-color-dropdown-item-active);
-        outline: 2px solid var(--taskflow-color-border);
-        outline-offset: -2px;
       }
 
       &:hover:not(.active) {
@@ -264,7 +261,6 @@
       &.active {
         background-color: var(--taskflow-color-dropdown-item-active);
         color: var(--taskflow-color-text-primary);
-        font-weight: 500;
 
         .option-icon {
           color: var(--taskflow-color-settings-icon-active, #0969da);
