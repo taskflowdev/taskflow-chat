@@ -73,6 +73,9 @@ export class SettingsSearchResultsComponent implements OnInit, OnDestroy {
    * Navigate to a setting and scroll to it
    */
   private async navigateToSetting(result: SettingsSearchResult): Promise<void> {
+    // Clear the search to hide search results
+    this.settingsSearchService.clearSearch();
+
     // Navigate to the category page
     await this.router.navigate(['/settings', result.categoryKey]);
 

@@ -163,15 +163,15 @@
 
 // Highlight animation for scroll-to-setting
 .setting-card.setting-highlight-animation {
-  border-color: var(--settingHighlightBorder);
-  background-color: var(--settingHighlightBg);
+  border-color: var(--taskflow-color-setting-highlight-border);
+  background-color: var(--taskflow-color-setting-highlight-bg);
   animation: settingHighlight 2s ease-out;
 }
 
 @keyframes settingHighlight {
   0% {
-    border-color: var(--settingHighlightBorder);
-    background-color: var(--settingHighlightBg);
+    border-color: var(--taskflow-color-setting-highlight-border);
+    background-color: var(--taskflow-color-setting-highlight-bg);
   }
   100% {
     border-color: var(--taskflow-color-border, #d0d7de);

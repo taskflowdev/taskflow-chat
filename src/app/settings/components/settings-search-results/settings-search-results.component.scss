@@ -10,24 +10,24 @@
 
 .search-result-item {
   padding: 1rem;
-  background-color: var(--searchResultsItemBg);
-  border: 1px solid var(--searchResultsItemBorder);
+  background-color: var(--taskflow-color-search-results-item-bg);
+  border: 1px solid var(--taskflow-color-search-results-item-border);
   border-radius: 0.5rem;
   cursor: pointer;
   transition: background-color 0.2s ease, border-color 0.2s ease;
 
   &:hover {
-    background-color: var(--searchResultsItemHoverBg);
+    background-color: var(--taskflow-color-search-results-item-hover-bg);
   }
 
   &.selected {
-    background-color: var(--searchResultsItemActiveBg);
-    border-color: var(--borderActive);
+    background-color: var(--taskflow-color-search-results-item-active-bg);
+    border-color: var(--taskflow-color-border-active);
   }
 
   &:focus {
     outline: none;
-    box-shadow: 0 0 0 3px var(--focusRingSubtle);
+    box-shadow: 0 0 0 3px var(--taskflow-color-focus-ring-subtle);
   }
 }
 
@@ -40,9 +40,9 @@
 }
 
 .result-title {
-  font-size: var(--fontSizeNormal);
+  font-size: var(--taskflow-font-font-size-normal);
   font-weight: 600;
-  color: var(--searchResultsItemText);
+  color: var(--taskflow-color-search-results-item-text);
   flex: 1;
 }
 
@@ -57,11 +57,11 @@
   display: inline-flex;
   align-items: center;
   padding: 0.25rem 0.5rem;
-  font-size: var(--fontSizeXSmall);
+  font-size: var(--taskflow-font-font-size-x-small);
   font-weight: 500;
-  color: var(--searchBadgeText);
-  background-color: var(--searchBadgeBg);
-  border: 1px solid var(--searchBadgeBorder);
+  color: var(--taskflow-color-search-badge-text);
+  background-color: var(--taskflow-color-search-badge-bg);
+  border: 1px solid var(--taskflow-color-search-badge-border);
   border-radius: 0.25rem;
 }
 
@@ -69,33 +69,33 @@
   display: inline-flex;
   align-items: center;
   padding: 0.25rem 0.5rem;
-  font-size: var(--fontSizeXSmall);
+  font-size: var(--taskflow-font-font-size-x-small);
   font-weight: 500;
   border-radius: 0.25rem;
 
   &.disabled {
-    color: var(--textDisabled);
-    background-color: var(--badgeDeprecatedBg);
-    border: 1px solid var(--badgeDeprecatedBorder);
+    color: var(--taskflow-color-text-disabled);
+    background-color: var(--taskflow-color-badge-deprecated-bg);
+    border: 1px solid var(--taskflow-color-badge-deprecated-border);
   }
 
   &.admin-only {
-    color: var(--warningEmphasis);
-    background-color: var(--warningSubtle);
-    border: 1px solid var(--warningEmphasis);
+    color: var(--taskflow-color-warning-emphasis);
+    background-color: var(--taskflow-color-warning-subtle);
+    border: 1px solid var(--taskflow-color-warning-emphasis);
   }
 
   &.deprecated {
-    color: var(--badgeDeprecatedText);
-    background-color: var(--badgeDeprecatedBg);
-    border: 1px solid var(--badgeDeprecatedBorder);
+    color: var(--taskflow-color-badge-deprecated-text);
+    background-color: var(--taskflow-color-badge-deprecated-bg);
+    border: 1px solid var(--taskflow-color-badge-deprecated-border);
   }
 }
 
 .result-description {
-  font-size: var(--fontSizeSmall);
-  color: var(--searchResultsItemTextSecondary);
-  line-height: var(--lineHeightBase);
+  font-size: var(--taskflow-font-font-size-small);
+  color: var(--taskflow-color-search-results-item-text-secondary);
+  line-height: var(--taskflow-font-line-height-base);
   margin-bottom: 0.5rem;
   display: -webkit-box;
   -webkit-line-clamp: 2;
@@ -108,8 +108,8 @@
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  font-size: var(--fontSizeXSmall);
-  color: var(--searchResultsItemTextSecondary);
+  font-size: var(--taskflow-font-font-size-x-small);
+  color: var(--taskflow-color-search-results-item-text-secondary);
 }
 
 .result-group {
@@ -123,7 +123,7 @@
   justify-content: center;
   padding: 3rem 1rem;
   text-align: center;
-  color: var(--searchNoResultsText);
+  color: var(--taskflow-color-search-no-results-text);
 
   i {
     font-size: 3rem;
@@ -133,6 +133,6 @@
 
   p {
     margin: 0;
-    font-size: var(--fontSizeNormal);
+    font-size: var(--taskflow-font-font-size-normal);
   }
 }
