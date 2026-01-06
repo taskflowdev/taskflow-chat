@@ -37,7 +37,8 @@
 
     <!-- Select type - Dropdown -->
     <app-select-control *ngIf="controlType === 'select' && hasOptions" [value]="currentValue"
-      [options]="getTranslatedOptions()" [disabled]="isSaving || isDisabled" (valueChange)="onValueChange($event)">
+      [options]="getTranslatedOptions()" [label]="settingKey.label" [disabled]="isSaving || isDisabled"
+      (valueChange)="onValueChange($event)">
     </app-select-control>
 
     <!-- Radio type - Radio Group -->

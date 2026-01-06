@@ -161,14 +161,14 @@ export type ControlType = 'select' | 'radio';
         <div *ngIf="showTags" class="skeleton-tags-section">
           <hr>
           <div class="skeleton-tags-container">
-            <div class="skeleton-tag">
-              <div style="width: 60px; height: 1.25rem;"></div>
+            <div class="skeleton-tag skeleton">
+              <div class="skeleton-rectangle" style="width: 60px; height: 1.25rem;"></div>
             </div>
-            <div class="skeleton-tag">
-              <div style="width: 75px; height: 1.25rem;"></div>
+            <div class="skeleton-tag skeleton">
+              <div class="skeleton-rectangle" style="width: 75px; height: 1.25rem;"></div>
             </div>
-            <div class="skeleton-tag">
-              <div style="width: 50px; height: 1.25rem;"></div>
+            <div class="skeleton-tag skeleton">
+              <div class="skeleton-rectangle" style="width: 50px; height: 1.25rem;"></div>
             </div>
           </div>
         </div>
