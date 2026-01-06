@@ -1,14 +1,7 @@
 <div class="custom-dropdown" [class.disabled]="disabled">
-  <button 
-    class="btn" 
-    [class.disabled]="disabled" 
-    type="button" 
-    role="combobox"
-    [attr.aria-expanded]="isOpen"
-    [attr.aria-haspopup]="true"
-    [attr.aria-controls]="'dropdown-menu'"
-    [attr.aria-label]="'Select option: ' + selectedLabel"
-    (click)="toggleDropdown()">
+  <button class="btn" [class.disabled]="disabled" type="button" role="combobox" [attr.aria-expanded]="isOpen"
+    [attr.aria-haspopup]="true" [attr.aria-controls]="'dropdown-menu'"
+    [attr.aria-label]="'Select option: ' + selectedLabel" (click)="toggleDropdown()">
     <span class="dropdown-text">
       <i *ngIf="selectedIcon" [class]="'bi bi-' + selectedIcon" class="option-icon"></i>
       {{ selectedLabel }}
@@ -16,48 +9,39 @@
     <i class="bi bi-chevron-down dropdown-icon" [class.rotated]="isOpen"></i>
   </button>
 
-  <div 
-    #dropdownMenu
-    id="dropdown-menu"
-    class="dropdown-menu" 
-    [class.show]="isOpen"
-    role="listbox"
-    [attr.aria-label]="'Available options'"
-    (click)="onDropdownClick($event)"
-    (keydown)="onKeyDown($event)">
-    
+  <div #dropdownMenu id="dropdown-menu" class="dropdown-menu" [class.show]="isOpen" role="listbox"
+    [attr.aria-label]="'Available options'" (click)="onDropdownClick($event)" (keydown)="onKeyDown($event)">
+
+    <!-- Dropdown Header -->
+    <div class="dropdown-header" [class.no-search]="options.length <= 2" *ngIf="label">
+      <h3 class="dropdown-title">{{ label }}</h3>
+      <span class="option-count" *ngIf="filteredOptions.length > 0">{{ filteredOptions.length }} option<span
+          *ngIf="filteredOptions.length !== 1">s</span></span>
+    </div>
+
     <!-- Search Input -->
-    <div class="search-container">
+    <div class="search-container" *ngIf="options.length > 2">
       <i class="bi bi-search search-icon"></i>
-      <input 
-        #searchInput
-        type="text"
-        class="search-input"
-        placeholder="Search options..."
-        [value]="searchTerm"
-        (input)="onSearchInput($event)"
-        aria-label="Search options"
-        autocomplete="off"
-        spellcheck="false">
-      <i *ngIf="searchTerm" 
-         class="bi bi-x-circle clear-icon" 
-         (click)="clearSearch()"
-         role="button"
-         tabindex="0"
-         aria-label="Clear search"></i>
+      <input #searchInput type="text" class="search-input"
+        [placeholder]="label ? 'Search ' + label.toLowerCase() + '...' : 'Search options...'" [value]="searchTerm"
+        (input)="onSearchInput($event)" aria-label="Search options" autocomplete="off" spellcheck="false">
+      <i *ngIf="searchTerm" class="bi bi-x-circle clear-icon" (click)="clearSearch()" role="button" tabindex="0"
+        aria-label="Clear search"></i>
+    </div>
+
+    <!-- Search Hint -->
+    <div class="search-hint" *ngIf="!searchTerm && filteredOptions.length > 0 && options.length > 2">
+      <small>
+        <i class="bi bi-lightbulb"></i>
+        Find what you need and press Enter
+      </small>
     </div>
 
     <!-- Options List -->
     <ul class="options-list" *ngIf="filteredOptions.length > 0">
       <li *ngFor="let option of filteredOptions; let i = index">
-        <button 
-          class="dropdown-item" 
-          [class.active]="isSelected(option)"
-          [class.focused]="isFocused(i)"
-          type="button"
-          role="option"
-          [attr.aria-selected]="isSelected(option)"
-          (mousedown)="selectOption(option)"
+        <button class="dropdown-item" [class.active]="isSelected(option)" [class.focused]="isFocused(i)" type="button"
+          role="option" [attr.aria-selected]="isSelected(option)" (mousedown)="selectOption(option)"
           (mouseenter)="onOptionMouseEnter(i)">
           <span class="option-content">
             <i *ngIf="option.icon" [class]="'bi bi-' + option.icon" class="option-icon"></i>
@@ -70,9 +54,16 @@
 
     <!-- No Results State -->
     <div class="no-results" *ngIf="hasNoResults">
-      <i class="bi bi-search"></i>
-      <p>No results found</p>
-      <span class="no-results-hint">Try a different search term</span>
+      <i class="bi bi-search-icon"></i>
+      <p class="no-results-title">No results found</p>
+      <span class="no-results-hint">Try a different search term or clear your filter</span>
+    </div>
+
+    <!-- Empty State -->
+    <div class="empty-state" *ngIf="!hasNoResults && filteredOptions.length === 0 && searchTerm === ''">
+      <i class="bi bi-inbox"></i>
+      <p class="empty-state-title">No options available</p>
+      <span class="empty-state-hint">There are no options to display</span>
     </div>
   </div>
 </div>

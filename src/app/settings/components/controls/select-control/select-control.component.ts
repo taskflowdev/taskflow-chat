@@ -14,6 +14,7 @@ export class SelectControlComponent {
   @Input() value: any;
   @Input() options: SettingOption[] = [];
   @Input() disabled: boolean = false;
+  @Input() label?: string;
   @Output() valueChange = new EventEmitter<any>();
 
   @ViewChild('searchInput') searchInput?: ElementRef<HTMLInputElement>;
@@ -24,7 +25,7 @@ export class SelectControlComponent {
   focusedIndex = -1;
   private debounceTimer?: ReturnType<typeof setTimeout>;
 
-  constructor(private cdr: ChangeDetectorRef) {}
+  constructor(private cdr: ChangeDetectorRef) { }
 
   get selectedLabel(): string {
     const selected = this.options.find(opt => opt.value === this.value);
@@ -46,7 +47,7 @@ export class SelectControlComponent {
     }
 
     const searchLower = this.searchTerm.toLowerCase().trim();
-    
+
     return this.options.filter(option => {
       // Search in label (unicode-aware, case-insensitive)
       if (option.label?.toLowerCase().includes(searchLower)) {
@@ -137,7 +138,7 @@ export class SelectControlComponent {
    */
   onSearchInput(event: Event): void {
     const input = event.target as HTMLInputElement;
-    
+
     // Clear existing timer
     if (this.debounceTimer) {
       clearTimeout(this.debounceTimer);
