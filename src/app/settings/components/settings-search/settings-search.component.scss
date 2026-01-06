@@ -18,8 +18,8 @@
 
 .search-input {
   width: 100%;
-  padding: 0.75rem 1rem 0.75rem 2.75rem;
-  font-size: var(--taskflow-font-font-size-normal);
+  padding: 0.5rem 1rem 0.5rem 2.65rem;
+  font-size: var(--taskflow-font-font-size-large);
   line-height: var(--taskflow-font-line-height-base);
   color: var(--taskflow-color-search-input-text);
   background-color: var(--taskflow-color-search-input-bg);
@@ -44,8 +44,8 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 2rem;
-  height: 2rem;
+  width: 1.8rem;
+  height: 1.8rem;
   padding: 0;
   color: var(--taskflow-color-search-input-clear-text);
   background-color: var(--taskflow-color-search-input-clear-bg);
@@ -64,13 +64,13 @@
   }
 
   i {
-    font-size: var(--taskflow-font-font-size-small);
+    font-size: var(--taskflow-font-icon-size-sm);
   }
 }
 
 .search-result-count {
   margin-top: 0.5rem;
-  font-size: var(--taskflow-font-font-size-small);
+  font-size: var(--taskflow-font-font-size-normal);
   color: var(--taskflow-color-search-result-count-text);
   text-align: right;
 }

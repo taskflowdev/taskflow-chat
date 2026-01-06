@@ -12,7 +12,7 @@
   padding: 1rem;
   background-color: var(--taskflow-color-search-results-item-bg);
   border: 1px solid var(--taskflow-color-search-results-item-border);
-  border-radius: 0.5rem;
+  border-radius: 8px;
   cursor: pointer;
   transition: background-color 0.2s ease, border-color 0.2s ease;
 
@@ -35,12 +35,12 @@
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
-  gap: 1rem;
-  margin-bottom: 0.5rem;
+  // gap: 1rem;
+  // margin-bottom: 0.5rem;
 }
 
 .result-title {
-  font-size: var(--taskflow-font-font-size-normal);
+  font-size: var(--taskflow-font-font-size-large);
   font-weight: 600;
   color: var(--taskflow-color-search-results-item-text);
   flex: 1;
@@ -57,46 +57,43 @@
   display: inline-flex;
   align-items: center;
   padding: 0.25rem 0.5rem;
-  font-size: var(--taskflow-font-font-size-x-small);
+  font-size: var(--taskflow-font-font-size-normal);
   font-weight: 500;
-  color: var(--taskflow-color-search-badge-text);
+  color: var(--taskflow-color-text-secondary);
   background-color: var(--taskflow-color-search-badge-bg);
   border: 1px solid var(--taskflow-color-search-badge-border);
-  border-radius: 0.25rem;
+  border-radius: 8px;
 }
 
 .status-badge {
   display: inline-flex;
   align-items: center;
   padding: 0.25rem 0.5rem;
-  font-size: var(--taskflow-font-font-size-x-small);
+  font-size: var(--taskflow-font-font-size-normal);
+  color: var(--taskflow-color-text-secondary);
   font-weight: 500;
-  border-radius: 0.25rem;
+  border-radius: 8px;
 
   &.disabled {
-    color: var(--taskflow-color-text-disabled);
     background-color: var(--taskflow-color-badge-deprecated-bg);
     border: 1px solid var(--taskflow-color-badge-deprecated-border);
   }
 
   &.admin-only {
-    color: var(--taskflow-color-warning-emphasis);
     background-color: var(--taskflow-color-warning-subtle);
     border: 1px solid var(--taskflow-color-warning-emphasis);
   }
 
   &.deprecated {
-    color: var(--taskflow-color-badge-deprecated-text);
     background-color: var(--taskflow-color-badge-deprecated-bg);
     border: 1px solid var(--taskflow-color-badge-deprecated-border);
   }
 }
 
 .result-description {
-  font-size: var(--taskflow-font-font-size-small);
+  font-size: var(--taskflow-font-font-size-normal);
   color: var(--taskflow-color-search-results-item-text-secondary);
   line-height: var(--taskflow-font-line-height-base);
-  margin-bottom: 0.5rem;
   display: -webkit-box;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
@@ -108,7 +105,7 @@
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  font-size: var(--taskflow-font-font-size-x-small);
+  font-size: var(--taskflow-font-font-size-normal);
   color: var(--taskflow-color-search-results-item-text-secondary);
 }
 
