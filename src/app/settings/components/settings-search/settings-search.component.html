@@ -1,0 +1,33 @@
+<div class="settings-search-container">
+  <div class="search-input-wrapper">
+    <i class="bi bi-search search-icon"></i>
+    <input
+      #searchInput
+      type="text"
+      class="search-input"
+      placeholder="Search settings..."
+      [(ngModel)]="searchQuery"
+      (input)="onSearchInput($event)"
+      aria-label="Search settings"
+      aria-describedby="search-result-count"
+    />
+    <button
+      *ngIf="isSearchActive"
+      class="clear-button"
+      (click)="clearSearch()"
+      aria-label="Clear search"
+      type="button"
+    >
+      <i class="bi bi-x-lg"></i>
+    </button>
+  </div>
+  <div
+    id="search-result-count"
+    class="search-result-count"
+    aria-live="polite"
+    aria-atomic="true"
+    *ngIf="isSearchActive"
+  >
+    {{ resultCount }} {{ resultCount === 1 ? 'result' : 'results' }}
+  </div>
+</div>

@@ -160,3 +160,22 @@
   border-radius: 8px;
   transition: all 0.12s cubic-bezier(0.2, 0, 0.38, 0.9);
 }
+
+// Highlight animation for scroll-to-setting
+.setting-card.setting-highlight-animation {
+  border-color: var(--settingHighlightBorder);
+  background-color: var(--settingHighlightBg);
+  animation: settingHighlight 2s ease-out;
+}
+
+@keyframes settingHighlight {
+  0% {
+    border-color: var(--settingHighlightBorder);
+    background-color: var(--settingHighlightBg);
+  }
+  100% {
+    border-color: var(--taskflow-color-border, #d0d7de);
+    background-color: var(--taskflow-color-surface, #ffffff);
+  }
+}
+

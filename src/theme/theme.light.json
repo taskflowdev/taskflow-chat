@@ -430,7 +430,36 @@
     "startupLoadingGradientThree": "rgb(77, 77, 77)",
     "startupLoadingGradientFour": "rgb(0, 0, 0)",
     "startupLoadingGradientFive": "rgb(0, 0, 0)",
-    "startupLoadingShineDuration": "2.5s"
+    "startupLoadingShineDuration": "2.5s",
+
+    "searchInputBg": "#ffffff",
+    "searchInputBorder": "#d0d7de",
+    "searchInputBorderFocus": "#0969da",
+    "searchInputText": "#1f2328",
+    "searchInputPlaceholder": "#6e7781",
+    "searchInputIcon": "#57606a",
+    "searchInputClearBg": "transparent",
+    "searchInputClearHoverBg": "#f6f8fa",
+    "searchInputClearText": "#57606a",
+
+    "searchResultsBg": "#ffffff",
+    "searchResultsBorder": "#d0d7de",
+    "searchResultsItemBg": "#ffffff",
+    "searchResultsItemHoverBg": "#f6f8fa",
+    "searchResultsItemActiveBg": "#eaeef2",
+    "searchResultsItemBorder": "#d0d7de",
+    "searchResultsItemText": "#1f2328",
+    "searchResultsItemTextSecondary": "#57606a",
+
+    "searchBadgeBg": "#eaeef2",
+    "searchBadgeText": "#1f2328",
+    "searchBadgeBorder": "#d0d7de",
+
+    "searchNoResultsText": "#57606a",
+    "searchResultCountText": "#57606a",
+
+    "settingHighlightBg": "rgba(9, 105, 218, 0.1)",
+    "settingHighlightBorder": "#0969da"
   },
   "typography": {
     "small": {
