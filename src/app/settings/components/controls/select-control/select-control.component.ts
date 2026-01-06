@@ -144,12 +144,12 @@ export class SelectControlComponent {
       clearTimeout(this.debounceTimer);
     }
 
-    // Debounce search for performance (300ms)
+    // Debounce search for performance (100ms)
     this.debounceTimer = setTimeout(() => {
       this.searchTerm = input.value;
       this.focusedIndex = 0; // Reset focus to first result
       this.cdr.markForCheck();
-    }, 300);
+    }, 100);
   }
 
   /**

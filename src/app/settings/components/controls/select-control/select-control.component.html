@@ -13,10 +13,9 @@
     [attr.aria-label]="'Available options'" (click)="onDropdownClick($event)" (keydown)="onKeyDown($event)">
 
     <!-- Dropdown Header -->
-    <div class="dropdown-header" [class.no-search]="options.length <= 2" *ngIf="label">
+    <div class="dropdown-header" *ngIf="label">
       <h3 class="dropdown-title">{{ label }}</h3>
-      <span class="option-count" *ngIf="filteredOptions.length > 0">{{ filteredOptions.length }} option<span
-          *ngIf="filteredOptions.length !== 1">s</span></span>
+      <span class="option-count">{{ options.length }} option<span *ngIf="options.length !== 1">s</span></span>
     </div>
 
     <!-- Search Input -->
@@ -54,7 +53,7 @@
 
     <!-- No Results State -->
     <div class="no-results" *ngIf="hasNoResults">
-      <i class="bi bi-search-icon"></i>
+      <i class="bi bi-search"></i>
       <p class="no-results-title">No results found</p>
       <span class="no-results-hint">Try a different search term or clear your filter</span>
     </div>

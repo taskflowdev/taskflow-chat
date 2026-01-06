@@ -127,7 +127,7 @@
       align-items: center;
       justify-content: space-between;
       padding: 6px 6px;
-      // border-bottom: 1px solid var(--taskflow-color-border-subtle);
+      background-color: var(--taskflow-color-surface-hover);
 
       &.no-search {
         padding-bottom: 0;
@@ -150,7 +150,7 @@
         font-size: var(--taskflow-font-font-size-small);
         font-weight: 500;
         color: var(--taskflow-color-text-secondary);
-        background-color: var(--taskflow-color-surface-hover);
+        background-color: var(--taskflow-color-surface);
         border-radius: 6px;
         white-space: nowrap;
         flex-shrink: 0;
@@ -163,7 +163,7 @@
       display: flex;
       align-items: center;
       margin: 0;
-      padding: 0px 6px 0px 6px;
+      padding: 6px 6px 0px 6px;
 
       .search-icon {
         position: absolute;
@@ -180,7 +180,7 @@
         font-size: var(--taskflow-font-font-size-normal);
         font-weight: 400;
         line-height: var(--taskflow-font-line-height-compact);
-        background-color: var(--taskflow-color-surface);
+        background-color: transparent;
         color: var(--taskflow-color-text-primary);
         border: 1px solid var(--taskflow-color-border);
         border-radius: 8px;
@@ -331,21 +331,23 @@
       padding: 32px 16px;
       text-align: center;
       color: var(--taskflow-color-text-secondary);
-      gap: 8px;
+      gap: 2px;
 
       i {
-        font-size: 2.5rem;
-        opacity: 0.3;
+        font-size: var(--taskflow-font-icon-size-xl);
       }
 
       .no-results-title {
         margin: 0;
+        padding: 0;
         font-size: var(--taskflow-font-font-size-normal);
         font-weight: 600;
         color: var(--taskflow-color-text-primary);
       }
 
       .no-results-hint {
+        margin: 0;
+        padding: 0;
         font-size: var(--taskflow-font-font-size-small);
         color: var(--taskflow-color-text-secondary);
         opacity: 0.7;
@@ -364,8 +366,7 @@
       gap: 8px;
 
       i {
-        font-size: 2.5rem;
-        opacity: 0.3;
+        font-size: var(--taskflow-font-icon-size-xl);
       }
 
       .empty-state-title {
