@@ -12,7 +12,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-import { SettingsSearchService } from '../../services/settings-search.service';
+import { SettingsSearchService, RecentSearchItem } from '../../services/settings-search.service';
 
 /**
  * Search input component for settings
@@ -31,6 +31,8 @@ export class SettingsSearchComponent implements OnInit, OnDestroy {
   searchQuery: string = '';
   resultCount: number = 0;
   isSearchActive: boolean = false;
+  recentSearches: RecentSearchItem[] = [];
+  showRecentSearches: boolean = false;
 
   private destroy$ = new Subject<void>();
 
@@ -61,6 +63,15 @@ export class SettingsSearchComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.destroy$))
       .subscribe(isActive => {
         this.isSearchActive = isActive;
+        this.showRecentSearches = !isActive;
+        this.cdr.markForCheck();
+      });
+
+    // Subscribe to recent searches
+    this.settingsSearchService.recentSearches$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(searches => {
+        this.recentSearches = searches;
         this.cdr.markForCheck();
       });
   }
@@ -76,6 +87,60 @@ export class SettingsSearchComponent implements OnInit, OnDestroy {
   onSearchInput(event: Event): void {
     const input = event.target as HTMLInputElement;
     this.settingsSearchService.setSearchQuery(input.value);
+  }
+
+  /**
+   * Handle search input focus - show recent searches if no active search
+   */
+  onSearchFocus(): void {
+    if (!this.isSearchActive && this.recentSearches.length > 0) {
+      this.showRecentSearches = true;
+      this.cdr.markForCheck();
+    }
+  }
+
+  /**
+   * Handle search input blur - hide recent searches after a delay
+   */
+  onSearchBlur(): void {
+    // Delay to allow click on recent search items
+    setTimeout(() => {
+      this.showRecentSearches = false;
+      this.cdr.markForCheck();
+    }, 200);
+  }
+
+  /**
+   * Handle Enter key press to save search
+   */
+  onSearchKeyPress(event: KeyboardEvent): void {
+    if (event.key === 'Enter' && this.searchQuery.trim().length > 0) {
+      this.settingsSearchService.performSearch(this.searchQuery);
+    }
+  }
+
+  /**
+   * Use a recent search
+   */
+  useRecentSearch(query: string): void {
+    this.settingsSearchService.useRecentSearch(query);
+    this.focusInput();
+  }
+
+  /**
+   * Clear a specific recent search
+   */
+  clearRecentSearch(event: Event, query: string): void {
+    event.stopPropagation();
+    this.settingsSearchService.clearRecentSearch(query);
+  }
+
+  /**
+   * Clear all recent searches
+   */
+  clearAllRecentSearches(event: Event): void {
+    event.stopPropagation();
+    this.settingsSearchService.clearAllRecentSearches();
   }
 
   /**
