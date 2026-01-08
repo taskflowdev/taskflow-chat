@@ -141,6 +141,16 @@ export class SettingsSearchComponent implements OnInit, OnDestroy {
   }
 
   /**
+   * Handle keyboard navigation for recent search items
+   */
+  onRecentSearchKeydown(event: KeyboardEvent, query: string): void {
+    if (event.key === 'Enter' || event.key === ' ') {
+      event.preventDefault();
+      this.useRecentSearch(query);
+    }
+  }
+
+  /**
    * Clear a specific recent search
    */
   clearRecentSearch(event: Event, query: string): void {

@@ -175,10 +175,12 @@ export class SettingsSearchService implements OnDestroy {
       return;
     }
 
-    if (!query || query.trim().length === 0) return;
-
     try {
       const trimmedQuery = query.trim();
+      if (!trimmedQuery) {
+        return;
+      }
+
       let searches = this.recentSearchesSubject.value;
 
       // Remove existing entry with same query (case-insensitive)

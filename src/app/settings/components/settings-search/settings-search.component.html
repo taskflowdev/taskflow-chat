@@ -26,7 +26,12 @@
       </button>
     </div>
     <div class="recent-searches-list">
-      <div *ngFor="let search of recentSearches" class="recent-search-item" (click)="useRecentSearch(search.query)">
+      <div *ngFor="let search of recentSearches" class="recent-search-item" 
+        (click)="useRecentSearch(search.query)"
+        (keydown)="onRecentSearchKeydown($event, search.query)"
+        role="button"
+        tabindex="0"
+        [attr.aria-label]="'Search for ' + search.query">
         <i class="bi bi-search recent-search-icon"></i>
         <span class="recent-search-query">{{ search.query }}</span>
         <button class="remove-recent-button" (click)="clearRecentSearch($event, search.query)" type="button"
