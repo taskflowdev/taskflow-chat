@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterOutlet } from '@angular/router';
 import { UserSettingsService } from '../../../core/services/user-settings.service';
@@ -28,16 +28,9 @@ export class SettingsLayoutComponent implements OnInit {
   catalogLoaded$: Observable<boolean>;
   isSearchActive$: Observable<boolean>;
 
-  // Sticky search bar state
-  showStickySearch: boolean = false;
-  private lastScrollTop: number = 0;
-  private scrollThreshold: number = 50; // Minimum scroll before showing search
-  private hideThreshold: number = 10; // Scroll to top threshold to hide
-
   constructor(
     private userSettingsService: UserSettingsService,
-    private settingsSearchService: SettingsSearchService,
-    private cdr: ChangeDetectorRef
+    private settingsSearchService: SettingsSearchService
   ) {
     this.loading$ = this.userSettingsService.loading$;
 
@@ -54,37 +47,5 @@ export class SettingsLayoutComponent implements OnInit {
     // Load catalog and user settings on initialization
     this.userSettingsService.loadCatalog().subscribe();
     this.userSettingsService.loadUserSettings().subscribe();
-  }
-
-  /**
-   * Handle scroll events on the settings content
-   * Implements Apple-style sticky search behavior
-   */
-  onScroll(event: Event): void {
-    const target = event.target as HTMLElement;
-    const scrollTop = target.scrollTop;
-
-    // At the very top - hide search bar
-    if (scrollTop <= this.hideThreshold) {
-      if (this.showStickySearch) {
-        this.showStickySearch = false;
-        this.cdr.markForCheck();
-      }
-      this.lastScrollTop = scrollTop;
-      return;
-    }
-
-    // User has scrolled down past threshold
-    if (scrollTop > this.scrollThreshold) {
-      // Scrolling up - show sticky search
-      if (scrollTop < this.lastScrollTop) {
-        if (!this.showStickySearch) {
-          this.showStickySearch = true;
-          this.cdr.markForCheck();
-        }
-      }
-    }
-
-    this.lastScrollTop = scrollTop;
   }
 }

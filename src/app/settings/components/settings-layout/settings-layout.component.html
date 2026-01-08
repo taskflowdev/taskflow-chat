@@ -8,16 +8,9 @@
       <app-settings-sidebar></app-settings-sidebar>
     </ng-template>
   </div>
-  <div class="settings-content" (scroll)="onScroll($event)">
-    <!-- Sticky Search Bar (appears on scroll up) -->
-    <div class="sticky-search-container" [class.visible]="showStickySearch">
-      <app-settings-search></app-settings-search>
-    </div>
-    
-    <!-- Regular Search Component (always in flow) -->
-    <div class="regular-search-container">
-      <app-settings-search></app-settings-search>
-    </div>
+  <div class="settings-content">
+    <!-- Search Component -->
+    <app-settings-search></app-settings-search>
     
     <!-- Show search results when search is active, otherwise show category content -->
     <ng-container *ngIf="isSearchActive$ | async; else categoryContent">
