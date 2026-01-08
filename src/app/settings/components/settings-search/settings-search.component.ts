@@ -5,8 +5,7 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   ElementRef,
-  ViewChild,
-  HostListener
+  ViewChild
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -92,27 +91,6 @@ export class SettingsSearchComponent implements OnInit, OnDestroy {
   focusInput(): void {
     if (this.searchInput) {
       this.searchInput.nativeElement.focus();
-    }
-  }
-
-  /**
-   * Global keyboard shortcut: / to focus search
-   */
-  @HostListener('window:keydown', ['$event'])
-  handleKeyboardShortcut(event: KeyboardEvent): void {
-    // Focus search on '/' key (only if not in an input/textarea)
-    if (
-      event.key === '/' &&
-      !['INPUT', 'TEXTAREA'].includes((event.target as HTMLElement).tagName)
-    ) {
-      event.preventDefault();
-      this.focusInput();
-    }
-
-    // Clear search on Escape
-    if (event.key === 'Escape' && this.isSearchActive) {
-      event.preventDefault();
-      this.clearSearch();
     }
   }
 }

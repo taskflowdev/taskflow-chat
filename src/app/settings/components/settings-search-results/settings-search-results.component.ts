@@ -11,6 +11,7 @@ import { Router } from '@angular/router';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { SettingsSearchService } from '../../services/settings-search.service';
+import { SettingsSearchOverlayService } from '../../services/settings-search-overlay.service';
 import { SettingsSearchResult } from '../../utils/settings-search-index';
 import { scrollToSetting } from '../../utils/scroll-to-setting';
 
@@ -34,6 +35,7 @@ export class SettingsSearchResultsComponent implements OnInit, OnDestroy {
 
   constructor(
     private settingsSearchService: SettingsSearchService,
+    private overlayService: SettingsSearchOverlayService,
     private router: Router,
     private cdr: ChangeDetectorRef
   ) {}
@@ -75,6 +77,9 @@ export class SettingsSearchResultsComponent implements OnInit, OnDestroy {
   private async navigateToSetting(result: SettingsSearchResult): Promise<void> {
     // Clear the search to hide search results
     this.settingsSearchService.clearSearch();
+
+    // Close the overlay if it's open
+    this.overlayService.close();
 
     // Navigate to the category page with proper URL
     await this.router.navigate(['/settings', result.categoryKey]);

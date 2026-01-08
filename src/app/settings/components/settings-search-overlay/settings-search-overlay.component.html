@@ -1,0 +1,42 @@
+<div class="search-overlay" *ngIf="isVisible" (click)="onOverlayClick($event)" role="dialog" aria-modal="true"
+  aria-label="Global settings search">
+  <div class="search-overlay-container" #overlayContainer>
+    <!-- Search Input -->
+    <div class="search-overlay-header">
+      <app-settings-search></app-settings-search>
+    </div>
+
+    <!-- Search Results -->
+    <div class="search-overlay-body">
+      <app-settings-search-results></app-settings-search-results>
+
+      <!-- Empty state when no search query -->
+      <div class="search-overlay-empty" *ngIf="!isSearchActive">
+        <div class="empty-content">
+          <i class="bi bi-search empty-icon"></i>
+          <p class="empty-title">Search settings</p>
+          <p class="empty-hint">Start typing to search across all settings</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer hint -->
+    <div class="search-overlay-footer">
+      <div class="footer-shortcuts">
+        <span class="footer-hint">
+          <kbd class="kbd-key">↑</kbd>
+          <kbd class="kbd-key">↓</kbd>
+          to navigate
+        </span>
+        <span class="footer-hint">
+          <kbd class="kbd-key">↵</kbd>
+          to select
+        </span>
+        <span class="footer-hint">
+          <kbd class="kbd-key">ESC</kbd>
+          to close
+        </span>
+      </div>
+    </div>
+  </div>
+</div>

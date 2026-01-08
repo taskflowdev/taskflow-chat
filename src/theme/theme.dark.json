@@ -463,6 +463,12 @@
     "searchNoResultsText": "#8b949e",
     "searchResultCountText": "#8b949e",
 
+    "searchOverlayBg": "#0d1117",
+    "searchOverlayBorder": "#30363d",
+    "searchOverlayBackdrop": "rgba(0, 0, 0, 0.5)",
+    "searchOverlayShadow": "rgba(0, 0, 0, 0.5)",
+    "searchOverlayBorderRadius": "12px",
+
     "settingHighlightBg": "rgba(88, 166, 255, 0.15)",
     "settingHighlightBorder": "#58a6ff"
   },

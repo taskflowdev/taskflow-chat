@@ -9,16 +9,21 @@
     </ng-template>
   </div>
   <div class="settings-content">
-    <!-- Search Component -->
-    <app-settings-search></app-settings-search>
-    
-    <!-- Show search results when search is active, otherwise show category content -->
-    <ng-container *ngIf="isSearchActive$ | async; else categoryContent">
-      <app-settings-search-results></app-settings-search-results>
-    </ng-container>
-    
-    <ng-template #categoryContent>
-      <router-outlet></router-outlet>
-    </ng-template>
+    <!-- Settings Header with Search Button -->
+    <div class="settings-header">
+      <button class="search-trigger-btn" (click)="openSearchOverlay()" aria-label="Search settings" type="button">
+        <i class="bi bi-search"></i>
+        <span class="search-trigger-text">Search settings...</span>
+        <span class="search-trigger-shortcut">
+          <kbd class="kbd-key">/</kbd>
+        </span>
+      </button>
+    </div>
+
+    <!-- Settings Category Content -->
+    <router-outlet></router-outlet>
   </div>
 </div>
+
+<!-- Global Search Overlay -->
+<app-settings-search-overlay></app-settings-search-overlay>
