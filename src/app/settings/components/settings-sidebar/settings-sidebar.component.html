@@ -1,13 +1,5 @@
 <div class="sidebar-container">
   <h3 class="sidebar-title">{{ 'settings.title' | translate }}</h3>
-  
-  <!-- Search Button -->
-  <button class="search-button" (click)="openSearchDialog()" aria-label="Search settings">
-    <i class="bi bi-search"></i>
-    <span>Search settings...</span>
-    <kbd class="search-shortcut">/</kbd>
-  </button>
-  
   <nav class="sidebar-nav">
     <!-- Profile Link with Avatar (Static) -->
     <a [routerLink]="['/settings', 'profile']" routerLinkActive="active" class="sidebar-link profile-link"

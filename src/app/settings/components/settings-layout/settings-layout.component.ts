@@ -1,10 +1,12 @@
 import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterOutlet, ActivatedRoute } from '@angular/router';
+import { RouterOutlet } from '@angular/router';
 import { UserSettingsService } from '../../../core/services/user-settings.service';
 import { SettingsSidebarComponent } from '../settings-sidebar/settings-sidebar.component';
 import { SkeletonLoaderComponent } from '../../../shared/components/skeleton-loader/skeleton-loader.component';
-import { SettingsSearchDialogComponent } from '../settings-search-dialog/settings-search-dialog.component';
+import { SettingsSearchComponent } from '../settings-search/settings-search.component';
+import { SettingsSearchResultsComponent } from '../settings-search-results/settings-search-results.component';
+import { SettingsSearchService } from '../../services/settings-search.service';
 import { map, Observable } from 'rxjs';
 
 @Component({
@@ -14,7 +16,8 @@ import { map, Observable } from 'rxjs';
     RouterOutlet,
     SettingsSidebarComponent,
     SkeletonLoaderComponent,
-    SettingsSearchDialogComponent
+    SettingsSearchComponent,
+    SettingsSearchResultsComponent
   ],
   templateUrl: './settings-layout.component.html',
   styleUrls: ['./settings-layout.component.scss'],
@@ -23,11 +26,11 @@ import { map, Observable } from 'rxjs';
 export class SettingsLayoutComponent implements OnInit {
   loading$: Observable<boolean>;
   catalogLoaded$: Observable<boolean>;
-  showSearchDialog: boolean = false;
+  isSearchActive$: Observable<boolean>;
 
   constructor(
     private userSettingsService: UserSettingsService,
-    private route: ActivatedRoute
+    private settingsSearchService: SettingsSearchService
   ) {
     this.loading$ = this.userSettingsService.loading$;
 
@@ -35,16 +38,14 @@ export class SettingsLayoutComponent implements OnInit {
     this.catalogLoaded$ = this.userSettingsService.catalog$.pipe(
       map(catalog => catalog !== null && catalog !== undefined)
     );
+
+    // Check if search is active
+    this.isSearchActive$ = this.settingsSearchService.isSearchActive$;
   }
 
   ngOnInit(): void {
     // Load catalog and user settings on initialization
     this.userSettingsService.loadCatalog().subscribe();
     this.userSettingsService.loadUserSettings().subscribe();
-
-    // Listen to URL fragment changes for search dialog
-    this.route.fragment.subscribe(fragment => {
-      this.showSearchDialog = fragment === 'search-setting';
-    });
   }
 }

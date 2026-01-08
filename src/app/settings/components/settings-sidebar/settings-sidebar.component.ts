@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy, ChangeDetectorRef, OnInit, OnDestroy, HostListener } from '@angular/core';
+import { Component, ChangeDetectionStrategy, ChangeDetectorRef, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, NavigationEnd, RouterModule } from '@angular/router';
 import { UserSettingsService } from '../../../core/services/user-settings.service';
@@ -70,31 +70,6 @@ export class SettingsSidebarComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();
-  }
-
-  /**
-   * Open search dialog
-   */
-  openSearchDialog(): void {
-    this.router.navigate([], {
-      fragment: 'search-setting',
-      queryParamsHandling: 'preserve'
-    });
-  }
-
-  /**
-   * Global keyboard shortcut: / to open search
-   */
-  @HostListener('window:keydown', ['$event'])
-  handleKeyboardShortcut(event: KeyboardEvent): void {
-    // Open search on '/' key (only if not in an input/textarea)
-    if (
-      event.key === '/' &&
-      !['INPUT', 'TEXTAREA'].includes((event.target as HTMLElement).tagName)
-    ) {
-      event.preventDefault();
-      this.openSearchDialog();
-    }
   }
 
   isActive(categoryKey: string | undefined): boolean {
