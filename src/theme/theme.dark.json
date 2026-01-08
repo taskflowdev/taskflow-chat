@@ -428,7 +428,43 @@
     "startupLoadingGradientThree": "rgb(77, 77, 77)",
     "startupLoadingGradientFour": "rgb(255, 255, 255)",
     "startupLoadingGradientFive": "rgb(255, 255, 255)",
-    "startupLoadingShineDuration": "2.5s"
+    "startupLoadingShineDuration": "2.5s",
+
+    "searchInputBg": "#0d1117",
+    "searchInputBorder": "#30363d",
+    "searchInputBorderFocus": "#58a6ff",
+    "searchInputText": "#c9d1d9",
+    "searchInputPlaceholder": "#6e7681",
+    "searchInputIcon": "#8b949e",
+    "searchInputClearBg": "transparent",
+    "searchInputClearHoverBg": "#161b22",
+    "searchInputClearText": "#8b949e",
+
+    "searchResultsBg": "#0d1117",
+    "searchResultsBorder": "#30363d",
+    "searchResultsItemBg": "#0d1117",
+    "searchResultsItemHoverBg": "#161b22",
+    "searchResultsItemActiveBg": "#21262d",
+    "searchResultsItemBorder": "#30363d",
+    "searchResultsItemText": "#c9d1d9",
+    "searchResultsItemTextSecondary": "#8b949e",
+
+    "searchBadgeBg": "#21262d",
+    "searchBadgeText": "#c9d1d9",
+    "searchBadgeBorder": "#30363d",
+
+    "searchTagBg": "#1c2a45",
+    "searchTagText": "#58a6ff",
+    "searchTagBorder": "#1f6feb",
+    "searchTagIcon": "#58a6ff",
+
+    "searchCategoryIconColor": "#8b949e",
+
+    "searchNoResultsText": "#8b949e",
+    "searchResultCountText": "#8b949e",
+
+    "settingHighlightBg": "rgba(88, 166, 255, 0.15)",
+    "settingHighlightBorder": "#58a6ff"
   },
   "typography": {
     "small": {

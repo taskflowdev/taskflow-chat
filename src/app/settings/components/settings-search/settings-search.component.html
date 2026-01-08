@@ -1,0 +1,22 @@
+<div class="settings-search-container">
+  <div class="search-input-wrapper">
+    <i class="bi bi-search search-icon"></i>
+    <input #searchInput type="text" class="search-input" placeholder="Search settings..." [(ngModel)]="searchQuery"
+      (input)="onSearchInput($event)" aria-label="Search settings" aria-describedby="search-result-count" />
+    <div class="search-actions">
+      <span class="shortcut-key" aria-hidden="true">/</span>
+      <button *ngIf="isSearchActive" class="clear-button" (click)="clearSearch()" aria-label="Clear search"
+        type="button">
+        <i class="bi bi-x-lg"></i>
+      </button>
+    </div>
+  </div>
+  <div id="search-result-count" class="search-result-count" aria-live="polite" aria-atomic="true"
+    *ngIf="isSearchActive">
+    {{ resultCount }} {{ resultCount === 1 ? 'result' : 'results' }}
+  </div>
+  <div class="search-hint" *ngIf="!isSearchActive" aria-hidden="true">
+    <i class="bi bi-lightbulb hint-icon"></i>
+    Press <span class="hint-key">/</span> to jump here, <span class="hint-key">Esc</span> to clear.
+  </div>
+</div>
