@@ -9,6 +9,7 @@ import { CatalogResponse } from '../../../api/models/catalog-response';
 import { CategoryWithKeys } from '../../../api/models/category-with-keys';
 import { TranslatePipe, I18nService } from '../../../core/i18n';
 import { getUserInitials } from '../../../shared/utils/user.utils';
+import { SettingsSearchOverlayService } from '../../services/settings-search-overlay.service';
 
 @Component({
   selector: 'app-settings-sidebar',
@@ -30,7 +31,8 @@ export class SettingsSidebarComponent implements OnInit, OnDestroy {
     private authService: AuthService,
     private router: Router,
     private i18n: I18nService,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private searchOverlayService: SettingsSearchOverlayService
   ) {
     this.catalog$ = this.userSettingsService.catalog$;
     this.currentUser$ = this.authService.currentUser$;
@@ -132,5 +134,12 @@ export class SettingsSidebarComponent implements OnInit, OnDestroy {
       }
     }
     return "Beta";
+  }
+
+  /**
+   * Open the search overlay
+   */
+  openSearchOverlay(): void {
+    this.searchOverlayService.open();
   }
 }

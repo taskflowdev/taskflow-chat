@@ -4,9 +4,7 @@ import { RouterOutlet } from '@angular/router';
 import { UserSettingsService } from '../../../core/services/user-settings.service';
 import { SettingsSidebarComponent } from '../settings-sidebar/settings-sidebar.component';
 import { SkeletonLoaderComponent } from '../../../shared/components/skeleton-loader/skeleton-loader.component';
-import { SettingsSearchComponent } from '../settings-search/settings-search.component';
-import { SettingsSearchResultsComponent } from '../settings-search-results/settings-search-results.component';
-import { SettingsSearchService } from '../../services/settings-search.service';
+import { SettingsSearchOverlayComponent } from '../settings-search-overlay/settings-search-overlay.component';
 import { map, Observable } from 'rxjs';
 
 @Component({
@@ -16,8 +14,7 @@ import { map, Observable } from 'rxjs';
     RouterOutlet,
     SettingsSidebarComponent,
     SkeletonLoaderComponent,
-    SettingsSearchComponent,
-    SettingsSearchResultsComponent
+    SettingsSearchOverlayComponent
   ],
   templateUrl: './settings-layout.component.html',
   styleUrls: ['./settings-layout.component.scss'],
@@ -26,11 +23,9 @@ import { map, Observable } from 'rxjs';
 export class SettingsLayoutComponent implements OnInit {
   loading$: Observable<boolean>;
   catalogLoaded$: Observable<boolean>;
-  isSearchActive$: Observable<boolean>;
 
   constructor(
-    private userSettingsService: UserSettingsService,
-    private settingsSearchService: SettingsSearchService
+    private userSettingsService: UserSettingsService
   ) {
     this.loading$ = this.userSettingsService.loading$;
 
@@ -38,9 +33,6 @@ export class SettingsLayoutComponent implements OnInit {
     this.catalogLoaded$ = this.userSettingsService.catalog$.pipe(
       map(catalog => catalog !== null && catalog !== undefined)
     );
-
-    // Check if search is active
-    this.isSearchActive$ = this.settingsSearchService.isSearchActive$;
   }
 
   ngOnInit(): void {
