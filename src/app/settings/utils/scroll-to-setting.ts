@@ -5,11 +5,12 @@
 /**
  * Scroll to a setting element by its data-setting-key attribute
  * Applies smooth scroll and temporary highlight animation
- * 
+ *
  * @param settingKey The full setting key (e.g., 'appearance.theme')
  * @param options Configuration options
  * @returns Promise that resolves when scroll is complete
  */
+const highlightTimers = new WeakMap<HTMLElement, number>();
 export async function scrollToSetting(
   settingKey: string,
   options: {
@@ -68,13 +69,24 @@ export async function scrollToSetting(
  * Apply a temporary highlight animation to an element
  */
 function applyHighlight(element: HTMLElement, duration: number): void {
-  // Add highlight class
+  // Clear any in-flight timer so the animation runs once per trigger
+  const existingTimer = highlightTimers.get(element);
+  if (existingTimer) {
+    clearTimeout(existingTimer);
+  }
+
+  // Restart the animation by removing the class and forcing a reflow
+  element.classList.remove('setting-highlight-animation');
+  void element.offsetWidth; // force reflow
+
   element.classList.add('setting-highlight-animation');
 
-  // Remove after duration
-  setTimeout(() => {
+  const timeoutId = window.setTimeout(() => {
     element.classList.remove('setting-highlight-animation');
+    highlightTimers.delete(element);
   }, duration);
+
+  highlightTimers.set(element, timeoutId);
 }
 
 /**
@@ -107,14 +119,14 @@ function focusSettingControl(settingElement: HTMLElement): void {
  */
 export function getSettingKeyFromHash(): string | null {
   const hash = window.location.hash.slice(1); // Remove #
-  
+
   if (!hash) {
     return null;
   }
 
   // Validate format: category.key (e.g., 'appearance.theme')
   const settingKeyPattern = /^[a-z0-9]+\.[a-z0-9.]+$/i;
-  
+
   if (settingKeyPattern.test(hash)) {
     return hash;
   }
@@ -128,7 +140,7 @@ export function getSettingKeyFromHash(): string | null {
  */
 export function scrollToSettingFromHash(delay: number = 500): void {
   const settingKey = getSettingKeyFromHash();
-  
+
   if (settingKey) {
     // Wait for DOM to be ready and for smooth scroll
     setTimeout(() => {
