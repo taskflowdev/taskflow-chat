@@ -32,6 +32,10 @@ import { scrollToSetting } from '../../utils/scroll-to-setting';
 export class SettingsSearchDialogComponent implements OnInit, OnDestroy {
   @ViewChild('searchInput', { static: false }) searchInput!: ElementRef<HTMLInputElement>;
 
+  // Animation timing constants
+  private readonly DIALOG_ANIMATION_DURATION = 300; // Matches CSS animation
+  private readonly FOCUS_DELAY = 300; // Time to wait before focusing input
+
   searchQuery: string = '';
   searchResults: SettingsSearchResult[] = [];
   selectedIndex: number = -1;
@@ -49,7 +53,7 @@ export class SettingsSearchDialogComponent implements OnInit, OnDestroy {
     // Auto-focus search input after animation
     setTimeout(() => {
       this.focusInput();
-    }, 300);
+    }, this.FOCUS_DELAY);
 
     // Subscribe to search results
     this.settingsSearchService.searchResults$
@@ -155,7 +159,7 @@ export class SettingsSearchDialogComponent implements OnInit, OnDestroy {
         focusControl: true,
         updateHash: false
       });
-    }, 300);
+    }, this.DIALOG_ANIMATION_DURATION);
   }
 
   /**

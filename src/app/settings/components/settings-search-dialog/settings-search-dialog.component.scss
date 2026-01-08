@@ -185,6 +185,9 @@
 }
 
 // Search Results
+$result-stagger-delay: 0.03s;
+$result-stagger-max: 20;
+
 .search-results-list {
   display: flex;
   flex-direction: column;
@@ -202,9 +205,9 @@
   transform: translateY(10px);
   animation: fadeInUp 0.3s ease forwards;
 
-  @for $i from 1 through 20 {
+  @for $i from 1 through $result-stagger-max {
     &:nth-child(#{$i}) {
-      animation-delay: #{$i * 0.03}s;
+      animation-delay: #{$i * $result-stagger-delay};
     }
   }
 
