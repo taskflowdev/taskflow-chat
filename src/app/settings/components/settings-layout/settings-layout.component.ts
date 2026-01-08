@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterOutlet } from '@angular/router';
 import { UserSettingsService } from '../../../core/services/user-settings.service';
@@ -23,7 +23,7 @@ import { map, Observable } from 'rxjs';
   styleUrls: ['./settings-layout.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class SettingsLayoutComponent implements OnInit {
+export class SettingsLayoutComponent implements OnInit, OnDestroy {
   loading$: Observable<boolean>;
   catalogLoaded$: Observable<boolean>;
   isSearchActive$: Observable<boolean>;
@@ -33,6 +33,8 @@ export class SettingsLayoutComponent implements OnInit {
   private lastScrollTop: number = 0;
   private scrollThreshold: number = 50; // Minimum scroll before showing search
   private hideThreshold: number = 10; // Scroll to top threshold to hide
+  private scrollTimeout: any = null;
+  private readonly SCROLL_THROTTLE_MS = 100; // Throttle scroll events
 
   constructor(
     private userSettingsService: UserSettingsService,
@@ -56,11 +58,33 @@ export class SettingsLayoutComponent implements OnInit {
     this.userSettingsService.loadUserSettings().subscribe();
   }
 
+  ngOnDestroy(): void {
+    // Clean up throttle timeout
+    if (this.scrollTimeout) {
+      clearTimeout(this.scrollTimeout);
+    }
+  }
+
   /**
    * Handle scroll events on the settings content
-   * Implements Apple-style sticky search behavior
+   * Implements Apple-style sticky search behavior with throttling
    */
   onScroll(event: Event): void {
+    // Throttle scroll events for performance
+    if (this.scrollTimeout) {
+      return;
+    }
+
+    this.scrollTimeout = setTimeout(() => {
+      this.scrollTimeout = null;
+      this.handleScrollLogic(event);
+    }, this.SCROLL_THROTTLE_MS);
+  }
+
+  /**
+   * Core scroll logic - separated for testability
+   */
+  private handleScrollLogic(event: Event): void {
     const target = event.target as HTMLElement;
     const scrollTop = target.scrollTop;
 
