@@ -29,6 +29,9 @@
           <span *ngFor="let badge of getStatusBadges(result)" class="status-badge"
             [class.disabled]="badge === 'Disabled'" [class.admin-only]="badge === 'Admin Only'"
             [class.deprecated]="badge === 'Deprecated'">
+            <i *ngIf="badge === 'Disabled'" class="bi bi-x-circle"></i>
+            <i *ngIf="badge === 'Admin Only'" class="bi bi-shield-lock"></i>
+            <i *ngIf="badge === 'Deprecated'" class="bi bi-exclamation-triangle"></i>
             {{ badge }}
           </span>
         </div>
