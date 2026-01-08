@@ -11,11 +11,17 @@
       [attr.aria-label]="result.label + ' in ' + result.categoryLabel"
     >
       <div class="result-header">
-        <div class="result-title">
-          {{ result.label }}
+        <div class="result-title-section">
+          <i *ngIf="result.categoryIcon" 
+             [class]="'bi bi-' + result.categoryIcon + ' result-icon'"
+             [style.color]="result.categoryIconColor || 'inherit'"></i>
+          <div class="result-title">
+            {{ result.label }}
+          </div>
         </div>
         <div class="result-badges">
           <span class="category-badge">
+            <i *ngIf="result.categoryIcon" [class]="'bi bi-' + result.categoryIcon"></i>
             {{ result.categoryLabel }}
           </span>
           <span
@@ -32,8 +38,17 @@
       <div class="result-description" *ngIf="result.summary || result.description">
         {{ result.summary || result.description }}
       </div>
-      <div class="result-meta" *ngIf="result.group">
-        <span class="result-group">{{ result.group }}</span>
+      <div class="result-footer">
+        <div class="result-tags" *ngIf="result.tags && result.tags.length > 0">
+          <span *ngFor="let tag of result.tags" class="tag-badge">
+            <i class="bi bi-hash"></i>{{ tag }}
+          </span>
+        </div>
+        <div class="result-meta" *ngIf="result.group">
+          <span class="result-group">
+            <i class="bi bi-folder"></i>{{ result.group }}
+          </span>
+        </div>
       </div>
     </div>
   </div>

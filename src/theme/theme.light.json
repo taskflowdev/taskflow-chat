@@ -455,6 +455,13 @@
     "searchBadgeText": "#1f2328",
     "searchBadgeBorder": "#d0d7de",
 
+    "searchTagBg": "#ddf4ff",
+    "searchTagText": "#0969da",
+    "searchTagBorder": "#54aeff",
+    "searchTagIcon": "#0969da",
+
+    "searchCategoryIconColor": "#57606a",
+
     "searchNoResultsText": "#57606a",
     "searchResultCountText": "#57606a",
 

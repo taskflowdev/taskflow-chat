@@ -15,6 +15,10 @@ export interface SettingsSearchIndexItem {
   categoryKey: string;
   /** Category display name */
   categoryLabel: string;
+  /** Category icon */
+  categoryIcon?: string;
+  /** Category icon color */
+  categoryIconColor?: string;
   /** Group name if available */
   group: string;
   /** Setting label */
@@ -67,6 +71,8 @@ export function buildSearchIndex(catalog: CatalogResponse | null): SettingsSearc
 
     const categoryKey = category.key;
     const categoryLabel = category.displayName || category.key;
+    const categoryIcon = category.icon || undefined;
+    const categoryIconColor = category.iconColor || undefined;
 
     for (const setting of category.keys) {
       if (!setting.key) {
@@ -105,6 +111,8 @@ export function buildSearchIndex(catalog: CatalogResponse | null): SettingsSearc
         key: setting.key,
         categoryKey,
         categoryLabel,
+        categoryIcon,
+        categoryIconColor,
         group: setting.group || '',
         label: setting.label || setting.key,
         summary: setting.summary || undefined,

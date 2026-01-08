@@ -76,17 +76,17 @@ export class SettingsSearchResultsComponent implements OnInit, OnDestroy {
     // Clear the search to hide search results
     this.settingsSearchService.clearSearch();
 
-    // Navigate to the category page
+    // Navigate to the category page with proper URL
     await this.router.navigate(['/settings', result.categoryKey]);
 
     // Wait for navigation to complete and DOM to update
     setTimeout(() => {
-      // Scroll to the setting
+      // Scroll to the setting (without updating hash to avoid weird URLs)
       scrollToSetting(result.id, {
         behavior: 'smooth',
         block: 'center',
         focusControl: true,
-        updateHash: true
+        updateHash: false // Keep URL clean
       });
     }, 300);
   }
