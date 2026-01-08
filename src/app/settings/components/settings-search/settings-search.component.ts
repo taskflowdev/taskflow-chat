@@ -35,6 +35,7 @@ export class SettingsSearchComponent implements OnInit, OnDestroy {
   showRecentSearches: boolean = false;
 
   private destroy$ = new Subject<void>();
+  private readonly BLUR_DELAY_MS = 200; // Delay to allow click on recent search items before blur hides dropdown
 
   constructor(
     private settingsSearchService: SettingsSearchService,
@@ -63,7 +64,10 @@ export class SettingsSearchComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.destroy$))
       .subscribe(isActive => {
         this.isSearchActive = isActive;
-        this.showRecentSearches = !isActive;
+        // Hide recent searches when search becomes active
+        if (isActive) {
+          this.showRecentSearches = false;
+        }
         this.cdr.markForCheck();
       });
 
@@ -107,7 +111,7 @@ export class SettingsSearchComponent implements OnInit, OnDestroy {
     setTimeout(() => {
       this.showRecentSearches = false;
       this.cdr.markForCheck();
-    }, 200);
+    }, this.BLUR_DELAY_MS);
   }
 
   /**

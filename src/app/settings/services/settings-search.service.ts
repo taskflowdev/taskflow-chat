@@ -213,7 +213,8 @@ export class SettingsSearchService implements OnDestroy {
 
     try {
       let searches = this.recentSearchesSubject.value;
-      searches = searches.filter(item => item.query !== query);
+      // Use case-insensitive comparison to match saveRecentSearch behavior
+      searches = searches.filter(item => item.query.toLowerCase() !== query.toLowerCase());
       
       localStorage.setItem(this.RECENT_SEARCHES_KEY, JSON.stringify(searches));
       this.recentSearchesSubject.next(searches);
