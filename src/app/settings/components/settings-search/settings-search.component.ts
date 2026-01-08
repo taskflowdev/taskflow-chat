@@ -36,6 +36,7 @@ export class SettingsSearchComponent implements OnInit, OnDestroy {
 
   private destroy$ = new Subject<void>();
   private readonly BLUR_DELAY_MS = 200; // Delay to allow click on recent search items before blur hides dropdown
+  private blurTimeoutId?: number;
 
   constructor(
     private settingsSearchService: SettingsSearchService,
@@ -81,6 +82,10 @@ export class SettingsSearchComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
+    // Clear any pending blur timeout
+    if (this.blurTimeoutId !== undefined) {
+      clearTimeout(this.blurTimeoutId);
+    }
     this.destroy$.next();
     this.destroy$.complete();
   }
@@ -107,8 +112,12 @@ export class SettingsSearchComponent implements OnInit, OnDestroy {
    * Handle search input blur - hide recent searches after a delay
    */
   onSearchBlur(): void {
+    // Clear any existing timeout
+    if (this.blurTimeoutId !== undefined) {
+      clearTimeout(this.blurTimeoutId);
+    }
     // Delay to allow click on recent search items
-    setTimeout(() => {
+    this.blurTimeoutId = window.setTimeout(() => {
       this.showRecentSearches = false;
       this.cdr.markForCheck();
     }, this.BLUR_DELAY_MS);

@@ -182,7 +182,7 @@ export class SettingsSearchService implements OnDestroy {
       let searches = this.recentSearchesSubject.value;
 
       // Remove existing entry with same query (case-insensitive)
-      searches = searches.filter(item => item.query.toLowerCase() !== trimmedQuery.toLowerCase());
+      searches = searches.filter(item => !this.isSameQuery(item.query, trimmedQuery));
 
       // Add new entry at the beginning
       searches.unshift({
@@ -214,7 +214,7 @@ export class SettingsSearchService implements OnDestroy {
     try {
       let searches = this.recentSearchesSubject.value;
       // Use case-insensitive comparison to match saveRecentSearch behavior
-      searches = searches.filter(item => item.query.toLowerCase() !== query.toLowerCase());
+      searches = searches.filter(item => !this.isSameQuery(item.query, query));
       
       localStorage.setItem(this.RECENT_SEARCHES_KEY, JSON.stringify(searches));
       this.recentSearchesSubject.next(searches);
@@ -245,6 +245,13 @@ export class SettingsSearchService implements OnDestroy {
   useRecentSearch(query: string): void {
     this.saveRecentSearch(query);
     this.setSearchQuery(query);
+  }
+
+  /**
+   * Check if two queries are the same (case-insensitive)
+   */
+  private isSameQuery(query1: string, query2: string): boolean {
+    return query1.toLowerCase() === query2.toLowerCase();
   }
 
   ngOnDestroy(): void {
