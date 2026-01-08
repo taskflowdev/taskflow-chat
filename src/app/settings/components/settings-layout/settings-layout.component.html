@@ -9,17 +9,6 @@
     </ng-template>
   </div>
   <div class="settings-content">
-    <!-- Settings Header with Search Button -->
-    <div class="settings-header">
-      <button class="search-trigger-btn" (click)="openSearchOverlay()" aria-label="Search settings" type="button">
-        <i class="bi bi-search"></i>
-        <span class="search-trigger-text">Search settings...</span>
-        <span class="search-trigger-shortcut">
-          <kbd class="kbd-key">/</kbd>
-        </span>
-      </button>
-    </div>
-
     <!-- Settings Category Content -->
     <router-outlet></router-outlet>
   </div>

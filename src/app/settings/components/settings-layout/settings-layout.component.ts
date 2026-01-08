@@ -5,7 +5,6 @@ import { UserSettingsService } from '../../../core/services/user-settings.servic
 import { SettingsSidebarComponent } from '../settings-sidebar/settings-sidebar.component';
 import { SkeletonLoaderComponent } from '../../../shared/components/skeleton-loader/skeleton-loader.component';
 import { SettingsSearchOverlayComponent } from '../settings-search-overlay/settings-search-overlay.component';
-import { SettingsSearchOverlayService } from '../../services/settings-search-overlay.service';
 import { map, Observable } from 'rxjs';
 
 @Component({
@@ -26,8 +25,7 @@ export class SettingsLayoutComponent implements OnInit {
   catalogLoaded$: Observable<boolean>;
 
   constructor(
-    private userSettingsService: UserSettingsService,
-    private searchOverlayService: SettingsSearchOverlayService
+    private userSettingsService: UserSettingsService
   ) {
     this.loading$ = this.userSettingsService.loading$;
 
@@ -41,12 +39,5 @@ export class SettingsLayoutComponent implements OnInit {
     // Load catalog and user settings on initialization
     this.userSettingsService.loadCatalog().subscribe();
     this.userSettingsService.loadUserSettings().subscribe();
-  }
-
-  /**
-   * Open the search overlay
-   */
-  openSearchOverlay(): void {
-    this.searchOverlayService.open();
   }
 }

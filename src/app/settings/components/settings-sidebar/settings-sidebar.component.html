@@ -1,5 +1,11 @@
 <div class="sidebar-container">
-  <h3 class="sidebar-title">{{ 'settings.title' | translate }}</h3>
+  <div class="sidebar-header">
+    <h3 class="sidebar-title">{{ 'settings.title' | translate }}</h3>
+    <button class="search-trigger-btn" (click)="openSearchOverlay()" aria-label="Search settings" type="button" title="Search settings (/)">
+      <i class="bi bi-search"></i>
+      <span class="shortcut-hint">/</span>
+    </button>
+  </div>
   <nav class="sidebar-nav">
     <!-- Profile Link with Avatar (Static) -->
     <a [routerLink]="['/settings', 'profile']" routerLinkActive="active" class="sidebar-link profile-link"
