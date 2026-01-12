@@ -16,7 +16,7 @@
     <div *ngFor="let item of recentSearches; trackBy: trackById" class="recent-search-card"
       (click)="onRecentSearchClick(item)" role="button" tabindex="0"
       [attr.aria-label]="item.label + ' in ' + item.categoryLabel">
-      
+
       <div class="card-top">
         <div class="icon-wrapper">
           <i *ngIf="item.categoryIcon" [class]="'bi bi-' + item.categoryIcon + ' result-icon result-icon-default'"
@@ -25,22 +25,15 @@
             [class]="'bi bi-' + item.categoryIconSelected + ' result-icon result-icon-selected'"
             [style.color]="item.categoryIconColor || 'inherit'"></i>
         </div>
+        <div class="action-icon">
+          <i class="bi bi-box-arrow-up-left"></i>
+        </div>
       </div>
-      
+
       <div class="card-middle">
         <div class="recent-search-title">{{ item.label }}</div>
         <div class="recent-search-description" *ngIf="item.summary || item.description">
           {{ item.summary || item.description }}
-        </div>
-      </div>
-      
-      <div class="card-bottom">
-        <div class="category-badge">
-          <i *ngIf="item.categoryIcon" [class]="'bi bi-' + item.categoryIcon"></i>
-          {{ item.categoryLabel }}
-        </div>
-        <div class="action-icon">
-          <i class="bi bi-box-arrow-up-left"></i>
         </div>
       </div>
     </div>

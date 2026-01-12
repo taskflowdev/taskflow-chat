@@ -41,12 +41,11 @@
 
   &:hover {
     background-color: var(--taskflow-color-surface-hover);
-    border-color: var(--taskflow-color-border-hover);
+    // border-color: var(--taskflow-color-border-hover);
   }
 
   &:focus {
     outline: none;
-    box-shadow: 0 0 0 2px var(--taskflow-color-focus-ring-subtle);
   }
 }
 
@@ -56,7 +55,8 @@
 
 .recent-searches-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  grid-auto-rows: 1fr;
   gap: 1rem;
 }
 
@@ -64,18 +64,16 @@
   position: relative;
   display: flex;
   flex-direction: column;
-  padding: 1rem;
+  padding: 0.8rem;
   background-color: var(--taskflow-color-search-results-item-bg);
   border: 1px solid var(--taskflow-color-search-results-item-border);
   border-radius: 12px;
   cursor: pointer;
-  transition: background-color 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
+  transition: background-color 0.2s ease, border-color 0.2s ease,
+    transform 0.2s ease;
   min-height: 180px;
 
   &:hover {
-    background-color: var(--taskflow-color-search-results-item-hover-bg);
-    transform: translateY(-2px);
-    
     .action-icon {
       opacity: 1;
       transform: translate(0, 0);
@@ -90,9 +88,9 @@
 
 .card-top {
   display: flex;
-  justify-content: center;
-  align-items: center;
-  margin-bottom: 1rem;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 0.4rem;
   min-height: 3rem;
 }
 
@@ -106,7 +104,7 @@
 }
 
 .result-icon {
-  font-size: 2.5rem;
+  font-size: var(--taskflow-font-icon-size-2xl);
   position: absolute;
   transition: opacity 0.2s ease;
 
@@ -133,7 +131,7 @@
   flex: 1;
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
+  gap: 0.2rem;
   margin-bottom: 1rem;
 }
 
@@ -141,7 +139,7 @@
   font-size: var(--taskflow-font-font-size-large);
   font-weight: 600;
   color: var(--taskflow-color-search-results-item-text);
-  line-height: 1.3;
+  line-height: normal;
   display: -webkit-box;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
@@ -150,7 +148,7 @@
 }
 
 .recent-search-description {
-  font-size: var(--taskflow-font-font-size-small);
+  font-size: var(--taskflow-font-font-size-normal);
   color: var(--taskflow-color-search-results-item-text-secondary);
   line-height: 1.4;
   display: -webkit-box;
@@ -161,7 +159,7 @@
 }
 
 .card-bottom {
-  display: flex;
+  display: none;
   align-items: center;
   justify-content: space-between;
   margin-top: auto;
@@ -170,9 +168,9 @@
 .category-badge {
   display: inline-flex;
   align-items: center;
-  gap: 0.25rem;
+  gap: 0.3rem;
   padding: 0.25rem 0.5rem;
-  font-size: var(--taskflow-font-font-size-small);
+  font-size: var(--taskflow-font-font-size-normal);
   font-weight: 500;
   color: var(--taskflow-color-text-secondary);
   background-color: var(--taskflow-color-search-badge-bg);
@@ -185,25 +183,23 @@
 }
 
 .action-icon {
-  display: flex;
+  display: none;
   align-items: center;
   justify-content: center;
   width: 1.75rem;
   height: 1.75rem;
-  border-radius: 50%;
-  background-color: var(--taskflow-color-search-badge-bg);
-  border: 1px solid var(--taskflow-color-search-badge-border);
-  opacity: 0.3;
+  opacity: 0;
   transform: translate(0, 0);
   transition: opacity 0.2s ease, transform 0.2s ease;
 
   i {
-    font-size: var(--taskflow-font-icon-size-md);
+    font-size: var(--taskflow-font-icon-size-lg);
     color: var(--taskflow-color-text-secondary);
   }
 }
 
 .recent-search-card:hover .action-icon {
+  display: flex;
   opacity: 1;
   transform: translate(0, 0);
 }
