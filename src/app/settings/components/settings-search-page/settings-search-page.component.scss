@@ -1,5 +1,5 @@
 .settings-search-page {
-  padding: 2rem;
+  padding: 0;
   max-width: 900px;
 }
 
@@ -14,22 +14,22 @@
 }
 
 .placeholder-icon {
-  font-size: 4rem;
+  font-size: var(--taskflow-font-icon-size-3xl);
   opacity: 0.3;
   margin-bottom: 1.5rem;
 }
 
 .placeholder-title {
-  font-size: var(--taskflow-font-font-size-h1);
+  font-size: var(--taskflow-font-font-size-large);
   font-weight: 600;
   color: var(--taskflow-color-text-primary);
   margin-bottom: 0.5rem;
 }
 
 .placeholder-text {
-  font-size: var(--taskflow-font-font-size-large);
+  font-size: var(--taskflow-font-font-size-normal);
   color: var(--taskflow-color-text-secondary);
-  margin-bottom: 2rem;
+  margin: 0;
 }
 
 .placeholder-hint {
@@ -43,22 +43,23 @@
 .hint-item {
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: 0.5rem;
 
   i {
-    font-size: var(--taskflow-font-icon-size-md);
+    font-size: var(--taskflow-font-icon-size-lg);
   }
 
   kbd {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    min-width: 1.8rem;
-    padding: 0.2rem 0.5rem;
+    min-width: 1.4rem;
+    padding: 0.1rem;
     border-radius: 0.35rem;
     border: 1px solid var(--taskflow-color-search-input-border);
     background-color: var(--taskflow-color-surface-hover);
-    color: var(--taskflow-color-text-primary);
+    color: var(--taskflow-color-text-secondary);
     font-family: monospace;
     font-size: var(--taskflow-font-font-size-normal);
     font-weight: 600;

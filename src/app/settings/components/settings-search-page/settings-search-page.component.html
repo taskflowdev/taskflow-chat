@@ -1,23 +1,23 @@
 <div class="settings-search-page">
   <!-- Search Component -->
   <app-settings-search></app-settings-search>
-  
+
   <!-- Show search results when search is active, otherwise show placeholder -->
   <ng-container *ngIf="isSearchActive$ | async; else searchPlaceholder">
     <app-settings-search-results></app-settings-search-results>
   </ng-container>
-  
+
   <ng-template #searchPlaceholder>
     <div class="search-placeholder">
       <i class="bi bi-search placeholder-icon"></i>
       <h2 class="placeholder-title">Search Settings</h2>
       <p class="placeholder-text">Start typing to search through all settings</p>
-      <div class="placeholder-hint">
+      <!-- <div class="placeholder-hint">
         <span class="hint-item">
           <i class="bi bi-keyboard"></i>
           Press <kbd>/</kbd> to focus search
         </span>
-      </div>
+      </div> -->
     </div>
   </ng-template>
 </div>
