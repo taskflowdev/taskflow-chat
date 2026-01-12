@@ -10,15 +10,14 @@
 }
 
 .recent-searches-title {
-  font-size: var(--taskflow-font-font-size-h3);
+  font-size: var(--taskflow-font-font-size-large);
   font-weight: 600;
   color: var(--taskflow-color-text-primary);
   margin: 0;
 
   i {
-    font-size: var(--taskflow-font-icon-size-lg);
+    font-size: var(--taskflow-font-icon-size-md);
     margin-right: 0.4rem;
-    vertical-align: middle;
   }
 }
 
@@ -36,7 +35,7 @@
   transition: background-color 0.2s ease, border-color 0.2s ease;
 
   i {
-    font-size: var(--taskflow-font-icon-size-sm);
+    font-size: var(--taskflow-font-icon-size-xxs);
   }
 
   &:hover {
@@ -56,8 +55,8 @@
 .recent-searches-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  grid-auto-rows: 1fr;
   gap: 1rem;
+  auto-rows: 1fr;
 }
 
 .recent-search-card {
@@ -71,7 +70,7 @@
   cursor: pointer;
   transition: background-color 0.2s ease, border-color 0.2s ease,
     transform 0.2s ease;
-  min-height: 180px;
+  height: 100%;
 
   &:hover {
     .action-icon {
@@ -96,15 +95,10 @@
 
 .icon-wrapper {
   position: relative;
-  width: 3rem;
-  height: 3rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
 }
 
 .result-icon {
-  font-size: var(--taskflow-font-icon-size-2xl);
+  font-size: var(--taskflow-font-icon-size-xl);
   position: absolute;
   transition: opacity 0.2s ease;
 
@@ -132,11 +126,10 @@
   display: flex;
   flex-direction: column;
   gap: 0.2rem;
-  margin-bottom: 1rem;
 }
 
 .recent-search-title {
-  font-size: var(--taskflow-font-font-size-large);
+  font-size: var(--taskflow-font-font-size-normal);
   font-weight: 600;
   color: var(--taskflow-color-search-results-item-text);
   line-height: normal;
