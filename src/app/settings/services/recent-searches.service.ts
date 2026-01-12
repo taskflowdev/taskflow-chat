@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { SettingsSearchResult } from '../utils/settings-search-index';
 
 /**
@@ -28,13 +29,18 @@ export interface RecentSearchItem {
 export class RecentSearchesService {
   private readonly STORAGE_KEY = 'taskflow-settings-recent-searches';
   private readonly MAX_RECENT_SEARCHES = 7;
+  
+  private recentSearchesSubject = new BehaviorSubject<RecentSearchItem[]>(this.loadFromStorage());
+  
+  /** Observable stream of recent searches */
+  public recentSearches$: Observable<RecentSearchItem[]> = this.recentSearchesSubject.asObservable();
 
   /**
    * Add a search result to recent searches
    * De-duplicates by id and keeps only the latest MAX_RECENT_SEARCHES items
    */
   addRecentSearch(result: SettingsSearchResult): void {
-    const recentSearches = this.getRecentSearches();
+    const recentSearches = this.recentSearchesSubject.value;
     
     // Remove existing entry with same id if it exists
     const filteredSearches = recentSearches.filter(item => item.id !== result.id);
@@ -60,8 +66,9 @@ export class RecentSearchesService {
     // Keep only MAX_RECENT_SEARCHES items
     const trimmedSearches = filteredSearches.slice(0, this.MAX_RECENT_SEARCHES);
     
-    // Save to localStorage
-    this.saveRecentSearches(trimmedSearches);
+    // Update subject and save to localStorage
+    this.recentSearchesSubject.next(trimmedSearches);
+    this.saveToStorage(trimmedSearches);
   }
 
   /**
@@ -69,6 +76,31 @@ export class RecentSearchesService {
    * Returns empty array if none exist or if parsing fails
    */
   getRecentSearches(): RecentSearchItem[] {
+    return this.recentSearchesSubject.value;
+  }
+
+  /**
+   * Clear all recent searches from localStorage
+   */
+  clearRecentSearches(): void {
+    this.recentSearchesSubject.next([]);
+    this.removeFromStorage();
+  }
+
+  /**
+   * Remove a specific recent search by id
+   */
+  removeRecentSearch(id: string): void {
+    const recentSearches = this.recentSearchesSubject.value;
+    const filteredSearches = recentSearches.filter(item => item.id !== id);
+    this.recentSearchesSubject.next(filteredSearches);
+    this.saveToStorage(filteredSearches);
+  }
+
+  /**
+   * Load recent searches from localStorage
+   */
+  private loadFromStorage(): RecentSearchItem[] {
     try {
       const stored = localStorage.getItem(this.STORAGE_KEY);
       if (!stored) {
@@ -83,33 +115,24 @@ export class RecentSearchesService {
   }
 
   /**
-   * Clear all recent searches from localStorage
-   */
-  clearRecentSearches(): void {
-    try {
-      localStorage.removeItem(this.STORAGE_KEY);
-    } catch (error) {
-      console.error('Failed to clear recent searches:', error);
-    }
-  }
-
-  /**
-   * Remove a specific recent search by id
-   */
-  removeRecentSearch(id: string): void {
-    const recentSearches = this.getRecentSearches();
-    const filteredSearches = recentSearches.filter(item => item.id !== id);
-    this.saveRecentSearches(filteredSearches);
-  }
-
-  /**
    * Save recent searches to localStorage
    */
-  private saveRecentSearches(searches: RecentSearchItem[]): void {
+  private saveToStorage(searches: RecentSearchItem[]): void {
     try {
       localStorage.setItem(this.STORAGE_KEY, JSON.stringify(searches));
     } catch (error) {
       console.error('Failed to save recent searches:', error);
+    }
+  }
+
+  /**
+   * Remove recent searches from localStorage
+   */
+  private removeFromStorage(): void {
+    try {
+      localStorage.removeItem(this.STORAGE_KEY);
+    } catch (error) {
+      console.error('Failed to clear recent searches:', error);
     }
   }
 }

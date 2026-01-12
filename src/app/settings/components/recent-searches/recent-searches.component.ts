@@ -1,13 +1,16 @@
 import {
   Component,
   OnInit,
+  OnDestroy,
   ChangeDetectionStrategy,
   ChangeDetectorRef
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Router } from '@angular/router';
+import { Router, NavigationEnd } from '@angular/router';
 import { RecentSearchesService, RecentSearchItem } from '../../services/recent-searches.service';
 import { scrollToSetting } from '../../utils/scroll-to-setting';
+import { Subject } from 'rxjs';
+import { takeUntil, filter } from 'rxjs/operators';
 
 /**
  * Recent searches component
@@ -20,8 +23,9 @@ import { scrollToSetting } from '../../utils/scroll-to-setting';
   styleUrls: ['./recent-searches.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class RecentSearchesComponent implements OnInit {
+export class RecentSearchesComponent implements OnInit, OnDestroy {
   recentSearches: RecentSearchItem[] = [];
+  private destroy$ = new Subject<void>();
 
   constructor(
     private recentSearchesService: RecentSearchesService,
@@ -30,15 +34,18 @@ export class RecentSearchesComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.loadRecentSearches();
+    // Subscribe to recent searches changes
+    this.recentSearchesService.recentSearches$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(searches => {
+        this.recentSearches = searches;
+        this.cdr.markForCheck();
+      });
   }
 
-  /**
-   * Load recent searches from localStorage
-   */
-  loadRecentSearches(): void {
-    this.recentSearches = this.recentSearchesService.getRecentSearches();
-    this.cdr.markForCheck();
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 
   /**
@@ -55,16 +62,23 @@ export class RecentSearchesComponent implements OnInit {
     // Navigate to the category page with proper URL
     await this.router.navigate(['/settings', item.categoryKey]);
 
-    // Wait for navigation to complete and DOM to update
-    setTimeout(() => {
-      // Scroll to the setting (without updating hash to avoid weird URLs)
-      scrollToSetting(item.id, {
-        behavior: 'smooth',
-        block: 'center',
-        focusControl: true,
-        updateHash: false // Keep URL clean
+    // Wait for navigation to complete using router events
+    this.router.events
+      .pipe(
+        filter(event => event instanceof NavigationEnd),
+        takeUntil(this.destroy$)
+      )
+      .subscribe(() => {
+        // Small delay to ensure DOM is updated after navigation
+        setTimeout(() => {
+          scrollToSetting(item.id, {
+            behavior: 'smooth',
+            block: 'center',
+            focusControl: true,
+            updateHash: false
+          });
+        }, 100);
       });
-    }, 300);
   }
 
   /**
@@ -72,7 +86,6 @@ export class RecentSearchesComponent implements OnInit {
    */
   clearAll(): void {
     this.recentSearchesService.clearRecentSearches();
-    this.loadRecentSearches();
   }
 
   /**

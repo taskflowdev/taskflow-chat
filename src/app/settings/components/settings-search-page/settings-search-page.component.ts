@@ -1,11 +1,12 @@
-import { Component, ChangeDetectionStrategy, OnInit, ChangeDetectorRef } from '@angular/core';
+import { Component, ChangeDetectionStrategy, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { SettingsSearchComponent } from '../settings-search/settings-search.component';
 import { SettingsSearchResultsComponent } from '../settings-search-results/settings-search-results.component';
 import { RecentSearchesComponent } from '../recent-searches/recent-searches.component';
 import { SettingsSearchService } from '../../services/settings-search.service';
 import { RecentSearchesService } from '../../services/recent-searches.service';
-import { Observable } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
+import { map, takeUntil } from 'rxjs/operators';
 
 /**
  * Dedicated search page component for settings
@@ -24,28 +25,31 @@ import { Observable } from 'rxjs';
   styleUrls: ['./settings-search-page.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class SettingsSearchPageComponent implements OnInit {
+export class SettingsSearchPageComponent implements OnInit, OnDestroy {
   isSearchActive$: Observable<boolean>;
-  hasRecentSearches: boolean = false;
+  hasRecentSearches$: Observable<boolean>;
+  
+  private destroy$ = new Subject<void>();
 
   constructor(
     private settingsSearchService: SettingsSearchService,
-    private recentSearchesService: RecentSearchesService,
-    private cdr: ChangeDetectorRef
+    private recentSearchesService: RecentSearchesService
   ) {
     this.isSearchActive$ = this.settingsSearchService.isSearchActive$;
+    this.hasRecentSearches$ = this.recentSearchesService.recentSearches$.pipe(
+      map(searches => searches.length > 0)
+    );
   }
 
   ngOnInit(): void {
-    this.checkRecentSearches();
+    // Subscribe to recent searches to ensure reactive updates
+    this.recentSearchesService.recentSearches$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe();
   }
 
-  /**
-   * Check if there are recent searches available
-   */
-  private checkRecentSearches(): void {
-    const recentSearches = this.recentSearchesService.getRecentSearches();
-    this.hasRecentSearches = recentSearches.length > 0;
-    this.cdr.markForCheck();
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 }

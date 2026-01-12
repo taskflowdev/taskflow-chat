@@ -10,7 +10,7 @@
   <!-- Show recent searches or placeholder when search is inactive -->
   <ng-template #emptyState>
     <!-- Show recent searches if they exist -->
-    <ng-container *ngIf="hasRecentSearches; else searchPlaceholder">
+    <ng-container *ngIf="hasRecentSearches$ | async; else searchPlaceholder">
       <app-recent-searches></app-recent-searches>
     </ng-container>
     
