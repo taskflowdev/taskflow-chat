@@ -1,27 +1,28 @@
 <div class="recent-searches-container">
   <div class="recent-searches-header">
-    <h3 class="recent-searches-title">Recent Searches</h3>
+    <h3 class="recent-searches-title">
+      <i class="bi bi-clock-history"></i>
+      Recent Searches
+    </h3>
     <button class="clear-all-button" (click)="clearAll()" type="button" aria-label="Clear all recent searches">
       <i class="bi bi-x-lg"></i>
       Clear All
     </button>
   </div>
-  
+
+  <hr class="divider" />
+
   <div class="recent-searches-list">
-    <div *ngFor="let item of recentSearches; trackBy: trackById" 
-         class="recent-search-item"
-         (click)="onRecentSearchClick(item)"
-         role="button"
-         tabindex="0"
-         [attr.aria-label]="item.label + ' in ' + item.categoryLabel">
+    <div *ngFor="let item of recentSearches; trackBy: trackById" class="recent-search-item"
+      (click)="onRecentSearchClick(item)" role="button" tabindex="0"
+      [attr.aria-label]="item.label + ' in ' + item.categoryLabel">
       <div class="recent-search-content">
         <div class="icon-wrapper">
-          <i *ngIf="item.categoryIcon" 
-             [class]="'bi bi-' + item.categoryIcon + ' result-icon result-icon-default'"
-             [style.color]="item.categoryIconColor || 'inherit'"></i>
+          <i *ngIf="item.categoryIcon" [class]="'bi bi-' + item.categoryIcon + ' result-icon result-icon-default'"
+            [style.color]="item.categoryIconColor || 'inherit'"></i>
           <i *ngIf="item.categoryIconSelected"
-             [class]="'bi bi-' + item.categoryIconSelected + ' result-icon result-icon-selected'"
-             [style.color]="item.categoryIconColor || 'inherit'"></i>
+            [class]="'bi bi-' + item.categoryIconSelected + ' result-icon result-icon-selected'"
+            [style.color]="item.categoryIconColor || 'inherit'"></i>
         </div>
         <div class="recent-search-info">
           <div class="recent-search-title">{{ item.label }}</div>

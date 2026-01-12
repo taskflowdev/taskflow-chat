@@ -7,7 +7,6 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 1rem;
 }
 
 .recent-searches-title {
@@ -15,13 +14,19 @@
   font-weight: 600;
   color: var(--taskflow-color-text-primary);
   margin: 0;
+
+  i {
+    font-size: var(--taskflow-font-icon-size-lg);
+    margin-right: 0.4rem;
+    vertical-align: middle;
+  }
 }
 
 .clear-all-button {
   display: inline-flex;
   align-items: center;
   gap: 0.375rem;
-  padding: 0.375rem 0.75rem;
+  padding: 0.25rem 0.5rem;
   font-size: var(--taskflow-font-font-size-normal);
   color: var(--taskflow-color-text-secondary);
   background-color: transparent;
@@ -151,4 +156,8 @@
   i {
     font-size: var(--taskflow-font-icon-size-sm);
   }
+}
+
+.divider {
+  margin: 0.5rem 0rem 1rem 0rem;
 }
