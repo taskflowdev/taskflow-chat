@@ -193,12 +193,17 @@
   border-radius: 50%;
   background-color: var(--taskflow-color-search-badge-bg);
   border: 1px solid var(--taskflow-color-search-badge-border);
-  opacity: 0;
-  transform: translate(4px, 4px);
+  opacity: 0.3;
+  transform: translate(0, 0);
   transition: opacity 0.2s ease, transform 0.2s ease;
 
   i {
     font-size: var(--taskflow-font-icon-size-md);
     color: var(--taskflow-color-text-secondary);
   }
+}
+
+.recent-search-card:hover .action-icon {
+  opacity: 1;
+  transform: translate(0, 0);
 }
