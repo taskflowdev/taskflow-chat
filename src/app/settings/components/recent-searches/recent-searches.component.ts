@@ -6,11 +6,12 @@ import {
   ChangeDetectorRef
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Router, NavigationEnd } from '@angular/router';
+import { Router } from '@angular/router';
 import { RecentSearchesService, RecentSearchItem } from '../../services/recent-searches.service';
+import { SettingsSearchService } from '../../services/settings-search.service';
 import { scrollToSetting } from '../../utils/scroll-to-setting';
 import { Subject } from 'rxjs';
-import { takeUntil, filter, take } from 'rxjs/operators';
+import { takeUntil } from 'rxjs/operators';
 
 /**
  * Recent searches component
@@ -29,9 +30,10 @@ export class RecentSearchesComponent implements OnInit, OnDestroy {
 
   constructor(
     private recentSearchesService: RecentSearchesService,
+    private settingsSearchService: SettingsSearchService,
     private router: Router,
     private cdr: ChangeDetectorRef
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     // Subscribe to recent searches changes
@@ -59,26 +61,21 @@ export class RecentSearchesComponent implements OnInit, OnDestroy {
    * Navigate to a setting and scroll to it
    */
   private async navigateToSetting(item: RecentSearchItem): Promise<void> {
+    // Clear the search to hide search results
+    this.settingsSearchService.clearSearch();
+
     // Navigate to the category page with proper URL
     await this.router.navigate(['/settings', item.categoryKey]);
 
-    // Wait for navigation to complete using router events (only once)
-    this.router.events
-      .pipe(
-        filter(event => event instanceof NavigationEnd),
-        take(1)
-      )
-      .subscribe(() => {
-        // Small delay to ensure DOM is updated after navigation
-        setTimeout(() => {
-          scrollToSetting(item.id, {
-            behavior: 'smooth',
-            block: 'center',
-            focusControl: true,
-            updateHash: false
-          });
-        }, 100);
+    // Wait for navigation to complete and DOM to update
+    setTimeout(() => {
+      scrollToSetting(item.id, {
+        behavior: 'smooth',
+        block: 'center',
+        focusControl: true,
+        updateHash: false
       });
+    }, 300);
   }
 
   /**
