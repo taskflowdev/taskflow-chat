@@ -18,6 +18,17 @@
     <!-- Divider -->
     <div class="sidebar-divider"></div>
 
+    <!-- Search Link -->
+    <a [routerLink]="['/settings', 'search']" routerLinkActive="active" class="sidebar-link">
+      <!-- Default Icon -->
+      <i class="bi sidebar-icon default-icon bi-search"></i>
+
+      <!-- Active Icon -->
+      <i class="bi sidebar-icon active-icon bi-search"></i>
+
+      <span class="category-name">{{ 'settings.search.title' | translate }}</span>
+    </a>
+
     <!-- Dynamic Categories from Catalog -->
     <a *ngFor="let category of sortedCategories$ | async" [routerLink]="['/settings', category.key]"
       routerLinkActive="active" #rla="routerLinkActive" class="sidebar-link">

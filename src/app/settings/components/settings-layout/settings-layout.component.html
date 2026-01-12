@@ -9,16 +9,6 @@
     </ng-template>
   </div>
   <div class="settings-content">
-    <!-- Search Component -->
-    <app-settings-search></app-settings-search>
-    
-    <!-- Show search results when search is active, otherwise show category content -->
-    <ng-container *ngIf="isSearchActive$ | async; else categoryContent">
-      <app-settings-search-results></app-settings-search-results>
-    </ng-container>
-    
-    <ng-template #categoryContent>
-      <router-outlet></router-outlet>
-    </ng-template>
+    <router-outlet></router-outlet>
   </div>
 </div>
