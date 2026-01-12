@@ -56,14 +56,14 @@
 .recent-searches-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  grid-auto-rows: 1fr;
+  grid-auto-rows: minmax(180px, auto);
   gap: 1rem;
 }
 
 .recent-search-card {
   position: relative;
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-rows: auto 1fr auto;
   padding: 0.8rem;
   background-color: var(--taskflow-color-search-results-item-bg);
   border: 1px solid var(--taskflow-color-search-results-item-border);
@@ -71,12 +71,14 @@
   cursor: pointer;
   transition: background-color 0.2s ease, border-color 0.2s ease,
     transform 0.2s ease;
-  min-height: 180px;
+  height: 100%;
 
   &:hover {
+    background-color: var(--taskflow-color-search-results-item-hover-bg);
+    transform: translateY(-2px);
+    
     .action-icon {
       opacity: 1;
-      transform: translate(0, 0);
     }
   }
 
@@ -91,7 +93,6 @@
   justify-content: space-between;
   align-items: flex-start;
   margin-bottom: 0.4rem;
-  min-height: 3rem;
 }
 
 .icon-wrapper {
@@ -101,6 +102,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  flex-shrink: 0;
 }
 
 .result-icon {
@@ -128,23 +130,24 @@
 }
 
 .card-middle {
-  flex: 1;
   display: flex;
   flex-direction: column;
   gap: 0.2rem;
-  margin-bottom: 1rem;
+  min-height: 0;
+  overflow: hidden;
 }
 
 .recent-search-title {
   font-size: var(--taskflow-font-font-size-large);
   font-weight: 600;
   color: var(--taskflow-color-search-results-item-text);
-  line-height: normal;
+  line-height: 1.3;
   display: -webkit-box;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
   text-overflow: ellipsis;
+  word-break: break-word;
 }
 
 .recent-search-description {
@@ -156,13 +159,14 @@
   -webkit-box-orient: vertical;
   overflow: hidden;
   text-overflow: ellipsis;
+  word-break: break-word;
 }
 
 .card-bottom {
-  display: none;
+  display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-top: auto;
+  padding-top: 0.5rem;
 }
 
 .category-badge {
@@ -183,23 +187,23 @@
 }
 
 .action-icon {
-  display: none;
+  display: flex;
   align-items: center;
   justify-content: center;
   width: 1.75rem;
   height: 1.75rem;
-  opacity: 0;
-  transform: translate(0, 0);
-  transition: opacity 0.2s ease, transform 0.2s ease;
+  border-radius: 50%;
+  background-color: var(--taskflow-color-search-badge-bg);
+  border: 1px solid var(--taskflow-color-search-badge-border);
+  opacity: 0.3;
+  transition: opacity 0.2s ease;
 
   i {
-    font-size: var(--taskflow-font-icon-size-lg);
+    font-size: var(--taskflow-font-icon-size-md);
     color: var(--taskflow-color-text-secondary);
   }
 }
 
 .recent-search-card:hover .action-icon {
-  display: flex;
   opacity: 1;
-  transform: translate(0, 0);
 }
