@@ -10,7 +10,7 @@ import { Router, NavigationEnd } from '@angular/router';
 import { RecentSearchesService, RecentSearchItem } from '../../services/recent-searches.service';
 import { scrollToSetting } from '../../utils/scroll-to-setting';
 import { Subject } from 'rxjs';
-import { takeUntil, filter } from 'rxjs/operators';
+import { takeUntil, filter, take } from 'rxjs/operators';
 
 /**
  * Recent searches component
@@ -62,11 +62,11 @@ export class RecentSearchesComponent implements OnInit, OnDestroy {
     // Navigate to the category page with proper URL
     await this.router.navigate(['/settings', item.categoryKey]);
 
-    // Wait for navigation to complete using router events
+    // Wait for navigation to complete using router events (only once)
     this.router.events
       .pipe(
         filter(event => event instanceof NavigationEnd),
-        takeUntil(this.destroy$)
+        take(1)
       )
       .subscribe(() => {
         // Small delay to ensure DOM is updated after navigation

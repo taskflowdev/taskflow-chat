@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy, OnInit, OnDestroy } from '@angular/core';
+import { Component, ChangeDetectionStrategy, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { SettingsSearchComponent } from '../settings-search/settings-search.component';
 import { SettingsSearchResultsComponent } from '../settings-search-results/settings-search-results.component';
@@ -6,7 +6,7 @@ import { RecentSearchesComponent } from '../recent-searches/recent-searches.comp
 import { SettingsSearchService } from '../../services/settings-search.service';
 import { RecentSearchesService } from '../../services/recent-searches.service';
 import { Observable, Subject } from 'rxjs';
-import { map, takeUntil } from 'rxjs/operators';
+import { map } from 'rxjs/operators';
 
 /**
  * Dedicated search page component for settings
@@ -25,7 +25,7 @@ import { map, takeUntil } from 'rxjs/operators';
   styleUrls: ['./settings-search-page.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class SettingsSearchPageComponent implements OnInit, OnDestroy {
+export class SettingsSearchPageComponent implements OnDestroy {
   isSearchActive$: Observable<boolean>;
   hasRecentSearches$: Observable<boolean>;
   
@@ -39,13 +39,6 @@ export class SettingsSearchPageComponent implements OnInit, OnDestroy {
     this.hasRecentSearches$ = this.recentSearchesService.recentSearches$.pipe(
       map(searches => searches.length > 0)
     );
-  }
-
-  ngOnInit(): void {
-    // Subscribe to recent searches to ensure reactive updates
-    this.recentSearchesService.recentSearches$
-      .pipe(takeUntil(this.destroy$))
-      .subscribe();
   }
 
   ngOnDestroy(): void {
