@@ -1,16 +1,77 @@
-<div class="presence-avatars" *ngIf="presenceList.length > 0">
-  <div class="avatar-group">
-    <div *ngFor="let member of visibleMembers" class="presence-avatar" [class.online]="member.isOnline"
-      [attr.title]="getMemberTooltip(member)">
-      <div class="avatar-initials">{{ getInitials(member.userName || '') }}</div>
-      <span class="presence-indicator" [class.online]="member.isOnline"></span>
+<div class="presence-avatars-container" *ngIf="onlineCount > 0">
+  <!-- Avatar Stack (Collapsed State) -->
+  <div 
+    class="avatar-stack"
+    (mouseenter)="onAvatarStackHover()"
+    (mouseleave)="onAvatarStackLeave()">
+    
+    <div 
+      *ngFor="let member of visibleMembers"
+      class="avatar-item"
+      (mouseenter)="onAvatarHover($event, member)"
+      (mouseleave)="onAvatarLeave()">
+      <div class="avatar-circle">
+        <span class="avatar-initials">{{ getInitials(member.userName || '') }}</span>
+        <span class="online-indicator"></span>
+      </div>
     </div>
-    <div class="presence-avatar remaining" *ngIf="remainingCount > 0"
-      [attr.title]="remainingCount + ' more member' + (remainingCount > 1 ? 's' : '')">
-      <div class="avatar-initials">+{{ remainingCount }}</div>
+    
+    <div 
+      *ngIf="remainingCount > 0"
+      class="avatar-item avatar-more"
+      (mouseenter)="onAvatarStackHover()">
+      <div class="avatar-circle">
+        <span class="avatar-initials">+{{ remainingCount }}</span>
+      </div>
     </div>
   </div>
-  <!-- <div class="presence-stats">
-    <span class="online-count">{{ onlineCount }} online</span>
-  </div> -->
+
+  <!-- Expanded Dropdown Panel -->
+  <div 
+    *ngIf="showDropdown"
+    class="online-users-dropdown"
+    (mouseenter)="onDropdownEnter()"
+    (mouseleave)="onDropdownLeave()">
+    
+    <div class="dropdown-header">
+      <span class="dropdown-title">Online — {{ onlineCount }}</span>
+    </div>
+    
+    <div class="dropdown-list">
+      <div 
+        *ngFor="let member of onlineMembers"
+        class="user-list-item"
+        (mouseenter)="onAvatarHover($event, member)"
+        (mouseleave)="onAvatarLeave()">
+        
+        <div class="user-avatar">
+          <span class="user-initials">{{ getInitials(member.userName || '') }}</span>
+          <span class="user-online-dot"></span>
+        </div>
+        
+        <div class="user-info">
+          <div class="user-name">{{ member.userName }}</div>
+          <div class="user-email">{{ getUserEmail(member) }}</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Profile Hover Card -->
+  <div 
+    *ngIf="hoveredUser && !showDropdown"
+    class="profile-hover-card"
+    [style.top.px]="profileCardPosition.top"
+    [style.left.px]="profileCardPosition.left">
+    
+    <div class="profile-card-avatar">
+      <span class="profile-initials">{{ getInitials(hoveredUser.userName || '') }}</span>
+      <span class="profile-online-dot"></span>
+    </div>
+    
+    <div class="profile-card-info">
+      <div class="profile-name">{{ hoveredUser.userName }}</div>
+      <div class="profile-email">{{ getUserEmail(hoveredUser) }}</div>
+    </div>
+  </div>
 </div>

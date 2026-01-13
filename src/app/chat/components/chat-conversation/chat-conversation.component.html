@@ -16,10 +16,14 @@
       </div>
     </div>
 
-    <app-presence-avatars [groupId]="conversation.groupId" [maxVisible]="3">
-    </app-presence-avatars>
-
     <div class="conversation-actions">
+      <app-presence-avatars 
+        [groupId]="conversation.groupId" 
+        [maxVisible]="5">
+      </app-presence-avatars>
+      
+      <div class="action-divider"></div>
+      
       <app-common-dropdown [items]="dropdownItems" buttonIcon="bi-three-dots-vertical" buttonClass="action-btn"
         [appCommonTooltip]="'chats.conversation-window.header.more-options.title' | translate"
         (itemSelected)="onDropdownItemSelected($event)">

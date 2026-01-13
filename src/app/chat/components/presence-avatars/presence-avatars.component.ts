@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, OnDestroy } from '@angular/core';
+import { Component, Input, OnInit, OnDestroy, HostListener, ElementRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { GroupsService } from '../../../api/services/groups.service';
 import { PresenceDto } from '../../../api/models/presence-dto';
@@ -16,14 +16,22 @@ import { of } from 'rxjs';
 })
 export class PresenceAvatarsComponent implements OnInit, OnDestroy {
   @Input() groupId: string | null = null;
-  @Input() maxVisible: number = 3; // Maximum number of avatars to show before showing "+N"
+  @Input() maxVisible: number = 5; // Maximum number of avatars to show before showing "+N"
 
   presenceList: PresenceDto[] = [];
+  showDropdown = false;
+  hoveredUser: PresenceDto | null = null;
+  profileCardPosition = { top: 0, left: 0 };
+  
   private presenceSubscription?: Subscription;
   private refreshInterval = 10000; // 10 seconds
   private destroy$ = new Subject<void>();
+  private dropdownCloseTimeout?: any;
 
-  constructor(private groupsService: GroupsService) {}
+  constructor(
+    private groupsService: GroupsService,
+    private elementRef: ElementRef
+  ) {}
 
   ngOnInit(): void {
     if (this.groupId) {
@@ -36,6 +44,18 @@ export class PresenceAvatarsComponent implements OnInit, OnDestroy {
     this.presenceSubscription?.unsubscribe();
     this.destroy$.next();
     this.destroy$.complete();
+    if (this.dropdownCloseTimeout) {
+      clearTimeout(this.dropdownCloseTimeout);
+    }
+  }
+
+  @HostListener('document:click', ['$event'])
+  onDocumentClick(event: MouseEvent): void {
+    const target = event.target as HTMLElement;
+    if (!this.elementRef.nativeElement.contains(target)) {
+      this.showDropdown = false;
+      this.hoveredUser = null;
+    }
   }
 
   private loadPresence(): void {
@@ -84,24 +104,86 @@ export class PresenceAvatarsComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Get the list of members to display (limited by maxVisible)
+   * Get only online members
    */
-  get visibleMembers(): PresenceDto[] {
-    return this.presenceList.slice(0, this.maxVisible);
+  get onlineMembers(): PresenceDto[] {
+    return this.presenceList.filter(p => p.isOnline);
   }
 
   /**
-   * Get the count of remaining members not displayed
+   * Get the list of online members to display (limited by maxVisible)
+   */
+  get visibleMembers(): PresenceDto[] {
+    return this.onlineMembers.slice(0, this.maxVisible);
+  }
+
+  /**
+   * Get the count of remaining online members not displayed
    */
   get remainingCount(): number {
-    return Math.max(0, this.presenceList.length - this.maxVisible);
+    return Math.max(0, this.onlineMembers.length - this.maxVisible);
   }
 
   /**
    * Get online members count
    */
   get onlineCount(): number {
-    return this.presenceList.filter(p => p.isOnline).length;
+    return this.onlineMembers.length;
+  }
+
+  /**
+   * Toggle dropdown visibility
+   */
+  onAvatarStackHover(): void {
+    if (this.dropdownCloseTimeout) {
+      clearTimeout(this.dropdownCloseTimeout);
+    }
+    this.showDropdown = true;
+  }
+
+  onAvatarStackLeave(): void {
+    this.dropdownCloseTimeout = setTimeout(() => {
+      this.showDropdown = false;
+    }, 300);
+  }
+
+  onDropdownEnter(): void {
+    if (this.dropdownCloseTimeout) {
+      clearTimeout(this.dropdownCloseTimeout);
+    }
+  }
+
+  onDropdownLeave(): void {
+    this.showDropdown = false;
+  }
+
+  /**
+   * Show profile card on avatar hover
+   */
+  onAvatarHover(event: MouseEvent, member: PresenceDto): void {
+    const target = event.currentTarget as HTMLElement;
+    const rect = target.getBoundingClientRect();
+    
+    // Position card to the left of the avatar
+    this.profileCardPosition = {
+      top: rect.top + window.scrollY,
+      left: rect.left - 280 // Card width + some spacing
+    };
+    
+    this.hoveredUser = member;
+  }
+
+  onAvatarLeave(): void {
+    this.hoveredUser = null;
+  }
+
+  /**
+   * Get user email or fallback to username
+   */
+  getUserEmail(member: PresenceDto): string {
+    // Since PresenceDto doesn't have email, we'll use username as fallback
+    // In a real implementation, you might fetch this from a user service
+    return member.userId ? `${member.userId}@company.com` : member.userName || '';
   }
 
   /**

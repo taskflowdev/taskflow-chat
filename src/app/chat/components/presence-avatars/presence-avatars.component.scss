@@ -1,115 +1,325 @@
-.presence-avatars {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-}
-
-.avatar-group {
-  display: flex;
-  flex-direction: row-reverse;
-  align-items: center;
-  gap: 0.25rem;
-}
-
-.presence-avatar {
+// Enterprise-grade online presence component inspired by Microsoft Teams
+.presence-avatars-container {
   position: relative;
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  background: var(--taskflow-color-member-avatar-bg);
-  border: 2px solid
-    var(--taskflow-color-member-avatar-border, var(--taskflow-color-background));
   display: flex;
   align-items: center;
-  justify-content: center;
-  margin-left: -8px;
-  transition: all 0.2s ease;
+}
+
+// Avatar Stack (Collapsed State)
+.avatar-stack {
+  display: flex;
+  align-items: center;
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  transition: background-color 0.2s ease;
   cursor: pointer;
+
+  &:hover {
+    background-color: var(--taskflow-color-surface-hover);
+  }
+}
+
+.avatar-item {
+  margin-left: -8px;
+  transition: transform 0.2s ease;
 
   &:first-child {
     margin-left: 0;
   }
 
   &:hover {
-    transform: translateY(-2px);
+    transform: scale(1.1);
     z-index: 10;
+  }
+}
+
+.avatar-circle {
+  position: relative;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: var(--taskflow-color-member-avatar-bg);
+  border: 2px solid var(--taskflow-color-background);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+.avatar-initials {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--taskflow-color-member-avatar-text);
+  user-select: none;
+  letter-spacing: 0.3px;
+}
+
+.online-indicator {
+  position: absolute;
+  bottom: -2px;
+  right: -2px;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--taskflow-color-success);
+  border: 2px solid var(--taskflow-color-background);
+}
+
+.avatar-more {
+  .avatar-circle {
+    background: var(--taskflow-color-surface-subtle);
+    border-color: var(--taskflow-color-border);
   }
 
   .avatar-initials {
-    font-size: var(--taskflow-font-font-size-normal);
-    font-weight: 600;
-    color: var(--taskflow-color-member-avatar-text);
-    user-select: none;
+    color: var(--taskflow-color-text-secondary);
+    font-size: 10px;
   }
 
-  .presence-indicator {
-    position: absolute;
-    bottom: -1px;
-    right: -1px;
-    width: 12px;
-    height: 12px;
-    border-radius: 50%;
-    background: var(--taskflow-color-text-tertiary);
-    border: 2px solid
-      var(
-        --taskflow-color-member-avatar-border,
-        var(--taskflow-color-background)
-      );
-    transition: background-color 0.2s ease;
+  &:hover .avatar-circle {
+    background: var(--taskflow-color-surface-hover);
+  }
+}
 
-    &.online {
-      background: var(--taskflow-color-success);
-    }
+// Expanded Dropdown Panel
+.online-users-dropdown {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  width: 300px;
+  max-height: 400px;
+  background: var(--taskflow-color-dropdown-bg);
+  border: 1px solid var(--taskflow-color-dropdown-border);
+  border-radius: 8px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+  z-index: 1000;
+  animation: dropdownFadeIn 0.2s ease;
+  overflow: hidden;
+}
+
+@keyframes dropdownFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.dropdown-header {
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--taskflow-color-divider-subtle);
+  background: var(--taskflow-color-background-subtle);
+}
+
+.dropdown-title {
+  font-size: var(--taskflow-font-font-size-normal);
+  font-weight: 600;
+  color: var(--taskflow-color-text-primary);
+}
+
+.dropdown-list {
+  max-height: 340px;
+  overflow-y: auto;
+  overflow-x: hidden;
+
+  // Custom scrollbar
+  &::-webkit-scrollbar {
+    width: 6px;
   }
 
-  &.remaining {
-    background: var(--taskflow-color-surface-subtle);
-    border-color: var(--taskflow-color-border);
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
 
-    .avatar-initials {
-      font-size: var(--taskflow-font-font-size-normal);
-      color: var(--taskflow-color-text-secondary);
-    }
+  &::-webkit-scrollbar-thumb {
+    background: var(--taskflow-color-scrollbar-thumb);
+    border-radius: 3px;
 
     &:hover {
-      background: var(--taskflow-color-surface-hover);
+      background: var(--taskflow-color-scrollbar-thumb-hover);
     }
   }
 }
 
-.presence-stats {
+.user-list-item {
   display: flex;
   align-items: center;
-  padding-left: 0.25rem;
+  padding: 10px 16px;
+  gap: 12px;
+  cursor: pointer;
+  transition: background-color 0.15s ease;
 
-  .online-count {
-    font-size: var(--taskflow-font-font-size-normal);
-    color: var(--taskflow-color-text-secondary);
-    font-weight: 500;
-    white-space: nowrap;
+  &:hover {
+    background: var(--taskflow-color-dropdown-item-hover);
+  }
+
+  &:focus {
+    outline: 2px solid var(--taskflow-color-focus-ring);
+    outline-offset: -2px;
   }
 }
 
-// Responsive design
+.user-avatar {
+  position: relative;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: var(--taskflow-color-member-avatar-bg);
+  border: 2px solid var(--taskflow-color-background);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.user-initials {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--taskflow-color-member-avatar-text);
+  user-select: none;
+}
+
+.user-online-dot {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--taskflow-color-success);
+  border: 2px solid var(--taskflow-color-dropdown-bg);
+}
+
+.user-info {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.user-name {
+  font-size: var(--taskflow-font-font-size-normal);
+  font-weight: 500;
+  color: var(--taskflow-color-text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.user-email {
+  font-size: var(--taskflow-font-font-size-small);
+  color: var(--taskflow-color-text-secondary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+// Profile Hover Card (Individual User)
+.profile-hover-card {
+  position: fixed;
+  width: 260px;
+  background: var(--taskflow-color-tooltip-bg);
+  border: 1px solid var(--taskflow-color-tooltip-border);
+  border-radius: 8px;
+  padding: 16px;
+  box-shadow: var(--taskflow-color-tooltip-box-shadow, 0 4px 12px rgba(0, 0, 0, 0.15));
+  z-index: 2000;
+  animation: cardFadeIn 0.15s ease;
+  pointer-events: none;
+}
+
+@keyframes cardFadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.profile-card-avatar {
+  position: relative;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: var(--taskflow-color-member-avatar-bg);
+  border: 3px solid var(--taskflow-color-background);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.profile-initials {
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--taskflow-color-member-avatar-text);
+  user-select: none;
+}
+
+.profile-online-dot {
+  position: absolute;
+  bottom: 2px;
+  right: 2px;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: var(--taskflow-color-success);
+  border: 3px solid var(--taskflow-color-tooltip-bg);
+}
+
+.profile-card-info {
+  text-align: center;
+}
+
+.profile-name {
+  font-size: var(--taskflow-font-font-size-large);
+  font-weight: 600;
+  color: var(--taskflow-color-tooltip-text);
+  margin-bottom: 4px;
+}
+
+.profile-email {
+  font-size: var(--taskflow-font-font-size-small);
+  color: var(--taskflow-color-tooltip-p, var(--taskflow-color-text-secondary));
+}
+
+// Responsive Design
 @media (max-width: 768px) {
-  .presence-avatars {
-    gap: 0.5rem;
+  .avatar-circle {
+    width: 24px;
+    height: 24px;
   }
 
-  .presence-avatar {
-    width: 28px;
-    height: 28px;
-    margin-left: -6px;
-
-    .presence-indicator {
-      width: 8px;
-      height: 8px;
-    }
+  .avatar-initials {
+    font-size: 10px;
   }
 
-  .presence-stats {
-    .online-count {
-      font-size: var(--taskflow-font-font-size-x-small);
-    }
+  .online-indicator {
+    width: 8px;
+    height: 8px;
+  }
+
+  .online-users-dropdown {
+    width: 280px;
+    max-height: 350px;
+  }
+
+  .profile-hover-card {
+    display: none; // Hide on mobile for better UX
+  }
+}
+
+@media (max-width: 480px) {
+  .online-users-dropdown {
+    width: calc(100vw - 32px);
+    right: 16px;
   }
 }
