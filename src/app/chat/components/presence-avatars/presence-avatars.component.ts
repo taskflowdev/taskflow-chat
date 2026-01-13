@@ -49,7 +49,8 @@ export class PresenceAvatarsComponent implements OnInit, OnDestroy {
   private startPresenceRefresh(): void {
     this.presenceSubscription = interval(this.refreshInterval)
       .pipe(
-        switchMap(() => this.fetchPresence())
+        switchMap(() => this.fetchPresence()),
+        takeUntil(this.destroy$)
       )
       .subscribe(response => {
         this.presenceList = response.data || [];
