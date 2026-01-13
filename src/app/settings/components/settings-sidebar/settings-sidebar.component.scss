@@ -193,3 +193,33 @@
   font-size: var(--taskflow-font-icon-size-md);
   color: inherit;
 }
+
+.new-label-tooltip {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: var(--taskflow-font-font-size-normal);
+  color: var(--taskflow-color-text-primary);
+  margin-bottom: 0.2rem;
+  font-weight: 600;
+
+  i {
+    font-size: var(--taskflow-font-icon-size-md);
+    color: var(--taskflow-color-badge-new-text);
+  }
+}
+
+.beta-label-tooltip {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: var(--taskflow-font-font-size-normal);
+  color: var(--taskflow-color-text-primary);
+  margin-bottom: 0.2rem;
+  font-weight: 600;
+
+  i {
+    font-size: var(--taskflow-font-icon-size-md);
+    color: var(--taskflow-color-badge-beta-text);
+  }
+}

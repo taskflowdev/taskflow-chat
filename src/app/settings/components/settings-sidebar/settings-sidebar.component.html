@@ -28,7 +28,7 @@
 
       <span class="category-name">Search</span>
 
-      <span class="new-label" aria-label="New" [appCommonTooltip]="'New Feature'">
+      <span class="new-label" aria-label="New" [appCommonTooltip]="newSearchTooltip">
         <i class="bi bi-stars"></i>
       </span>
     </a>
@@ -45,10 +45,28 @@
 
       <span class="category-name">{{ getCategoryName(category) }}</span>
 
-      <span *ngIf="category.beta" class="beta-label" aria-label="Beta"
-        [appCommonTooltip]="getCategoryBetaLabel(category)">
+      <span *ngIf="category.beta" class="beta-label" aria-label="Beta" [appCommonTooltip]="betaTooltip">
         <i class="bi bi-flask"></i>
       </span>
     </a>
   </nav>
 </div>
+
+<!-- Tooltip template for new search feature -->
+<ng-template #newSearchTooltip>
+  <div class="tooltip-content">
+    <span class="new-label-tooltip" aria-label="New">
+      <i class="bi bi-stars"></i> Search (New)
+    </span>
+    <p>Quickly locate settings across all categories using one simple search.</p>
+  </div>
+</ng-template>
+
+<ng-template #betaTooltip>
+  <div class="tooltip-content">
+    <span class="beta-label-tooltip" aria-label="Beta">
+      <i class="bi bi-flask"></i> Beta
+    </span>
+    <p>This settings category is in beta and may change as improvements are made.</p>
+  </div>
+</ng-template>
