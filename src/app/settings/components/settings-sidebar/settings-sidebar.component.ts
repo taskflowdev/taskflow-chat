@@ -9,10 +9,12 @@ import { CatalogResponse } from '../../../api/models/catalog-response';
 import { CategoryWithKeys } from '../../../api/models/category-with-keys';
 import { TranslatePipe, I18nService } from '../../../core/i18n';
 import { getUserInitials } from '../../../shared/utils/user.utils';
+import { CommonTooltipDirective } from "../../../shared/components/common-tooltip";
 
 @Component({
   selector: 'app-settings-sidebar',
-  imports: [CommonModule, RouterModule, TranslatePipe],
+  standalone: true,
+  imports: [CommonModule, RouterModule, TranslatePipe, CommonTooltipDirective],
   templateUrl: './settings-sidebar.component.html',
   styleUrls: ['./settings-sidebar.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -123,7 +125,7 @@ export class SettingsSidebarComponent implements OnInit, OnDestroy {
    * Get translated beta label for category
    * Uses i18n key from API if available, falls back to "Beta"
    */
-  getCategoryBetaLabel(category: CategoryWithKeys): string | null {
+  getCategoryBetaLabel(category: CategoryWithKeys): string {
     const i18nKey = category.i18n?.fields?.['beta'];
     if (i18nKey) {
       const translated = this.i18n.t(i18nKey);

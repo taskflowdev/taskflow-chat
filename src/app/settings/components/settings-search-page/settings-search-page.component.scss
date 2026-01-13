@@ -1,0 +1,67 @@
+.settings-search-page {
+  padding: 0;
+  max-width: 900px;
+}
+
+.search-placeholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 4rem 2rem;
+  text-align: center;
+  color: var(--taskflow-color-text-secondary);
+}
+
+.placeholder-icon {
+  font-size: var(--taskflow-font-icon-size-3xl);
+  opacity: 0.3;
+  margin-bottom: 1.5rem;
+}
+
+.placeholder-title {
+  font-size: var(--taskflow-font-font-size-large);
+  font-weight: 600;
+  color: var(--taskflow-color-text-primary);
+  margin-bottom: 0.5rem;
+}
+
+.placeholder-text {
+  font-size: var(--taskflow-font-font-size-normal);
+  color: var(--taskflow-color-text-secondary);
+  margin: 0;
+}
+
+.placeholder-hint {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  font-size: var(--taskflow-font-font-size-normal);
+  color: var(--taskflow-color-text-secondary);
+}
+
+.hint-item {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+
+  i {
+    font-size: var(--taskflow-font-icon-size-lg);
+  }
+
+  kbd {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 1.4rem;
+    padding: 0.1rem;
+    border-radius: 0.35rem;
+    border: 1px solid var(--taskflow-color-search-input-border);
+    background-color: var(--taskflow-color-surface-hover);
+    color: var(--taskflow-color-text-secondary);
+    font-family: monospace;
+    font-size: var(--taskflow-font-font-size-normal);
+    font-weight: 600;
+  }
+}

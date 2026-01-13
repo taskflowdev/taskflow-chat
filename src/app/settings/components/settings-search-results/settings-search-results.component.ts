@@ -11,6 +11,7 @@ import { Router } from '@angular/router';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { SettingsSearchService } from '../../services/settings-search.service';
+import { RecentSearchesService } from '../../services/recent-searches.service';
 import { SettingsSearchResult } from '../../utils/settings-search-index';
 import { scrollToSetting } from '../../utils/scroll-to-setting';
 
@@ -34,6 +35,7 @@ export class SettingsSearchResultsComponent implements OnInit, OnDestroy {
 
   constructor(
     private settingsSearchService: SettingsSearchService,
+    private recentSearchesService: RecentSearchesService,
     private router: Router,
     private cdr: ChangeDetectorRef
   ) {}
@@ -73,6 +75,9 @@ export class SettingsSearchResultsComponent implements OnInit, OnDestroy {
    * Navigate to a setting and scroll to it
    */
   private async navigateToSetting(result: SettingsSearchResult): Promise<void> {
+    // Save to recent searches when user clicks a result
+    this.recentSearchesService.addRecentSearch(result);
+
     // Clear the search to hide search results
     this.settingsSearchService.clearSearch();
 

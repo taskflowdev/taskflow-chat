@@ -383,11 +383,11 @@
 
     "badgeBetaBg": "#198754",
     "badgeBetaBorder": "transparent",
-    "badgeBetaText": "#ffffff",
+    "badgeBetaText": "#3fb950",
 
-    "badgeNewBg": "rgba(35, 134, 54, 0.08)",
-    "badgeNewBorder": "rgba(35, 134, 54, 0.16)",
-    "badgeNewText": "#2ea043",
+    "badgeNewBg": "rgba(26, 127, 55, 0.08)",
+    "badgeNewBorder": "transparent",
+    "badgeNewText": "#a8b3ff",
 
     "badgeDeprecatedBg": "rgba(158, 106, 3, 0.08)",
     "badgeDeprecatedBorder": "rgba(158, 106, 3, 0.16)",
