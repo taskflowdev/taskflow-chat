@@ -2,8 +2,9 @@ import { Component, Input, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { GroupsService } from '../../../api/services/groups.service';
 import { PresenceDto } from '../../../api/models/presence-dto';
-import { interval, Subscription, Observable } from 'rxjs';
-import { switchMap, catchError } from 'rxjs/operators';
+import { PresenceDtoIEnumerableApiResponse } from '../../../api/models/presence-dto-i-enumerable-api-response';
+import { interval, Subscription, Observable, Subject } from 'rxjs';
+import { switchMap, catchError, takeUntil } from 'rxjs/operators';
 import { of } from 'rxjs';
 
 @Component({
@@ -20,6 +21,7 @@ export class PresenceAvatarsComponent implements OnInit, OnDestroy {
   presenceList: PresenceDto[] = [];
   private presenceSubscription?: Subscription;
   private refreshInterval = 10000; // 10 seconds
+  private destroy$ = new Subject<void>();
 
   constructor(private groupsService: GroupsService) {}
 
@@ -32,12 +34,16 @@ export class PresenceAvatarsComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.presenceSubscription?.unsubscribe();
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 
   private loadPresence(): void {
-    this.fetchPresence().subscribe(response => {
-      this.presenceList = response.data || [];
-    });
+    this.fetchPresence()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(response => {
+        this.presenceList = response.data || [];
+      });
   }
 
   private startPresenceRefresh(): void {
@@ -50,7 +56,7 @@ export class PresenceAvatarsComponent implements OnInit, OnDestroy {
       });
   }
 
-  private fetchPresence(): Observable<any> {
+  private fetchPresence(): Observable<PresenceDtoIEnumerableApiResponse> {
     if (!this.groupId) {
       return of({ data: [] });
     }
