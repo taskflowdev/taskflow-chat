@@ -9,9 +9,15 @@
 
     <div class="conversation-info">
       <h4 class="conversation-title">{{ conversation.groupName }}</h4>
-      <p class="conversation-subtitle" *ngIf="conversation.memberCount">
-        {{ conversation.memberCount }} member{{ conversation.memberCount !== 1 ? 's' : '' }}
-      </p>
+      <div class="conversation-subtitle-row">
+        <p class="conversation-subtitle" *ngIf="conversation.memberCount">
+          {{ conversation.memberCount }} member{{ conversation.memberCount !== 1 ? 's' : '' }}
+        </p>
+        <app-presence-avatars 
+          [groupId]="conversation.groupId"
+          [maxVisible]="3">
+        </app-presence-avatars>
+      </div>
     </div>
 
     <div class="conversation-actions">

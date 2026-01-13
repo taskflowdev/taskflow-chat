@@ -10,6 +10,7 @@ import { CommonDropdownComponent, DropdownItem } from '../../../shared/component
 import { CommonTooltipDirective, TooltipPosition } from '../../../shared/components/common-tooltip';
 import { ScrollToBottomButtonComponent } from '../scroll-to-bottom-button';
 import { TypingIndicatorComponent } from '../typing-indicator';
+import { PresenceAvatarsComponent } from '../presence-avatars';
 import { AutoScrollService } from '../../services/auto-scroll.service';
 import { TranslatePipe, I18nService } from '../../../core/i18n';
 import { TypingIndicatorSettingsService } from '../../../core/services/typing-indicator-settings.service';
@@ -23,7 +24,7 @@ export interface ConversationData {
 
 @Component({
   selector: 'app-chat-conversation',
-  imports: [CommonModule, FormsModule, ChatMessageComponent, SkeletonLoaderComponent, GroupInfoDialogComponent, CommonDropdownComponent, CommonTooltipDirective, ScrollToBottomButtonComponent, TypingIndicatorComponent, TranslatePipe],
+  imports: [CommonModule, FormsModule, ChatMessageComponent, SkeletonLoaderComponent, GroupInfoDialogComponent, CommonDropdownComponent, CommonTooltipDirective, ScrollToBottomButtonComponent, TypingIndicatorComponent, PresenceAvatarsComponent, TranslatePipe],
   providers: [AutoScrollService],
   templateUrl: './chat-conversation.component.html',
   styleUrls: ['./chat-conversation.component.scss']

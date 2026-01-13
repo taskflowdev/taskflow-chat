@@ -56,6 +56,12 @@
       transition: color 0.2s ease;
     }
 
+    .conversation-subtitle-row {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
     .conversation-subtitle {
       color: var(--taskflow-color-text-tertiary);
       font-size: var(--taskflow-font-font-size-normal);

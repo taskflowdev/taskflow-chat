@@ -1,0 +1,109 @@
+.presence-avatars {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.avatar-group {
+  display: flex;
+  flex-direction: row-reverse;
+  align-items: center;
+}
+
+.presence-avatar {
+  position: relative;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: var(--taskflow-color-member-avatar-bg);
+  border: 2px solid var(--taskflow-color-navbar-bg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-left: -8px;
+  transition: all 0.2s ease;
+  cursor: pointer;
+
+  &:first-child {
+    margin-left: 0;
+  }
+
+  &:hover {
+    transform: translateY(-2px);
+    z-index: 10;
+  }
+
+  .avatar-initials {
+    font-size: var(--taskflow-font-font-size-x-small);
+    font-weight: 600;
+    color: var(--taskflow-color-member-avatar-text);
+    user-select: none;
+  }
+
+  .presence-indicator {
+    position: absolute;
+    bottom: -1px;
+    right: -1px;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: var(--taskflow-color-text-tertiary);
+    border: 2px solid var(--taskflow-color-navbar-bg);
+    transition: background-color 0.2s ease;
+
+    &.online {
+      background: var(--taskflow-color-success);
+    }
+  }
+
+  &.remaining {
+    background: var(--taskflow-color-surface-subtle);
+    border-color: var(--taskflow-color-border);
+
+    .avatar-initials {
+      font-size: var(--taskflow-font-font-size-x-small);
+      color: var(--taskflow-color-text-secondary);
+    }
+
+    &:hover {
+      background: var(--taskflow-color-surface-hover);
+    }
+  }
+}
+
+.presence-stats {
+  display: flex;
+  align-items: center;
+  padding-left: 0.25rem;
+
+  .online-count {
+    font-size: var(--taskflow-font-font-size-small);
+    color: var(--taskflow-color-text-secondary);
+    font-weight: 500;
+    white-space: nowrap;
+  }
+}
+
+// Responsive design
+@media (max-width: 768px) {
+  .presence-avatars {
+    gap: 0.5rem;
+  }
+
+  .presence-avatar {
+    width: 28px;
+    height: 28px;
+    margin-left: -6px;
+
+    .presence-indicator {
+      width: 8px;
+      height: 8px;
+    }
+  }
+
+  .presence-stats {
+    .online-count {
+      font-size: var(--taskflow-font-font-size-x-small);
+    }
+  }
+}
