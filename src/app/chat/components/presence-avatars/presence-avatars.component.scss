@@ -9,18 +9,15 @@
 .avatar-stack {
   display: flex;
   align-items: center;
-  padding: 0.25rem 0.5rem;
-  border-radius: 4px;
-  transition: background-color 0.2s ease;
   cursor: pointer;
 
-  &:hover {
-    background-color: var(--taskflow-color-surface-hover);
-  }
+  // &:hover {
+  //   background-color: var(--taskflow-color-surface-hover);
+  // }
 }
 
 .avatar-item {
-  margin-left: -8px;
+  margin-left: -22px;
   transition: transform 0.2s ease;
 
   &:first-child {
@@ -28,15 +25,14 @@
   }
 
   &:hover {
-    transform: scale(1.1);
-    z-index: 10;
+    margin-left: 2px;
   }
 }
 
 .avatar-circle {
   position: relative;
-  width: 28px;
-  height: 28px;
+  width: 40px;
+  height: 40px;
   border-radius: 50%;
   background: var(--taskflow-color-member-avatar-bg);
   border: 2px solid var(--taskflow-color-background);
@@ -47,7 +43,7 @@
 }
 
 .avatar-initials {
-  font-size: 11px;
+  font-size: var(--taskflow-font-font-size-normal);
   font-weight: 600;
   color: var(--taskflow-color-member-avatar-text);
   user-select: none;
@@ -58,11 +54,11 @@
   position: absolute;
   bottom: -2px;
   right: -2px;
-  width: 10px;
-  height: 10px;
+  width: 14px;
+  height: 14px;
   border-radius: 50%;
   background: var(--taskflow-color-success);
-  border: 2px solid var(--taskflow-color-background);
+  border: 1px solid var(--taskflow-color-background);
 }
 
 .avatar-more {
@@ -109,7 +105,7 @@
 }
 
 .dropdown-header {
-  padding: 12px 16px;
+  padding: 8px 10px;
   border-bottom: 1px solid var(--taskflow-color-divider-subtle);
   background: var(--taskflow-color-background-subtle);
 }
@@ -147,7 +143,7 @@
 .user-list-item {
   display: flex;
   align-items: center;
-  padding: 10px 16px;
+  padding: 8px 10px;
   gap: 12px;
   cursor: pointer;
   transition: background-color 0.15s ease;
@@ -164,8 +160,8 @@
 
 .user-avatar {
   position: relative;
-  width: 36px;
-  height: 36px;
+  width: 44px;
+  height: 44px;
   border-radius: 50%;
   background: var(--taskflow-color-member-avatar-bg);
   border: 2px solid var(--taskflow-color-background);
@@ -198,11 +194,11 @@
   min-width: 0;
   display: flex;
   flex-direction: column;
-  gap: 2px;
+  gap: 1px;
 }
 
 .user-name {
-  font-size: var(--taskflow-font-font-size-normal);
+  font-size: var(--taskflow-font-font-size-large);
   font-weight: 500;
   color: var(--taskflow-color-text-primary);
   white-space: nowrap;
@@ -211,7 +207,7 @@
 }
 
 .user-email {
-  font-size: var(--taskflow-font-font-size-small);
+  font-size: var(--taskflow-font-font-size-normal);
   color: var(--taskflow-color-text-secondary);
   white-space: nowrap;
   overflow: hidden;
@@ -226,7 +222,10 @@
   border: 1px solid var(--taskflow-color-tooltip-border);
   border-radius: 8px;
   padding: 16px;
-  box-shadow: var(--taskflow-color-tooltip-box-shadow, 0 4px 12px rgba(0, 0, 0, 0.15));
+  box-shadow: var(
+    --taskflow-color-tooltip-box-shadow,
+    0 4px 12px rgba(0, 0, 0, 0.15)
+  );
   z-index: 2000;
   animation: cardFadeIn 0.15s ease;
   pointer-events: none;
