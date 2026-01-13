@@ -8,15 +8,17 @@
   display: flex;
   flex-direction: row-reverse;
   align-items: center;
+  gap: 0.25rem;
 }
 
 .presence-avatar {
   position: relative;
-  width: 32px;
-  height: 32px;
+  width: 40px;
+  height: 40px;
   border-radius: 50%;
   background: var(--taskflow-color-member-avatar-bg);
-  border: 2px solid var(--taskflow-color-member-avatar-border, var(--taskflow-color-background));
+  border: 2px solid
+    var(--taskflow-color-member-avatar-border, var(--taskflow-color-background));
   display: flex;
   align-items: center;
   justify-content: center;
@@ -34,7 +36,7 @@
   }
 
   .avatar-initials {
-    font-size: var(--taskflow-font-font-size-x-small);
+    font-size: var(--taskflow-font-font-size-normal);
     font-weight: 600;
     color: var(--taskflow-color-member-avatar-text);
     user-select: none;
@@ -44,11 +46,15 @@
     position: absolute;
     bottom: -1px;
     right: -1px;
-    width: 10px;
-    height: 10px;
+    width: 12px;
+    height: 12px;
     border-radius: 50%;
     background: var(--taskflow-color-text-tertiary);
-    border: 2px solid var(--taskflow-color-member-avatar-border, var(--taskflow-color-background));
+    border: 2px solid
+      var(
+        --taskflow-color-member-avatar-border,
+        var(--taskflow-color-background)
+      );
     transition: background-color 0.2s ease;
 
     &.online {
@@ -61,7 +67,7 @@
     border-color: var(--taskflow-color-border);
 
     .avatar-initials {
-      font-size: var(--taskflow-font-font-size-x-small);
+      font-size: var(--taskflow-font-font-size-normal);
       color: var(--taskflow-color-text-secondary);
     }
 
@@ -77,7 +83,7 @@
   padding-left: 0.25rem;
 
   .online-count {
-    font-size: var(--taskflow-font-font-size-small);
+    font-size: var(--taskflow-font-font-size-normal);
     color: var(--taskflow-color-text-secondary);
     font-weight: 500;
     white-space: nowrap;

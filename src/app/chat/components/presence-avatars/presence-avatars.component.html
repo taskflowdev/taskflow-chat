@@ -1,19 +1,16 @@
 <div class="presence-avatars" *ngIf="presenceList.length > 0">
   <div class="avatar-group">
-    <div
-      *ngFor="let member of visibleMembers"
-      class="presence-avatar"
-      [class.online]="member.isOnline"
-      [attr.title]="getMemberTooltip(member)"
-    >
+    <div *ngFor="let member of visibleMembers" class="presence-avatar" [class.online]="member.isOnline"
+      [attr.title]="getMemberTooltip(member)">
       <div class="avatar-initials">{{ getInitials(member.userName || '') }}</div>
       <span class="presence-indicator" [class.online]="member.isOnline"></span>
     </div>
-    <div class="presence-avatar remaining" *ngIf="remainingCount > 0" [attr.title]="remainingCount + ' more member' + (remainingCount > 1 ? 's' : '')">
+    <div class="presence-avatar remaining" *ngIf="remainingCount > 0"
+      [attr.title]="remainingCount + ' more member' + (remainingCount > 1 ? 's' : '')">
       <div class="avatar-initials">+{{ remainingCount }}</div>
     </div>
   </div>
-  <div class="presence-stats">
+  <!-- <div class="presence-stats">
     <span class="online-count">{{ onlineCount }} online</span>
-  </div>
+  </div> -->
 </div>

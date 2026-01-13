@@ -71,7 +71,9 @@
   }
 
   .conversation-actions {
-    // Styles for common dropdown are in the common component
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
   }
 }
 
