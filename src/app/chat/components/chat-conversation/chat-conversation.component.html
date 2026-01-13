@@ -20,7 +20,7 @@
       <app-presence-avatars [groupId]="conversation.groupId" [maxVisible]="5">
       </app-presence-avatars>
 
-      <div class="action-divider"></div>
+      <div class="action-divider" *ngIf="conversation.memberCount && conversation.memberCount > 1"></div>
 
       <app-common-dropdown [items]="dropdownItems" buttonIcon="bi-three-dots-vertical" buttonClass="action-btn"
         [appCommonTooltip]="'chats.conversation-window.header.more-options.title' | translate"
