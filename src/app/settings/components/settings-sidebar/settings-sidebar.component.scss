@@ -65,21 +65,24 @@
     background-color: var(--taskflow-color-sidebar-active);
     color: var(--taskflow-color-sidebar-active-text);
     font-weight: 600;
+    border-radius: 6px;
+    position: relative;
 
     .sidebar-icon {
       color: var(--taskflow-color-sidebar-icon-active);
     }
 
-    // &::before {
-    //   content: "";
-    //   position: absolute;
-    //   left: 0;
-    //   top: 0;
-    //   bottom: 0;
-    //   width: 3px;
-    //   background-color: var(--taskflow-color-accent, #0969da);
-    //   border-radius: 0 3px 3px 0;
-    // }
+    // Add pill/badge effect
+    &::before {
+      content: "";
+      position: absolute;
+      left: -8px;
+      top: 8px;
+      bottom: 8px;
+      width: 4px;
+      background-color: var(--taskflow-color-accent);
+      border-radius: 3px;
+    }
   }
 }
 
