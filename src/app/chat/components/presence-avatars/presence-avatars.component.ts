@@ -26,7 +26,9 @@ export class PresenceAvatarsComponent implements OnInit, OnDestroy {
   private presenceSubscription?: Subscription;
   private refreshInterval = 10000; // 10 seconds
   private destroy$ = new Subject<void>();
-  private dropdownCloseTimeout?: any;
+  private dropdownCloseTimeout: NodeJS.Timeout | null = null;
+  
+  private readonly PROFILE_CARD_WIDTH = 280; // Must match CSS .profile-hover-card width
 
   constructor(
     private groupsService: GroupsService,
@@ -167,7 +169,7 @@ export class PresenceAvatarsComponent implements OnInit, OnDestroy {
     // Position card to the left of the avatar
     this.profileCardPosition = {
       top: rect.top + window.scrollY,
-      left: rect.left - 280 // Card width + some spacing
+      left: rect.left - this.PROFILE_CARD_WIDTH - 10 // Card width + spacing
     };
     
     this.hoveredUser = member;
@@ -179,11 +181,12 @@ export class PresenceAvatarsComponent implements OnInit, OnDestroy {
 
   /**
    * Get user email or fallback to username
+   * Note: Since PresenceDto doesn't include email, we return just the username.
+   * In a production environment, this should fetch from a user profile service.
    */
   getUserEmail(member: PresenceDto): string {
-    // Since PresenceDto doesn't have email, we'll use username as fallback
-    // In a real implementation, you might fetch this from a user service
-    return member.userId ? `${member.userId}@company.com` : member.userName || '';
+    // TODO: Integrate with user profile service to get actual email
+    return member.userName || member.userId || 'user@domain.com';
   }
 
   /**
