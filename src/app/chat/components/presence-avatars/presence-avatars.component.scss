@@ -18,14 +18,28 @@
 
 .avatar-item {
   margin-left: -22px;
-  transition: transform 0.2s ease;
+  transition: margin-left 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 
   &:first-child {
     margin-left: 0;
   }
 
-  &:hover {
+  // Uncollapse on hover
+  .avatar-stack:hover & {
     margin-left: 2px;
+
+    &:first-child {
+      margin-left: 0;
+    }
+  }
+
+  // Keep uncollapsed when dropdown is open
+  .avatar-stack.dropdown-active & {
+    margin-left: 2px;
+
+    &:first-child {
+      margin-left: 0;
+    }
   }
 }
 
@@ -59,6 +73,18 @@
   border-radius: 50%;
   background: var(--taskflow-color-success);
   border: 1px solid var(--taskflow-color-background);
+}
+
+.offline-indicator {
+  position: absolute;
+  bottom: -2px;
+  right: -2px;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: var(--taskflow-color-dropdown-bg);
+  border: 2px solid var(--taskflow-color-text-tertiary, rgba(0, 0, 0, 0.3));
+  box-sizing: border-box;
 }
 
 .avatar-more {
@@ -102,18 +128,6 @@
     opacity: 1;
     transform: translateY(0);
   }
-}
-
-.dropdown-header {
-  padding: 8px 10px;
-  border-bottom: 1px solid var(--taskflow-color-divider-subtle);
-  background: var(--taskflow-color-background-subtle);
-}
-
-.dropdown-title {
-  font-size: var(--taskflow-font-font-size-normal);
-  font-weight: 600;
-  color: var(--taskflow-color-text-primary);
 }
 
 .dropdown-list {
@@ -182,11 +196,23 @@
   position: absolute;
   bottom: 0;
   right: 0;
-  width: 12px;
-  height: 12px;
+  width: 14px;
+  height: 14px;
   border-radius: 50%;
   background: var(--taskflow-color-success);
   border: 2px solid var(--taskflow-color-dropdown-bg);
+}
+
+.user-offline-dot {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: var(--taskflow-color-dropdown-bg);
+  border: 2px solid var(--taskflow-color-text-tertiary);
+  box-sizing: border-box;
 }
 
 .user-info {
@@ -194,7 +220,7 @@
   min-width: 0;
   display: flex;
   flex-direction: column;
-  gap: 1px;
+  gap: 0px;
 }
 
 .user-name {
@@ -272,6 +298,18 @@
   border-radius: 50%;
   background: var(--taskflow-color-success);
   border: 3px solid var(--taskflow-color-tooltip-bg);
+}
+
+.profile-offline-dot {
+  position: absolute;
+  bottom: 2px;
+  right: 2px;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: transparent;
+  border: 3px solid var(--taskflow-color-text-tertiary, rgba(0, 0, 0, 0.3));
+  box-sizing: border-box;
 }
 
 .profile-card-info {

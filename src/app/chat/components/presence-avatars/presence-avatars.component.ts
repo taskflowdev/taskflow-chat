@@ -22,18 +22,18 @@ export class PresenceAvatarsComponent implements OnInit, OnDestroy {
   showDropdown = false;
   hoveredUser: PresenceDto | null = null;
   profileCardPosition = { top: 0, left: 0 };
-  
+
   private presenceSubscription?: Subscription;
   private refreshInterval = 10000; // 10 seconds
   private destroy$ = new Subject<void>();
   private dropdownCloseTimeout: NodeJS.Timeout | null = null;
-  
+
   private readonly PROFILE_CARD_WIDTH = 280; // Must match CSS .profile-hover-card width
 
   constructor(
     private groupsService: GroupsService,
     private elementRef: ElementRef
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     if (this.groupId) {
@@ -113,6 +113,20 @@ export class PresenceAvatarsComponent implements OnInit, OnDestroy {
   }
 
   /**
+   * Get only offline members
+   */
+  get offlineMembers(): PresenceDto[] {
+    return this.presenceList.filter(p => !p.isOnline);
+  }
+
+  /**
+   * Get all members sorted by online status first
+   */
+  get allMembers(): PresenceDto[] {
+    return [...this.onlineMembers, ...this.offlineMembers];
+  }
+
+  /**
    * Get the list of online members to display (limited by maxVisible)
    */
   get visibleMembers(): PresenceDto[] {
@@ -131,6 +145,20 @@ export class PresenceAvatarsComponent implements OnInit, OnDestroy {
    */
   get onlineCount(): number {
     return this.onlineMembers.length;
+  }
+
+  /**
+   * Get offline members count
+   */
+  get offlineCount(): number {
+    return this.offlineMembers.length;
+  }
+
+  /**
+   * Get total members count
+   */
+  get totalCount(): number {
+    return this.presenceList.length;
   }
 
   /**
@@ -165,13 +193,13 @@ export class PresenceAvatarsComponent implements OnInit, OnDestroy {
   onAvatarHover(event: MouseEvent, member: PresenceDto): void {
     const target = event.currentTarget as HTMLElement;
     const rect = target.getBoundingClientRect();
-    
+
     // Position card to the left of the avatar
     this.profileCardPosition = {
       top: rect.top + window.scrollY,
       left: rect.left - this.PROFILE_CARD_WIDTH - 10 // Card width + spacing
     };
-    
+
     this.hoveredUser = member;
   }
 
