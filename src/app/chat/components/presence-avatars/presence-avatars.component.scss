@@ -16,7 +16,7 @@
   height: 32px;
   border-radius: 50%;
   background: var(--taskflow-color-member-avatar-bg);
-  border: 2px solid var(--taskflow-color-navbar-bg);
+  border: 2px solid var(--taskflow-color-background);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -48,7 +48,7 @@
     height: 10px;
     border-radius: 50%;
     background: var(--taskflow-color-text-tertiary);
-    border: 2px solid var(--taskflow-color-navbar-bg);
+    border: 2px solid var(--taskflow-color-background);
     transition: background-color 0.2s ease;
 
     &.online {

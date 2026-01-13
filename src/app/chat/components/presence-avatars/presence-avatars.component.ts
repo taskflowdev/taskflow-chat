@@ -2,7 +2,7 @@ import { Component, Input, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { GroupsService } from '../../../api/services/groups.service';
 import { PresenceDto } from '../../../api/models/presence-dto';
-import { interval, Subscription } from 'rxjs';
+import { interval, Subscription, Observable } from 'rxjs';
 import { switchMap, catchError } from 'rxjs/operators';
 import { of } from 'rxjs';
 
@@ -35,37 +35,33 @@ export class PresenceAvatarsComponent implements OnInit, OnDestroy {
   }
 
   private loadPresence(): void {
-    if (!this.groupId) return;
+    this.fetchPresence().subscribe(response => {
+      this.presenceList = response.data || [];
+    });
+  }
 
-    this.groupsService.apiGroupsIdPresenceGet$Json({ id: this.groupId })
+  private startPresenceRefresh(): void {
+    this.presenceSubscription = interval(this.refreshInterval)
       .pipe(
-        catchError(error => {
-          console.error('Error loading presence:', error);
-          return of({ data: [] });
-        })
+        switchMap(() => this.fetchPresence())
       )
       .subscribe(response => {
         this.presenceList = response.data || [];
       });
   }
 
-  private startPresenceRefresh(): void {
-    this.presenceSubscription = interval(this.refreshInterval)
+  private fetchPresence(): Observable<any> {
+    if (!this.groupId) {
+      return of({ data: [] });
+    }
+
+    return this.groupsService.apiGroupsIdPresenceGet$Json({ id: this.groupId })
       .pipe(
-        switchMap(() => {
-          if (!this.groupId) return of({ data: [] });
-          return this.groupsService.apiGroupsIdPresenceGet$Json({ id: this.groupId })
-            .pipe(
-              catchError(error => {
-                console.error('Error refreshing presence:', error);
-                return of({ data: [] });
-              })
-            );
+        catchError(error => {
+          console.error('Error loading presence:', error);
+          return of({ data: [] });
         })
-      )
-      .subscribe(response => {
-        this.presenceList = response.data || [];
-      });
+      );
   }
 
   /**
