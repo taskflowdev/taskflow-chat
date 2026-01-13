@@ -232,6 +232,23 @@
   text-overflow: ellipsis;
 }
 
+.user-status {
+  font-size: var(--taskflow-font-font-size-normal);
+  color: var(--taskflow-color-text-secondary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-weight: 600;
+
+  &.online {
+    color: var(--taskflow-color-success);
+  }
+
+  &.offline {
+    color: var(--taskflow-color-text-tertiary, rgba(0, 0, 0, 0.5));
+  }
+}
+
 .user-email {
   font-size: var(--taskflow-font-font-size-normal);
   color: var(--taskflow-color-text-secondary);

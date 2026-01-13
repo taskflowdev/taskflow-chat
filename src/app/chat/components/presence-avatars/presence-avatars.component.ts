@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { GroupsService } from '../../../api/services/groups.service';
 import { PresenceDto } from '../../../api/models/presence-dto';
 import { PresenceDtoIEnumerableApiResponse } from '../../../api/models/presence-dto-i-enumerable-api-response';
+import { AuthService } from '../../../auth/services/auth.service';
 import { interval, Subscription, Observable, Subject } from 'rxjs';
 import { switchMap, catchError, takeUntil } from 'rxjs/operators';
 import { of } from 'rxjs';
@@ -32,6 +33,7 @@ export class PresenceAvatarsComponent implements OnInit, OnDestroy {
 
   constructor(
     private groupsService: GroupsService,
+    private authService: AuthService,
     private elementRef: ElementRef
   ) { }
 
@@ -124,6 +126,73 @@ export class PresenceAvatarsComponent implements OnInit, OnDestroy {
    */
   get allMembers(): PresenceDto[] {
     return [...this.onlineMembers, ...this.offlineMembers];
+  }
+
+  /**
+   * Get current logged-in user
+   */
+  get currentUser() {
+    return this.authService.getCurrentUser();
+  }
+
+  /**
+   * Get all members excluding current user
+   */
+  get filteredAllMembers(): PresenceDto[] {
+    const currentUser = this.currentUser;
+    if (!currentUser) {
+      return this.allMembers;
+    }
+    return this.allMembers.filter((member: PresenceDto) =>
+      member.userId !== currentUser.id && member.userName !== currentUser.userName
+    );
+  }
+
+  /**
+   * Get online members excluding current user
+   */
+  get filteredOnlineMembers(): PresenceDto[] {
+    const currentUser = this.currentUser;
+    if (!currentUser) {
+      return this.onlineMembers;
+    }
+    return this.onlineMembers.filter((member: PresenceDto) =>
+      member.userId !== currentUser.id && member.userName !== currentUser.userName
+    );
+  }
+
+  /**
+   * Get offline members excluding current user
+   */
+  get filteredOfflineMembers(): PresenceDto[] {
+    const currentUser = this.currentUser;
+    if (!currentUser) {
+      return this.offlineMembers;
+    }
+    return this.offlineMembers.filter((member: PresenceDto) =>
+      member.userId !== currentUser.id && member.userName !== currentUser.userName
+    );
+  }
+
+  /**
+   * Get total count excluding current user
+   */
+  get filteredTotalCount(): number {
+    return this.filteredAllMembers.length;
+  }
+
+  /**
+   * Get online count excluding current user
+   */
+  get filteredOnlineCount(): number {
+    return this.filteredOnlineMembers.length;
+  }
+
+  /**
+   * Get offline count excluding current user
+   */
+  get filteredOfflineCount(): number {
+    return this.filteredOfflineMembers.length;
   }
 
   /**

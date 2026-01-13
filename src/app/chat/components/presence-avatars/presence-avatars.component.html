@@ -1,9 +1,9 @@
-<div class="presence-avatars-container" *ngIf="totalCount > 0">
+<div class="presence-avatars-container" *ngIf="filteredTotalCount > 0">
   <!-- Avatar Stack (Collapsed State) -->
   <div class="avatar-stack" [class.dropdown-active]="showDropdown" (mouseenter)="onAvatarStackHover()"
     (mouseleave)="onAvatarStackLeave()">
 
-    <div *ngFor="let member of allMembers" class="avatar-item" (mouseenter)="onAvatarHover($event, member)"
+    <div *ngFor="let member of filteredAllMembers" class="avatar-item" (mouseenter)="onAvatarHover($event, member)"
       (mouseleave)="onAvatarLeave()">
       <div class="avatar-circle">
         <span class="avatar-initials">{{ getInitials(member.userName || '') }}</span>
@@ -18,7 +18,7 @@
     (mouseleave)="onDropdownLeave()">
 
     <div class="dropdown-list">
-      <div *ngFor="let member of allMembers" class="user-list-item" (mouseenter)="onAvatarHover($event, member)"
+      <div *ngFor="let member of filteredAllMembers" class="user-list-item" (mouseenter)="onAvatarHover($event, member)"
         (mouseleave)="onAvatarLeave()">
 
         <div class="user-avatar">
@@ -29,7 +29,9 @@
 
         <div class="user-info">
           <div class="user-name">{{ member.userName }}</div>
-          <div class="user-email">{{ getUserEmail(member) }}</div>
+          <div class="user-status" [class.online]="member.isOnline" [class.offline]="!member.isOnline">
+            {{ member.isOnline ? 'Online' : 'Offline' }}
+          </div>
         </div>
       </div>
     </div>
