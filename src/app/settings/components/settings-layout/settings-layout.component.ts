@@ -8,6 +8,7 @@ import { map, Observable } from 'rxjs';
 
 @Component({
   selector: 'app-settings-layout',
+  standalone: true,
   imports: [
     CommonModule,
     RouterOutlet,

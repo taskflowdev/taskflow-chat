@@ -170,24 +170,26 @@
   line-height: normal;
 }
 
-.badge {
-  padding: 0.125rem 0.5rem;
-  font-size: var(--taskflow-font-font-size-x-small);
-  font-weight: 500;
-  line-height: normal;
-  border-radius: 8px;
-  text-transform: uppercase;
-  letter-spacing: 0.03em;
+.beta-label,
+.new-label {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
   flex-shrink: 0;
-  white-space: nowrap;
 }
 
-.badge-beta {
-  background-color: var(
-    --taskflow-color-badge-beta-bg,
-    rgba(9, 105, 218, 0.08)
-  );
-  border: 1px solid
-    var(--taskflow-color-badge-beta-border, rgba(9, 105, 218, 0.16));
+.beta-label {
   color: var(--taskflow-color-badge-beta-text, #0969da);
+}
+
+.new-label {
+  color: var(--taskflow-color-badge-new-text, #1fd366);
+}
+
+.beta-label i,
+.new-label i {
+  font-size: var(--taskflow-font-icon-size-md);
+  color: inherit;
 }
