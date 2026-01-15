@@ -20,14 +20,13 @@ export class PresenceAvatarsComponent implements OnInit, OnDestroy {
   @Input() maxVisible: number = 5; // Maximum number of avatars to show before showing "+N"
 
   presenceList: PresenceDto[] = [];
-  showDropdown = false;
   hoveredUser: PresenceDto | null = null;
   profileCardPosition = { top: 0, left: 0 };
 
   private presenceSubscription?: Subscription;
   private refreshInterval = 10000; // 10 seconds
   private destroy$ = new Subject<void>();
-  private dropdownCloseTimeout: NodeJS.Timeout | null = null;
+  private avatarHoverTimeout: NodeJS.Timeout | null = null;
 
   private readonly PROFILE_CARD_WIDTH = 280; // Must match CSS .profile-hover-card width
 
@@ -48,8 +47,8 @@ export class PresenceAvatarsComponent implements OnInit, OnDestroy {
     this.presenceSubscription?.unsubscribe();
     this.destroy$.next();
     this.destroy$.complete();
-    if (this.dropdownCloseTimeout) {
-      clearTimeout(this.dropdownCloseTimeout);
+    if (this.avatarHoverTimeout) {
+      clearTimeout(this.avatarHoverTimeout);
     }
   }
 
@@ -57,7 +56,6 @@ export class PresenceAvatarsComponent implements OnInit, OnDestroy {
   onDocumentClick(event: MouseEvent): void {
     const target = event.target as HTMLElement;
     if (!this.elementRef.nativeElement.contains(target)) {
-      this.showDropdown = false;
       this.hoveredUser = null;
     }
   }
@@ -69,7 +67,7 @@ export class PresenceAvatarsComponent implements OnInit, OnDestroy {
     }
 
     console.log('[PresenceAvatars] Loading presence for group:', this.groupId);
-    
+
     this.fetchPresence()
       .pipe(takeUntil(this.destroy$))
       .subscribe(response => {
@@ -111,7 +109,7 @@ export class PresenceAvatarsComponent implements OnInit, OnDestroy {
     }
 
     console.log('[PresenceAvatars] Fetching presence from API for group:', this.groupId);
-    
+
     return this.groupsService.apiGroupsIdPresenceGet$Json({ id: this.groupId })
       .pipe(
         catchError(error => {
@@ -262,58 +260,44 @@ export class PresenceAvatarsComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Toggle dropdown visibility
+   * Toggle avatar expansion on hover
    */
   onAvatarStackHover(): void {
-    if (this.dropdownCloseTimeout) {
-      clearTimeout(this.dropdownCloseTimeout);
+    if (this.avatarHoverTimeout) {
+      clearTimeout(this.avatarHoverTimeout);
     }
-    this.showDropdown = true;
   }
 
   onAvatarStackLeave(): void {
-    this.dropdownCloseTimeout = setTimeout(() => {
-      this.showDropdown = false;
-    }, 300);
-  }
-
-  onDropdownEnter(): void {
-    if (this.dropdownCloseTimeout) {
-      clearTimeout(this.dropdownCloseTimeout);
-    }
-  }
-
-  onDropdownLeave(): void {
-    this.showDropdown = false;
+    this.avatarHoverTimeout = setTimeout(() => {
+      this.hoveredUser = null;
+    }, 200);
   }
 
   /**
    * Show profile card on avatar hover
    */
   onAvatarHover(event: MouseEvent, member: PresenceDto): void {
+    if (this.avatarHoverTimeout) {
+      clearTimeout(this.avatarHoverTimeout);
+    }
+
     const target = event.currentTarget as HTMLElement;
     const rect = target.getBoundingClientRect();
 
-    // Position card based on whether dropdown is open
-    if (this.showDropdown) {
-      // When dropdown is open, position to the left of the dropdown
-      this.profileCardPosition = {
-        top: rect.top + window.scrollY,
-        left: rect.left - this.PROFILE_CARD_WIDTH - 20 // Card width + spacing
-      };
-    } else {
-      // When dropdown is closed, position to the left of the avatar
-      this.profileCardPosition = {
-        top: rect.top + window.scrollY,
-        left: rect.left - this.PROFILE_CARD_WIDTH - 10 // Card width + spacing
-      };
-    }
+    // Position card to the left of the avatar
+    this.profileCardPosition = {
+      top: rect.top + window.scrollY - 20,
+      left: rect.left - this.PROFILE_CARD_WIDTH - 16 // Card width + spacing
+    };
 
     this.hoveredUser = member;
   }
 
   onAvatarLeave(): void {
-    this.hoveredUser = null;
+    this.avatarHoverTimeout = setTimeout(() => {
+      this.hoveredUser = null;
+    }, 100);
   }
 
   /**

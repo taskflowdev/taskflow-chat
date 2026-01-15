@@ -5,36 +5,25 @@
   align-items: center;
 }
 
-// Avatar Stack (Collapsed State)
+// Avatar Stack (Expanded on Hover)
 .avatar-stack {
   display: flex;
   align-items: center;
   cursor: pointer;
-
-  // &:hover {
-  //   background-color: var(--taskflow-color-surface-hover);
-  // }
+  gap: 2px;
 }
 
 .avatar-item {
   margin-left: -22px;
-  transition: margin-left 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: margin-left 0.3s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease;
+  opacity: 1;
 
   &:first-child {
     margin-left: 0;
   }
 
-  // Uncollapse on hover
+  // Expand on hover
   .avatar-stack:hover & {
-    margin-left: 2px;
-
-    &:first-child {
-      margin-left: 0;
-    }
-  }
-
-  // Keep uncollapsed when dropdown is open
-  .avatar-stack.dropdown-active & {
     margin-left: 2px;
 
     &:first-child {
@@ -103,198 +92,6 @@
   }
 }
 
-// Expanded Dropdown Panel
-.online-users-dropdown {
-  position: absolute;
-  top: calc(100% + 8px);
-  right: 0;
-  width: 300px;
-  max-height: 400px;
-  background: var(--taskflow-color-dropdown-bg);
-  border: 1px solid var(--taskflow-color-dropdown-border);
-  border-radius: 8px;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
-  z-index: 1000;
-  animation: dropdownFadeIn 0.2s ease;
-  overflow: hidden;
-}
-
-@keyframes dropdownFadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(-8px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-.dropdown-list {
-  max-height: 340px;
-  overflow-y: auto;
-  overflow-x: hidden;
-
-  // Custom scrollbar
-  &::-webkit-scrollbar {
-    width: 6px;
-  }
-
-  &::-webkit-scrollbar-track {
-    background: transparent;
-  }
-
-  &::-webkit-scrollbar-thumb {
-    background: var(--taskflow-color-scrollbar-thumb);
-    border-radius: 3px;
-
-    &:hover {
-      background: var(--taskflow-color-scrollbar-thumb-hover);
-    }
-  }
-}
-
-.user-list-item {
-  display: flex;
-  align-items: center;
-  padding: 8px 10px;
-  gap: 12px;
-  cursor: pointer;
-  transition: background-color 0.15s ease;
-
-  &:hover {
-    background: var(--taskflow-color-dropdown-item-hover);
-  }
-
-  &:focus {
-    outline: 2px solid var(--taskflow-color-focus-ring);
-    outline-offset: -2px;
-  }
-}
-
-.user-avatar {
-  position: relative;
-  width: 44px;
-  height: 44px;
-  border-radius: 50%;
-  background: var(--taskflow-color-member-avatar-bg);
-  border: 2px solid var(--taskflow-color-background);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-}
-
-.user-initials {
-  font-size: 14px;
-  font-weight: 600;
-  color: var(--taskflow-color-member-avatar-text);
-  user-select: none;
-}
-
-.user-online-dot {
-  position: absolute;
-  bottom: 0;
-  right: 0;
-  width: 14px;
-  height: 14px;
-  border-radius: 50%;
-  background: var(--taskflow-color-success);
-  border: 2px solid var(--taskflow-color-dropdown-bg);
-}
-
-.user-offline-dot {
-  position: absolute;
-  bottom: 0;
-  right: 0;
-  width: 14px;
-  height: 14px;
-  border-radius: 50%;
-  background: var(--taskflow-color-dropdown-bg);
-  border: 2px solid var(--taskflow-color-text-tertiary);
-  box-sizing: border-box;
-}
-
-.user-info {
-  flex: 1;
-  min-width: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 0px;
-}
-
-.user-name {
-  font-size: var(--taskflow-font-font-size-large);
-  font-weight: 500;
-  color: var(--taskflow-color-text-primary);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.user-status {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  font-size: var(--taskflow-font-font-size-small);
-  color: var(--taskflow-color-text-secondary);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-
-  .status-indicator {
-    width: 8px;
-    height: 8px;
-    border-radius: 50%;
-    flex-shrink: 0;
-  }
-
-  &.online {
-    color: var(--taskflow-color-success);
-
-    .status-indicator {
-      background: var(--taskflow-color-success);
-    }
-  }
-
-  &.offline {
-    color: var(--taskflow-color-text-tertiary);
-
-    .status-indicator {
-      background: var(--taskflow-color-text-tertiary);
-    }
-  }
-
-  &.hidden {
-    color: var(--taskflow-color-text-disabled);
-
-    .status-indicator {
-      background: var(--taskflow-color-text-disabled);
-      opacity: 0.5;
-    }
-  }
-}
-
-.dropdown-header {
-  padding: 12px 16px;
-  border-bottom: 1px solid var(--taskflow-color-divider-subtle);
-  background: var(--taskflow-color-background-subtle);
-}
-
-.dropdown-title {
-  font-size: var(--taskflow-font-font-size-normal);
-  font-weight: 600;
-  color: var(--taskflow-color-text-primary);
-}
-
-.user-email {
-  font-size: var(--taskflow-font-font-size-normal);
-  color: var(--taskflow-color-text-secondary);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
 // Profile Hover Card (Individual User)
 .profile-hover-card {
   position: fixed;
@@ -308,18 +105,18 @@
     0 4px 12px rgba(0, 0, 0, 0.15)
   );
   z-index: 2000;
-  animation: cardFadeIn 0.15s ease;
-  pointer-events: none;
+  animation: cardFadeIn 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+  pointer-events: auto;
 }
 
 @keyframes cardFadeIn {
   from {
     opacity: 0;
-    transform: scale(0.95);
+    transform: scale(0.95) translateY(-8px);
   }
   to {
     opacity: 1;
-    transform: scale(1);
+    transform: scale(1) translateY(0);
   }
 }
 
@@ -449,19 +246,7 @@
     height: 8px;
   }
 
-  .online-users-dropdown {
-    width: 280px;
-    max-height: 350px;
-  }
-
   .profile-hover-card {
     display: none; // Hide on mobile for better UX
-  }
-}
-
-@media (max-width: 480px) {
-  .online-users-dropdown {
-    width: calc(100vw - 32px);
-    right: 16px;
   }
 }

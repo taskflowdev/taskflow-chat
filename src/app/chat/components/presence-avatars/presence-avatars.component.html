@@ -1,7 +1,6 @@
 <div class="presence-avatars-container" *ngIf="filteredTotalCount > 0">
-  <!-- Avatar Stack (Collapsed State) - Show All Users -->
-  <div class="avatar-stack" [class.dropdown-active]="showDropdown" (mouseenter)="onAvatarStackHover()"
-    (mouseleave)="onAvatarStackLeave()">
+  <!-- Avatar Stack - Expands on hover -->
+  <div class="avatar-stack" (mouseenter)="onAvatarStackHover()" (mouseleave)="onAvatarStackLeave()">
 
     <div *ngFor="let member of visibleMembers" class="avatar-item" (mouseenter)="onAvatarHover($event, member)"
       (mouseleave)="onAvatarLeave()">
@@ -15,72 +14,15 @@
     </div>
 
     <!-- +N indicator for remaining users -->
-    <div *ngIf="remainingCount > 0" class="avatar-item avatar-more" (mouseenter)="onAvatarStackHover()">
+    <div *ngIf="remainingCount > 0" class="avatar-item avatar-more">
       <div class="avatar-circle">
         <span class="avatar-initials">+{{ remainingCount }}</span>
       </div>
     </div>
   </div>
 
-  <!-- Expanded Dropdown Panel - All Users (Online and Offline) -->
-  <div *ngIf="showDropdown" class="online-users-dropdown" (mouseenter)="onDropdownEnter()"
-    (mouseleave)="onDropdownLeave()">
-
-    <!-- <div class="dropdown-header">
-      <span class="dropdown-title">Members — {{ filteredTotalCount }}</span>
-    </div> -->
-
-    <div class="dropdown-list">
-      <!-- Online users first -->
-      <div *ngFor="let member of filteredOnlineMembers" class="user-list-item"
-        (mouseenter)="onAvatarHover($event, member)" (mouseleave)="onAvatarLeave()">
-
-        <div class="user-avatar">
-          <span class="user-initials">{{ getInitials(getUserFullName(member)) }}</span>
-          <span class="user-online-dot"
-            *ngIf="member.statusVisibilityEnabled === true || member.statusVisibilityEnabled === undefined"></span>
-        </div>
-
-        <div class="user-info">
-          <div class="user-name">{{ getUserFullName(member) }}</div>
-          <div class="user-status" [ngClass]="getPresenceStatusClass(member)"
-            *ngIf="member.statusVisibilityEnabled === true || member.statusVisibilityEnabled === undefined">
-            <span class="status-indicator"></span>
-            <span class="status-text">{{ getPresenceStatus(member) }}</span>
-          </div>
-          <div class="user-status hidden" *ngIf="member.statusVisibilityEnabled === false">
-            <span class="status-text">Status hidden</span>
-          </div>
-        </div>
-      </div>
-
-      <!-- Offline users -->
-      <div *ngFor="let member of filteredOfflineMembers" class="user-list-item"
-        (mouseenter)="onAvatarHover($event, member)" (mouseleave)="onAvatarLeave()">
-
-        <div class="user-avatar">
-          <span class="user-initials">{{ getInitials(getUserFullName(member)) }}</span>
-          <span class="user-offline-dot"
-            *ngIf="member.statusVisibilityEnabled === true || member.statusVisibilityEnabled === undefined"></span>
-        </div>
-
-        <div class="user-info">
-          <div class="user-name">{{ getUserFullName(member) }}</div>
-          <div class="user-status" [ngClass]="getPresenceStatusClass(member)"
-            *ngIf="member.statusVisibilityEnabled === true || member.statusVisibilityEnabled === undefined">
-            <span class="status-indicator"></span>
-            <span class="status-text">{{ getPresenceStatus(member) }}</span>
-          </div>
-          <div class="user-status hidden" *ngIf="member.statusVisibilityEnabled === false">
-            <span class="status-text">Status hidden</span>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
   <!-- Profile Hover Card (Microsoft Teams-style) -->
-  <!-- Shows on hover over individual avatars or list items -->
+  <!-- Shows on hover over individual avatars -->
   <div *ngIf="hoveredUser" class="profile-hover-card" [style.top.px]="profileCardPosition.top"
     [style.left.px]="profileCardPosition.left">
 
