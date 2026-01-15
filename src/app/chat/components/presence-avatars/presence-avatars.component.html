@@ -26,28 +26,40 @@
   <div *ngIf="hoveredUser" class="profile-hover-card" [style.top.px]="profileCardPosition.top"
     [style.left.px]="profileCardPosition.left">
 
-    <div class="profile-card-avatar">
-      <span class="profile-initials">{{ getInitials(getUserFullName(hoveredUser)) }}</span>
-      <span class="profile-online-dot"
-        *ngIf="hoveredUser.isOnline === true && (hoveredUser.statusVisibilityEnabled === true || hoveredUser.statusVisibilityEnabled === undefined)"></span>
-      <span class="profile-offline-dot"
-        *ngIf="hoveredUser.isOnline === false && (hoveredUser.statusVisibilityEnabled === true || hoveredUser.statusVisibilityEnabled === undefined)"></span>
+    <div class="profile-card-header">
+      <div class="profile-card-avatar">
+        <span class="profile-initials">{{ getInitials(getUserFullName(hoveredUser)) }}</span>
+        <span class="profile-online-dot"
+          *ngIf="hoveredUser.isOnline === true && (hoveredUser.statusVisibilityEnabled === true || hoveredUser.statusVisibilityEnabled === undefined)"></span>
+        <span class="profile-offline-dot"
+          *ngIf="hoveredUser.isOnline === false && (hoveredUser.statusVisibilityEnabled === true || hoveredUser.statusVisibilityEnabled === undefined)"></span>
+      </div>
+
+      <div class="profile-card-info">
+        <div class="profile-name">{{ getUserFullName(hoveredUser) }}</div>
+        <div class="profile-status-inline" [ngClass]="getPresenceStatusClass(hoveredUser)"
+          *ngIf="hoveredUser.statusVisibilityEnabled === true || hoveredUser.statusVisibilityEnabled === undefined">
+          <span class="status-indicator"></span>
+          <span class="status-text">{{ getPresenceStatus(hoveredUser) }}</span>
+        </div>
+        <div class="profile-status-inline hidden" *ngIf="hoveredUser.statusVisibilityEnabled === false">
+          <span class="status-text">Status hidden</span>
+        </div>
+      </div>
     </div>
 
-    <div class="profile-card-info">
-      <div class="profile-name">{{ getUserFullName(hoveredUser) }}</div>
-      <div class="profile-email">{{ getUserEmail(hoveredUser) }}</div>
-      <div class="profile-status" [ngClass]="getPresenceStatusClass(hoveredUser)"
-        *ngIf="hoveredUser.statusVisibilityEnabled === true || hoveredUser.statusVisibilityEnabled === undefined">
-        <span class="status-indicator"></span>
-        <span class="status-text">{{ getPresenceStatus(hoveredUser) }}</span>
+    <div class="profile-card-separator"></div>
+
+    <div class="profile-card-details">
+      <div class="detail-row">
+        <i class="bi bi-envelope detail-icon" aria-hidden="true"></i>
+        <div class="profile-email">{{ getUserEmail(hoveredUser) }}</div>
       </div>
-      <div class="profile-status hidden" *ngIf="hoveredUser.statusVisibilityEnabled === false">
-        <span class="status-text">Status hidden</span>
-      </div>
-      <div class="profile-last-seen"
+
+      <div class="detail-row"
         *ngIf="hoveredUser.isOnline === false && hoveredUser.lastSeenVisibilityEnabled && (hoveredUser.statusVisibilityEnabled === true || hoveredUser.statusVisibilityEnabled === undefined)">
-        {{ getLastSeenText(hoveredUser) }}
+        <i class="bi bi-clock-history detail-icon" aria-hidden="true"></i>
+        <div class="profile-last-seen">{{ getLastSeenText(hoveredUser) }}</div>
       </div>
     </div>
   </div>
