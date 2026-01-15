@@ -325,6 +325,7 @@
     "memberItemHoverBg": "rgba(255, 255, 255, 0.05)",
     "memberAvatarBg": "#ffffff",
     "memberAvatarText": "#000000",
+    "memberAvatarBorder": "#30363d",
     "memberNameText": "#ffffff",
     "memberMetaText": "#9ca3af",
     "actionBtnBg": "rgba(255, 255, 255, 0.05)",

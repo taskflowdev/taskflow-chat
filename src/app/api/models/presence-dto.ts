@@ -4,24 +4,59 @@
 
 
 /**
- * DTO for user presence information in a group
+ * DTO for user presence information in a group with comprehensive member details
  */
 export interface PresenceDto {
 
   /**
-   * Number of active connections for this user
+   * Approximate response time in milliseconds (for performance monitoring)
    */
-  connectionCount?: number;
+  averageResponseTimeMs?: number | null;
 
   /**
-   * Online status of the user
+   * Number of active connections for this user (only shown if online status is visible)
    */
-  isOnline?: boolean;
+  connectionCount?: number | null;
 
   /**
-   * Last seen timestamp (if offline)
+   * Email address of the user
+   */
+  email?: string;
+
+  /**
+   * Full name of the user
+   */
+  fullName?: string;
+
+  /**
+   * Online status of the user (null if user has disabled status sharing)
+   */
+  isOnline?: boolean | null;
+
+  /**
+   * Date and time when the user joined the group
+   */
+  joinedAt?: string;
+
+  /**
+   * Last seen timestamp (null if user has disabled last seen sharing or is online)
    */
   lastSeen?: string | null;
+
+  /**
+   * Indicates whether the user has enabled last seen sharing
+   */
+  lastSeenVisibilityEnabled?: boolean;
+
+  /**
+   * User's role in the group
+   */
+  role?: string;
+
+  /**
+   * Indicates whether the user has enabled online status sharing
+   */
+  statusVisibilityEnabled?: boolean;
 
   /**
    * User ID
@@ -29,7 +64,7 @@ export interface PresenceDto {
   userId?: string;
 
   /**
-   * User display name
+   * User display name (username)
    */
   userName?: string;
 }

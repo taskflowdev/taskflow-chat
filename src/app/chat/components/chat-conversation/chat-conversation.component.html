@@ -9,14 +9,22 @@
 
     <div class="conversation-info">
       <h4 class="conversation-title">{{ conversation.groupName }}</h4>
-      <p class="conversation-subtitle" *ngIf="conversation.memberCount">
-        {{ conversation.memberCount }} member{{ conversation.memberCount !== 1 ? 's' : '' }}
-      </p>
+      <div class="conversation-subtitle-row">
+        <p class="conversation-subtitle" *ngIf="conversation.memberCount">
+          {{ conversation.memberCount }} member{{ conversation.memberCount !== 1 ? 's' : '' }}
+        </p>
+      </div>
     </div>
 
     <div class="conversation-actions">
+      <app-presence-avatars [groupId]="conversation.groupId" [maxVisible]="5">
+      </app-presence-avatars>
+
+      <div class="action-divider" *ngIf="conversation.memberCount && conversation.memberCount > 1"></div>
+
       <app-common-dropdown [items]="dropdownItems" buttonIcon="bi-three-dots-vertical" buttonClass="action-btn"
-        [appCommonTooltip]="'chats.conversation-window.header.more-options.title' | translate" (itemSelected)="onDropdownItemSelected($event)">
+        [appCommonTooltip]="'chats.conversation-window.header.more-options.title' | translate"
+        (itemSelected)="onDropdownItemSelected($event)">
       </app-common-dropdown>
     </div>
   </div>
@@ -65,15 +73,18 @@
     <app-typing-indicator *ngIf="shouldShowTypingIndicator" [typingUsers]="typingUsers"></app-typing-indicator>
 
     <div class="input-wrapper">
-      <textarea [(ngModel)]="newMessage" (keydown)="onKeyDown($event)" [placeholder]="'chats.conversation-window.conversations.composer.placeholder' | translate"
-        class="message-input" rows="1" [disabled]="loading">
+      <textarea [(ngModel)]="newMessage" (keydown)="onKeyDown($event)"
+        [placeholder]="'chats.conversation-window.conversations.composer.placeholder' | translate" class="message-input"
+        rows="1" [disabled]="loading">
       </textarea>
       <button class="btn send-btn" (click)="onSendMessage()" [disabled]="!newMessage.trim() || loading"
         [appCommonTooltip]="btnSendTooltip">
         <i class="bi" [ngClass]="newMessage.trim() && !loading ? 'bi-send-check' : 'bi-send'"></i>
       </button>
       <ng-template #btnSendTooltip>
-        {{ 'chats.conversation-window.conversations.composer.send-button.tooltip.label' | translate }} <span class="shortcut-key-tooltip">{{ 'chats.conversation-window.conversations.composer.send-button.tooltip.shortcut' | translate }}</span>
+        {{ 'chats.conversation-window.conversations.composer.send-button.tooltip.label' | translate }} <span
+          class="shortcut-key-tooltip">{{
+          'chats.conversation-window.conversations.composer.send-button.tooltip.shortcut' | translate }}</span>
       </ng-template>
     </div>
   </div>
@@ -84,9 +95,11 @@
     <div class="placeholder-content">
       <i class="bi bi-chat-quote placeholder-icon"></i>
       <h3 class="placeholder-title">{{ 'chats.conversation-window.conversations.empty-state.title' | translate }}</h3>
-      <p class="placeholder-subtitle">{{ 'chats.conversation-window.conversations.empty-state.subtitle' | translate }}</p>
+      <p class="placeholder-subtitle">{{ 'chats.conversation-window.conversations.empty-state.subtitle' | translate }}
+      </p>
       <p class="placeholder-footer" [appCommonTooltip]="encryptionTooltip" [tooltipPosition]="TooltipPosition.BOTTOM">
-        <i class="bi bi-lock"></i> {{ 'chats.conversation-window.conversations.empty-state.encryption.title' | translate }}
+        <i class="bi bi-lock"></i> {{ 'chats.conversation-window.conversations.empty-state.encryption.title' | translate
+        }}
       </p>
     </div>
   </div>

@@ -903,7 +903,7 @@ export class GroupsService extends BaseService {
   static readonly ApiGroupsIdPresenceGetPath = '/api/Groups/{id}/presence';
 
   /**
-   * Gets presence information for all members in a group.
+   * Gets presence information for all members in a group with privacy settings applied.
    *
    *
    *
@@ -917,7 +917,7 @@ export class GroupsService extends BaseService {
   }
 
   /**
-   * Gets presence information for all members in a group.
+   * Gets presence information for all members in a group with privacy settings applied.
    *
    *
    *
@@ -933,7 +933,7 @@ export class GroupsService extends BaseService {
   }
 
   /**
-   * Gets presence information for all members in a group.
+   * Gets presence information for all members in a group with privacy settings applied.
    *
    *
    *
@@ -947,7 +947,7 @@ export class GroupsService extends BaseService {
   }
 
   /**
-   * Gets presence information for all members in a group.
+   * Gets presence information for all members in a group with privacy settings applied.
    *
    *
    *
