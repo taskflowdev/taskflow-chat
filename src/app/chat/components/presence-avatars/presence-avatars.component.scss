@@ -233,20 +233,49 @@
 }
 
 .user-status {
-  font-size: var(--taskflow-font-font-size-normal);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: var(--taskflow-font-font-size-small);
   color: var(--taskflow-color-text-secondary);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  font-weight: 600;
+
+  .status-indicator {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
 
   &.online {
     color: var(--taskflow-color-success);
+    
+    .status-indicator {
+      background: var(--taskflow-color-success);
+    }
   }
 
   &.offline {
-    color: var(--taskflow-color-text-tertiary, rgba(0, 0, 0, 0.5));
+    color: var(--taskflow-color-text-tertiary);
+    
+    .status-indicator {
+      background: var(--taskflow-color-text-tertiary);
+    }
   }
+}
+
+.dropdown-header {
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--taskflow-color-divider-subtle);
+  background: var(--taskflow-color-background-subtle);
+}
+
+.dropdown-title {
+  font-size: var(--taskflow-font-font-size-normal);
+  font-weight: 600;
+  color: var(--taskflow-color-text-primary);
 }
 
 .user-email {
@@ -331,18 +360,59 @@
 
 .profile-card-info {
   text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
 }
 
 .profile-name {
   font-size: var(--taskflow-font-font-size-large);
   font-weight: 600;
   color: var(--taskflow-color-tooltip-text);
-  margin-bottom: 4px;
 }
 
 .profile-email {
   font-size: var(--taskflow-font-font-size-small);
   color: var(--taskflow-color-tooltip-p, var(--taskflow-color-text-secondary));
+}
+
+.profile-status {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  font-size: var(--taskflow-font-font-size-small);
+  margin-top: 4px;
+
+  .status-indicator {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  &.online {
+    color: var(--taskflow-color-success);
+    
+    .status-indicator {
+      background: var(--taskflow-color-success);
+    }
+  }
+
+  &.offline {
+    color: var(--taskflow-color-text-tertiary);
+    
+    .status-indicator {
+      background: var(--taskflow-color-text-tertiary);
+    }
+  }
+}
+
+.profile-last-seen {
+  font-size: var(--taskflow-font-font-size-x-small);
+  color: var(--taskflow-color-tooltip-p, var(--taskflow-color-text-secondary));
+  font-style: italic;
+  margin-top: 2px;
 }
 
 // Responsive Design

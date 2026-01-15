@@ -1,56 +1,73 @@
-<div class="presence-avatars-container" *ngIf="filteredTotalCount > 0">
-  <!-- Avatar Stack (Collapsed State) -->
+<div class="presence-avatars-container" *ngIf="filteredOnlineCount > 0">
+  <!-- Avatar Stack (Collapsed State) - Only Online Users -->
   <div class="avatar-stack" [class.dropdown-active]="showDropdown" (mouseenter)="onAvatarStackHover()"
     (mouseleave)="onAvatarStackLeave()">
 
-    <div *ngFor="let member of filteredAllMembers" class="avatar-item" (mouseenter)="onAvatarHover($event, member)"
+    <div *ngFor="let member of visibleMembers" class="avatar-item" (mouseenter)="onAvatarHover($event, member)"
       (mouseleave)="onAvatarLeave()">
       <div class="avatar-circle">
-        <span class="avatar-initials">{{ getInitials(member.userName || '') }}</span>
-        <span class="online-indicator" *ngIf="member.isOnline"></span>
-        <span class="offline-indicator" *ngIf="!member.isOnline"></span>
+        <span class="avatar-initials">{{ getInitials(getUserFullName(member)) }}</span>
+        <span class="online-indicator"></span>
+      </div>
+    </div>
+
+    <!-- +N indicator for remaining online users -->
+    <div *ngIf="remainingCount > 0" class="avatar-item avatar-more" (mouseenter)="onAvatarStackHover()">
+      <div class="avatar-circle">
+        <span class="avatar-initials">+{{ remainingCount }}</span>
       </div>
     </div>
   </div>
 
-  <!-- Expanded Dropdown Panel -->
+  <!-- Expanded Dropdown Panel - All Online Users -->
   <div *ngIf="showDropdown" class="online-users-dropdown" (mouseenter)="onDropdownEnter()"
     (mouseleave)="onDropdownLeave()">
 
+    <div class="dropdown-header">
+      <span class="dropdown-title">Online — {{ filteredOnlineCount }}</span>
+    </div>
+
     <div class="dropdown-list">
-      <div *ngFor="let member of filteredAllMembers" class="user-list-item" (mouseenter)="onAvatarHover($event, member)"
+      <div *ngFor="let member of filteredOnlineMembers" class="user-list-item" (mouseenter)="onAvatarHover($event, member)"
         (mouseleave)="onAvatarLeave()">
 
         <div class="user-avatar">
-          <span class="user-initials">{{ getInitials(member.userName || '') }}</span>
-          <span class="user-online-dot" *ngIf="member.isOnline"></span>
-          <span class="user-offline-dot" *ngIf="!member.isOnline"></span>
+          <span class="user-initials">{{ getInitials(getUserFullName(member)) }}</span>
+          <span class="user-online-dot"></span>
         </div>
 
         <div class="user-info">
-          <div class="user-name">{{ member.userName }}</div>
-          <div class="user-status" [class.online]="member.isOnline" [class.offline]="!member.isOnline">
-            {{ member.isOnline ? 'Online' : 'Offline' }}
+          <div class="user-name">{{ getUserFullName(member) }}</div>
+          <div class="user-status" [ngClass]="getPresenceStatusClass(member)">
+            <span class="status-indicator"></span>
+            <span class="status-text">{{ getPresenceStatus(member) }}</span>
           </div>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- Profile Hover Card -->
+  <!-- Profile Hover Card (Microsoft Teams-style) -->
   <!-- Hidden when dropdown is open to avoid UI clutter and conflicting interactions -->
   <div *ngIf="hoveredUser && !showDropdown" class="profile-hover-card" [style.top.px]="profileCardPosition.top"
     [style.left.px]="profileCardPosition.left">
 
     <div class="profile-card-avatar">
-      <span class="profile-initials">{{ getInitials(hoveredUser.userName || '') }}</span>
+      <span class="profile-initials">{{ getInitials(getUserFullName(hoveredUser)) }}</span>
       <span class="profile-online-dot" *ngIf="hoveredUser.isOnline"></span>
       <span class="profile-offline-dot" *ngIf="!hoveredUser.isOnline"></span>
     </div>
 
     <div class="profile-card-info">
-      <div class="profile-name">{{ hoveredUser.userName }}</div>
+      <div class="profile-name">{{ getUserFullName(hoveredUser) }}</div>
       <div class="profile-email">{{ getUserEmail(hoveredUser) }}</div>
+      <div class="profile-status" [ngClass]="getPresenceStatusClass(hoveredUser)">
+        <span class="status-indicator"></span>
+        <span class="status-text">{{ getPresenceStatus(hoveredUser) }}</span>
+      </div>
+      <div class="profile-last-seen" *ngIf="!hoveredUser.isOnline && hoveredUser.lastSeenVisibilityEnabled">
+        {{ getLastSeenText(hoveredUser) }}
+      </div>
     </div>
   </div>
 </div>

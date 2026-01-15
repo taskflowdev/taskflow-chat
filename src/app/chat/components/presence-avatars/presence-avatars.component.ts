@@ -196,17 +196,17 @@ export class PresenceAvatarsComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Get the list of online members to display (limited by maxVisible)
+   * Get the list of online members to display (limited by maxVisible, excluding current user)
    */
   get visibleMembers(): PresenceDto[] {
-    return this.onlineMembers.slice(0, this.maxVisible);
+    return this.filteredOnlineMembers.slice(0, this.maxVisible);
   }
 
   /**
    * Get the count of remaining online members not displayed
    */
   get remainingCount(): number {
-    return Math.max(0, this.onlineMembers.length - this.maxVisible);
+    return Math.max(0, this.filteredOnlineMembers.length - this.maxVisible);
   }
 
   /**
@@ -277,13 +277,66 @@ export class PresenceAvatarsComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Get user email or fallback to username
-   * Note: Since PresenceDto doesn't include email, we return just the username.
-   * In a production environment, this should fetch from a user profile service.
+   * Get user email from presence data
    */
   getUserEmail(member: PresenceDto): string {
-    // TODO: Integrate with user profile service to get actual email
-    return member.userName || member.userId || 'user@domain.com';
+    return member.email || member.userName || 'No email available';
+  }
+
+  /**
+   * Get user full name or fallback to username
+   */
+  getUserFullName(member: PresenceDto): string {
+    return member.fullName || member.userName || 'Unknown User';
+  }
+
+  /**
+   * Get formatted last seen text
+   */
+  getLastSeenText(member: PresenceDto): string {
+    if (!member.lastSeen || member.isOnline) {
+      return '';
+    }
+
+    const lastSeenDate = new Date(member.lastSeen);
+    const now = new Date();
+    const diffMs = now.getTime() - lastSeenDate.getTime();
+    const diffMinutes = Math.floor(diffMs / 60000);
+    const diffHours = Math.floor(diffMs / 3600000);
+    const diffDays = Math.floor(diffMs / 86400000);
+
+    if (diffMinutes < 1) {
+      return 'Last seen just now';
+    } else if (diffMinutes < 60) {
+      return `Last seen ${diffMinutes} minute${diffMinutes > 1 ? 's' : ''} ago`;
+    } else if (diffHours < 24) {
+      return `Last seen ${diffHours} hour${diffHours > 1 ? 's' : ''} ago`;
+    } else if (diffDays < 7) {
+      return `Last seen ${diffDays} day${diffDays > 1 ? 's' : ''} ago`;
+    } else {
+      return `Last seen on ${lastSeenDate.toLocaleDateString()}`;
+    }
+  }
+
+  /**
+   * Get presence status text (online/away/busy/offline)
+   * For now, we only have isOnline, but this can be extended
+   */
+  getPresenceStatus(member: PresenceDto): string {
+    if (member.isOnline) {
+      return 'Online';
+    }
+    return 'Offline';
+  }
+
+  /**
+   * Get presence status class for styling
+   */
+  getPresenceStatusClass(member: PresenceDto): string {
+    if (member.isOnline) {
+      return 'online';
+    }
+    return 'offline';
   }
 
   /**
