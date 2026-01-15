@@ -264,6 +264,15 @@
       background: var(--taskflow-color-text-tertiary);
     }
   }
+
+  &.hidden {
+    color: var(--taskflow-color-text-disabled);
+    
+    .status-indicator {
+      background: var(--taskflow-color-text-disabled);
+      opacity: 0.5;
+    }
+  }
 }
 
 .dropdown-header {
@@ -404,6 +413,15 @@
     
     .status-indicator {
       background: var(--taskflow-color-text-tertiary);
+    }
+  }
+
+  &.hidden {
+    color: var(--taskflow-color-text-disabled);
+    
+    .status-indicator {
+      background: var(--taskflow-color-text-disabled);
+      opacity: 0.5;
     }
   }
 }

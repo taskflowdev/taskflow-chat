@@ -108,17 +108,17 @@ export class PresenceAvatarsComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Get only online members
+   * Get only online members (explicitly online, not null or false)
    */
   get onlineMembers(): PresenceDto[] {
-    return this.presenceList.filter(p => p.isOnline);
+    return this.presenceList.filter(p => p.isOnline === true);
   }
 
   /**
-   * Get only offline members
+   * Get only offline members (explicitly offline, not null)
    */
   get offlineMembers(): PresenceDto[] {
-    return this.presenceList.filter(p => !p.isOnline);
+    return this.presenceList.filter(p => p.isOnline === false);
   }
 
   /**
@@ -294,7 +294,7 @@ export class PresenceAvatarsComponent implements OnInit, OnDestroy {
    * Get formatted last seen text
    */
   getLastSeenText(member: PresenceDto): string {
-    if (!member.lastSeen || member.isOnline) {
+    if (!member.lastSeen || member.isOnline === true) {
       return '';
     }
 
@@ -319,24 +319,29 @@ export class PresenceAvatarsComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Get presence status text (online/away/busy/offline)
-   * For now, we only have isOnline, but this can be extended
+   * Get presence status text (online/offline/hidden)
    */
   getPresenceStatus(member: PresenceDto): string {
-    if (member.isOnline) {
+    if (member.isOnline === true) {
       return 'Online';
+    } else if (member.isOnline === false) {
+      return 'Offline';
     }
-    return 'Offline';
+    // null means user has disabled status sharing
+    return 'Status hidden';
   }
 
   /**
    * Get presence status class for styling
    */
   getPresenceStatusClass(member: PresenceDto): string {
-    if (member.isOnline) {
+    if (member.isOnline === true) {
       return 'online';
+    } else if (member.isOnline === false) {
+      return 'offline';
     }
-    return 'offline';
+    // null means user has disabled status sharing
+    return 'hidden';
   }
 
   /**
