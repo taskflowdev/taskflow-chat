@@ -227,17 +227,17 @@ export class PresenceAvatarsComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Get the list of online members to display (limited by maxVisible, excluding current user)
+   * Get the list of all members to display (limited by maxVisible, excluding current user)
    */
   get visibleMembers(): PresenceDto[] {
-    return this.filteredOnlineMembers.slice(0, this.maxVisible);
+    return this.filteredAllMembers.slice(0, this.maxVisible);
   }
 
   /**
-   * Get the count of remaining online members not displayed
+   * Get the count of remaining members not displayed
    */
   get remainingCount(): number {
-    return Math.max(0, this.filteredOnlineMembers.length - this.maxVisible);
+    return Math.max(0, this.filteredAllMembers.length - this.maxVisible);
   }
 
   /**
@@ -294,11 +294,20 @@ export class PresenceAvatarsComponent implements OnInit, OnDestroy {
     const target = event.currentTarget as HTMLElement;
     const rect = target.getBoundingClientRect();
 
-    // Position card to the left of the avatar
-    this.profileCardPosition = {
-      top: rect.top + window.scrollY,
-      left: rect.left - this.PROFILE_CARD_WIDTH - 10 // Card width + spacing
-    };
+    // Position card based on whether dropdown is open
+    if (this.showDropdown) {
+      // When dropdown is open, position to the left of the dropdown
+      this.profileCardPosition = {
+        top: rect.top + window.scrollY,
+        left: rect.left - this.PROFILE_CARD_WIDTH - 20 // Card width + spacing
+      };
+    } else {
+      // When dropdown is closed, position to the left of the avatar
+      this.profileCardPosition = {
+        top: rect.top + window.scrollY,
+        left: rect.left - this.PROFILE_CARD_WIDTH - 10 // Card width + spacing
+      };
+    }
 
     this.hoveredUser = member;
   }
