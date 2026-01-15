@@ -67,6 +67,13 @@ export class PresenceAvatarsComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.destroy$))
       .subscribe(response => {
         this.presenceList = response.data || [];
+        console.log('[PresenceAvatars] Loaded presence data:', {
+          total: this.presenceList.length,
+          online: this.onlineMembers.length,
+          filteredOnline: this.filteredOnlineMembers.length,
+          currentUser: this.currentUser,
+          presenceList: this.presenceList
+        });
       });
   }
 
