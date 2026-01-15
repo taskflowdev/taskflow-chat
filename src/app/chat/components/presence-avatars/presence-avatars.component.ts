@@ -63,16 +63,32 @@ export class PresenceAvatarsComponent implements OnInit, OnDestroy {
   }
 
   private loadPresence(): void {
+    if (!this.groupId) {
+      console.warn('[PresenceAvatars] No groupId provided, skipping presence load');
+      return;
+    }
+
+    console.log('[PresenceAvatars] Loading presence for group:', this.groupId);
+    
     this.fetchPresence()
       .pipe(takeUntil(this.destroy$))
       .subscribe(response => {
         this.presenceList = response.data || [];
         console.log('[PresenceAvatars] Loaded presence data:', {
+          groupId: this.groupId,
           total: this.presenceList.length,
           online: this.onlineMembers.length,
+          offline: this.offlineMembers.length,
           filteredOnline: this.filteredOnlineMembers.length,
+          filteredOffline: this.filteredOfflineMembers.length,
           currentUser: this.currentUser,
-          presenceList: this.presenceList
+          presenceList: this.presenceList.map(p => ({
+            userId: p.userId,
+            userName: p.userName,
+            fullName: p.fullName,
+            isOnline: p.isOnline,
+            email: p.email
+          }))
         });
       });
   }
@@ -90,13 +106,21 @@ export class PresenceAvatarsComponent implements OnInit, OnDestroy {
 
   private fetchPresence(): Observable<PresenceDtoIEnumerableApiResponse> {
     if (!this.groupId) {
+      console.warn('[PresenceAvatars] fetchPresence called without groupId');
       return of({ data: [] });
     }
 
+    console.log('[PresenceAvatars] Fetching presence from API for group:', this.groupId);
+    
     return this.groupsService.apiGroupsIdPresenceGet$Json({ id: this.groupId })
       .pipe(
         catchError(error => {
-          console.error('Error loading presence:', error);
+          console.error('[PresenceAvatars] Error loading presence:', {
+            groupId: this.groupId,
+            error: error,
+            errorMessage: error?.message,
+            errorStatus: error?.status
+          });
           return of({ data: [] });
         })
       );
