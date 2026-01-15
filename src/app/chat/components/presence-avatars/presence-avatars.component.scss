@@ -83,7 +83,7 @@
   height: 14px;
   border-radius: 50%;
   background: var(--taskflow-color-dropdown-bg);
-  border: 2px solid var(--taskflow-color-text-tertiary, rgba(0, 0, 0, 0.3));
+  border: 2px solid var(--taskflow-color-text-tertiary);
   box-sizing: border-box;
 }
 
@@ -251,7 +251,7 @@
 
   &.online {
     color: var(--taskflow-color-success);
-    
+
     .status-indicator {
       background: var(--taskflow-color-success);
     }
@@ -259,7 +259,7 @@
 
   &.offline {
     color: var(--taskflow-color-text-tertiary);
-    
+
     .status-indicator {
       background: var(--taskflow-color-text-tertiary);
     }
@@ -267,7 +267,7 @@
 
   &.hidden {
     color: var(--taskflow-color-text-disabled);
-    
+
     .status-indicator {
       background: var(--taskflow-color-text-disabled);
       opacity: 0.5;
@@ -402,7 +402,7 @@
 
   &.online {
     color: var(--taskflow-color-success);
-    
+
     .status-indicator {
       background: var(--taskflow-color-success);
     }
@@ -410,7 +410,7 @@
 
   &.offline {
     color: var(--taskflow-color-text-tertiary);
-    
+
     .status-indicator {
       background: var(--taskflow-color-text-tertiary);
     }
@@ -418,7 +418,7 @@
 
   &.hidden {
     color: var(--taskflow-color-text-disabled);
-    
+
     .status-indicator {
       background: var(--taskflow-color-text-disabled);
       opacity: 0.5;

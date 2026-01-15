@@ -7,8 +7,10 @@
       (mouseleave)="onAvatarLeave()">
       <div class="avatar-circle">
         <span class="avatar-initials">{{ getInitials(getUserFullName(member)) }}</span>
-        <span class="online-indicator" *ngIf="member.isOnline === true && (member.statusVisibilityEnabled === true || member.statusVisibilityEnabled === undefined)"></span>
-        <span class="offline-indicator" *ngIf="member.isOnline === false && (member.statusVisibilityEnabled === true || member.statusVisibilityEnabled === undefined)"></span>
+        <span class="online-indicator"
+          *ngIf="member.isOnline === true && (member.statusVisibilityEnabled === true || member.statusVisibilityEnabled === undefined)"></span>
+        <span class="offline-indicator"
+          *ngIf="member.isOnline === false && (member.statusVisibilityEnabled === true || member.statusVisibilityEnabled === undefined)"></span>
       </div>
     </div>
 
@@ -24,23 +26,25 @@
   <div *ngIf="showDropdown" class="online-users-dropdown" (mouseenter)="onDropdownEnter()"
     (mouseleave)="onDropdownLeave()">
 
-    <div class="dropdown-header">
+    <!-- <div class="dropdown-header">
       <span class="dropdown-title">Members — {{ filteredTotalCount }}</span>
-    </div>
+    </div> -->
 
     <div class="dropdown-list">
       <!-- Online users first -->
-      <div *ngFor="let member of filteredOnlineMembers" class="user-list-item" (mouseenter)="onAvatarHover($event, member)"
-        (mouseleave)="onAvatarLeave()">
+      <div *ngFor="let member of filteredOnlineMembers" class="user-list-item"
+        (mouseenter)="onAvatarHover($event, member)" (mouseleave)="onAvatarLeave()">
 
         <div class="user-avatar">
           <span class="user-initials">{{ getInitials(getUserFullName(member)) }}</span>
-          <span class="user-online-dot" *ngIf="member.statusVisibilityEnabled === true || member.statusVisibilityEnabled === undefined"></span>
+          <span class="user-online-dot"
+            *ngIf="member.statusVisibilityEnabled === true || member.statusVisibilityEnabled === undefined"></span>
         </div>
 
         <div class="user-info">
           <div class="user-name">{{ getUserFullName(member) }}</div>
-          <div class="user-status" [ngClass]="getPresenceStatusClass(member)" *ngIf="member.statusVisibilityEnabled === true || member.statusVisibilityEnabled === undefined">
+          <div class="user-status" [ngClass]="getPresenceStatusClass(member)"
+            *ngIf="member.statusVisibilityEnabled === true || member.statusVisibilityEnabled === undefined">
             <span class="status-indicator"></span>
             <span class="status-text">{{ getPresenceStatus(member) }}</span>
           </div>
@@ -51,17 +55,19 @@
       </div>
 
       <!-- Offline users -->
-      <div *ngFor="let member of filteredOfflineMembers" class="user-list-item" (mouseenter)="onAvatarHover($event, member)"
-        (mouseleave)="onAvatarLeave()">
+      <div *ngFor="let member of filteredOfflineMembers" class="user-list-item"
+        (mouseenter)="onAvatarHover($event, member)" (mouseleave)="onAvatarLeave()">
 
         <div class="user-avatar">
           <span class="user-initials">{{ getInitials(getUserFullName(member)) }}</span>
-          <span class="user-offline-dot" *ngIf="member.statusVisibilityEnabled === true || member.statusVisibilityEnabled === undefined"></span>
+          <span class="user-offline-dot"
+            *ngIf="member.statusVisibilityEnabled === true || member.statusVisibilityEnabled === undefined"></span>
         </div>
 
         <div class="user-info">
           <div class="user-name">{{ getUserFullName(member) }}</div>
-          <div class="user-status" [ngClass]="getPresenceStatusClass(member)" *ngIf="member.statusVisibilityEnabled === true || member.statusVisibilityEnabled === undefined">
+          <div class="user-status" [ngClass]="getPresenceStatusClass(member)"
+            *ngIf="member.statusVisibilityEnabled === true || member.statusVisibilityEnabled === undefined">
             <span class="status-indicator"></span>
             <span class="status-text">{{ getPresenceStatus(member) }}</span>
           </div>
@@ -80,21 +86,25 @@
 
     <div class="profile-card-avatar">
       <span class="profile-initials">{{ getInitials(getUserFullName(hoveredUser)) }}</span>
-      <span class="profile-online-dot" *ngIf="hoveredUser.isOnline === true && (hoveredUser.statusVisibilityEnabled === true || hoveredUser.statusVisibilityEnabled === undefined)"></span>
-      <span class="profile-offline-dot" *ngIf="hoveredUser.isOnline === false && (hoveredUser.statusVisibilityEnabled === true || hoveredUser.statusVisibilityEnabled === undefined)"></span>
+      <span class="profile-online-dot"
+        *ngIf="hoveredUser.isOnline === true && (hoveredUser.statusVisibilityEnabled === true || hoveredUser.statusVisibilityEnabled === undefined)"></span>
+      <span class="profile-offline-dot"
+        *ngIf="hoveredUser.isOnline === false && (hoveredUser.statusVisibilityEnabled === true || hoveredUser.statusVisibilityEnabled === undefined)"></span>
     </div>
 
     <div class="profile-card-info">
       <div class="profile-name">{{ getUserFullName(hoveredUser) }}</div>
       <div class="profile-email">{{ getUserEmail(hoveredUser) }}</div>
-      <div class="profile-status" [ngClass]="getPresenceStatusClass(hoveredUser)" *ngIf="hoveredUser.statusVisibilityEnabled === true || hoveredUser.statusVisibilityEnabled === undefined">
+      <div class="profile-status" [ngClass]="getPresenceStatusClass(hoveredUser)"
+        *ngIf="hoveredUser.statusVisibilityEnabled === true || hoveredUser.statusVisibilityEnabled === undefined">
         <span class="status-indicator"></span>
         <span class="status-text">{{ getPresenceStatus(hoveredUser) }}</span>
       </div>
       <div class="profile-status hidden" *ngIf="hoveredUser.statusVisibilityEnabled === false">
         <span class="status-text">Status hidden</span>
       </div>
-      <div class="profile-last-seen" *ngIf="hoveredUser.isOnline === false && hoveredUser.lastSeenVisibilityEnabled && (hoveredUser.statusVisibilityEnabled === true || hoveredUser.statusVisibilityEnabled === undefined)">
+      <div class="profile-last-seen"
+        *ngIf="hoveredUser.isOnline === false && hoveredUser.lastSeenVisibilityEnabled && (hoveredUser.statusVisibilityEnabled === true || hoveredUser.statusVisibilityEnabled === undefined)">
         {{ getLastSeenText(hoveredUser) }}
       </div>
     </div>
