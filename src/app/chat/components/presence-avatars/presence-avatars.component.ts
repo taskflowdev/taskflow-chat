@@ -22,13 +22,17 @@ export class PresenceAvatarsComponent implements OnInit, OnDestroy {
   presenceList: PresenceDto[] = [];
   hoveredUser: PresenceDto | null = null;
   profileCardPosition = { top: 0, left: 0 };
+  cardExpanded = false;
 
   private presenceSubscription?: Subscription;
   private refreshInterval = 10000; // 10 seconds
   private destroy$ = new Subject<void>();
   private avatarHoverTimeout: NodeJS.Timeout | null = null;
+  private cardExpandTimeout: NodeJS.Timeout | null = null;
 
   private readonly PROFILE_CARD_WIDTH = 280; // Must match CSS .profile-hover-card width
+  private readonly PROFILE_CARD_OFFSET = 12; // Spacing between avatar and card
+  private readonly PROFILE_CARD_SCREEN_MARGIN = 8; // Keep card inside viewport
 
   constructor(
     private groupsService: GroupsService,
@@ -50,6 +54,9 @@ export class PresenceAvatarsComponent implements OnInit, OnDestroy {
     if (this.avatarHoverTimeout) {
       clearTimeout(this.avatarHoverTimeout);
     }
+    if (this.cardExpandTimeout) {
+      clearTimeout(this.cardExpandTimeout);
+    }
   }
 
   @HostListener('document:click', ['$event'])
@@ -57,6 +64,7 @@ export class PresenceAvatarsComponent implements OnInit, OnDestroy {
     const target = event.target as HTMLElement;
     if (!this.elementRef.nativeElement.contains(target)) {
       this.hoveredUser = null;
+      this.cardExpanded = false;
     }
   }
 
@@ -269,6 +277,7 @@ export class PresenceAvatarsComponent implements OnInit, OnDestroy {
   }
 
   onAvatarStackLeave(): void {
+    this.cardExpanded = false;
     this.avatarHoverTimeout = setTimeout(() => {
       this.hoveredUser = null;
     }, 200);
@@ -281,20 +290,36 @@ export class PresenceAvatarsComponent implements OnInit, OnDestroy {
     if (this.avatarHoverTimeout) {
       clearTimeout(this.avatarHoverTimeout);
     }
+    if (this.cardExpandTimeout) {
+      clearTimeout(this.cardExpandTimeout);
+    }
+
+    this.cardExpanded = false;
 
     const target = event.currentTarget as HTMLElement;
     const rect = target.getBoundingClientRect();
 
-    // Position card to the left of the avatar
+    const desiredLeft = rect.left + (rect.width / 2) - (this.PROFILE_CARD_WIDTH / 2);
+    const maxLeft = window.innerWidth - this.PROFILE_CARD_WIDTH - this.PROFILE_CARD_SCREEN_MARGIN;
+    const clampedLeft = Math.min(Math.max(desiredLeft, this.PROFILE_CARD_SCREEN_MARGIN), maxLeft);
+
+    // Position card below the avatar and centered, clamped within viewport
     this.profileCardPosition = {
-      top: rect.top + window.scrollY - 20,
-      left: rect.left - this.PROFILE_CARD_WIDTH - 16 // Card width + spacing
+      top: rect.bottom + window.scrollY + this.PROFILE_CARD_OFFSET,
+      left: clampedLeft
     };
 
     this.hoveredUser = member;
+    this.cardExpandTimeout = setTimeout(() => {
+      this.cardExpanded = true;
+    }, 1000);
   }
 
   onAvatarLeave(): void {
+    if (this.cardExpandTimeout) {
+      clearTimeout(this.cardExpandTimeout);
+    }
+    this.cardExpanded = false;
     this.avatarHoverTimeout = setTimeout(() => {
       this.hoveredUser = null;
     }, 100);
@@ -319,7 +344,7 @@ export class PresenceAvatarsComponent implements OnInit, OnDestroy {
    */
   getLastSeenText(member: PresenceDto): string {
     if (!member.lastSeen || member.isOnline === true) {
-      return '';
+      return 'Last seen is not available';
     }
 
     const lastSeenDate = new Date(member.lastSeen);

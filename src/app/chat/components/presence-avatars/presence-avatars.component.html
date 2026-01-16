@@ -23,8 +23,8 @@
 
   <!-- Profile Hover Card (Microsoft Teams-style) -->
   <!-- Shows on hover over individual avatars -->
-  <div *ngIf="hoveredUser" class="profile-hover-card" [style.top.px]="profileCardPosition.top"
-    [style.left.px]="profileCardPosition.left">
+  <div *ngIf="hoveredUser" class="profile-hover-card" [class.expanded]="cardExpanded"
+    [style.top.px]="profileCardPosition.top" [style.left.px]="profileCardPosition.left">
 
     <div class="profile-card-header">
       <div class="profile-card-avatar">
