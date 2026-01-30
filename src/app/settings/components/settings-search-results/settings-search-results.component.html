@@ -1,0 +1,63 @@
+<div class="search-results-container" *ngIf="isSearchActive">
+  <div class="search-results-list" *ngIf="searchResults.length > 0; else noResults">
+    <div *ngFor="let result of searchResults; let i = index; trackBy: trackByResultId" class="search-result-item"
+      [class.selected]="isSelected(i)" [attr.data-result-index]="i" (click)="onResultClick(result)" role="button"
+      tabindex="0" [attr.aria-label]="result.label + ' in ' + result.categoryLabel">
+      <div class="result-header">
+        <div class="result-title-section">
+          <div class="icon-wrapper">
+            <i *ngIf="result.categoryIcon" [class]="'bi bi-' + result.categoryIcon + ' result-icon result-icon-default'"
+              [style.color]="result.categoryIconColor || 'inherit'"></i>
+            <i *ngIf="result.categoryIconSelected"
+              [class]="'bi bi-' + result.categoryIconSelected + ' result-icon result-icon-selected'"
+              [style.color]="result.categoryIconColor || 'inherit'"></i>
+          </div>
+          <div class="result-titles">
+            <div class="result-title">
+              {{ result.label }}
+            </div>
+            <div class="result-description" *ngIf="result.summary || result.description">
+              {{ result.summary || result.description }}
+            </div>
+          </div>
+        </div>
+        <div class="result-badges">
+          <span class="category-badge">
+            <i *ngIf="result.categoryIcon" [class]="'bi bi-' + result.categoryIcon"></i>
+            {{ result.categoryLabel }}
+          </span>
+          <span *ngFor="let badge of getStatusBadges(result)" class="status-badge"
+            [class.disabled]="badge === 'Disabled'" [class.admin-only]="badge === 'Admin Only'"
+            [class.deprecated]="badge === 'Deprecated'">
+            <i *ngIf="badge === 'Disabled'" class="bi bi-x-circle"></i>
+            <i *ngIf="badge === 'Admin Only'" class="bi bi-shield-lock"></i>
+            <i *ngIf="badge === 'Deprecated'" class="bi bi-exclamation-triangle"></i>
+            {{ badge }}
+          </span>
+        </div>
+      </div>
+      <!-- <div class="result-description" *ngIf="result.summary || result.description">
+        {{ result.summary || result.description }}
+      </div> -->
+      <div class="result-footer">
+        <div class="result-tags" *ngIf="result.tags && result.tags.length > 0">
+          <span *ngFor="let tag of result.tags" class="tag-badge">
+            #{{ tag }}
+          </span>
+        </div>
+        <div class="result-meta" *ngIf="result.group">
+          <span class="result-group">
+            <i class="bi bi-folder"></i>{{ result.group }}
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <ng-template #noResults>
+    <div class="no-results">
+      <i class="bi bi-search"></i>
+      <p>No settings found</p>
+    </div>
+  </ng-template>
+</div>

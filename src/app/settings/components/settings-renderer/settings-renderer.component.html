@@ -1,4 +1,4 @@
-<div class="setting-card" [class.is-disabled]="isDisabled">
+<div class="setting-card" [class.is-disabled]="isDisabled" [attr.data-setting-key]="categoryKey + '.' + settingKey.key">
   <span *ngIf="isDisabled" class="setting-badge"
     [appCommonTooltip]="settingKey.disabledReason || 'This feature is not available right now. It will be available soon.'">
     <i class="bi bi-x-circle"></i>

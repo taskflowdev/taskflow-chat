@@ -1,0 +1,403 @@
+import { Component, Input, OnInit, OnDestroy, HostListener, ElementRef } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { GroupsService } from '../../../api/services/groups.service';
+import { PresenceDto } from '../../../api/models/presence-dto';
+import { PresenceDtoIEnumerableApiResponse } from '../../../api/models/presence-dto-i-enumerable-api-response';
+import { AuthService } from '../../../auth/services/auth.service';
+import { interval, Subscription, Observable, Subject } from 'rxjs';
+import { switchMap, catchError, takeUntil } from 'rxjs/operators';
+import { of } from 'rxjs';
+
+@Component({
+  selector: 'app-presence-avatars',
+  standalone: true,
+  imports: [CommonModule],
+  templateUrl: './presence-avatars.component.html',
+  styleUrls: ['./presence-avatars.component.scss']
+})
+export class PresenceAvatarsComponent implements OnInit, OnDestroy {
+  @Input() groupId: string | null = null;
+  @Input() maxVisible: number = 5; // Maximum number of avatars to show before showing "+N"
+
+  presenceList: PresenceDto[] = [];
+  hoveredUser: PresenceDto | null = null;
+  profileCardPosition = { top: 0, left: 0 };
+  cardExpanded = false;
+
+  private presenceSubscription?: Subscription;
+  private refreshInterval = 10000; // 10 seconds
+  private destroy$ = new Subject<void>();
+  private avatarHoverTimeout: NodeJS.Timeout | null = null;
+  private cardExpandTimeout: NodeJS.Timeout | null = null;
+
+  private readonly PROFILE_CARD_WIDTH = 280; // Must match CSS .profile-hover-card width
+  private readonly PROFILE_CARD_OFFSET = 12; // Spacing between avatar and card
+  private readonly PROFILE_CARD_SCREEN_MARGIN = 8; // Keep card inside viewport
+
+  constructor(
+    private groupsService: GroupsService,
+    private authService: AuthService,
+    private elementRef: ElementRef
+  ) { }
+
+  ngOnInit(): void {
+    if (this.groupId) {
+      this.loadPresence();
+      this.startPresenceRefresh();
+    }
+  }
+
+  ngOnDestroy(): void {
+    this.presenceSubscription?.unsubscribe();
+    this.destroy$.next();
+    this.destroy$.complete();
+    if (this.avatarHoverTimeout) {
+      clearTimeout(this.avatarHoverTimeout);
+    }
+    if (this.cardExpandTimeout) {
+      clearTimeout(this.cardExpandTimeout);
+    }
+  }
+
+  @HostListener('document:click', ['$event'])
+  onDocumentClick(event: MouseEvent): void {
+    const target = event.target as HTMLElement;
+    if (!this.elementRef.nativeElement.contains(target)) {
+      this.hoveredUser = null;
+      this.cardExpanded = false;
+    }
+  }
+
+  private loadPresence(): void {
+    if (!this.groupId) {
+      console.warn('[PresenceAvatars] No groupId provided, skipping presence load');
+      return;
+    }
+
+    console.log('[PresenceAvatars] Loading presence for group:', this.groupId);
+
+    this.fetchPresence()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(response => {
+        this.presenceList = response.data || [];
+        console.log('[PresenceAvatars] Loaded presence data:', {
+          groupId: this.groupId,
+          total: this.presenceList.length,
+          online: this.onlineMembers.length,
+          offline: this.offlineMembers.length,
+          filteredOnline: this.filteredOnlineMembers.length,
+          filteredOffline: this.filteredOfflineMembers.length,
+          currentUser: this.currentUser,
+          presenceList: this.presenceList.map(p => ({
+            userId: p.userId,
+            userName: p.userName,
+            fullName: p.fullName,
+            isOnline: p.isOnline,
+            email: p.email
+          }))
+        });
+      });
+  }
+
+  private startPresenceRefresh(): void {
+    this.presenceSubscription = interval(this.refreshInterval)
+      .pipe(
+        switchMap(() => this.fetchPresence()),
+        takeUntil(this.destroy$)
+      )
+      .subscribe(response => {
+        this.presenceList = response.data || [];
+      });
+  }
+
+  private fetchPresence(): Observable<PresenceDtoIEnumerableApiResponse> {
+    if (!this.groupId) {
+      console.warn('[PresenceAvatars] fetchPresence called without groupId');
+      return of({ data: [] });
+    }
+
+    console.log('[PresenceAvatars] Fetching presence from API for group:', this.groupId);
+
+    return this.groupsService.apiGroupsIdPresenceGet$Json({ id: this.groupId })
+      .pipe(
+        catchError(error => {
+          console.error('[PresenceAvatars] Error loading presence:', {
+            groupId: this.groupId,
+            error: error,
+            errorMessage: error?.message,
+            errorStatus: error?.status
+          });
+          return of({ data: [] });
+        })
+      );
+  }
+
+  /**
+   * Get the initials from a user's name
+   */
+  getInitials(name: string): string {
+    if (!name) return '??';
+    const parts = name.trim().split(/\s+/);
+    if (parts.length === 1) {
+      return parts[0].substring(0, 2).toUpperCase();
+    }
+    return (parts[0].charAt(0) + parts[parts.length - 1].charAt(0)).toUpperCase();
+  }
+
+  /**
+   * Get only online members (explicitly online, not null or false)
+   */
+  get onlineMembers(): PresenceDto[] {
+    return this.presenceList.filter(p => p.isOnline === true);
+  }
+
+  /**
+   * Get only offline members (explicitly offline, not null)
+   */
+  get offlineMembers(): PresenceDto[] {
+    return this.presenceList.filter(p => p.isOnline === false);
+  }
+
+  /**
+   * Get all members sorted by online status first
+   */
+  get allMembers(): PresenceDto[] {
+    return [...this.onlineMembers, ...this.offlineMembers];
+  }
+
+  /**
+   * Get current logged-in user
+   */
+  get currentUser() {
+    return this.authService.getCurrentUser();
+  }
+
+  /**
+   * Get all members excluding current user
+   */
+  get filteredAllMembers(): PresenceDto[] {
+    const currentUser = this.currentUser;
+    if (!currentUser) {
+      return this.allMembers;
+    }
+    return this.allMembers.filter((member: PresenceDto) =>
+      member.userId !== currentUser.id && member.userName !== currentUser.userName
+    );
+  }
+
+  /**
+   * Get online members excluding current user
+   */
+  get filteredOnlineMembers(): PresenceDto[] {
+    const currentUser = this.currentUser;
+    if (!currentUser) {
+      return this.onlineMembers;
+    }
+    return this.onlineMembers.filter((member: PresenceDto) =>
+      member.userId !== currentUser.id && member.userName !== currentUser.userName
+    );
+  }
+
+  /**
+   * Get offline members excluding current user
+   */
+  get filteredOfflineMembers(): PresenceDto[] {
+    const currentUser = this.currentUser;
+    if (!currentUser) {
+      return this.offlineMembers;
+    }
+    return this.offlineMembers.filter((member: PresenceDto) =>
+      member.userId !== currentUser.id && member.userName !== currentUser.userName
+    );
+  }
+
+  /**
+   * Get total count excluding current user
+   */
+  get filteredTotalCount(): number {
+    return this.filteredAllMembers.length;
+  }
+
+  /**
+   * Get online count excluding current user
+   */
+  get filteredOnlineCount(): number {
+    return this.filteredOnlineMembers.length;
+  }
+
+  /**
+   * Get offline count excluding current user
+   */
+  get filteredOfflineCount(): number {
+    return this.filteredOfflineMembers.length;
+  }
+
+  /**
+   * Get the list of all members to display (limited by maxVisible, excluding current user)
+   */
+  get visibleMembers(): PresenceDto[] {
+    return this.filteredAllMembers.slice(0, this.maxVisible);
+  }
+
+  /**
+   * Get the count of remaining members not displayed
+   */
+  get remainingCount(): number {
+    return Math.max(0, this.filteredAllMembers.length - this.maxVisible);
+  }
+
+  /**
+   * Get online members count
+   */
+  get onlineCount(): number {
+    return this.onlineMembers.length;
+  }
+
+  /**
+   * Get offline members count
+   */
+  get offlineCount(): number {
+    return this.offlineMembers.length;
+  }
+
+  /**
+   * Get total members count
+   */
+  get totalCount(): number {
+    return this.presenceList.length;
+  }
+
+  /**
+   * Toggle avatar expansion on hover
+   */
+  onAvatarStackHover(): void {
+    if (this.avatarHoverTimeout) {
+      clearTimeout(this.avatarHoverTimeout);
+    }
+  }
+
+  onAvatarStackLeave(): void {
+    this.cardExpanded = false;
+    this.avatarHoverTimeout = setTimeout(() => {
+      this.hoveredUser = null;
+    }, 200);
+  }
+
+  /**
+   * Show profile card on avatar hover
+   */
+  onAvatarHover(event: MouseEvent, member: PresenceDto): void {
+    if (this.avatarHoverTimeout) {
+      clearTimeout(this.avatarHoverTimeout);
+    }
+    if (this.cardExpandTimeout) {
+      clearTimeout(this.cardExpandTimeout);
+    }
+
+    this.cardExpanded = false;
+
+    const target = event.currentTarget as HTMLElement;
+    const rect = target.getBoundingClientRect();
+
+    const desiredLeft = rect.left + (rect.width / 2) - (this.PROFILE_CARD_WIDTH / 2);
+    const maxLeft = window.innerWidth - this.PROFILE_CARD_WIDTH - this.PROFILE_CARD_SCREEN_MARGIN;
+    const clampedLeft = Math.min(Math.max(desiredLeft, this.PROFILE_CARD_SCREEN_MARGIN), maxLeft);
+
+    // Position card below the avatar and centered, clamped within viewport
+    this.profileCardPosition = {
+      top: rect.bottom + window.scrollY + this.PROFILE_CARD_OFFSET,
+      left: clampedLeft
+    };
+
+    this.hoveredUser = member;
+    this.cardExpandTimeout = setTimeout(() => {
+      this.cardExpanded = true;
+    }, 1000);
+  }
+
+  onAvatarLeave(): void {
+    if (this.cardExpandTimeout) {
+      clearTimeout(this.cardExpandTimeout);
+    }
+    this.cardExpanded = false;
+    this.avatarHoverTimeout = setTimeout(() => {
+      this.hoveredUser = null;
+    }, 100);
+  }
+
+  /**
+   * Get user email from presence data
+   */
+  getUserEmail(member: PresenceDto): string {
+    return member.email || member.userName || 'No email available';
+  }
+
+  /**
+   * Get user full name or fallback to username
+   */
+  getUserFullName(member: PresenceDto): string {
+    return member.fullName || member.userName || 'Unknown User';
+  }
+
+  /**
+   * Get formatted last seen text
+   */
+  getLastSeenText(member: PresenceDto): string {
+    if (!member.lastSeen || member.isOnline === true) {
+      return 'Last seen is not available';
+    }
+
+    const lastSeenDate = new Date(member.lastSeen);
+    const now = new Date();
+    const diffMs = now.getTime() - lastSeenDate.getTime();
+    const diffMinutes = Math.floor(diffMs / 60000);
+    const diffHours = Math.floor(diffMs / 3600000);
+    const diffDays = Math.floor(diffMs / 86400000);
+
+    if (diffMinutes < 1) {
+      return 'Last seen just now';
+    } else if (diffMinutes < 60) {
+      return `Last seen ${diffMinutes} minute${diffMinutes > 1 ? 's' : ''} ago`;
+    } else if (diffHours < 24) {
+      return `Last seen ${diffHours} hour${diffHours > 1 ? 's' : ''} ago`;
+    } else if (diffDays < 7) {
+      return `Last seen ${diffDays} day${diffDays > 1 ? 's' : ''} ago`;
+    } else {
+      return `Last seen on ${lastSeenDate.toLocaleDateString()}`;
+    }
+  }
+
+  /**
+   * Get presence status text (online/offline/hidden)
+   */
+  getPresenceStatus(member: PresenceDto): string {
+    if (member.isOnline === true) {
+      return 'Online';
+    } else if (member.isOnline === false) {
+      return 'Offline';
+    }
+    // null means user has disabled status sharing
+    return 'Status hidden';
+  }
+
+  /**
+   * Get presence status class for styling
+   */
+  getPresenceStatusClass(member: PresenceDto): string {
+    if (member.isOnline === true) {
+      return 'online';
+    } else if (member.isOnline === false) {
+      return 'offline';
+    }
+    // null means user has disabled status sharing
+    return 'hidden';
+  }
+
+  /**
+   * Get tooltip text for a member
+   */
+  getMemberTooltip(member: PresenceDto): string {
+    const status = member.isOnline ? 'Online' : 'Offline';
+    return `${member.userName} - ${status}`;
+  }
+}

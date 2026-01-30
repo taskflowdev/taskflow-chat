@@ -1,0 +1,198 @@
+.recent-searches-container {
+  margin-top: 2rem;
+  max-width: 900px;
+}
+
+.recent-searches-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.recent-searches-title {
+  font-size: var(--taskflow-font-font-size-large);
+  font-weight: 600;
+  color: var(--taskflow-color-text-primary);
+  margin: 0;
+
+  i {
+    font-size: var(--taskflow-font-icon-size-md);
+    margin-right: 0.4rem;
+  }
+}
+
+.clear-all-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  padding: 0.25rem 0.5rem;
+  font-size: var(--taskflow-font-font-size-normal);
+  color: var(--taskflow-color-text-secondary);
+  background-color: transparent;
+  border: 1px solid var(--taskflow-color-border);
+  border-radius: 0.375rem;
+  cursor: pointer;
+  transition: background-color 0.2s ease, border-color 0.2s ease;
+
+  i {
+    font-size: var(--taskflow-font-icon-size-xxs);
+  }
+
+  &:hover {
+    background-color: var(--taskflow-color-surface-hover);
+    // border-color: var(--taskflow-color-border-hover);
+  }
+
+  &:focus {
+    outline: none;
+  }
+}
+
+.divider {
+  margin: 0.5rem 0rem 1rem 0rem;
+}
+
+.recent-searches-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1rem;
+  auto-rows: 1fr;
+}
+
+.recent-search-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  padding: 0.8rem;
+  background-color: var(--taskflow-color-search-results-item-bg);
+  border: 1px solid var(--taskflow-color-search-results-item-border);
+  border-radius: 12px;
+  cursor: pointer;
+  transition: background-color 0.2s ease, border-color 0.2s ease,
+    transform 0.2s ease;
+  height: 100%;
+
+  &:hover {
+    .action-icon {
+      opacity: 1;
+      transform: translate(0, 0);
+    }
+  }
+
+  &:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px var(--taskflow-color-focus-ring-subtle);
+  }
+}
+
+.card-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 0.4rem;
+  min-height: 3rem;
+}
+
+.icon-wrapper {
+  position: relative;
+}
+
+.result-icon {
+  font-size: var(--taskflow-font-icon-size-xl);
+  position: absolute;
+  transition: opacity 0.2s ease;
+
+  &.result-icon-default {
+    opacity: 0.8;
+  }
+
+  &.result-icon-selected {
+    opacity: 0;
+  }
+}
+
+.recent-search-card:hover .result-icon {
+  &.result-icon-default {
+    opacity: 0;
+  }
+
+  &.result-icon-selected {
+    opacity: 0.8;
+  }
+}
+
+.card-middle {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.recent-search-title {
+  font-size: var(--taskflow-font-font-size-normal);
+  font-weight: 600;
+  color: var(--taskflow-color-search-results-item-text);
+  line-height: normal;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.recent-search-description {
+  font-size: var(--taskflow-font-font-size-normal);
+  color: var(--taskflow-color-search-results-item-text-secondary);
+  line-height: 1.4;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.card-bottom {
+  display: none;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: auto;
+}
+
+.category-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0.25rem 0.5rem;
+  font-size: var(--taskflow-font-font-size-normal);
+  font-weight: 500;
+  color: var(--taskflow-color-text-secondary);
+  background-color: var(--taskflow-color-search-badge-bg);
+  border: 1px solid var(--taskflow-color-search-badge-border);
+  border-radius: 6px;
+
+  i {
+    font-size: var(--taskflow-font-icon-size-sm);
+  }
+}
+
+.action-icon {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  width: 1.75rem;
+  height: 1.75rem;
+  opacity: 0;
+  transform: translate(0, 0);
+  transition: opacity 0.2s ease, transform 0.2s ease;
+
+  i {
+    font-size: var(--taskflow-font-icon-size-lg);
+    color: var(--taskflow-color-text-secondary);
+  }
+}
+
+.recent-search-card:hover .action-icon {
+  display: flex;
+  opacity: 1;
+  transform: translate(0, 0);
+}

@@ -1,0 +1,315 @@
+// Enterprise-grade online presence component inspired by Microsoft Teams
+.presence-avatars-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+// Avatar Stack (Expanded on Hover)
+.avatar-stack {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  gap: 2px;
+}
+
+.avatar-item {
+  margin-left: -22px;
+  transition: margin-left 0.3s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease;
+  opacity: 1;
+
+  &:first-child {
+    margin-left: 0;
+  }
+
+  // Expand on hover
+  .avatar-stack:hover & {
+    margin-left: 2px;
+
+    &:first-child {
+      margin-left: 0;
+    }
+  }
+}
+
+.avatar-circle {
+  position: relative;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: var(--taskflow-color-member-avatar-bg);
+  border: 2px solid var(--taskflow-color-background);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+.avatar-initials {
+  font-size: var(--taskflow-font-font-size-normal);
+  font-weight: 600;
+  color: var(--taskflow-color-member-avatar-text);
+  user-select: none;
+  letter-spacing: 0.3px;
+}
+
+.online-indicator {
+  position: absolute;
+  bottom: -2px;
+  right: -2px;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: var(--taskflow-color-success);
+  border: 1px solid var(--taskflow-color-background);
+}
+
+.offline-indicator {
+  position: absolute;
+  bottom: -2px;
+  right: -2px;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: var(--taskflow-color-dropdown-bg);
+  border: 2px solid var(--taskflow-color-text-tertiary);
+  box-sizing: border-box;
+}
+
+.avatar-more {
+  .avatar-circle {
+    background: var(--taskflow-color-surface-subtle);
+    border-color: var(--taskflow-color-border);
+  }
+
+  .avatar-initials {
+    color: var(--taskflow-color-text-secondary);
+    font-size: 10px;
+  }
+
+  &:hover .avatar-circle {
+    background: var(--taskflow-color-surface-hover);
+  }
+}
+
+// Profile Hover Card (Individual User)
+.profile-hover-card {
+  position: fixed;
+  width: auto;
+  min-width: 280px;
+  max-width: 360px;
+  background: var(--taskflow-color-tooltip-bg);
+  border: 1px solid var(--taskflow-color-tooltip-border);
+  border-radius: 8px;
+  padding: 12px;
+  z-index: 2000;
+  animation: cardFadeIn 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+  pointer-events: auto;
+}
+
+@keyframes cardFadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95) translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+.profile-card-avatar {
+  position: relative;
+  width: 54px;
+  height: 54px;
+  border-radius: 50%;
+  background: var(--taskflow-color-member-avatar-bg);
+  border: 2px solid var(--taskflow-color-background);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+}
+
+.profile-initials {
+  font-size: var(--taskflow-font-font-size-h3);
+  font-weight: 600;
+  color: var(--taskflow-color-member-avatar-text);
+  user-select: none;
+}
+
+.profile-online-dot {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--taskflow-color-success);
+  border: 2px solid var(--taskflow-color-tooltip-bg);
+}
+
+.profile-offline-dot {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--taskflow-color-dropdown-bg);
+  border: 2px solid var(--taskflow-color-text-tertiary, rgba(0, 0, 0, 0.3));
+  box-sizing: border-box;
+}
+
+.profile-card-separator {
+  height: 0;
+  background: var(--taskflow-color-tooltip-border);
+  margin: 0;
+  opacity: 0;
+  transform: scaleX(0.9);
+  transition: height 0.16s ease, margin 0.16s ease, opacity 0.16s ease,
+    transform 0.2s ease;
+}
+
+.profile-card-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.profile-card-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  vertical-align: middle;
+}
+
+.profile-card-details {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  max-height: 0;
+  opacity: 0;
+  overflow: hidden;
+  transform: translateY(-4px);
+  transition: max-height 0.22s ease, opacity 0.18s ease, transform 0.22s ease;
+}
+
+.profile-hover-card.expanded {
+  .profile-card-separator {
+    height: 1px;
+    margin: 10px 0;
+    opacity: 1;
+    transform: scaleX(1);
+  }
+
+  .profile-card-details {
+    max-height: 160px;
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.detail-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 22px;
+}
+
+.detail-icon {
+  font-size: var(--taskflow-font-icon-size-sm);
+  color: var(--taskflow-color-text-secondary);
+  flex-shrink: 0;
+}
+
+.profile-name {
+  font-size: var(--taskflow-font-font-size-large);
+  font-weight: 600;
+  color: var(--taskflow-color-tooltip-text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.profile-email {
+  font-size: var(--taskflow-font-font-size-normal);
+  color: var(--taskflow-color-tooltip-p, var(--taskflow-color-text-secondary));
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.profile-status-inline {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: var(--taskflow-font-font-size-normal);
+  color: var(--taskflow-color-text-secondary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  vertical-align: middle;
+  line-height: normal;
+
+  .status-indicator {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  &.online {
+    color: var(--taskflow-color-success);
+
+    .status-indicator {
+      background: var(--taskflow-color-success);
+    }
+  }
+
+  &.offline {
+    color: var(--taskflow-color-text-tertiary);
+
+    .status-indicator {
+      background: var(--taskflow-color-text-tertiary);
+    }
+  }
+
+  &.hidden {
+    color: var(--taskflow-color-text-disabled);
+
+    .status-indicator {
+      background: var(--taskflow-color-text-disabled);
+      opacity: 0.5;
+    }
+  }
+}
+
+.profile-last-seen {
+  font-size: var(--taskflow-font-font-size-normal);
+  color: var(--taskflow-color-tooltip-p, var(--taskflow-color-text-secondary));
+  font-style: italic;
+}
+
+// Responsive Design
+@media (max-width: 768px) {
+  .avatar-circle {
+    width: 24px;
+    height: 24px;
+  }
+
+  .avatar-initials {
+    font-size: 10px;
+  }
+
+  .online-indicator {
+    width: 8px;
+    height: 8px;
+  }
+
+  .profile-hover-card {
+    display: none; // Hide on mobile for better UX
+  }
+}

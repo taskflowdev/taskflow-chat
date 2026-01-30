@@ -8,7 +8,13 @@ import { map, Observable } from 'rxjs';
 
 @Component({
   selector: 'app-settings-layout',
-  imports: [CommonModule, RouterOutlet, SettingsSidebarComponent, SkeletonLoaderComponent],
+  standalone: true,
+  imports: [
+    CommonModule,
+    RouterOutlet,
+    SettingsSidebarComponent,
+    SkeletonLoaderComponent
+  ],
   templateUrl: './settings-layout.component.html',
   styleUrls: ['./settings-layout.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -17,7 +23,9 @@ export class SettingsLayoutComponent implements OnInit {
   loading$: Observable<boolean>;
   catalogLoaded$: Observable<boolean>;
 
-  constructor(private userSettingsService: UserSettingsService) {
+  constructor(
+    private userSettingsService: UserSettingsService
+  ) {
     this.loading$ = this.userSettingsService.loading$;
 
     // Check if catalog has been loaded (catalog$ emits non-null value)

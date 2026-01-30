@@ -1,0 +1,26 @@
+<div class="settings-search-page">
+  <!-- Search Component -->
+  <app-settings-search></app-settings-search>
+  
+  <!-- Show search results when search is active -->
+  <ng-container *ngIf="isSearchActive$ | async; else emptyState">
+    <app-settings-search-results></app-settings-search-results>
+  </ng-container>
+  
+  <!-- Show recent searches or placeholder when search is inactive -->
+  <ng-template #emptyState>
+    <!-- Show recent searches if they exist -->
+    <ng-container *ngIf="hasRecentSearches$ | async; else searchPlaceholder">
+      <app-recent-searches></app-recent-searches>
+    </ng-container>
+    
+    <!-- Show placeholder if no recent searches -->
+    <ng-template #searchPlaceholder>
+      <div class="search-placeholder">
+        <i class="bi bi-search placeholder-icon"></i>
+        <h2 class="placeholder-title">Search Settings</h2>
+        <p class="placeholder-text">Start typing to search through all settings</p>
+      </div>
+    </ng-template>
+  </ng-template>
+</div>
