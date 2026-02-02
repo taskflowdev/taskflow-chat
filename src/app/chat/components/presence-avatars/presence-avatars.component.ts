@@ -400,4 +400,20 @@ export class PresenceAvatarsComponent implements OnInit, OnDestroy {
     const status = member.isOnline ? 'Online' : 'Offline';
     return `${member.userName} - ${status}`;
   }
+
+  /**
+   * Get icon class based on user role
+   */
+  getRoleIconClass(role: string | undefined): string {
+    if (!role) {
+      return 'bi bi-person detail-icon';
+    }
+
+    const roleNormalized = role.toLowerCase();
+    if (roleNormalized === 'admin') {
+      return 'bi bi-person-gear detail-icon';
+    }
+
+    return 'bi bi-person detail-icon';
+  }
 }
