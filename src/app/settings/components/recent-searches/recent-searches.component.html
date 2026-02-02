@@ -15,7 +15,7 @@
   <div class="recent-searches-grid">
     <div *ngFor="let item of recentSearches; trackBy: trackById" class="recent-search-card"
       (click)="onRecentSearchClick(item)" role="button" tabindex="0"
-      [attr.aria-label]="item.label + ' in ' + item.categoryLabel">
+      [attr.aria-label]="getItemLabel(item) + ' in ' + getItemCategoryLabel(item)">
 
       <div class="card-top">
         <div class="icon-wrapper">
@@ -31,9 +31,9 @@
       </div>
 
       <div class="card-middle">
-        <div class="recent-search-title">{{ item.label }}</div>
-        <div class="recent-search-description" *ngIf="item.summary || item.description">
-          {{ item.description || item.summary }}
+        <div class="recent-search-title">{{ getItemLabel(item) }}</div>
+        <div class="recent-search-description" *ngIf="getItemSummary(item) || getItemDescription(item)">
+          {{ getItemDescription(item) || getItemSummary(item) }}
         </div>
       </div>
     </div>

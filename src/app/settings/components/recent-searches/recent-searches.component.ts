@@ -12,6 +12,7 @@ import { SettingsSearchService } from '../../services/settings-search.service';
 import { scrollToSetting } from '../../utils/scroll-to-setting';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
+import { I18nService } from '../../../core/i18n';
 
 /**
  * Recent searches component
@@ -32,7 +33,8 @@ export class RecentSearchesComponent implements OnInit, OnDestroy {
     private recentSearchesService: RecentSearchesService,
     private settingsSearchService: SettingsSearchService,
     private router: Router,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private i18n: I18nService
   ) { }
 
   ngOnInit(): void {
@@ -43,6 +45,13 @@ export class RecentSearchesComponent implements OnInit, OnDestroy {
         this.recentSearches = searches;
         this.cdr.markForCheck();
       });
+
+    // Subscribe to language changes to trigger change detection
+    this.i18n.languageChanged$.pipe(
+      takeUntil(this.destroy$)
+    ).subscribe(() => {
+      this.cdr.markForCheck();
+    });
   }
 
   ngOnDestroy(): void {
@@ -83,6 +92,55 @@ export class RecentSearchesComponent implements OnInit, OnDestroy {
    */
   clearAll(): void {
     this.recentSearchesService.clearRecentSearches();
+  }
+
+  /**
+   * Get translated value using i18n key or fallback
+   * @param i18nKey Translation key from API
+   * @param fallback Fallback value if translation not found
+   * @returns Translated string or fallback
+   */
+  private getTranslatedValue(i18nKey: string | undefined, fallback: string): string {
+    if (i18nKey) {
+      const translated = this.i18n.t(i18nKey);
+      // Only use translation if it's different from the key (meaning it was found)
+      if (translated !== i18nKey) {
+        return translated;
+      }
+    }
+    return fallback;
+  }
+
+  /**
+   * Get translated label for a recent search item
+   * Uses i18n key if available, falls back to label
+   */
+  getItemLabel(item: RecentSearchItem): string {
+    return this.getTranslatedValue(item.labelI18nKey, item.label);
+  }
+
+  /**
+   * Get translated summary for a recent search item
+   * Uses i18n key if available, falls back to summary
+   */
+  getItemSummary(item: RecentSearchItem): string {
+    return this.getTranslatedValue(item.summaryI18nKey, item.summary || '');
+  }
+
+  /**
+   * Get translated description for a recent search item
+   * Uses i18n key if available, falls back to description
+   */
+  getItemDescription(item: RecentSearchItem): string {
+    return this.getTranslatedValue(item.descriptionI18nKey, item.description || '');
+  }
+
+  /**
+   * Get translated category label for a recent search item
+   * Uses i18n key if available, falls back to category label
+   */
+  getItemCategoryLabel(item: RecentSearchItem): string {
+    return this.getTranslatedValue(item.categoryI18nKey, item.categoryLabel);
   }
 
   /**

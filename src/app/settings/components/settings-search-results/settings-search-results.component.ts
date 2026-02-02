@@ -14,6 +14,7 @@ import { SettingsSearchService } from '../../services/settings-search.service';
 import { RecentSearchesService } from '../../services/recent-searches.service';
 import { SettingsSearchResult } from '../../utils/settings-search-index';
 import { scrollToSetting } from '../../utils/scroll-to-setting';
+import { I18nService } from '../../../core/i18n';
 
 /**
  * Search results list component
@@ -37,8 +38,9 @@ export class SettingsSearchResultsComponent implements OnInit, OnDestroy {
     private settingsSearchService: SettingsSearchService,
     private recentSearchesService: RecentSearchesService,
     private router: Router,
-    private cdr: ChangeDetectorRef
-  ) {}
+    private cdr: ChangeDetectorRef,
+    private i18n: I18nService
+  ) { }
 
   ngOnInit(): void {
     // Subscribe to search results
@@ -57,6 +59,13 @@ export class SettingsSearchResultsComponent implements OnInit, OnDestroy {
         this.isSearchActive = isActive;
         this.cdr.markForCheck();
       });
+
+    // Subscribe to language changes to trigger change detection
+    this.i18n.languageChanged$.pipe(
+      takeUntil(this.destroy$)
+    ).subscribe(() => {
+      this.cdr.markForCheck();
+    });
   }
 
   ngOnDestroy(): void {
@@ -202,6 +211,55 @@ export class SettingsSearchResultsComponent implements OnInit, OnDestroy {
     }
 
     return badges;
+  }
+
+  /**
+   * Get translated value using i18n key or fallback
+   * @param i18nKey Translation key from API
+   * @param fallback Fallback value if translation not found
+   * @returns Translated string or fallback
+   */
+  private getTranslatedValue(i18nKey: string | undefined, fallback: string): string {
+    if (i18nKey) {
+      const translated = this.i18n.t(i18nKey);
+      // Only use translation if it's different from the key (meaning it was found)
+      if (translated !== i18nKey) {
+        return translated;
+      }
+    }
+    return fallback;
+  }
+
+  /**
+   * Get translated label for a search result
+   * Uses i18n key from search index if available, falls back to label
+   */
+  getResultLabel(result: SettingsSearchResult): string {
+    return this.getTranslatedValue(result.labelI18nKey, result.label);
+  }
+
+  /**
+   * Get translated summary for a search result
+   * Uses i18n key from search index if available, falls back to summary
+   */
+  getResultSummary(result: SettingsSearchResult): string {
+    return this.getTranslatedValue(result.summaryI18nKey, result.summary || '');
+  }
+
+  /**
+   * Get translated description for a search result
+   * Uses i18n key from search index if available, falls back to description
+   */
+  getResultDescription(result: SettingsSearchResult): string {
+    return this.getTranslatedValue(result.descriptionI18nKey, result.description || '');
+  }
+
+  /**
+   * Get translated category label for a search result
+   * Uses i18n key from search index if available, falls back to category label
+   */
+  getResultCategoryLabel(result: SettingsSearchResult): string {
+    return this.getTranslatedValue(result.categoryI18nKey, result.categoryLabel);
   }
 
   /**
