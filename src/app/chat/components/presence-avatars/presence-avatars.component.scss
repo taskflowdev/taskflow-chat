@@ -15,7 +15,9 @@
 
 .avatar-item {
   margin-left: -22px;
-  transition: margin-left 0.3s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease;
+  transition:
+    margin-left 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+    opacity 0.3s ease;
   opacity: 1;
 
   &:first-child {
@@ -34,11 +36,11 @@
 
 .avatar-circle {
   position: relative;
-  width: 40px;
-  height: 40px;
+  width: 44px;
+  height: 44px;
   border-radius: 50%;
-  background: var(--taskflow-color-member-avatar-bg);
-  border: 2px solid var(--taskflow-color-background);
+  background: var(--taskflow-color-profile-avatar-bg);
+  border: 2px solid var(--taskflow-color-profile-avatar-border);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -46,9 +48,9 @@
 }
 
 .avatar-initials {
-  font-size: var(--taskflow-font-font-size-normal);
+  font-size: var(--taskflow-font-font-size-large);
   font-weight: 600;
-  color: var(--taskflow-color-member-avatar-text);
+  color: var(--taskflow-color-profile-avatar-text);
   user-select: none;
   letter-spacing: 0.3px;
 }
@@ -123,8 +125,8 @@
   width: 54px;
   height: 54px;
   border-radius: 50%;
-  background: var(--taskflow-color-member-avatar-bg);
-  border: 2px solid var(--taskflow-color-background);
+  background: var(--taskflow-color-profile-avatar-bg);
+  border: 2px solid var(--taskflow-color-profile-avatar-border);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -135,7 +137,7 @@
 .profile-initials {
   font-size: var(--taskflow-font-font-size-h3);
   font-weight: 600;
-  color: var(--taskflow-color-member-avatar-text);
+  color: var(--taskflow-color-profile-avatar-text);
   user-select: none;
 }
 
@@ -168,7 +170,10 @@
   margin: 0;
   opacity: 0;
   transform: scaleX(0.9);
-  transition: height 0.16s ease, margin 0.16s ease, opacity 0.16s ease,
+  transition:
+    height 0.16s ease,
+    margin 0.16s ease,
+    opacity 0.16s ease,
     transform 0.2s ease;
 }
 
@@ -194,7 +199,10 @@
   opacity: 0;
   overflow: hidden;
   transform: translateY(-4px);
-  transition: max-height 0.22s ease, opacity 0.18s ease, transform 0.22s ease;
+  transition:
+    max-height 0.22s ease,
+    opacity 0.18s ease,
+    transform 0.22s ease;
 }
 
 .profile-hover-card.expanded {
