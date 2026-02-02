@@ -2,7 +2,7 @@
   <div class="search-results-list" *ngIf="searchResults.length > 0; else noResults">
     <div *ngFor="let result of searchResults; let i = index; trackBy: trackByResultId" class="search-result-item"
       [class.selected]="isSelected(i)" [attr.data-result-index]="i" (click)="onResultClick(result)" role="button"
-      tabindex="0" [attr.aria-label]="result.label + ' in ' + result.categoryLabel">
+      tabindex="0" [attr.aria-label]="getResultLabel(result) + ' in ' + getResultCategoryLabel(result)">
       <div class="result-header">
         <div class="result-title-section">
           <div class="icon-wrapper">
@@ -14,17 +14,17 @@
           </div>
           <div class="result-titles">
             <div class="result-title">
-              {{ result.label }}
+              {{ getResultLabel(result) }}
             </div>
-            <div class="result-description" *ngIf="result.summary || result.description">
-              {{ result.summary || result.description }}
+            <div class="result-description" *ngIf="getResultSummary(result) || getResultDescription(result)">
+              {{ getResultSummary(result) || getResultDescription(result) }}
             </div>
           </div>
         </div>
         <div class="result-badges">
           <span class="category-badge">
             <i *ngIf="result.categoryIcon" [class]="'bi bi-' + result.categoryIcon"></i>
-            {{ result.categoryLabel }}
+            {{ getResultCategoryLabel(result) }}
           </span>
           <span *ngFor="let badge of getStatusBadges(result)" class="status-badge"
             [class.disabled]="badge === 'Disabled'" [class.admin-only]="badge === 'Admin Only'"

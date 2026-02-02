@@ -15,6 +15,8 @@ export interface SettingsSearchIndexItem {
   categoryKey: string;
   /** Category display name */
   categoryLabel: string;
+  /** Category i18n key for displayName */
+  categoryI18nKey?: string;
   /** Category icon */
   categoryIcon?: string;
   /** Category selected icon */
@@ -25,10 +27,16 @@ export interface SettingsSearchIndexItem {
   group: string;
   /** Setting label */
   label: string;
+  /** Setting label i18n key */
+  labelI18nKey?: string;
   /** Setting summary */
   summary?: string;
+  /** Setting summary i18n key */
+  summaryI18nKey?: string;
   /** Setting description */
   description?: string;
+  /** Setting description i18n key */
+  descriptionI18nKey?: string;
   /** Setting markdown description */
   markdownDescription?: string;
   /** Setting tags */
@@ -73,6 +81,7 @@ export function buildSearchIndex(catalog: CatalogResponse | null): SettingsSearc
 
     const categoryKey = category.key;
     const categoryLabel = category.displayName || category.key;
+    const categoryI18nKey = category.i18n?.fields?.['displayName'] || undefined;
     const categoryIcon = category.icon || undefined;
     const categoryIconSelected = category.iconSelected || undefined;
     const categoryIconColor = category.iconColor || undefined;
@@ -81,6 +90,11 @@ export function buildSearchIndex(catalog: CatalogResponse | null): SettingsSearc
       if (!setting.key) {
         continue;
       }
+
+      // Extract i18n keys from setting
+      const labelI18nKey = setting.i18n?.fields?.['label'] || undefined;
+      const summaryI18nKey = setting.i18n?.fields?.['summary'] || undefined;
+      const descriptionI18nKey = setting.i18n?.fields?.['description'] || undefined;
 
       // Extract aliases from options metadata
       const aliases: string[] = [];
@@ -114,13 +128,17 @@ export function buildSearchIndex(catalog: CatalogResponse | null): SettingsSearc
         key: setting.key,
         categoryKey,
         categoryLabel,
+        categoryI18nKey,
         categoryIcon,
         categoryIconSelected,
         categoryIconColor,
         group: setting.group || '',
         label: setting.label || setting.key,
+        labelI18nKey,
         summary: setting.summary || undefined,
+        summaryI18nKey,
         description: setting.description || undefined,
+        descriptionI18nKey,
         markdownDescription: setting.markdownDescription || undefined,
         tags: setting.tags || [],
         aliases,
