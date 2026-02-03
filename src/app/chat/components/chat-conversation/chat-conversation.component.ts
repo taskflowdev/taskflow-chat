@@ -315,15 +315,47 @@ export class ChatConversationComponent implements AfterViewChecked, OnInit, OnDe
     return Array.from(groups.entries())
       .map(([dateKey, messages]) => {
         const date = new Date(dateKey);
+        const sortedMessages = messages.sort(
+          (a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
+        );
+        const enrichedMessages = sortedMessages.map((message, index) => {
+          const previousMessage = index > 0 ? sortedMessages[index - 1] : undefined;
+          const isConsecutive = this.isConsecutiveMessage(message, previousMessage);
+          return { ...message, isConsecutive };
+        });
         return {
           date: dateKey,
           dateLabel: this.getDateLabel(date),
-          messages: messages.sort(
-            (a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
-          )
+          messages: enrichedMessages
         };
       })
       .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
+  }
+
+  /**
+   * Determines if a message is consecutive to the previous message from the same sender
+   */
+  private isConsecutiveMessage(current: ChatMessageData, previous?: ChatMessageData): boolean {
+    if (!previous) {
+      return false;
+    }
+
+    if (current.isSystemMessage || previous.isSystemMessage) {
+      return false;
+    }
+
+    if (current.isOwn !== previous.isOwn) {
+      return false;
+    }
+
+    const currentSenderKey = current.isOwn
+      ? 'own'
+      : (current.senderId || current.senderName || 'unknown');
+    const previousSenderKey = previous.isOwn
+      ? 'own'
+      : (previous.senderId || previous.senderName || 'unknown');
+
+    return currentSenderKey === previousSenderKey;
   }
 
   /**

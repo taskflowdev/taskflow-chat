@@ -6,7 +6,8 @@
 </div>
 
 <!-- Regular Message -->
-<div class="message-wrapper" [class.own-message]="message.isOwn" *ngIf="!message.isSystemMessage">
+<div class="message-wrapper" [class.own-message]="message.isOwn" [class.is-consecutive]="message.isConsecutive"
+  *ngIf="!message.isSystemMessage">
   <!-- Avatar for other messages -->
   <div class="message-avatar" *ngIf="!message.isOwn">
     <div class="avatar-circle">
@@ -15,8 +16,8 @@
   </div>
 
   <div class="message-bubble">
-    <div class="message-header" *ngIf="!message.isOwn">
-      <span class="sender-name">{{ message.senderName || 'Unknown User' }}</span>
+    <div class="message-header" *ngIf="!message.isConsecutive">
+      <span class="sender-name">{{ message.isOwn ? 'You' : (message.senderName || 'Unknown User') }}</span>
       <span class="message-time" appCommonTooltip="{{ getDateTimeTooltip(message.createdAt) }}">{{
         getTimeDisplay(message.createdAt) }}</span>
     </div>
@@ -72,11 +73,6 @@
           </span>
         </div>
       </ng-container>
-    </div>
-
-    <div class="message-footer" *ngIf="message.isOwn">
-      <span class="message-time" appCommonTooltip="{{ getDateTimeTooltip(message.createdAt) }}">{{
-        getTimeDisplay(message.createdAt) }}</span>
     </div>
   </div>
 </div>

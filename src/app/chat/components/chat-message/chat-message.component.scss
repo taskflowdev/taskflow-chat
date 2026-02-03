@@ -24,7 +24,7 @@
 
 .message-wrapper {
   display: flex;
-  margin-bottom: 0.75rem;
+  margin-bottom: 0.65rem;
   padding: 0 1rem;
 
   .message-avatar {
@@ -226,6 +226,16 @@
       color: var(--taskflow-color-chat-bubble-own-message-text);
       border: 1px solid var(--taskflow-color-chat-bubble-own-message-border);
 
+      .message-header {
+        .sender-name {
+          color: var(--taskflow-color-chat-bubble-own-message-text);
+        }
+
+        .message-time {
+          color: var(--taskflow-color-chat-bubble-own-message-timestamp);
+        }
+      }
+
       .message-content {
         color: var(--taskflow-color-chat-bubble-own-message-text);
 
@@ -283,16 +293,27 @@
   }
 }
 
-// Consecutive messages from same sender - hide avatar and header for compact display
-.message-wrapper + .message-wrapper:not(.own-message) {
-  .message-avatar {
-    visibility: hidden;
-    width: 0;
-    margin: 0;
+// Consecutive messages from same sender - hide avatar/header and tails for compact display
+.message-wrapper.is-consecutive {
+  margin-top: -0.25rem;
+
+  &.own-message .message-bubble,
+  &:not(.own-message) .message-bubble {
+    &::before,
+    &::after {
+      display: none;
+    }
   }
 
   .message-bubble .message-header {
     display: none;
+  }
+
+  &:not(.own-message) {
+    .message-avatar {
+      visibility: hidden;
+      margin-right: 0.5rem;
+    }
   }
 }
 

@@ -14,6 +14,7 @@ export interface ChatMessageData {
   isOwn: boolean;
   isSystemMessage?: boolean; // Flag to identify system messages
   messageType?: string; // Type of system message (e.g., 'groupCreated', 'userJoined')
+  isConsecutive?: boolean; // True when this message follows the same sender consecutively
 }
 
 @Component({
