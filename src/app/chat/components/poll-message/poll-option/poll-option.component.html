@@ -1,0 +1,38 @@
+<div 
+  class="poll-option"
+  [class.selected]="isSelected"
+  [class.disabled]="disabled"
+  [attr.role]="allowMultipleAnswers ? 'checkbox' : 'radio'"
+  [attr.aria-checked]="isSelected"
+  [attr.aria-disabled]="disabled"
+  [attr.tabindex]="disabled ? -1 : 0"
+  (click)="onOptionClick()"
+  (keydown)="onKeyDown($event)">
+  
+  <!-- Selection indicator (radio/checkbox) -->
+  <div class="option-selector">
+    <div class="selector-icon" *ngIf="!allowMultipleAnswers">
+      <i class="bi" [class.bi-circle]="!isSelected" [class.bi-record-circle]="isSelected"></i>
+    </div>
+    <div class="selector-icon" *ngIf="allowMultipleAnswers">
+      <i class="bi" [class.bi-square]="!isSelected" [class.bi-check-square-fill]="isSelected"></i>
+    </div>
+  </div>
+  
+  <!-- Option content -->
+  <div class="option-content">
+    <div class="option-text-row">
+      <span class="option-text">{{ option.text }}</span>
+      <span class="option-vote-count">{{ option.votes }}</span>
+    </div>
+    
+    <!-- Progress bar -->
+    <div class="option-progress">
+      <app-poll-progress-bar 
+        [percentage]="option.percentage"
+        [showLabel]="false"
+        [ariaLabel]="'Votes for ' + option.text">
+      </app-poll-progress-bar>
+    </div>
+  </div>
+</div>

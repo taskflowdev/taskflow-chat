@@ -1,0 +1,53 @@
+/**
+ * Poll Progress Bar Component Styles
+ * Uses theme tokens for light/dark mode support
+ */
+
+.poll-progress-bar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+}
+
+.progress-track {
+  flex: 1;
+  height: 8px;
+  background-color: var(--taskflow-color-pollProgressBarBg, #eaeef2);
+  border-radius: 4px;
+  overflow: hidden;
+  position: relative;
+}
+
+.progress-fill {
+  height: 100%;
+  background-color: var(--taskflow-color-pollProgressBarFill, #0969da);
+  border-radius: 4px;
+  transition: width 0.3s ease-in-out;
+  
+  /* Smooth animation */
+  will-change: width;
+}
+
+.progress-label {
+  font-size: var(--taskflow-font-font-size-small, 12px);
+  color: var(--taskflow-color-pollProgressBarText, #1f2328);
+  font-weight: 500;
+  min-width: 36px;
+  text-align: right;
+  line-height: 1;
+}
+
+/* Accessibility: High contrast mode */
+@media (prefers-contrast: high) {
+  .progress-track {
+    border: 1px solid currentColor;
+  }
+}
+
+/* Reduced motion preference */
+@media (prefers-reduced-motion: reduce) {
+  .progress-fill {
+    transition: none;
+  }
+}

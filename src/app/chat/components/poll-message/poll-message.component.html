@@ -1,0 +1,49 @@
+<div class="poll-container" *ngIf="pollState.pollResults">
+  <!-- Poll question header -->
+  <div class="poll-header">
+    <i class="bi bi-bar-chart-fill poll-icon"></i>
+    <h3 class="poll-question">{{ pollState.pollResults.question }}</h3>
+  </div>
+
+  <!-- Error message -->
+  <div class="poll-error" *ngIf="pollState.error">
+    <i class="bi bi-exclamation-triangle-fill"></i>
+    <span>{{ pollState.error }}</span>
+  </div>
+
+  <!-- Loading overlay -->
+  <div class="poll-loading" *ngIf="pollState.isLoading">
+    <div class="loading-spinner"></div>
+  </div>
+
+  <!-- Poll options -->
+  <div class="poll-options">
+    <app-poll-option
+      *ngFor="let option of optionsData; trackBy: trackByOptionId"
+      [option]="option"
+      [isSelected]="isOptionSelected(option.id)"
+      [allowMultipleAnswers]="pollState.pollResults.allowMultipleAnswers ?? false"
+      [disabled]="pollState.isLoading"
+      (optionSelected)="onOptionSelected($event)">
+    </app-poll-option>
+  </div>
+
+  <!-- Poll footer with statistics -->
+  <app-poll-footer
+    [totalVotes]="pollState.pollResults.totalVotes ?? 0"
+    [totalVoters]="pollState.pollResults.totalVoters ?? 0"
+    [allowMultipleAnswers]="pollState.pollResults.allowMultipleAnswers ?? false">
+  </app-poll-footer>
+</div>
+
+<!-- Loading state when no poll data -->
+<div class="poll-loading-initial" *ngIf="!pollState.pollResults && pollState.isLoading">
+  <div class="loading-spinner"></div>
+  <span>Loading poll...</span>
+</div>
+
+<!-- Error state when no poll data -->
+<div class="poll-error-initial" *ngIf="!pollState.pollResults && pollState.error">
+  <i class="bi bi-exclamation-circle-fill"></i>
+  <span>{{ pollState.error }}</span>
+</div>
