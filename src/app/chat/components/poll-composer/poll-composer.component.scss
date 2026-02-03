@@ -1,0 +1,306 @@
+// Poll composer component styles - uses theme tokens
+.poll-composer {
+  background: var(--taskflow-color-surface);
+  border: 1px solid var(--taskflow-color-border);
+  border-radius: 8px;
+  margin-bottom: 4px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  transition:
+    background 0.2s ease,
+    border-color 0.2s ease;
+  display: flex;
+  flex-direction: column;
+  max-height: 500px;
+}
+
+.poll-composer-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 12px;
+  border-bottom: 1px solid var(--taskflow-color-border);
+  transition: border-color 0.2s ease;
+}
+
+.poll-composer-title {
+  margin: 0;
+  font-size: var(--taskflow-font-font-size-large);
+  font-weight: 600;
+  color: var(--taskflow-color-text-primary);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: color 0.2s ease;
+
+  i {
+    font-size: var(--taskflow-font-icon-size-lg);
+    color: var(--taskflow-color-primary);
+    transition: color 0.2s ease;
+  }
+}
+
+.btn-close-composer {
+  background: none;
+  border: none;
+  padding: 4px;
+  cursor: pointer;
+  color: var(--taskflow-color-text-secondary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+
+  &:hover {
+    background: var(--taskflow-color-surface-hover);
+    color: var(--taskflow-color-text-primary);
+  }
+
+  i {
+    font-size: var(--taskflow-font-icon-size-sm);
+  }
+}
+
+.poll-composer-body {
+  padding: 14px;
+  flex: 1;
+  overflow-y: auto;
+  min-height: 0;
+}
+
+.form-group {
+  margin-bottom: 20px;
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+
+.form-label {
+  display: block;
+  margin-bottom: 8px;
+  font-size: var(--taskflow-font-font-size-normal);
+  font-weight: 500;
+  color: var(--taskflow-color-text-primary);
+  transition: color 0.2s ease;
+}
+
+.form-control {
+  width: 100%;
+  padding: 10px 12px;
+  font-size: var(--taskflow-font-font-size-normal);
+  line-height: normal;
+  color: var(--taskflow-color-text-primary);
+  background-color: var(--taskflow-color-input-bg);
+  border: 1px solid var(--taskflow-color-input-border);
+  border-radius: 6px;
+  transition:
+    background 0.2s ease,
+    border-color 0.15s ease-in-out,
+    box-shadow 0.15s ease-in-out,
+    color 0.2s ease;
+
+  &:focus {
+    outline: none;
+    background-color: var(--taskflow-color-input-bg);
+    border-color: var(--taskflow-color-input-border-focus);
+    box-shadow: 0 0 0 3px rgba(var(--taskflow-color-primary-rgb), 0.1);
+  }
+
+  &::placeholder {
+    color: var(--taskflow-color-text-tertiary);
+  }
+}
+
+.form-hint {
+  margin-top: 4px;
+  font-size: var(--taskflow-font-font-size-normal);
+  color: var(--taskflow-color-text-tertiary);
+  text-align: right;
+  transition: color 0.2s ease;
+}
+
+.poll-options {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 12px;
+  max-height: 110px;
+  overflow-y: auto;
+  padding-right: 4px;
+
+  &::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: var(--taskflow-color-border);
+    border-radius: 3px;
+    transition: background 0.2s ease;
+
+    &:hover {
+      background: var(--taskflow-color-text-tertiary);
+    }
+  }
+}
+
+.poll-option-item {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.btn-remove-option {
+  flex-shrink: 0;
+  background: none;
+  border: none;
+  padding: 8px;
+  cursor: pointer;
+  color: var(--taskflow-color-text-secondary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  transition: all 0.2s ease;
+
+  &:hover:not(:disabled) {
+    background: var(--taskflow-color-surface-hover);
+    color: var(--taskflow-color-text-primary);
+  }
+
+  &:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+  }
+
+  i {
+    font-size: var(--taskflow-font-icon-size-md);
+  }
+}
+
+.btn-add-option {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 10px;
+  font-size: var(--taskflow-font-font-size-normal);
+  font-weight: 500;
+  color: var(--taskflow-color-primary);
+  background: none;
+  border: 1px dashed var(--taskflow-color-border);
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  width: 100%;
+  justify-content: center;
+  line-height: normal;
+
+  &:hover:not(:disabled) {
+    border-color: var(--taskflow-color-primary);
+    background: rgba(var(--taskflow-color-primary-rgb), 0.1);
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  i {
+    font-size: var(--taskflow-font-icon-size-md);
+  }
+}
+
+.form-check {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.form-check-input {
+  width: 18px;
+  height: 18px;
+  cursor: pointer;
+  accent-color: var(--taskflow-color-primary);
+}
+
+.poll-toggle-col {
+  display: flex;
+  align-items: start;
+  flex-direction: column;
+  gap: 8px;
+  padding-top: 4px;
+}
+
+.poll-toggle-label {
+  font-weight: 600;
+  font-size: var(--taskflow-font-font-size-normal);
+  color: var(--taskflow-color-text-primary);
+}
+
+.form-check-label {
+  font-size: var(--taskflow-font-font-size-normal);
+  color: var(--taskflow-color-text-primary);
+  cursor: pointer;
+  user-select: none;
+  transition: color 0.2s ease;
+  line-height: normal;
+}
+
+.poll-composer-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 6px;
+  padding: 8px 12px;
+  border-top: 1px solid var(--taskflow-color-border);
+  transition: border-color 0.2s ease;
+}
+
+.btn {
+  padding: 4px 12px;
+  font-size: var(--taskflow-font-font-size-normal);
+  font-weight: 500;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+
+  i {
+    font-size: 14px;
+  }
+}
+
+.btn-secondary {
+  color: var(--taskflow-color-text-primary);
+  background: var(--taskflow-color-surface-variant);
+  border: 1px solid var(--taskflow-color-border);
+
+  &:hover {
+    background: var(--taskflow-color-surface-hover);
+  }
+}
+
+.btn-primary {
+  color: var(--taskflow-color-text-primary);
+  background: var(--taskflow-color-surface-variant);
+  border: 1px solid var(--taskflow-color-border);
+
+  &:hover:not(:disabled) {
+    background: var(--taskflow-color-surface-hover);
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+}

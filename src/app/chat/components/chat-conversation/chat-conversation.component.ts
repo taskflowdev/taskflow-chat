@@ -11,6 +11,7 @@ import { CommonTooltipDirective, TooltipPosition } from '../../../shared/compone
 import { ScrollToBottomButtonComponent } from '../scroll-to-bottom-button';
 import { TypingIndicatorComponent } from '../typing-indicator';
 import { PresenceAvatarsComponent } from '../presence-avatars';
+import { PollComposerComponent, PollData } from '../poll-composer/poll-composer.component';
 import { AutoScrollService } from '../../services/auto-scroll.service';
 import { TranslatePipe, I18nService } from '../../../core/i18n';
 import { TypingIndicatorSettingsService } from '../../../core/services/typing-indicator-settings.service';
@@ -24,7 +25,7 @@ export interface ConversationData {
 
 @Component({
   selector: 'app-chat-conversation',
-  imports: [CommonModule, FormsModule, ChatMessageComponent, SkeletonLoaderComponent, GroupInfoDialogComponent, CommonDropdownComponent, CommonTooltipDirective, ScrollToBottomButtonComponent, TypingIndicatorComponent, PresenceAvatarsComponent, TranslatePipe],
+  imports: [CommonModule, FormsModule, ChatMessageComponent, SkeletonLoaderComponent, GroupInfoDialogComponent, CommonDropdownComponent, CommonTooltipDirective, ScrollToBottomButtonComponent, TypingIndicatorComponent, PresenceAvatarsComponent, PollComposerComponent, TranslatePipe],
   providers: [AutoScrollService],
   templateUrl: './chat-conversation.component.html',
   styleUrls: ['./chat-conversation.component.scss']
@@ -36,6 +37,7 @@ export class ChatConversationComponent implements AfterViewChecked, OnInit, OnDe
   @Input() showBackButton: boolean = false; // For mobile back navigation
   @Input() typingUsers: string[] = []; // Users currently typing
   @Output() sendMessage = new EventEmitter<string>();
+  @Output() sendPoll = new EventEmitter<PollData>();
   @Output() backToChats = new EventEmitter<void>(); // Mobile back navigation
   @Output() groupUpdated = new EventEmitter<void>(); // Group info updated
   @Output() groupDeleted = new EventEmitter<string>(); // Group deleted - emits group ID
@@ -44,6 +46,8 @@ export class ChatConversationComponent implements AfterViewChecked, OnInit, OnDe
   @ViewChild('messagesContainer') messagesContainer!: ElementRef;
 
   newMessage = '';
+  showPollComposer = false;
+  pollBtnHovered = false;
   private shouldScrollToBottom = false;
   showGroupInfoDialog = false;
   openGroupInfoForDeletion = false; // Flag to indicate deletion flow
@@ -232,6 +236,29 @@ export class ChatConversationComponent implements AfterViewChecked, OnInit, OnDe
       this.newMessage = '';
       this.shouldScrollToBottom = true;
     }
+  }
+
+  /**
+   * Toggles the poll composer visibility
+   */
+  togglePollComposer(): void {
+    this.showPollComposer = !this.showPollComposer;
+  }
+
+  /**
+   * Handles poll creation from the poll composer
+   */
+  onPollCreated(pollData: PollData): void {
+    this.sendPoll.emit(pollData);
+    this.showPollComposer = false;
+    this.shouldScrollToBottom = true;
+  }
+
+  /**
+   * Handles poll composer cancellation
+   */
+  onPollComposerCancelled(): void {
+    this.showPollComposer = false;
   }
 
   onKeyDown(event: KeyboardEvent): void {

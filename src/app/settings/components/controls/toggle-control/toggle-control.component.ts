@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-toggle-control',
+  standalone: true,
   imports: [CommonModule],
   templateUrl: './toggle-control.component.html',
   styleUrls: ['./toggle-control.component.scss'],
