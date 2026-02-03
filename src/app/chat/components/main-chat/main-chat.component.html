@@ -19,6 +19,7 @@
       [typingUsers]="currentTypingUsers"
       [class.mobile-hidden]="isMobileView && showSidebar"
       (sendMessage)="onSendMessage($event)"
+      (sendPoll)="onSendPoll($event)"
       (backToChats)="onBackToChats()"
       (groupUpdated)="onGroupUpdated()"
       (groupDeleted)="onGroupDeleted($event)"

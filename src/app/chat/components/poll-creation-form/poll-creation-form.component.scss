@@ -1,0 +1,313 @@
+/**
+ * Poll Creation Form Component Styles
+ * Inline form that appears above message input
+ */
+
+.poll-creation-form {
+  background: var(--taskflow-color-surface);
+  border: 1px solid var(--taskflow-color-border);
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15),
+              0 0 20px rgba(0, 0, 0, 0.05);
+  max-width: 600px;
+  width: 100%;
+  animation: slideUp 0.2s ease-out;
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.form-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--taskflow-color-border);
+  
+  .header-left {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  
+  .header-icon {
+    font-size: var(--taskflow-font-icon-size-lg, 1.375rem);
+    color: var(--taskflow-color-accent);
+  }
+  
+  .form-title {
+    margin: 0;
+    font-size: var(--taskflow-font-font-size-h4, 16px);
+    font-weight: 600;
+    color: var(--taskflow-color-text-primary);
+  }
+  
+  .close-btn {
+    background: transparent;
+    border: none;
+    color: var(--taskflow-color-text-secondary);
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    
+    &:hover {
+      background: var(--taskflow-color-surface-hover);
+      color: var(--taskflow-color-text-primary);
+    }
+    
+    i {
+      font-size: 1rem;
+    }
+  }
+}
+
+.form-content {
+  padding: 20px;
+  max-height: 400px;
+  overflow-y: auto;
+  
+  /* Custom scrollbar */
+  &::-webkit-scrollbar {
+    width: 6px;
+  }
+  
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  
+  &::-webkit-scrollbar-thumb {
+    background: var(--taskflow-color-scrollbar-thumb);
+    border-radius: 3px;
+    
+    &:hover {
+      background: var(--taskflow-color-scrollbar-thumb-hover);
+    }
+  }
+}
+
+.form-group {
+  margin-bottom: 20px;
+  
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+
+.form-label {
+  display: block;
+  font-size: var(--taskflow-font-font-size-small, 12px);
+  font-weight: 600;
+  color: var(--taskflow-color-text-secondary);
+  margin-bottom: 8px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.form-input {
+  width: 100%;
+  background: var(--taskflow-color-input-bg);
+  border: 2px solid var(--taskflow-color-input-border);
+  border-radius: 8px;
+  color: var(--taskflow-color-text-primary);
+  font-size: var(--taskflow-font-font-size-normal, 14px);
+  padding: 12px 14px;
+  transition: all 0.2s ease;
+  font-family: inherit;
+  
+  &:focus {
+    outline: none;
+    border-color: var(--taskflow-color-input-border-focus);
+    background: var(--taskflow-color-input-bg);
+  }
+  
+  &::placeholder {
+    color: var(--taskflow-color-input-placeholder);
+  }
+}
+
+.options-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.option-item {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.option-input {
+  flex: 1;
+  background: var(--taskflow-color-input-bg);
+  border: 2px solid var(--taskflow-color-input-border);
+  border-radius: 8px;
+  color: var(--taskflow-color-text-primary);
+  font-size: var(--taskflow-font-font-size-normal, 14px);
+  padding: 10px 12px;
+  transition: all 0.2s ease;
+  font-family: inherit;
+  
+  &:focus {
+    outline: none;
+    border-color: var(--taskflow-color-input-border-focus);
+  }
+  
+  &::placeholder {
+    color: var(--taskflow-color-input-placeholder);
+  }
+}
+
+.remove-option-btn {
+  background: transparent;
+  border: none;
+  color: var(--taskflow-color-danger);
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  flex-shrink: 0;
+  
+  &:hover:not(:disabled) {
+    background: var(--taskflow-color-danger-subtle);
+  }
+  
+  &:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+  }
+  
+  i {
+    font-size: 0.875rem;
+  }
+}
+
+.add-option-btn {
+  width: 100%;
+  background: transparent;
+  border: 2px dashed var(--taskflow-color-border);
+  color: var(--taskflow-color-text-secondary);
+  padding: 10px 14px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-size: var(--taskflow-font-font-size-normal, 14px);
+  font-weight: 500;
+  
+  &:hover:not(:disabled) {
+    background: var(--taskflow-color-surface-hover);
+    border-color: var(--taskflow-color-border-hover);
+    color: var(--taskflow-color-text-primary);
+  }
+  
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+  
+  i {
+    font-size: 1rem;
+  }
+}
+
+.checkbox-label {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  user-select: none;
+  
+  .checkbox-input {
+    width: 18px;
+    height: 18px;
+    cursor: pointer;
+  }
+  
+  .checkbox-text {
+    font-size: var(--taskflow-font-font-size-normal, 14px);
+    color: var(--taskflow-color-text-primary);
+  }
+}
+
+.form-footer {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 12px;
+  padding: 16px 20px;
+  border-top: 1px solid var(--taskflow-color-border);
+  
+  .btn {
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-size: var(--taskflow-font-font-size-normal, 14px);
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    border: none;
+    
+    i {
+      font-size: 1rem;
+    }
+  }
+  
+  .btn-cancel {
+    background: transparent;
+    color: var(--taskflow-color-text-secondary);
+    
+    &:hover {
+      background: var(--taskflow-color-surface-hover);
+      color: var(--taskflow-color-text-primary);
+    }
+  }
+  
+  .btn-create {
+    background: var(--taskflow-color-accent);
+    color: var(--taskflow-color-accent-fg);
+    
+    &:hover:not(:disabled) {
+      background: var(--taskflow-color-accent-emphasis);
+    }
+    
+    &:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+  }
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .poll-creation-form {
+    border-radius: 12px 12px 0 0;
+  }
+  
+  .form-content {
+    max-height: 300px;
+  }
+}

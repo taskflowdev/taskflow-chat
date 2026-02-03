@@ -11,6 +11,7 @@ import { CommonTooltipDirective, TooltipPosition } from '../../../shared/compone
 import { ScrollToBottomButtonComponent } from '../scroll-to-bottom-button';
 import { TypingIndicatorComponent } from '../typing-indicator';
 import { PresenceAvatarsComponent } from '../presence-avatars';
+import { PollCreationFormComponent, PollCreationData } from '../poll-creation-form/poll-creation-form.component';
 import { AutoScrollService } from '../../services/auto-scroll.service';
 import { TranslatePipe, I18nService } from '../../../core/i18n';
 import { TypingIndicatorSettingsService } from '../../../core/services/typing-indicator-settings.service';
@@ -24,7 +25,7 @@ export interface ConversationData {
 
 @Component({
   selector: 'app-chat-conversation',
-  imports: [CommonModule, FormsModule, ChatMessageComponent, SkeletonLoaderComponent, GroupInfoDialogComponent, CommonDropdownComponent, CommonTooltipDirective, ScrollToBottomButtonComponent, TypingIndicatorComponent, PresenceAvatarsComponent, TranslatePipe],
+  imports: [CommonModule, FormsModule, ChatMessageComponent, SkeletonLoaderComponent, GroupInfoDialogComponent, CommonDropdownComponent, CommonTooltipDirective, ScrollToBottomButtonComponent, TypingIndicatorComponent, PresenceAvatarsComponent, PollCreationFormComponent, TranslatePipe],
   providers: [AutoScrollService],
   templateUrl: './chat-conversation.component.html',
   styleUrls: ['./chat-conversation.component.scss']
@@ -36,6 +37,7 @@ export class ChatConversationComponent implements AfterViewChecked, OnInit, OnDe
   @Input() showBackButton: boolean = false; // For mobile back navigation
   @Input() typingUsers: string[] = []; // Users currently typing
   @Output() sendMessage = new EventEmitter<string>();
+  @Output() sendPoll = new EventEmitter<PollCreationData>();
   @Output() backToChats = new EventEmitter<void>(); // Mobile back navigation
   @Output() groupUpdated = new EventEmitter<void>(); // Group info updated
   @Output() groupDeleted = new EventEmitter<string>(); // Group deleted - emits group ID
@@ -44,6 +46,7 @@ export class ChatConversationComponent implements AfterViewChecked, OnInit, OnDe
   @ViewChild('messagesContainer') messagesContainer!: ElementRef;
 
   newMessage = '';
+  showPollCreationForm = false;
   private shouldScrollToBottom = false;
   showGroupInfoDialog = false;
   openGroupInfoForDeletion = false; // Flag to indicate deletion flow
@@ -241,12 +244,28 @@ export class ChatConversationComponent implements AfterViewChecked, OnInit, OnDe
   }
   
   /**
-   * Open poll creation dialog
+   * Open poll creation form
    */
   openPollCreation(): void {
-    // TODO: Open poll creation dialog
-    console.log('[ChatConversation] Opening poll creation dialog');
-    // For now, just log - will implement dialog next
+    this.showPollCreationForm = true;
+    this.cdr.markForCheck();
+  }
+  
+  /**
+   * Handle poll creation
+   */
+  onPollCreated(pollData: PollCreationData): void {
+    this.sendPoll.emit(pollData);
+    this.showPollCreationForm = false;
+    this.cdr.markForCheck();
+  }
+  
+  /**
+   * Handle poll creation cancellation
+   */
+  onPollCreationCancelled(): void {
+    this.showPollCreationForm = false;
+    this.cdr.markForCheck();
   }
 
   /**
