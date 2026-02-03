@@ -73,6 +73,15 @@
     <app-typing-indicator *ngIf="shouldShowTypingIndicator" [typingUsers]="typingUsers"></app-typing-indicator>
 
     <div class="input-wrapper">
+      <!-- Attachment/Message Type Dropdown -->
+      <app-common-dropdown 
+        [items]="messageTypeItems" 
+        buttonIcon="bi-plus-lg" 
+        buttonClass="attachment-btn"
+        [buttonTitle]="'Add attachment or poll'"
+        (itemSelected)="onMessageTypeSelected($event)">
+      </app-common-dropdown>
+      
       <textarea [(ngModel)]="newMessage" (keydown)="onKeyDown($event)"
         [placeholder]="'chats.conversation-window.conversations.composer.placeholder' | translate" class="message-input"
         rows="1" [disabled]="loading">

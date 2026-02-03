@@ -183,6 +183,30 @@
         color: var(--taskflow-color-text-disabled);
       }
     }
+    
+    .attachment-btn {
+      background: transparent;
+      color: var(--taskflow-color-text-secondary);
+      border: none;
+      width: 44px;
+      height: 44px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      cursor: pointer;
+      transition: color 0.2s ease, background 0.2s ease;
+      border-radius: 8px;
+      
+      &:hover {
+        color: var(--taskflow-color-text-primary);
+        background: var(--taskflow-color-surface-hover);
+      }
+
+      i {
+        font-size: 1.25rem;
+      }
+    }
 
     .send-btn {
       background: transparent;
