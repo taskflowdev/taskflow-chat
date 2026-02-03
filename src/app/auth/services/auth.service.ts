@@ -5,6 +5,7 @@ import { AuthService as ApiAuthService } from '../../api/services/auth.service';
 import { LoginDto, RegisterDto, UserDto } from '../../api/models';
 import { LocalStorageService } from './local-storage.service';
 import { ToastService } from '../../shared/services/toast.service';
+import { ChatRealtimeService } from '../../core/realtime';
 
 export interface AuthUser {
   id: string;
@@ -36,6 +37,7 @@ export class AuthService {
     private apiAuthService: ApiAuthService,
     private localStorageService: LocalStorageService,
     private toastService: ToastService,
+    private chatRealtimeService: ChatRealtimeService,
     @Inject(PLATFORM_ID) private platformId: Object
   ) {
     // Check if user is logged in on service initialization (only in browser)
@@ -121,6 +123,8 @@ export class AuthService {
 
   logout(): void {
     if (!isPlatformBrowser(this.platformId)) return;
+
+    void this.chatRealtimeService.disconnectAndClear();
 
     // Clear stored data
     this.localStorageService.removeItem(this.TOKEN_KEY);
