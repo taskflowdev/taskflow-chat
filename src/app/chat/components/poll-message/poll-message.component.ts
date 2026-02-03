@@ -1,11 +1,12 @@
 import { Component, Input, OnInit, OnDestroy, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Subject, takeUntil, filter, tap, catchError, of } from 'rxjs';
-import { PollResultsDto } from '../../../../api/models';
-import { PollApiService } from '../../../services/poll/poll-api.service';
-import { PollStateService, PollState } from '../../../services/poll/poll-state.service';
-import { PollRealtimeService } from '../../../services/poll/poll-realtime.service';
-import { PollError } from '../../../services/poll/poll-error-handler';
+import { PollResultsDto } from '../../../api/models';
+import { PollApiService } from '../../services/poll/poll-api.service';
+import { PollStateService, PollState } from '../../services/poll/poll-state.service';
+import { PollRealtimeService } from '../../services/poll/poll-realtime.service';
+import { PollVoteUpdateEvent } from '../../../core/realtime/services/chat-realtime.service';
+import { PollError } from '../../services/poll/poll-error-handler';
 import { PollOptionComponent, PollOptionData } from './poll-option/poll-option.component';
 import { PollFooterComponent } from './poll-footer/poll-footer.component';
 
@@ -40,6 +41,7 @@ import { PollFooterComponent } from './poll-footer/poll-footer.component';
  */
 @Component({
   selector: 'app-poll-message',
+  standalone: true,
   imports: [CommonModule, PollOptionComponent, PollFooterComponent],
   templateUrl: './poll-message.component.html',
   styleUrl: './poll-message.component.scss',
@@ -116,7 +118,7 @@ export class PollMessageComponent implements OnInit, OnDestroy {
     this.pollStateService
       .getState(this.messageId)
       .pipe(takeUntil(this.destroy$))
-      .subscribe(state => {
+      .subscribe((state: PollState) => {
         this.pollState = state;
         this.cdr.markForCheck();
       });
@@ -124,10 +126,10 @@ export class PollMessageComponent implements OnInit, OnDestroy {
     // Subscribe to real-time updates for this poll
     this.pollRealtimeService.pollVoteUpdates$
       .pipe(
-        filter(event => event.messageId === this.messageId),
+        filter((event: PollVoteUpdateEvent) => event.messageId === this.messageId),
         takeUntil(this.destroy$)
       )
-      .subscribe(event => {
+      .subscribe((event: PollVoteUpdateEvent) => {
         console.log('[PollMessageComponent] Real-time update received', event);
         // State is already updated by PollRealtimeService
       });
@@ -268,7 +270,7 @@ export class PollMessageComponent implements OnInit, OnDestroy {
       return [];
     }
 
-    return this.pollState.pollResults.options.map(option => ({
+    return this.pollState.pollResults.options.map((option: any) => ({
       id: option.id ?? '',
       text: option.text ?? '',
       votes: option.votes ?? 0,

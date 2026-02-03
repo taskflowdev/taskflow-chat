@@ -22,6 +22,7 @@ import { CommonModule } from '@angular/common';
  */
 @Component({
   selector: 'app-poll-progress-bar',
+  standalone: true,
   imports: [CommonModule],
   templateUrl: './poll-progress-bar.component.html',
   styleUrl: './poll-progress-bar.component.scss',

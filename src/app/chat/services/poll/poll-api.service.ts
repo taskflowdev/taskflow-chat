@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { Observable, throwError } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
-import { PollsService } from '../../../../api/services';
-import { PollResultsDto, VotePollDto } from '../../../../api/models';
+import { PollsService } from '../../../api/services';
+import { PollResultsDto, VotePollDto } from '../../../api/models';
 import { handlePollError } from './poll-error-handler';
 
 /**

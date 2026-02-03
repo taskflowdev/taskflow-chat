@@ -1,6 +1,6 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { BehaviorSubject, Observable, Subject } from 'rxjs';
-import { PollResultsDto } from '../../../../api/models';
+import { PollResultsDto } from '../../../api/models';
 
 /**
  * Poll state with user voting information

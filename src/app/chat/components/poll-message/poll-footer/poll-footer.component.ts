@@ -23,6 +23,7 @@ import { CommonModule } from '@angular/common';
  */
 @Component({
   selector: 'app-poll-footer',
+  standalone: true,
   imports: [CommonModule],
   templateUrl: './poll-footer.component.html',
   styleUrl: './poll-footer.component.scss',

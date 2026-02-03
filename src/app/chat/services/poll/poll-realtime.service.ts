@@ -1,17 +1,8 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { Subject, takeUntil } from 'rxjs';
-import { ChatRealtimeService } from '../../../../core/realtime/services/chat-realtime.service';
-import { PollResultsDto } from '../../../../api/models';
+import { ChatRealtimeService, PollVoteUpdateEvent } from '../../../core/realtime/services/chat-realtime.service';
+import { PollResultsDto } from '../../../api/models';
 import { PollStateService } from './poll-state.service';
-
-/**
- * Poll vote update event from SignalR
- */
-export interface PollVoteUpdateEvent {
-  groupId: string;
-  messageId: string;
-  pollResults: PollResultsDto;
-}
 
 /**
  * Enterprise-grade SignalR integration for poll real-time updates

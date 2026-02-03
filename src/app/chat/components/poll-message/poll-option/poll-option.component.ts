@@ -38,6 +38,7 @@ export interface PollOptionData {
  */
 @Component({
   selector: 'app-poll-option',
+  standalone: true,
   imports: [CommonModule, PollProgressBarComponent],
   templateUrl: './poll-option.component.html',
   styleUrl: './poll-option.component.scss',
