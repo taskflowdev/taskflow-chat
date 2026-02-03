@@ -11,4 +11,5 @@ export { I18NService } from './services/i-18-n.service';
 export { I18NAdminService } from './services/i-18-n-admin.service';
 export { MessageMetadataService } from './services/message-metadata.service';
 export { MessagesService } from './services/messages.service';
+export { PollsService } from './services/polls.service';
 export { SettingsService } from './services/settings.service';
