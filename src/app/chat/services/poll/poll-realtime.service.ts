@@ -113,27 +113,19 @@ export class PollRealtimeService implements OnDestroy {
 
   /**
    * Invokes SignalR method to get poll results
-   * Uses existing SignalR connection
+   * Delegates to ChatRealtimeService
    *
    * @param groupId - The group ID
    * @param messageId - The message ID containing the poll
    * @returns Promise that resolves when the request is sent
    */
   async getPollResults(groupId: string, messageId: string): Promise<void> {
-    // This would use the ChatRealtimeService's connection
-    // to invoke the GetPollResults method
-    console.log('[PollRealtimeService] Requesting poll results via SignalR', {
-      groupId,
-      messageId
-    });
-    
-    // Note: Implementation depends on ChatRealtimeService exposing
-    // a method to invoke SignalR hub methods
+    return this.chatRealtimeService.getPollResults(groupId, messageId);
   }
 
   /**
    * Invokes SignalR method to vote on poll
-   * Uses existing SignalR connection for real-time vote
+   * Delegates to ChatRealtimeService
    *
    * @param groupId - The group ID
    * @param messageId - The message ID containing the poll
@@ -141,32 +133,19 @@ export class PollRealtimeService implements OnDestroy {
    * @returns Promise that resolves when the request is sent
    */
   async votePoll(groupId: string, messageId: string, optionIds: string[]): Promise<void> {
-    console.log('[PollRealtimeService] Voting on poll via SignalR', {
-      groupId,
-      messageId,
-      optionIds
-    });
-    
-    // Note: Implementation depends on ChatRealtimeService exposing
-    // a method to invoke SignalR hub methods
+    return this.chatRealtimeService.votePoll(groupId, messageId, optionIds);
   }
 
   /**
    * Invokes SignalR method to remove vote from poll
-   * Uses existing SignalR connection for real-time vote removal
+   * Delegates to ChatRealtimeService
    *
    * @param groupId - The group ID
    * @param messageId - The message ID containing the poll
    * @returns Promise that resolves when the request is sent
    */
   async removePollVote(groupId: string, messageId: string): Promise<void> {
-    console.log('[PollRealtimeService] Removing poll vote via SignalR', {
-      groupId,
-      messageId
-    });
-    
-    // Note: Implementation depends on ChatRealtimeService exposing
-    // a method to invoke SignalR hub methods
+    return this.chatRealtimeService.removePollVote(groupId, messageId);
   }
 
   /**

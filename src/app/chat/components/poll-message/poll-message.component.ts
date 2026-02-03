@@ -270,7 +270,7 @@ export class PollMessageComponent implements OnInit, OnDestroy {
       return [];
     }
 
-    return this.pollState.pollResults.options.map((option: any) => ({
+    return this.pollState.pollResults.options.map((option: { id?: string; text?: string; votes?: number; percentage?: number; voters?: string[] }) => ({
       id: option.id ?? '',
       text: option.text ?? '',
       votes: option.votes ?? 0,

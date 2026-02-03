@@ -737,7 +737,7 @@ export class MainChatComponent implements OnInit, OnDestroy {
         : this.extractContentText(message.content, message.contentType),
       contentType: message.contentType,
       contentData: message.content,
-      pollData: message.contentType === 'poll' ? undefined : undefined, // Poll data will be loaded by PollMessageComponent
+      pollData: undefined, // PollMessageComponent loads poll data via API
       createdAt: message.createdAt || new Date().toISOString(),
       isOwn: message.senderId === this.user?.id,
       isSystemMessage: isSystemMessage,
