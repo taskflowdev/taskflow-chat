@@ -25,7 +25,19 @@ export interface ChatMessageData {
 export class ChatMessageComponent {
   @Input() message!: ChatMessageData;
 
-  constructor(private dateTimeFormatService: DateTimeFormatService) {}
+  constructor(private dateTimeFormatService: DateTimeFormatService) { }
+
+  /**
+   * Get the initials from a user's name for avatar display
+   */
+  getInitials(name?: string): string {
+    if (!name) return '??';
+    const parts = name.trim().split(/\s+/);
+    if (parts.length === 1) {
+      return parts[0].substring(0, 2).toUpperCase();
+    }
+    return (parts[0].charAt(0) + parts[parts.length - 1].charAt(0)).toUpperCase();
+  }
 
   getTimeDisplay(timeString: string): string {
     return this.dateTimeFormatService.formatTime(timeString);

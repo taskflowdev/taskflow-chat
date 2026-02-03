@@ -7,11 +7,17 @@
 
 <!-- Regular Message -->
 <div class="message-wrapper" [class.own-message]="message.isOwn" *ngIf="!message.isSystemMessage">
+  <!-- Avatar for other messages -->
+  <div class="message-avatar" *ngIf="!message.isOwn">
+    <div class="avatar-circle">
+      <span class="avatar-initials">{{ getInitials(message.senderName) }}</span>
+    </div>
+  </div>
+
   <div class="message-bubble">
     <div class="message-header" *ngIf="!message.isOwn">
       <span class="sender-name">{{ message.senderName || 'Unknown User' }}</span>
-      <span class="message-time"
-        appCommonTooltip="{{ getDateTimeTooltip(message.createdAt) }}">{{
+      <span class="message-time" appCommonTooltip="{{ getDateTimeTooltip(message.createdAt) }}">{{
         getTimeDisplay(message.createdAt) }}</span>
     </div>
 
@@ -69,8 +75,7 @@
     </div>
 
     <div class="message-footer" *ngIf="message.isOwn">
-      <span class="message-time"
-        appCommonTooltip="{{ getDateTimeTooltip(message.createdAt) }}">{{
+      <span class="message-time" appCommonTooltip="{{ getDateTimeTooltip(message.createdAt) }}">{{
         getTimeDisplay(message.createdAt) }}</span>
     </div>
   </div>
