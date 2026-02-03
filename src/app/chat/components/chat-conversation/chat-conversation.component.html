@@ -72,14 +72,6 @@
     <!-- Typing Indicator -->
     <app-typing-indicator *ngIf="shouldShowTypingIndicator" [typingUsers]="typingUsers"></app-typing-indicator>
 
-    <!-- Poll Creation Form (appears above input) -->
-    <div class="poll-creation-wrapper" *ngIf="showPollCreationForm">
-      <app-poll-creation-form
-        (pollCreated)="onPollCreated($event)"
-        (cancelled)="onPollCreationCancelled()">
-      </app-poll-creation-form>
-    </div>
-
     <div class="input-wrapper">
       <!-- Attachment/Message Type Dropdown -->
       <app-common-dropdown 

@@ -4,7 +4,6 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { AuthService, AuthUser } from '../../../auth/services/auth.service';
 import { ChatSidebarComponent } from '../chat-sidebar/chat-sidebar.component';
 import { ChatConversationComponent, ConversationData } from '../chat-conversation/chat-conversation.component';
-import { PollCreationData } from '../poll-creation-form/poll-creation-form.component';
 import { ChatItemData } from '../chat-item/chat-item.component';
 import { ChatMessageData } from '../chat-message/chat-message.component';
 import { GroupsServiceProxy, MessageFactoryServiceProxy } from '../../services';
@@ -847,46 +846,6 @@ export class MainChatComponent implements OnInit, OnDestroy {
             this.currentConversation.messages.splice(index, 1);
           }
         }
-      }
-    });
-  }
-
-  /**
-   * Handles sending poll messages
-   */
-  async onSendPoll(pollData: PollCreationData): Promise<void> {
-    if (!this.currentConversation || !this.user) return;
-
-    console.log('[MainChat] Sending poll:', pollData);
-
-    // Send poll via REST API
-    this.messageFactoryService.sendPollMessage(
-      this.currentConversation.groupId,
-      {
-        question: pollData.question,
-        options: pollData.options,
-        allowMultipleAnswers: pollData.allowMultipleAnswers
-      }
-    ).subscribe({
-      next: (sentMessage) => {
-        console.log('[MainChat] Poll sent successfully:', sentMessage);
-        
-        // Add the poll message to the conversation
-        if (sentMessage && this.currentConversation) {
-          const pollMessage = this.mapMessageToChatMessage(sentMessage);
-          this.currentConversation.messages.push(pollMessage);
-          
-          // Update the chat list with the poll message
-          const chat = this.chats.find(c => c.groupId === this.currentConversation?.groupId);
-          if (chat) {
-            chat.lastMessage = sentMessage;
-            chat.lastMessageTime = sentMessage.createdAt || new Date().toISOString();
-          }
-        }
-      },
-      error: (error) => {
-        console.error('[MainChat] Failed to send poll:', error);
-        // TODO: Show error notification to user
       }
     });
   }
