@@ -737,10 +737,13 @@ export class MainChatComponent implements OnInit, OnDestroy {
         : this.extractContentText(message.content, message.contentType),
       contentType: message.contentType,
       contentData: message.content,
+      pollData: message.contentType === 'poll' ? undefined : undefined, // Poll data will be loaded by PollMessageComponent
       createdAt: message.createdAt || new Date().toISOString(),
       isOwn: message.senderId === this.user?.id,
       isSystemMessage: isSystemMessage,
-      messageType: message.messageType
+      messageType: message.messageType,
+      groupId: message.groupId || this.currentConversation?.groupId || '',
+      currentUserId: this.user?.id || ''
     };
   }
 

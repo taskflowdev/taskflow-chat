@@ -84,13 +84,15 @@ export class PollRealtimeService implements OnDestroy {
       return;
     }
     
-    // Note: ChatRealtimeService manages the HubConnection
-    // We need to access it to register our event handlers
-    // This will be done through the ChatRealtimeService's connection
-    // For now, we'll use a method to register the handler
+    // Subscribe to poll vote updates from ChatRealtimeService
+    this.chatRealtimeService.onPollVoteUpdate
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(event => {
+        this.handlePollVoteUpdate(event);
+      });
     
-    this.registerPollVoteUpdateHandler();
     this.handlersRegistered = true;
+    console.log('[PollRealtimeService] Event handlers registered');
   }
 
   /**
@@ -98,11 +100,7 @@ export class PollRealtimeService implements OnDestroy {
    * This should be called after the connection is established
    */
   registerPollVoteUpdateHandler(): void {
-    // Get the hub connection from ChatRealtimeService
-    // Since ChatRealtimeService doesn't expose the connection,
-    // we'll need to add a method there or use a different approach
-    // For now, we'll document that this needs integration
-    
+    // Event handler is registered in setupEventHandlers via subscription
     console.log('[PollRealtimeService] Ready to handle poll vote updates');
   }
 
