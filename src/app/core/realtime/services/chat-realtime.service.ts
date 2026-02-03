@@ -16,7 +16,7 @@ export interface ConnectionState {
 
 /**
  * Enterprise-grade SignalR chat service with real-time capabilities
- * 
+ *
  * @remarks
  * This service provides:
  * - Automatic reconnection with exponential backoff
@@ -25,7 +25,7 @@ export interface ConnectionState {
  * - Seamless integration with REST API for history/pagination
  * - OnPush change detection compatibility
  * - Production-ready error handling
- * 
+ *
  * Architecture follows strict SRP (Single Responsibility Principle):
  * - SignalR connection management
  * - Event handling and routing
@@ -38,25 +38,25 @@ export interface ConnectionState {
 export class ChatRealtimeService implements OnDestroy {
   private hubConnection?: HubConnection;
   private reconnectDelay = 2000; // Start with 2 seconds
-  
+
   // Observables for real-time events
   private readonly messageReceived$ = new Subject<MessageDto>();
   private readonly systemMessageReceived$ = new Subject<MessageDto>();
   private readonly presenceUpdated$ = new Subject<{ groupId: string; presence: PresenceDto[] }>();
   private readonly userTyping$ = new Subject<TypingDto>();
-  private readonly connectionState$ = new BehaviorSubject<ConnectionState>({ 
-    state: HubConnectionState.Disconnected 
+  private readonly connectionState$ = new BehaviorSubject<ConnectionState>({
+    state: HubConnectionState.Disconnected
   });
 
   constructor(
     private readonly groupsService: GroupsService,
     private readonly messagesService: MessagesService,
     private readonly store: ChatRealtimeStore
-  ) {}
+  ) { }
 
   /**
    * Initializes SignalR connection with automatic reconnection
-   * 
+   *
    * @param apiUrl - Base API URL (e.g., 'https://api.example.com')
    * @param accessToken - JWT access token for authentication
    */
@@ -85,7 +85,7 @@ export class ChatRealtimeService implements OnDestroy {
       .build();
 
     this.setupEventHandlers();
-    
+
     try {
       await this.hubConnection.start();
       console.log('[ChatRealtimeService] SignalR connected successfully');
@@ -95,7 +95,7 @@ export class ChatRealtimeService implements OnDestroy {
       console.error('[ChatRealtimeService] Connection error:', error);
       const errorMessage = error instanceof Error ? error.message : 'Connection failed';
       this.store.setConnectionStatus(false, errorMessage);
-      this.connectionState$.next({ 
+      this.connectionState$.next({
         state: HubConnectionState.Disconnected,
         error: errorMessage
       });
@@ -116,6 +116,20 @@ export class ChatRealtimeService implements OnDestroy {
   }
 
   /**
+   * Disconnects and clears all realtime state
+   * Intended for logout cleanup
+   */
+  async disconnectAndClear(): Promise<void> {
+    try {
+      await this.disconnect();
+    } catch (error) {
+      console.debug('[ChatRealtimeService] Disconnect error during cleanup:', error);
+    } finally {
+      this.store.clearAll();
+    }
+  }
+
+  /**
    * Sets up event handlers for SignalR messages
    * Private method - internal connection management
    */
@@ -125,12 +139,12 @@ export class ChatRealtimeService implements OnDestroy {
     // Handle incoming messages
     this.hubConnection.on('ReceiveMessage', (message: MessageDto) => {
       console.log('[ChatRealtimeService] Message received:', message);
-      
+
       // Add to store
       if (message.groupId) {
         this.store.addMessage(message.groupId, message);
       }
-      
+
       // Emit through appropriate observable
       if (message.sourceType === 'system') {
         this.systemMessageReceived$.next(message);
@@ -142,7 +156,7 @@ export class ChatRealtimeService implements OnDestroy {
     // Handle presence updates
     this.hubConnection.on('PresenceUpdate', (presenceList: PresenceDto[]) => {
       console.log('[ChatRealtimeService] Presence updated:', presenceList);
-      
+
       // Note: Backend should send groupId with presence updates
       // For now, we emit the event and let components handle context
       // Components should call this when they need presence for a specific group
@@ -160,9 +174,9 @@ export class ChatRealtimeService implements OnDestroy {
     this.hubConnection.onreconnecting((error) => {
       console.log('[ChatRealtimeService] Reconnecting...', error);
       this.store.setConnectionStatus(false, error?.message);
-      this.connectionState$.next({ 
+      this.connectionState$.next({
         state: HubConnectionState.Reconnecting,
-        error: error?.message 
+        error: error?.message
       });
     });
 
@@ -170,7 +184,7 @@ export class ChatRealtimeService implements OnDestroy {
       console.log('[ChatRealtimeService] Reconnected:', connectionId);
       this.store.setConnectionStatus(true);
       this.connectionState$.next({ state: HubConnectionState.Connected });
-      
+
       // Rejoin all groups after reconnection
       this.rejoinGroups();
     });
@@ -178,9 +192,9 @@ export class ChatRealtimeService implements OnDestroy {
     this.hubConnection.onclose((error) => {
       console.log('[ChatRealtimeService] Connection closed', error);
       this.store.setConnectionStatus(false, error?.message);
-      this.connectionState$.next({ 
+      this.connectionState$.next({
         state: HubConnectionState.Disconnected,
-        error: error?.message 
+        error: error?.message
       });
     });
   }
@@ -192,7 +206,7 @@ export class ChatRealtimeService implements OnDestroy {
   private async rejoinGroups(): Promise<void> {
     const joinedGroups = this.store.getJoinedGroups();
     console.log('[ChatRealtimeService] Rejoining groups:', joinedGroups);
-    
+
     for (const groupId of joinedGroups) {
       try {
         await this.joinGroup(groupId);
@@ -204,14 +218,14 @@ export class ChatRealtimeService implements OnDestroy {
 
   /**
    * Joins a SignalR group by group ID or invite code
-   * 
+   *
    * @param groupIdOrInviteCode - Group ID or invite code to join
    */
   async joinGroup(groupIdOrInviteCode: string): Promise<void> {
     if (!this.hubConnection || this.hubConnection.state !== HubConnectionState.Connected) {
       throw new Error('SignalR not connected');
     }
-    
+
     try {
       await this.hubConnection.invoke('JoinGroup', groupIdOrInviteCode);
       console.log('[ChatRealtimeService] Joined group:', groupIdOrInviteCode);
@@ -224,14 +238,14 @@ export class ChatRealtimeService implements OnDestroy {
 
   /**
    * Leaves a SignalR group
-   * 
+   *
    * @param groupId - Group ID to leave
    */
   async leaveGroup(groupId: string): Promise<void> {
     if (!this.hubConnection || this.hubConnection.state !== HubConnectionState.Connected) {
       throw new Error('SignalR not connected');
     }
-    
+
     try {
       await this.hubConnection.invoke('LeaveGroup', groupId);
       console.log('[ChatRealtimeService] Left group:', groupId);
@@ -246,7 +260,7 @@ export class ChatRealtimeService implements OnDestroy {
   /**
    * Sends a message to a group via SignalR
    * Real-time message sending - no REST API involved
-   * 
+   *
    * @param groupId - Target group ID
    * @param message - Message to send
    */
@@ -254,7 +268,7 @@ export class ChatRealtimeService implements OnDestroy {
     if (!this.hubConnection || this.hubConnection.state !== HubConnectionState.Connected) {
       throw new Error('SignalR not connected');
     }
-    
+
     try {
       await this.hubConnection.invoke('SendMessage', groupId, message);
       console.log('[ChatRealtimeService] Message sent to group:', groupId);
@@ -267,7 +281,7 @@ export class ChatRealtimeService implements OnDestroy {
   /**
    * Sends typing indicator to group members
    * Fails silently to avoid disrupting user experience
-   * 
+   *
    * @param groupId - Target group ID
    * @param isTyping - Whether user is typing
    */
@@ -275,7 +289,7 @@ export class ChatRealtimeService implements OnDestroy {
     if (!this.hubConnection || this.hubConnection.state !== HubConnectionState.Connected) {
       return; // Silently fail for typing indicators
     }
-    
+
     try {
       await this.hubConnection.invoke('SendTypingIndicator', groupId, isTyping);
     } catch (error) {
@@ -287,14 +301,14 @@ export class ChatRealtimeService implements OnDestroy {
   /**
    * Requests presence information for a group
    * Response will be received via presenceUpdated$ observable
-   * 
+   *
    * @param groupId - Target group ID
    */
   async getGroupPresence(groupId: string): Promise<void> {
     if (!this.hubConnection || this.hubConnection.state !== HubConnectionState.Connected) {
       throw new Error('SignalR not connected');
     }
-    
+
     try {
       await this.hubConnection.invoke('GetGroupPresence', groupId);
     } catch (error) {
@@ -304,18 +318,18 @@ export class ChatRealtimeService implements OnDestroy {
   }
 
   // ==================== REST API Methods for History/Pagination ====================
-  
+
   /**
    * Fetches message history via REST API (with pagination)
    * Use this for initial load and pagination, not for real-time updates
-   * 
+   *
    * @param groupId - Group ID
    * @param before - Optional timestamp to fetch messages before
    * @param limit - Number of messages to fetch (default: 20)
    */
   async getMessageHistory(
-    groupId: string, 
-    before?: Date, 
+    groupId: string,
+    before?: Date,
     limit: number = 20
   ): Promise<MessageDto[]> {
     try {
@@ -324,14 +338,14 @@ export class ChatRealtimeService implements OnDestroy {
         before: before?.toISOString(),
         limit
       }).toPromise();
-      
+
       const messages = response?.data || [];
-      
+
       // Store messages in state for consistency
       if (messages.length > 0) {
         this.store.setGroupMessages(groupId, messages);
       }
-      
+
       return messages;
     } catch (error) {
       console.error('[ChatRealtimeService] Failed to fetch message history:', error);
@@ -356,19 +370,19 @@ export class ChatRealtimeService implements OnDestroy {
   /**
    * Fetches presence info via REST API
    * Use SignalR getGroupPresence() for real-time presence instead
-   * 
+   *
    * @param groupId - Group ID
    */
   async getPresenceViaREST(groupId: string): Promise<PresenceDto[]> {
     try {
       const response = await this.groupsService.apiGroupsIdPresenceGet$Json({ id: groupId }).toPromise();
       const presence = response?.data || [];
-      
+
       // Update store
       if (presence.length > 0) {
         this.store.updatePresence(groupId, presence);
       }
-      
+
       return presence;
     } catch (error) {
       console.error('[ChatRealtimeService] Failed to fetch presence:', error);
@@ -377,7 +391,7 @@ export class ChatRealtimeService implements OnDestroy {
   }
 
   // ==================== Observable Getters ====================
-  
+
   /**
    * Observable for new user messages
    */
