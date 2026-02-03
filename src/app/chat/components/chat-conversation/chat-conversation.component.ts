@@ -62,9 +62,6 @@ export class ChatConversationComponent implements AfterViewChecked, OnInit, OnDe
 
   // Dropdown items - will be updated with translations
   dropdownItems: DropdownItem[] = [];
-  
-  // Message type dropdown items
-  messageTypeItems: DropdownItem[] = [];
 
   // Generate varied message skeleton items
   get messageSkeletonItems(): Array<{ index: number }> {
@@ -107,16 +104,6 @@ export class ChatConversationComponent implements AfterViewChecked, OnInit, OnDe
         variant: 'danger',
         isQuick: true
       }
-    ];
-    
-    // Message type dropdown items
-    this.messageTypeItems = [
-      {
-        id: 'poll',
-        label: 'Create Poll',
-        icon: 'bi-bar-chart-fill'
-      }
-      // Future: Add more message types here (image, file, etc.)
     ];
   }
 
@@ -228,25 +215,6 @@ export class ChatConversationComponent implements AfterViewChecked, OnInit, OnDe
 
   onGroupInfoUpdated(): void {
     this.groupUpdated.emit();
-  }
-  
-  /**
-   * Handle message type selection from dropdown
-   */
-  onMessageTypeSelected(itemId: string): void {
-    if (itemId === 'poll') {
-      this.openPollCreation();
-    }
-    // Future: Handle other message types here
-  }
-  
-  /**
-   * Open poll creation dialog
-   */
-  openPollCreation(): void {
-    // TODO: Open poll creation dialog
-    console.log('[ChatConversation] Opening poll creation dialog');
-    // For now, just log - will implement dialog next
   }
 
   /**
