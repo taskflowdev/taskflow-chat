@@ -17,7 +17,7 @@
 
   /* Hover state */
   &:hover:not(.disabled) {
-    background-color: var(--taskflow-color-poll-option-hover-bg, #eaeef2);
+    background-color: var(--taskflow-color-surface-hover, #eaeef2);
     // border-color: var(--taskflow-color-poll-option-hover-border, #8c959f);
   }
 
@@ -103,12 +103,12 @@
 
 .option-vote-count {
   flex-shrink: 0;
-  font-size: var(--taskflow-font-font-size-small, 12px);
+  font-size: var(--taskflow-font-font-size-normal, 12px);
   font-weight: 600;
-  color: var(--taskflow-color-poll-vote-count-text, #1f2328);
-  // background-color: var(--taskflow-color-poll-vote-count-badge-bg, #eaeef2);
-  padding: 2px 8px;
-  border-radius: 12px;
+  color: var(--taskflow-color-text-primary, #1f2328);
+  background-color: var(--taskflow-color-poll-vote-count-badge-bg, #eaeef2);
+  padding: 2px 2px;
+  border-radius: 8px;
   line-height: 1.4;
 }
 

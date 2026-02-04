@@ -81,6 +81,7 @@ export class PollMessageComponent implements OnInit, OnDestroy {
     currentUserId: null,
     userVotedOptionIds: [],
     isLoading: false,
+    isUpdating: false,
     error: null
   };
 

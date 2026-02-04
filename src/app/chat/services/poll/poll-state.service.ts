@@ -10,6 +10,7 @@ export interface PollState {
   currentUserId: string | null;
   userVotedOptionIds: string[];
   isLoading: boolean;
+  isUpdating: boolean;
   error: string | null;
 }
 
@@ -21,6 +22,7 @@ const INITIAL_STATE: PollState = {
   currentUserId: null,
   userVotedOptionIds: [],
   isLoading: false,
+  isUpdating: false,
   error: null
 };
 
@@ -57,7 +59,7 @@ export class PollStateService implements OnDestroy {
    * Each poll has its own isolated state
    */
   private readonly stateMap = new Map<string, BehaviorSubject<PollState>>();
-  
+
   /**
    * Cleanup subject
    */
@@ -83,12 +85,13 @@ export class PollStateService implements OnDestroy {
   initialize(messageId: string, currentUserId: string, pollResults: PollResultsDto): void {
     const state = this.getOrCreateStateSubject(messageId);
     const userVotedOptionIds = this.extractUserVotes(currentUserId, pollResults);
-    
+
     state.next({
       pollResults,
       currentUserId,
       userVotedOptionIds,
       isLoading: false,
+      isUpdating: false,
       error: null
     });
   }
@@ -102,25 +105,26 @@ export class PollStateService implements OnDestroy {
   updateResults(messageId: string, pollResults: PollResultsDto): void {
     const state = this.getOrCreateStateSubject(messageId);
     const currentState = state.value;
-    
+
     if (!currentState.currentUserId) {
       console.warn('[PollStateService] Cannot update results without currentUserId');
       return;
     }
-    
+
     const userVotedOptionIds = this.extractUserVotes(currentState.currentUserId, pollResults);
-    
+
     state.next({
       ...currentState,
       pollResults,
       userVotedOptionIds,
       isLoading: false,
+      isUpdating: false,
       error: null
     });
   }
 
   /**
-   * Sets loading state
+   * Sets loading state (for initial poll load)
    *
    * @param messageId - The message ID containing the poll
    * @param isLoading - Loading state
@@ -130,6 +134,20 @@ export class PollStateService implements OnDestroy {
     state.next({
       ...state.value,
       isLoading
+    });
+  }
+
+  /**
+   * Sets updating state (for vote updates)
+   *
+   * @param messageId - The message ID containing the poll
+   * @param isUpdating - Updating state
+   */
+  setUpdating(messageId: string, isUpdating: boolean): void {
+    const state = this.getOrCreateStateSubject(messageId);
+    state.next({
+      ...state.value,
+      isUpdating
     });
   }
 
@@ -173,7 +191,7 @@ export class PollStateService implements OnDestroy {
     state.next({
       ...state.value,
       userVotedOptionIds: [...optionIds],
-      isLoading: true
+      isUpdating: true
     });
   }
 
@@ -188,7 +206,7 @@ export class PollStateService implements OnDestroy {
     state.next({
       ...state.value,
       userVotedOptionIds: [...previousOptionIds],
-      isLoading: false
+      isUpdating: false
     });
   }
 
@@ -238,7 +256,7 @@ export class PollStateService implements OnDestroy {
     if (!pollResults.options) {
       return [];
     }
-    
+
     return pollResults.options
       .filter(option => option.voters?.includes(currentUserId))
       .map(option => option.id ?? '')

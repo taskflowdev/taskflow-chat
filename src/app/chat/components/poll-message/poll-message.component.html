@@ -1,4 +1,20 @@
-<div class="card poll-container" *ngIf="pollState.pollResults">
+<!-- Loading state -->
+<div class="poll-container poll-loading-initial" *ngIf="pollState.isLoading && !pollState.pollResults">
+  <div class="loading-spinner"></div>
+  <span>Loading poll...</span>
+</div>
+
+<!-- Error state -->
+<div class="card poll-container poll-error-initial"
+  *ngIf="!pollState.error && !pollState.pollResults && !pollState.isLoading">
+  <div class="error-content">
+    <i class="bi bi-exclamation-circle"></i>
+    <span>{{ pollState.error || 'There was an error loading the poll. Please try again later.' }}</span>
+  </div>
+</div>
+
+<!-- Content state -->
+<div class="poll-container" *ngIf="pollState.pollResults && !pollState.isLoading && !pollState.error">
   <!-- Poll question header -->
   <div class="poll-header">
     <i class="bi bi-bar-chart poll-icon"></i>
@@ -7,17 +23,9 @@
       <span class="poll-type-text">{{ pollState.pollResults.allowMultipleAnswers ? 'Choose one or more answers' :
         'Choose one answer' }}</span>
     </div>
-  </div>
-
-  <!-- Error message -->
-  <div class="poll-error" *ngIf="pollState.error">
-    <i class="bi bi-exclamation-triangle-fill"></i>
-    <span>{{ pollState.error }}</span>
-  </div>
-
-  <!-- Loading overlay -->
-  <div class="poll-loading" *ngIf="pollState.isLoading">
-    <div class="loading-spinner"></div>
+    <div class="poll-header-spinner" *ngIf="pollState.isUpdating">
+      <div class="updating-spinner"></div>
+    </div>
   </div>
 
   <!-- Poll options -->
@@ -34,16 +42,4 @@
     [totalVoters]="pollState.pollResults.totalVoters ?? 0" [groupMemberCount]="groupMemberCount"
     [allowMultipleAnswers]="pollState.pollResults.allowMultipleAnswers ?? false">
   </app-poll-footer>
-</div>
-
-<!-- Loading state when no poll data -->
-<div class="poll-loading-initial" *ngIf="!pollState.pollResults && pollState.isLoading">
-  <div class="loading-spinner"></div>
-  <span>Loading poll...</span>
-</div>
-
-<!-- Error state when no poll data -->
-<div class="poll-error-initial" *ngIf="!pollState.pollResults && pollState.error">
-  <i class="bi bi-exclamation-circle-fill"></i>
-  <span>{{ pollState.error }}</span>
 </div>
