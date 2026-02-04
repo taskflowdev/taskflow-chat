@@ -49,18 +49,10 @@
 
       <!-- Poll content -->
       <ng-container *ngIf="message.contentType === 'poll'">
-        <div class="poll-message">
-          <div class="poll-header">
-            <i class="bi bi-bar-chart"></i>
-            <strong>Poll</strong>
-          </div>
-          <div class="poll-question">{{ message.content }}</div>
-          <div class="poll-options" *ngIf="message.contentData?.options">
-            <div class="poll-option" *ngFor="let option of message.contentData.options">
-              <i class="bi bi-circle"></i> {{ option }}
-            </div>
-          </div>
-        </div>
+        <app-poll-message [groupId]="message.groupId ?? ''" [messageId]="message.messageId"
+          [currentUserId]="message.currentUserId ?? ''" [groupMemberCount]="message.groupMemberCount ?? 0"
+          [initialPollData]="message.pollData">
+        </app-poll-message>
       </ng-container>
 
       <!-- File content -->

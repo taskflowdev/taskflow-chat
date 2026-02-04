@@ -15,6 +15,7 @@ import { I18NService } from './services/i-18-n.service';
 import { I18NAdminService } from './services/i-18-n-admin.service';
 import { MessageMetadataService } from './services/message-metadata.service';
 import { MessagesService } from './services/messages.service';
+import { PollsService } from './services/polls.service';
 import { SettingsService } from './services/settings.service';
 
 /**
@@ -34,6 +35,7 @@ import { SettingsService } from './services/settings.service';
     I18NAdminService,
     MessageMetadataService,
     MessagesService,
+    PollsService,
     SettingsService,
     ApiConfiguration
   ],

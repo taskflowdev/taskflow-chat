@@ -466,7 +466,44 @@
     "searchResultCountText": "#57606a",
 
     "settingHighlightBg": "rgba(9, 105, 218, 0.1)",
-    "settingHighlightBorder": "#0969da"
+    "settingHighlightBorder": "#0969da",
+
+    "pollContainerBg": "#ffffff",
+    "pollContainerBorder": "#d0d7de",
+    "pollQuestionText": "#1f2328",
+    "pollQuestionIcon": "#57606a",
+
+    "pollOptionBg": "#f6f8fa",
+    "pollOptionBorder": "#d0d7de",
+    "pollOptionText": "#1f2328",
+    "pollOptionHoverBg": "#eaeef2",
+    "pollOptionHoverBorder": "#8c959f",
+    "pollOptionSelectedBg": "#ddf4ff",
+    "pollOptionSelectedBorder": "#0969da",
+    "pollOptionSelectedText": "#0550ae",
+    "pollOptionDisabledBg": "#f6f8fa",
+    "pollOptionDisabledText": "#8c959f",
+    "pollOptionCheckboxBg": "#ffffff",
+    "pollOptionCheckboxBorder": "#d0d7de",
+    "pollOptionCheckboxCheckedBg": "#0969da",
+    "pollOptionCheckboxCheckedBorder": "#0550ae",
+
+    "pollProgressBarBg": "#eaeef2",
+    "pollProgressBarFill": "#0969da",
+    "pollProgressBarText": "#1f2328",
+
+    "pollFooterBg": "transparent",
+    "pollFooterText": "#57606a",
+    "pollFooterIcon": "#6e7781",
+    "pollFooterBorder": "#d8dee4",
+
+    "pollVoteCountText": "#1f2328",
+    "pollVoteCountBadgeBg": "#eaeef2",
+    "pollVoteCountBadgeText": "#1f2328",
+
+    "pollErrorBg": "#ffebe9",
+    "pollErrorBorder": "#cf222e",
+    "pollErrorText": "#cf222e"
   },
   "typography": {
     "small": {

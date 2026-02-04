@@ -48,6 +48,9 @@ export type { ObjectApiResponse } from './models/object-api-response';
 export type { PasswordResetResponseDto } from './models/password-reset-response-dto';
 export type { PasswordResetResponseDtoApiResponse } from './models/password-reset-response-dto-api-response';
 export type { PollContent } from './models/poll-content';
+export type { PollOptionResultDto } from './models/poll-option-result-dto';
+export type { PollResultsDto } from './models/poll-results-dto';
+export type { PollResultsDtoApiResponse } from './models/poll-results-dto-api-response';
 export type { PresenceDto } from './models/presence-dto';
 export type { PresenceDtoIEnumerableApiResponse } from './models/presence-dto-i-enumerable-api-response';
 export type { RefreshTokenDto } from './models/refresh-token-dto';
@@ -91,3 +94,4 @@ export type { ValidationResponseApiResponse } from './models/validation-response
 export type { VerifySecurityCodeDto } from './models/verify-security-code-dto';
 export type { VideoContent } from './models/video-content';
 export type { VisibilityCondition } from './models/visibility-condition';
+export type { VotePollDto } from './models/vote-poll-dto';

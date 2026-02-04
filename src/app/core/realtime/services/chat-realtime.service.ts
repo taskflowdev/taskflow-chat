@@ -1,7 +1,7 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { HubConnection, HubConnectionBuilder, LogLevel, HubConnectionState } from '@microsoft/signalr';
 import { BehaviorSubject, Observable, Subject } from 'rxjs';
-import { MessageDto, GroupDto, SendMessageDto, PresenceDto } from '../../../api/models';
+import { MessageDto, GroupDto, SendMessageDto, PresenceDto, PollResultsDto } from '../../../api/models';
 import { GroupsService, MessagesService } from '../../../api/services';
 import { TypingDto } from '../models';
 import { ChatRealtimeStore } from '../stores/chat-realtime.store';
@@ -12,6 +12,15 @@ import { ChatRealtimeStore } from '../stores/chat-realtime.store';
 export interface ConnectionState {
   state: HubConnectionState;
   error?: string;
+}
+
+/**
+ * Poll vote update event from SignalR
+ */
+export interface PollVoteUpdateEvent {
+  groupId: string;
+  messageId: string;
+  pollResults: PollResultsDto;
 }
 
 /**
@@ -44,6 +53,7 @@ export class ChatRealtimeService implements OnDestroy {
   private readonly systemMessageReceived$ = new Subject<MessageDto>();
   private readonly presenceUpdated$ = new Subject<{ groupId: string; presence: PresenceDto[] }>();
   private readonly userTyping$ = new Subject<TypingDto>();
+  private readonly pollVoteUpdate$ = new Subject<PollVoteUpdateEvent>();
   private readonly connectionState$ = new BehaviorSubject<ConnectionState>({
     state: HubConnectionState.Disconnected
   });
@@ -168,6 +178,12 @@ export class ChatRealtimeService implements OnDestroy {
       console.log('[ChatRealtimeService] User typing:', typingInfo);
       this.store.updateTyping(typingInfo);
       this.userTyping$.next(typingInfo);
+    });
+
+    // Handle poll vote updates
+    this.hubConnection.on('PollVoteUpdate', (event: PollVoteUpdateEvent) => {
+      console.log('[ChatRealtimeService] Poll vote update:', event);
+      this.pollVoteUpdate$.next(event);
     });
 
     // Handle reconnection
@@ -317,6 +333,70 @@ export class ChatRealtimeService implements OnDestroy {
     }
   }
 
+  // ==================== Poll Methods ====================
+
+  /**
+   * Votes on a poll via SignalR
+   *
+   * @param groupId - Group ID
+   * @param messageId - Message ID containing the poll
+   * @param optionIds - Array of option IDs to vote for
+   */
+  async votePoll(groupId: string, messageId: string, optionIds: string[]): Promise<void> {
+    if (!this.hubConnection || this.hubConnection.state !== HubConnectionState.Connected) {
+      throw new Error('SignalR not connected');
+    }
+
+    try {
+      await this.hubConnection.invoke('VotePoll', groupId, messageId, { optionIds });
+      console.log('[ChatRealtimeService] Poll vote sent:', { groupId, messageId, optionIds });
+    } catch (error) {
+      console.error('[ChatRealtimeService] Failed to vote on poll:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Removes vote from a poll via SignalR
+   *
+   * @param groupId - Group ID
+   * @param messageId - Message ID containing the poll
+   */
+  async removePollVote(groupId: string, messageId: string): Promise<void> {
+    if (!this.hubConnection || this.hubConnection.state !== HubConnectionState.Connected) {
+      throw new Error('SignalR not connected');
+    }
+
+    try {
+      await this.hubConnection.invoke('RemovePollVote', groupId, messageId);
+      console.log('[ChatRealtimeService] Poll vote removed:', { groupId, messageId });
+    } catch (error) {
+      console.error('[ChatRealtimeService] Failed to remove poll vote:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Gets poll results via SignalR
+   * Response will be received via pollVoteUpdate$ observable
+   *
+   * @param groupId - Group ID
+   * @param messageId - Message ID containing the poll
+   */
+  async getPollResults(groupId: string, messageId: string): Promise<void> {
+    if (!this.hubConnection || this.hubConnection.state !== HubConnectionState.Connected) {
+      throw new Error('SignalR not connected');
+    }
+
+    try {
+      await this.hubConnection.invoke('GetPollResults', groupId, messageId);
+      console.log('[ChatRealtimeService] Poll results requested:', { groupId, messageId });
+    } catch (error) {
+      console.error('[ChatRealtimeService] Failed to get poll results:', error);
+      throw error;
+    }
+  }
+
   // ==================== REST API Methods for History/Pagination ====================
 
   /**
@@ -421,6 +501,13 @@ export class ChatRealtimeService implements OnDestroy {
   }
 
   /**
+   * Observable for poll vote updates
+   */
+  get onPollVoteUpdate(): Observable<PollVoteUpdateEvent> {
+    return this.pollVoteUpdate$.asObservable();
+  }
+
+  /**
    * Observable for connection state changes
    */
   get connectionState(): Observable<ConnectionState> {
@@ -443,6 +530,7 @@ export class ChatRealtimeService implements OnDestroy {
     this.systemMessageReceived$.complete();
     this.presenceUpdated$.complete();
     this.userTyping$.complete();
+    this.pollVoteUpdate$.complete();
     this.connectionState$.complete();
   }
 }

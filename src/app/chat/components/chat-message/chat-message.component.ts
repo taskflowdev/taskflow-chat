@@ -2,6 +2,8 @@ import { Component, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { CommonTooltipDirective } from "../../../shared/components/common-tooltip";
 import { DateTimeFormatService } from '../../../core/services/datetime-format.service';
+import { PollMessageComponent } from '../poll-message/poll-message.component';
+import { PollResultsDto } from '../../../api/models';
 
 export interface ChatMessageData {
   messageId: string;
@@ -10,16 +12,20 @@ export interface ChatMessageData {
   content: string;
   contentType?: 'text' | 'image' | 'video' | 'poll' | 'file';
   contentData?: any; // Raw content object for rendering different types
+  pollData?: PollResultsDto; // Poll-specific data
   createdAt: string;
   isOwn: boolean;
   isSystemMessage?: boolean; // Flag to identify system messages
   messageType?: string; // Type of system message (e.g., 'groupCreated', 'userJoined')
   isConsecutive?: boolean; // True when this message follows the same sender consecutively
+  groupId?: string; // Group ID for poll messages
+  currentUserId?: string; // Current user ID for poll voting
+  groupMemberCount?: number; // Group member count for poll participation display
 }
 
 @Component({
   selector: 'app-chat-message',
-  imports: [CommonModule, CommonTooltipDirective],
+  imports: [CommonModule, CommonTooltipDirective, PollMessageComponent],
   templateUrl: './chat-message.component.html',
   styleUrl: './chat-message.component.scss'
 })

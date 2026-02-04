@@ -1,0 +1,15 @@
+<div 
+  class="poll-progress-bar" 
+  role="progressbar"
+  [attr.aria-valuenow]="percentage"
+  [attr.aria-valuemin]="0"
+  [attr.aria-valuemax]="100"
+  [attr.aria-label]="ariaLabel">
+  <div class="progress-track">
+    <div 
+      class="progress-fill" 
+      [style.width.%]="percentage">
+    </div>
+  </div>
+  <span class="progress-label" *ngIf="showLabel">{{ percentage }}%</span>
+</div>

@@ -80,7 +80,7 @@ export class MainChatComponent implements OnInit, OnDestroy {
     if (isPlatformBrowser(this.platformId)) {
       this.checkMobileView();
       window.addEventListener('resize', () => this.checkMobileView());
-      
+
       // Initialize SignalR connection
       this.initializeRealtimeConnection();
     }
@@ -207,12 +207,12 @@ export class MainChatComponent implements OnInit, OnDestroy {
     if (chat) {
       chat.lastMessage = message;
       chat.lastMessageTime = message.createdAt || new Date().toISOString();
-      
+
       // If this is not the currently selected chat, increment unread count
       if (message.groupId !== this.selectedChatId) {
         chat.unreadCount = (chat.unreadCount || 0) + 1;
       }
-      
+
       // Move chat to top of list
       this.chats = [chat, ...this.chats.filter(c => c.groupId !== message.groupId)];
     }
@@ -220,10 +220,10 @@ export class MainChatComponent implements OnInit, OnDestroy {
     // If this message belongs to the currently open conversation, handle it
     if (this.currentConversation && message.groupId === this.currentConversation.groupId) {
       const chatMessage = this.mapMessageToChatMessage(message);
-      
+
       // Check for exact duplicate by messageId
       const existsByMessageId = this.currentConversation.messages.some(m => m.messageId === chatMessage.messageId);
-      
+
       if (!existsByMessageId) {
         // Check if this is replacing an optimistic message (own message from this user)
         if (message.senderId === this.user?.id) {
@@ -233,13 +233,13 @@ export class MainChatComponent implements OnInit, OnDestroy {
           const optimisticIndex = this.currentConversation.messages.findIndex(m => {
             if (!m.messageId.startsWith('temp-')) return false;
             if (m.senderId !== message.senderId) return false;
-            
+
             // Check if timestamps are close (within 5 seconds)
             const optimisticTimestamp = new Date(m.createdAt).getTime();
             const timeDiff = Math.abs(messageTimestamp - optimisticTimestamp);
             return timeDiff < 5000; // 5 seconds tolerance
           });
-          
+
           if (optimisticIndex !== -1) {
             // Replace optimistic message with real one at the same position to maintain order
             this.currentConversation.messages[optimisticIndex] = chatMessage;
@@ -247,7 +247,7 @@ export class MainChatComponent implements OnInit, OnDestroy {
             return;
           }
         }
-        
+
         // No optimistic message found, just add the new message
         this.currentConversation.messages.push(chatMessage);
       }
@@ -452,31 +452,31 @@ export class MainChatComponent implements OnInit, OnDestroy {
 
   /**
    * Handle group deletion
-   * 
+   *
    * This method:
    * 1. Removes the deleted group from the chat list
    * 2. Clears the selected chat
    * 3. Navigates back to the chat list
    * 4. Updates the UI state
-   * 
+   *
    * @param deletedGroupId - ID of the deleted group
    */
   onGroupDeleted(deletedGroupId: string): void {
     // Remove the deleted group from the chats list using groupId property
     this.chats = this.chats.filter(chat => chat.groupId !== deletedGroupId);
-    
+
     // Clear selected chat and conversation
     this.selectedChatId = null;
     this.currentConversation = null;
-    
+
     // Show sidebar in mobile view
     if (this.isMobileView) {
       this.showSidebar = true;
     }
-    
+
     // Update context to CHAT_VIEW
     this.updateShortcutContext();
-    
+
     // Navigate to chat list (clear fragment)
     this.router.navigate(['/chat'], {
       queryParamsHandling: 'preserve'
@@ -666,10 +666,10 @@ export class MainChatComponent implements OnInit, OnDestroy {
    */
   private extractContentText(content: any, contentType?: string): string {
     if (!content) return '';
-    
+
     // If content is already a string, return it
     if (typeof content === 'string') return content;
-    
+
     // Extract based on content type
     switch (contentType) {
       case 'text':
@@ -693,15 +693,15 @@ export class MainChatComponent implements OnInit, OnDestroy {
    */
   private formatSystemMessage(message: MessageDto): string {
     const senderName = message.senderName || 'Someone';
-    
+
     // Try to extract text from content if available
     const contentText = this.extractContentText(message.content, message.contentType);
-    
+
     // If content has text, use it; otherwise format based on message type
     if (contentText) {
       return contentText;
     }
-    
+
     switch (message.messageType) {
       case 'groupCreated':
         return `Group was created by ${senderName}`;
@@ -727,20 +727,24 @@ export class MainChatComponent implements OnInit, OnDestroy {
    */
   private mapMessageToChatMessage(message: MessageDto): ChatMessageData {
     const isSystemMessage = message.sourceType === 'system';
-    
+
     return {
       messageId: message.messageId || '',
       senderId: message.senderId || '',
       senderName: message.senderName || 'Unknown',
-      content: isSystemMessage 
+      content: isSystemMessage
         ? this.formatSystemMessage(message)
         : this.extractContentText(message.content, message.contentType),
       contentType: message.contentType,
       contentData: message.content,
+      pollData: undefined, // PollMessageComponent loads poll data via API
       createdAt: message.createdAt || new Date().toISOString(),
       isOwn: message.senderId === this.user?.id,
       isSystemMessage: isSystemMessage,
-      messageType: message.messageType
+      messageType: message.messageType,
+      groupId: message.groupId || this.currentConversation?.groupId || '',
+      currentUserId: this.user?.id || '',
+      groupMemberCount: this.currentConversation?.memberCount || 0
     };
   }
 
@@ -794,10 +798,10 @@ export class MainChatComponent implements OnInit, OnDestroy {
       try {
         // Use message factory to create properly formatted SendMessageDto
         const messageDto = this.messageFactoryService.createTextMessageDto(messageContent);
-        
+
         await this.chatRealtimeService.sendMessage(this.currentConversation.groupId, messageDto);
         console.log('[MainChat] Message sent via SignalR');
-        
+
         // The real message will arrive via SignalR event and replace the optimistic one
         // in handleRealtimeMessage() by matching sender and timestamp
       } catch (error) {
@@ -808,6 +812,81 @@ export class MainChatComponent implements OnInit, OnDestroy {
       // SignalR not connected, use REST API
       this.sendMessageViaREST(messageContent, optimisticMessage);
     }
+  }
+
+  /**
+   * Handles sending poll messages.
+   * Sends poll data to the server via the message factory service.
+   */
+  async onSendPoll(pollData: { question: string; options: string[]; allowMultipleAnswers: boolean }): Promise<void> {
+    if (!this.currentConversation || !this.user) return;
+
+    // Optimistically add poll message to UI
+    const optimisticMessage: ChatMessageData = {
+      messageId: 'temp-poll-' + Date.now().toString(),
+      senderId: this.user.id,
+      senderName: 'You',
+      content: pollData.question,
+      contentType: 'poll',
+      createdAt: new Date().toISOString(),
+      isOwn: true,
+      groupId: this.currentConversation.groupId,
+      currentUserId: this.user.id,
+      groupMemberCount: this.currentConversation.memberCount || 0
+    };
+
+    this.currentConversation.messages.push(optimisticMessage);
+
+    // Update last message in chat list
+    const chat = this.chats.find(c => c.groupId === this.currentConversation?.groupId);
+    if (chat) {
+      const tempMessageDto: MessageDto = {
+        messageId: optimisticMessage.messageId,
+        senderId: optimisticMessage.senderId,
+        senderName: optimisticMessage.senderName,
+        content: { contentType: 'poll' },
+        createdAt: optimisticMessage.createdAt,
+        contentType: 'poll',
+        messageType: 'userMessage',
+        sourceType: 'user'
+      };
+      chat.lastMessage = tempMessageDto;
+      chat.lastMessageTime = new Date().toISOString();
+    }
+
+    // Send poll via REST API
+    this.messageFactoryService.sendPollMessage(this.currentConversation.groupId, pollData, this.user?.id).subscribe({
+      next: (sentMessage) => {
+        // Replace optimistic message with real one
+        if (sentMessage && this.currentConversation) {
+          const index = this.currentConversation.messages.findIndex(
+            msg => msg.messageId === optimisticMessage.messageId
+          );
+          if (index !== -1) {
+            this.currentConversation.messages[index] = this.mapMessageToChatMessage(sentMessage);
+          }
+
+          // Update the chat list with the real message
+          const chat = this.chats.find(c => c.groupId === this.currentConversation?.groupId);
+          if (chat) {
+            chat.lastMessage = sentMessage;
+          }
+        }
+        console.log('[MainChat] Poll sent successfully');
+      },
+      error: (error) => {
+        console.error('Failed to send poll:', error);
+        // Remove optimistic message on error
+        if (this.currentConversation) {
+          const index = this.currentConversation.messages.findIndex(
+            msg => msg.messageId === optimisticMessage.messageId
+          );
+          if (index !== -1) {
+            this.currentConversation.messages.splice(index, 1);
+          }
+        }
+      }
+    });
   }
 
   /**

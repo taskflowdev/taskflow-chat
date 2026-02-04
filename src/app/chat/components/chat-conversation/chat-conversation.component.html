@@ -72,7 +72,16 @@
     <!-- Typing Indicator -->
     <app-typing-indicator *ngIf="shouldShowTypingIndicator" [typingUsers]="typingUsers"></app-typing-indicator>
 
-    <div class="input-wrapper">
+    <!-- Poll Composer -->
+    <app-poll-composer *ngIf="showPollComposer" (pollCreated)="onPollCreated($event)"
+      (cancelled)="onPollComposerCancelled()">
+    </app-poll-composer>
+
+    <div class="input-wrapper" *ngIf="!showPollComposer">
+      <button class="btn attachment-btn" (click)="togglePollComposer()" (mouseenter)="pollBtnHovered = true"
+        (mouseleave)="pollBtnHovered = false" [appCommonTooltip]="'Create poll'" [disabled]="loading">
+        <i class="bi" [ngClass]="pollBtnHovered ? 'bi-bar-chart-fill' : 'bi-bar-chart'"></i>
+      </button>
       <textarea [(ngModel)]="newMessage" (keydown)="onKeyDown($event)"
         [placeholder]="'chats.conversation-window.conversations.composer.placeholder' | translate" class="message-input"
         rows="1" [disabled]="loading">

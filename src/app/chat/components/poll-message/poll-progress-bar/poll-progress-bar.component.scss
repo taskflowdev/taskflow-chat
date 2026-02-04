@@ -1,0 +1,94 @@
+/**
+ * Poll Progress Bar Component Styles
+ * Uses theme tokens for light/dark mode support
+ */
+
+.poll-progress-bar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+}
+
+.progress-track {
+  flex: 1;
+  height: 6px;
+  background-color: var(--taskflow-color-poll-progress-bar-bg, #e1e4e8);
+  border-radius: 8px;
+  overflow: hidden;
+  position: relative;
+  // box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.06);
+}
+
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    var(--taskflow-color-accent, #0969da) 0%,
+    var(--taskflow-color-accent-light, #2e8af7) 100%
+  );
+  border-radius: 10px;
+  transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  box-shadow: 0 1px 2px rgba(9, 105, 218, 0.25);
+
+  /* Smooth animation */
+  will-change: width;
+
+  // Add glossy effect overlay
+  &::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 50%;
+    background: linear-gradient(
+      180deg,
+      rgba(255, 255, 255, 0.3) 0%,
+      rgba(255, 255, 255, 0) 100%
+    );
+    border-radius: 10px 10px 0 0;
+  }
+
+  // Add subtle animation when progress changes
+  animation: progressPulse 0.6s ease-out;
+}
+
+@keyframes progressPulse {
+  0% {
+    opacity: 0.8;
+  }
+  50% {
+    opacity: 1;
+    box-shadow: 0 1px 4px rgba(9, 105, 218, 0.4);
+  }
+  100% {
+    opacity: 1;
+    box-shadow: 0 1px 2px rgba(9, 105, 218, 0.25);
+  }
+}
+
+.progress-label {
+  font-size: var(--taskflow-font-font-size-small, 12px);
+  color: var(--taskflow-color-poll-progress-bar-text, #1f2328);
+  font-weight: 500;
+  min-width: 36px;
+  text-align: right;
+  line-height: 1;
+}
+
+/* Accessibility: High contrast mode */
+@media (prefers-contrast: high) {
+  .progress-track {
+    border: 1px solid currentColor;
+  }
+}
+
+/* Reduced motion preference */
+@media (prefers-reduced-motion: reduce) {
+  .progress-fill {
+    transition: none;
+    animation: none;
+  }
+}
