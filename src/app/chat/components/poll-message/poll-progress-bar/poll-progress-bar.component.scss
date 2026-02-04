@@ -22,15 +22,11 @@
 
 .progress-fill {
   height: 100%;
-  background: linear-gradient(
-    90deg,
-    var(--taskflow-color-accent, #0969da) 0%,
-    var(--taskflow-color-accent-light, #2e8af7) 100%
-  );
+  background: var(--taskflow-color-primary, #0969da);
   border-radius: 10px;
   transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
   position: relative;
-  box-shadow: 0 1px 2px rgba(9, 105, 218, 0.25);
+  // box-shadow: 0 1px 2px rgba(9, 105, 218, 0.25);
 
   /* Smooth animation */
   will-change: width;
@@ -43,11 +39,11 @@
     left: 0;
     right: 0;
     height: 50%;
-    background: linear-gradient(
-      180deg,
-      rgba(255, 255, 255, 0.3) 0%,
-      rgba(255, 255, 255, 0) 100%
-    );
+    // background: linear-gradient(
+    //   180deg,
+    //   rgba(255, 255, 255, 0.3) 0%,
+    //   rgba(255, 255, 255, 0) 100%
+    // );
     border-radius: 10px 10px 0 0;
   }
 
