@@ -60,7 +60,7 @@ export function isGeneralFileContent(content: any): content is GeneralFileConten
 })
 export class MessageDisplayServiceProxy {
 
-  constructor() {}
+  constructor() { }
 
   /**
    * Generates a WhatsApp-style message preview for chat list display.
@@ -271,14 +271,14 @@ export class MessageDisplayServiceProxy {
         : content.question;
 
       return {
-        text: `📊 Poll: ${truncatedQuestion}`,
+        text: `${truncatedQuestion}`,
         icon: 'bar-chart',
         hasIcon: true
       };
     }
 
     return {
-      text: '📊 Poll',
+      text: 'Poll',
       icon: 'bar-chart',
       hasIcon: true
     };
