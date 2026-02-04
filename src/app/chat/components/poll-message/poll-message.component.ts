@@ -298,4 +298,16 @@ export class PollMessageComponent implements OnInit, OnDestroy {
   trackByOptionId(index: number, option: PollOptionData): string {
     return option.id;
   }
+
+  /**
+   * Calculates voting progress percentage
+   * @returns Percentage of group members who have voted (0-100)
+   */
+  get votingProgressPercentage(): number {
+    if (!this.groupMemberCount || this.groupMemberCount === 0) {
+      return 0;
+    }
+    const totalVoters = this.pollState.pollResults?.totalVoters ?? 0;
+    return Math.round((totalVoters / this.groupMemberCount) * 100);
+  }
 }

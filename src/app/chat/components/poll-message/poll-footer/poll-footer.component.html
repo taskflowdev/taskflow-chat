@@ -1,9 +1,26 @@
 <div class="poll-footer">
-  <div class="poll-stats">
+  <!-- Progress section -->
+  <div class="poll-progress-section">
+    <div class="progress-info">
+      <span class="progress-text">
+        <i class="bi bi-graph-up-arrow progress-icon"></i>
+        {{ votingProgressPercentage }}% of participation.
+      </span>
+      <span class="progress-count">
+        <i class="bi bi-people-fill progress-icon"></i>
+        {{ totalVoters }} of {{ groupMemberCount }} members
+      </span>
+    </div>
+    <div class="progress-bar-container">
+      <div class="progress-bar-fill" [style.width.%]="votingProgressPercentage"></div>
+    </div>
+  </div>
+
+  <!-- <div class="poll-stats">
     <span class="poll-footer-text">
       <i class="bi bi-pie-chart-fill poll-footer-icon"></i>
       {{ totalVoters }} {{ totalVoters === 1 ? 'member' : 'members' }} voted out of {{ groupMemberCount }} total {{
       groupMemberCount === 1 ? 'member' : 'members' }}.
     </span>
-  </div>
+  </div> -->
 </div>
