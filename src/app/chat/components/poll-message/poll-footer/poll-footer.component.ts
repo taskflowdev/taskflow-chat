@@ -46,6 +46,11 @@ export class PollFooterComponent {
   @Input() groupMemberCount: number = 0;
 
   /**
+   * Voting progress percentage (0-100)
+   */
+  @Input() votingProgressPercentage: number = 0;
+
+  /**
    * Whether the poll allows multiple answers
    */
   @Input() allowMultipleAnswers: boolean = false;

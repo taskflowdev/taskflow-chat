@@ -17,14 +17,17 @@
 <div class="poll-container" *ngIf="pollState.pollResults && !pollState.isLoading && !pollState.error">
   <!-- Poll question header -->
   <div class="poll-header">
-    <i class="bi bi-bar-chart poll-icon"></i>
-    <div class="poll-question-container">
-      <h3 class="poll-question">{{ pollState.pollResults.question }}</h3>
-      <span class="poll-type-text">{{ pollState.pollResults.allowMultipleAnswers ? 'Choose one or more answers' :
-        'Choose one answer' }}</span>
-    </div>
-    <div class="poll-header-spinner" *ngIf="pollState.isUpdating">
-      <div class="updating-spinner"></div>
+    <!-- Header top section: question and spinner -->
+    <div class="poll-header-top">
+      <i class="bi bi-bar-chart poll-icon"></i>
+      <div class="poll-question-container">
+        <h3 class="poll-question">{{ pollState.pollResults.question }}</h3>
+        <span class="poll-type-text">{{ pollState.pollResults.allowMultipleAnswers ? 'Choose one or more answers' :
+          'Choose one answer' }}</span>
+      </div>
+      <div class="poll-header-spinner" *ngIf="pollState.isUpdating">
+        <div class="updating-spinner"></div>
+      </div>
     </div>
   </div>
 
@@ -32,14 +35,15 @@
   <div class="poll-options">
     <app-poll-option *ngFor="let option of optionsData; trackBy: trackByOptionId" [option]="option"
       [isSelected]="isOptionSelected(option.id)"
-      [allowMultipleAnswers]="pollState.pollResults.allowMultipleAnswers ?? false" [disabled]="pollState.isLoading"
-      (optionSelected)="onOptionSelected($event)">
+      [allowMultipleAnswers]="pollState.pollResults.allowMultipleAnswers ?? false"
+      [disabled]="pollState.isLoading || pollState.isUpdating" (optionSelected)="onOptionSelected($event)">
     </app-poll-option>
   </div>
 
   <!-- Poll footer with statistics -->
   <app-poll-footer [totalVotes]="pollState.pollResults.totalVotes ?? 0"
     [totalVoters]="pollState.pollResults.totalVoters ?? 0" [groupMemberCount]="groupMemberCount"
+    [votingProgressPercentage]="votingProgressPercentage"
     [allowMultipleAnswers]="pollState.pollResults.allowMultipleAnswers ?? false">
   </app-poll-footer>
 </div>

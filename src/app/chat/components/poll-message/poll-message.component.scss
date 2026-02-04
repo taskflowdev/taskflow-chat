@@ -18,11 +18,17 @@
 /* Poll Header */
 .poll-header {
   display: flex;
-  align-items: center;
-  gap: 8px;
+  flex-direction: column;
   margin: 0;
-  padding: 12px;
+  padding: 0;
   border-bottom: 1px solid var(--taskflow-color-poll-container-border, #d0d7de);
+
+  .poll-header-top {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px;
+  }
 
   .poll-question-container {
     display: flex;
