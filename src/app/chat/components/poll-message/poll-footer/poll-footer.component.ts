@@ -41,6 +41,11 @@ export class PollFooterComponent {
   @Input() totalVoters: number = 0;
 
   /**
+   * Total number of members in the group
+   */
+  @Input() groupMemberCount: number = 0;
+
+  /**
    * Whether the poll allows multiple answers
    */
   @Input() allowMultipleAnswers: boolean = false;

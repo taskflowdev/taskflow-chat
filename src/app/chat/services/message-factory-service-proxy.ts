@@ -82,19 +82,19 @@ export interface ExtendedGeneralFileContent extends GeneralFileContent {
 })
 export class MessageFactoryServiceProxy {
 
-  constructor(private groupsServiceProxy: GroupsServiceProxy) {}
+  constructor(private groupsServiceProxy: GroupsServiceProxy) { }
 
   /**
    * Sends a text message to a group.
-   * 
+   *
    * @param groupId - Target group ID
    * @param text - Message text content
    * @param metadata - Optional message metadata
    * @returns Observable with the sent message or null if failed
    */
   sendTextMessage(
-    groupId: string, 
-    text: string, 
+    groupId: string,
+    text: string,
     metadata?: MessageMetadata
   ): Observable<any> {
     const textContent: ExtendedTextContent = {
@@ -112,7 +112,7 @@ export class MessageFactoryServiceProxy {
 
   /**
    * Sends an image message to a group.
-   * 
+   *
    * @param groupId - Target group ID
    * @param imageData - Image content data
    * @param metadata - Optional message metadata
@@ -145,7 +145,7 @@ export class MessageFactoryServiceProxy {
 
   /**
    * Sends a video message to a group.
-   * 
+   *
    * @param groupId - Target group ID
    * @param videoData - Video content data
    * @param metadata - Optional message metadata
@@ -179,9 +179,10 @@ export class MessageFactoryServiceProxy {
 
   /**
    * Sends a poll message to a group.
-   * 
+   *
    * @param groupId - Target group ID
    * @param pollData - Poll content data
+   * @param userId - ID of the user creating the poll
    * @param metadata - Optional message metadata
    * @returns Observable with the sent message or null if failed
    */
@@ -193,7 +194,8 @@ export class MessageFactoryServiceProxy {
       allowMultipleAnswers?: boolean;
       expiresAt?: string;
     },
-    metadata?: MessageMetadata
+    userId?: string,
+    metadata?: MessageMetadata,
   ): Observable<any> {
     const pollOptions: PollOption[] = pollData.options.map((optionText, index) => ({
       id: `option_${index + 1}`,
@@ -208,7 +210,7 @@ export class MessageFactoryServiceProxy {
       options: pollOptions,
       allowMultipleAnswers: pollData.allowMultipleAnswers || false,
       expiresAt: pollData.expiresAt,
-      createdBy: '' // Will be set by the API based on authenticated user
+      createdBy: userId || ''
     };
 
     return this.groupsServiceProxy.sendTypedMessage(
@@ -221,7 +223,7 @@ export class MessageFactoryServiceProxy {
 
   /**
    * Sends a file message to a group.
-   * 
+   *
    * @param groupId - Target group ID
    * @param fileData - File content data
    * @param metadata - Optional message metadata
@@ -254,7 +256,7 @@ export class MessageFactoryServiceProxy {
 
   /**
    * Creates a system message for group events.
-   * 
+   *
    * @param groupId - Target group ID
    * @param messageType - Type of system message
    * @param content - Message content (usually empty for system messages)
@@ -283,7 +285,7 @@ export class MessageFactoryServiceProxy {
 
   /**
    * Validates message content before sending.
-   * 
+   *
    * @param contentType - Type of message content
    * @param content - Message content to validate
    * @returns Object with validation result and error message if invalid
@@ -320,11 +322,11 @@ export class MessageFactoryServiceProxy {
       }
       return { isValid: true };
     }
-    
+
     if (content && typeof content.text === 'string') {
       return this.validateTextContent(content.text);
     }
-    
+
     return { isValid: false, error: 'Invalid text content' };
   }
 
@@ -335,20 +337,20 @@ export class MessageFactoryServiceProxy {
     if (!content.url || typeof content.url !== 'string') {
       return { isValid: false, error: 'Image URL is required' };
     }
-    
+
     if (!content.fileName || typeof content.fileName !== 'string') {
       return { isValid: false, error: 'Image file name is required' };
     }
-    
+
     if (typeof content.fileSize !== 'number' || content.fileSize <= 0) {
       return { isValid: false, error: 'Valid file size is required' };
     }
-    
+
     // Check file size limit (10MB)
     if (content.fileSize > 10 * 1024 * 1024) {
       return { isValid: false, error: 'Image file is too large (max 10MB)' };
     }
-    
+
     return { isValid: true };
   }
 
@@ -359,20 +361,20 @@ export class MessageFactoryServiceProxy {
     if (!content.url || typeof content.url !== 'string') {
       return { isValid: false, error: 'Video URL is required' };
     }
-    
+
     if (!content.fileName || typeof content.fileName !== 'string') {
       return { isValid: false, error: 'Video file name is required' };
     }
-    
+
     if (typeof content.fileSize !== 'number' || content.fileSize <= 0) {
       return { isValid: false, error: 'Valid file size is required' };
     }
-    
+
     // Check file size limit (100MB)
     if (content.fileSize > 100 * 1024 * 1024) {
       return { isValid: false, error: 'Video file is too large (max 100MB)' };
     }
-    
+
     return { isValid: true };
   }
 
@@ -383,28 +385,28 @@ export class MessageFactoryServiceProxy {
     if (!content.question || typeof content.question !== 'string' || content.question.trim().length === 0) {
       return { isValid: false, error: 'Poll question is required' };
     }
-    
+
     if (!Array.isArray(content.options) || content.options.length < 2) {
       return { isValid: false, error: 'Poll must have at least 2 options' };
     }
-    
+
     if (content.options.length > 10) {
       return { isValid: false, error: 'Poll cannot have more than 10 options' };
     }
-    
+
     for (const option of content.options) {
       if (typeof option !== 'string' || option.trim().length === 0) {
         return { isValid: false, error: 'All poll options must be non-empty strings' };
       }
     }
-    
+
     return { isValid: true };
   }
 
   /**
    * Creates a SendMessageDto for a text message without sending it.
    * This is useful for SignalR hub methods that expect SendMessageDto.
-   * 
+   *
    * @param text - Message text content
    * @param metadata - Optional message metadata
    * @returns Properly formatted SendMessageDto
@@ -425,7 +427,7 @@ export class MessageFactoryServiceProxy {
 
   /**
    * Creates a SendMessageDto for an image message without sending it.
-   * 
+   *
    * @param imageData - Image content data
    * @param metadata - Optional message metadata
    * @returns Properly formatted SendMessageDto
@@ -453,7 +455,7 @@ export class MessageFactoryServiceProxy {
 
   /**
    * Creates a SendMessageDto for a poll message without sending it.
-   * 
+   *
    * @param pollData - Poll content data
    * @param metadata - Optional message metadata
    * @returns Properly formatted SendMessageDto

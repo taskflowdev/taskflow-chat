@@ -1,20 +1,9 @@
 <div class="poll-footer">
   <div class="poll-stats">
-    <i class="bi bi-person poll-footer-icon"></i>
-    <span class="poll-stat-text">
-      {{ totalVoters }} {{ totalVoters === 1 ? 'voter' : 'voters' }}
+    <span class="poll-footer-text">
+      <i class="bi bi-pie-chart-fill poll-footer-icon"></i>
+      {{ totalVoters }} {{ totalVoters === 1 ? 'member' : 'members' }} voted out of {{ groupMemberCount }} total {{
+      groupMemberCount === 1 ? 'member' : 'members' }}.
     </span>
-    
-    <span class="poll-separator">•</span>
-    
-    <i class="bi bi-check-circle poll-footer-icon"></i>
-    <span class="poll-stat-text">
-      {{ totalVotes }} {{ totalVotes === 1 ? 'vote' : 'votes' }}
-    </span>
-    
-    <ng-container *ngIf="allowMultipleAnswers">
-      <span class="poll-separator">•</span>
-      <span class="poll-type-indicator">Multiple answers</span>
-    </ng-container>
   </div>
 </div>

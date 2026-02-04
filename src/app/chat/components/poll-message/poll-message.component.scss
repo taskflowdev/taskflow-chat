@@ -1,73 +1,100 @@
 /**
  * Poll Message Component Styles
- * Enterprise-grade, Teams-like UI with theme support
+ * Enterprise-grade, Teams-like UI with theme support and design system integration
  */
 
 .poll-container {
-  background-color: var(--taskflow-color-pollContainerBg, #ffffff);
-  border: 1px solid var(--taskflow-color-pollContainerBorder, #d0d7de);
+  background-color: var(--taskflow-color-poll-container-bg, #ffffff);
+  border: 1px solid var(--taskflow-color-poll-container-border, #d0d7de);
   border-radius: 8px;
-  padding: 16px;
+  padding: 0;
   position: relative;
   overflow: hidden;
+  min-width: 380px;
+  max-width: 100%;
+  width: fit-content;
 }
 
 /* Poll Header */
 .poll-header {
   display: flex;
-  align-items: center;
-  gap: 10px;
-  margin-bottom: 16px;
+  align-items: flex-start;
+  gap: 8px;
+  margin: 0;
+  padding: 12px;
+  border-bottom: 1px solid var(--taskflow-color-poll-container-border, #d0d7de);
+
+  .poll-question-container {
+    display: flex;
+    align-items: start;
+    flex-direction: column;
+
+    .poll-type-text {
+      font-size: var(--taskflow-font-font-size-normal, 12px);
+      color: var(--taskflow-color-text-secondary, #6e7781);
+      line-height: normal;
+      padding: 0;
+      margin: 0;
+      text-align: left;
+    }
+  }
 }
 
 .poll-icon {
-  font-size: var(--taskflow-font-icon-size-lg, 1.375rem);
-  color: var(--taskflow-color-pollQuestionIcon, #57606a);
+  font-size: var(--taskflow-font-icon-size-xl);
+  color: var(--taskflow-color-poll-question-icon, #57606a);
   flex-shrink: 0;
+  // line-height: 1;
 }
 
 .poll-question {
   flex: 1;
   margin: 0;
-  font-size: var(--taskflow-font-font-size-h4, 16px);
-  font-weight: 600;
-  color: var(--taskflow-color-pollQuestionText, #1f2328);
-  line-height: var(--taskflow-font-line-height-heading, 1.25);
+  font-size: var(--taskflow-font-font-size-large);
+  font-weight: var(--taskflow-font-weight-semibold, 600);
+  color: var(--taskflow-color-poll-question-text, #1f2328);
+  // line-height: var(--taskflow-font-line-height-normal, 1.5);
+  letter-spacing: var(--taskflow-font-letter-spacing-tight, -0.01em);
   word-wrap: break-word;
   overflow-wrap: break-word;
+  hyphens: auto;
 }
 
 /* Poll Options List */
 .poll-options {
   display: flex;
   flex-direction: column;
-  gap: 8px;
-  margin-bottom: 8px;
+  gap: var(--taskflow-spacing-sm, 10px);
+  padding: 16px;
 }
 
 /* Error Display */
 .poll-error {
   display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 12px;
-  margin-bottom: 12px;
-  background-color: var(--taskflow-color-pollErrorBg, #ffebe9);
-  border: 1px solid var(--taskflow-color-pollErrorBorder, #cf222e);
-  border-radius: 6px;
-  color: var(--taskflow-color-pollErrorText, #cf222e);
-  font-size: var(--taskflow-font-font-size-small, 12px);
-  font-weight: 500;
+  align-items: flex-start;
+  gap: var(--taskflow-spacing-sm, 10px);
+  padding: var(--taskflow-spacing-md, 12px) var(--taskflow-spacing-md, 14px);
+  margin: 0 16px 12px 16px;
+  background-color: var(--taskflow-color-poll-error-bg, #ffebe9);
+  border: 1px solid var(--taskflow-color-poll-error-border, #cf222e);
+  border-radius: var(--taskflow-spacing-border-radius-sm, 6px);
+  color: var(--taskflow-color-poll-error-text, #cf222e);
+  font-size: var(--taskflow-font-size-sm, 13px);
+  font-weight: var(--taskflow-font-weight-medium, 500);
+  line-height: var(--taskflow-font-line-height-normal, 1.5);
   animation: slideIn 0.3s ease-out;
 
   i {
     font-size: var(--taskflow-font-icon-size-md, 1.125rem);
     flex-shrink: 0;
+    margin-top: var(--taskflow-spacing-xs, 2px);
+    line-height: 1;
   }
 
   span {
     flex: 1;
-    line-height: var(--taskflow-font-line-height-compact, 1.3);
+    line-height: var(--taskflow-font-line-height-relaxed, 1.6);
+    letter-spacing: var(--taskflow-font-letter-spacing-normal, 0);
   }
 }
 
@@ -75,16 +102,13 @@
 .poll-loading {
   position: absolute;
   top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: rgba(255, 255, 255, 0.8);
-  backdrop-filter: blur(2px);
+  backdrop-filter: blur(3px);
   display: flex;
   align-items: center;
   justify-content: center;
   z-index: 10;
   animation: fadeIn 0.2s ease-in;
+  border-radius: var(--taskflow-spacing-border-radius-md, 8px);
 }
 
 /* Initial Loading State */
@@ -93,30 +117,42 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 12px;
-  padding: 32px;
-  background-color: var(--taskflow-color-pollContainerBg, #ffffff);
-  border: 1px solid var(--taskflow-color-pollContainerBorder, #d0d7de);
-  border-radius: 8px;
+  gap: var(--taskflow-spacing-md, 12px);
+  padding: var(--taskflow-spacing-xl, 32px) var(--taskflow-spacing-lg, 24px);
+  background-color: var(--taskflow-color-poll-container-bg, #ffffff);
+  border: 1px solid var(--taskflow-color-poll-container-border, #d0d7de);
+  border-radius: var(--taskflow-spacing-border-radius-md, 8px);
   color: var(--taskflow-color-textSecondary, #57606a);
-  font-size: var(--taskflow-font-font-size-normal, 14px);
+  font-size: var(--taskflow-font-size-sm, 14px);
+  font-weight: var(--taskflow-font-weight-normal, 400);
+  line-height: var(--taskflow-font-line-height-normal, 1.5);
+  letter-spacing: var(--taskflow-font-letter-spacing-normal, 0);
 }
 
 /* Initial Error State */
 .poll-error-initial {
   display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 16px;
-  background-color: var(--taskflow-color-pollErrorBg, #ffebe9);
-  border: 1px solid var(--taskflow-color-pollErrorBorder, #cf222e);
-  border-radius: 8px;
-  color: var(--taskflow-color-pollErrorText, #cf222e);
-  font-size: var(--taskflow-font-font-size-normal, 14px);
+  align-items: flex-start;
+  gap: var(--taskflow-spacing-md, 12px);
+  padding: var(--taskflow-spacing-lg, 16px);
+  background-color: var(--taskflow-color-poll-error-bg, #ffebe9);
+  border: 1px solid var(--taskflow-color-poll-error-border, #cf222e);
+  border-radius: var(--taskflow-spacing-border-radius-md, 8px);
+  color: var(--taskflow-color-poll-error-text, #cf222e);
+  font-size: var(--taskflow-font-size-sm, 14px);
+  font-weight: var(--taskflow-font-weight-medium, 500);
+  line-height: normal;
 
   i {
     font-size: var(--taskflow-font-icon-size-lg, 1.375rem);
     flex-shrink: 0;
+    margin-top: var(--taskflow-spacing-xs, 2px);
+    line-height: normal;
+    height: var(--taskflow-spacing-xl, 24px);
+    border: 3px solid var(--taskflow-color-border-light, rgba(0, 0, 0, 0.1));
+    border-top-color: var(--taskflow-color-accent, #0969da);
+    border-radius: 50%;
+    animation: spin 0.8s cubic-bezier(0.4, 0, 0.2, 1);
   }
 }
 
@@ -160,31 +196,66 @@
 /* Dark mode adjustments */
 @media (prefers-color-scheme: dark) {
   .poll-loading {
-    background-color: rgba(13, 17, 23, 0.8);
+    background-color: var(
+      --taskflow-color-overlay-dark,
+      rgba(13, 17, 23, 0.85)
+    );
   }
 }
 
 /* Accessibility: Reduced motion */
 @media (prefers-reduced-motion: reduce) {
+  .poll-container,
   .poll-error,
   .poll-loading,
   .loading-spinner {
     animation: none;
+    transition: none;
+  }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .poll-container {
+    border-width: 2px;
+  }
+
+  .poll-error,
+  .poll-error-initial {
+    border-width: 2px;
+    font-weight: var(--taskflow-font-weight-semibold, 600);
   }
 }
 
 /* Responsive adjustments */
 @media (max-width: 480px) {
   .poll-container {
-    padding: 12px;
+    padding: var(--taskflow-spacing-md, 12px);
+    border-radius: var(--taskflow-spacing-border-radius-sm, 6px);
   }
 
   .poll-header {
-    gap: 8px;
-    margin-bottom: 12px;
+    gap: var(--taskflow-spacing-xs, 8px);
+    margin-bottom: var(--taskflow-spacing-md, 12px);
+  }
+
+  .poll-icon {
+    font-size: var(--taskflow-font-icon-size-md, 1.125rem);
   }
 
   .poll-question {
-    font-size: var(--taskflow-font-font-size-h5, 14px);
+    font-size: var(--taskflow-font-size-sm, 14px);
+    line-height: var(--taskflow-font-line-height-relaxed, 1.6);
+  }
+
+  .poll-options {
+    gap: var(--taskflow-spacing-xs, 8px);
+  }
+
+  .poll-error,
+  .poll-loading-initial,
+  .poll-error-initial {
+    padding: var(--taskflow-spacing-sm, 10px) var(--taskflow-spacing-md, 12px);
+    font-size: var(--taskflow-font-size-xs, 12px);
   }
 }

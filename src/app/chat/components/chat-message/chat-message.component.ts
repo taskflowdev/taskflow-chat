@@ -20,6 +20,7 @@ export interface ChatMessageData {
   isConsecutive?: boolean; // True when this message follows the same sender consecutively
   groupId?: string; // Group ID for poll messages
   currentUserId?: string; // Current user ID for poll voting
+  groupMemberCount?: number; // Group member count for poll participation display
 }
 
 @Component({

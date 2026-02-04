@@ -49,10 +49,8 @@
 
       <!-- Poll content -->
       <ng-container *ngIf="message.contentType === 'poll'">
-        <app-poll-message
-          [groupId]="message.groupId ?? ''"
-          [messageId]="message.messageId"
-          [currentUserId]="message.currentUserId ?? ''"
+        <app-poll-message [groupId]="message.groupId ?? ''" [messageId]="message.messageId"
+          [currentUserId]="message.currentUserId ?? ''" [groupMemberCount]="message.groupMemberCount ?? 0"
           [initialPollData]="message.pollData">
         </app-poll-message>
       </ng-container>

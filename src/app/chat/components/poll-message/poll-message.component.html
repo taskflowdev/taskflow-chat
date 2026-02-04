@@ -1,8 +1,12 @@
-<div class="poll-container" *ngIf="pollState.pollResults">
+<div class="card poll-container" *ngIf="pollState.pollResults">
   <!-- Poll question header -->
   <div class="poll-header">
-    <i class="bi bi-bar-chart-fill poll-icon"></i>
-    <h3 class="poll-question">{{ pollState.pollResults.question }}</h3>
+    <i class="bi bi-bar-chart poll-icon"></i>
+    <div class="poll-question-container">
+      <h3 class="poll-question">{{ pollState.pollResults.question }}</h3>
+      <span class="poll-type-text">{{ pollState.pollResults.allowMultipleAnswers ? 'Choose one or more answers' :
+        'Choose one answer' }}</span>
+    </div>
   </div>
 
   <!-- Error message -->
@@ -18,20 +22,16 @@
 
   <!-- Poll options -->
   <div class="poll-options">
-    <app-poll-option
-      *ngFor="let option of optionsData; trackBy: trackByOptionId"
-      [option]="option"
+    <app-poll-option *ngFor="let option of optionsData; trackBy: trackByOptionId" [option]="option"
       [isSelected]="isOptionSelected(option.id)"
-      [allowMultipleAnswers]="pollState.pollResults.allowMultipleAnswers ?? false"
-      [disabled]="pollState.isLoading"
+      [allowMultipleAnswers]="pollState.pollResults.allowMultipleAnswers ?? false" [disabled]="pollState.isLoading"
       (optionSelected)="onOptionSelected($event)">
     </app-poll-option>
   </div>
 
   <!-- Poll footer with statistics -->
-  <app-poll-footer
-    [totalVotes]="pollState.pollResults.totalVotes ?? 0"
-    [totalVoters]="pollState.pollResults.totalVoters ?? 0"
+  <app-poll-footer [totalVotes]="pollState.pollResults.totalVotes ?? 0"
+    [totalVoters]="pollState.pollResults.totalVoters ?? 0" [groupMemberCount]="groupMemberCount"
     [allowMultipleAnswers]="pollState.pollResults.allowMultipleAnswers ?? false">
   </app-poll-footer>
 </div>

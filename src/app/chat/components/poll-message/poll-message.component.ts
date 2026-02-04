@@ -69,6 +69,11 @@ export class PollMessageComponent implements OnInit, OnDestroy {
   @Input() initialPollData?: PollResultsDto;
 
   /**
+   * Group member count for displaying poll participation
+   */
+  @Input() groupMemberCount: number = 0;
+
+  /**
    * Poll state from state service
    */
   pollState: PollState = {
@@ -222,12 +227,12 @@ export class PollMessageComponent implements OnInit, OnDestroy {
           // Rollback optimistic update
           this.pollStateService.rollbackVoteUpdate(this.messageId, previousVotes);
           this.pollStateService.setError(this.messageId, error.message);
-          
+
           // Clear error after 5 seconds
           setTimeout(() => {
             this.pollStateService.clearError(this.messageId);
           }, 5000);
-          
+
           return of(null);
         }),
         takeUntil(this.destroy$)
@@ -249,12 +254,12 @@ export class PollMessageComponent implements OnInit, OnDestroy {
           // Rollback optimistic update
           this.pollStateService.rollbackVoteUpdate(this.messageId, previousVotes);
           this.pollStateService.setError(this.messageId, error.message);
-          
+
           // Clear error after 5 seconds
           setTimeout(() => {
             this.pollStateService.clearError(this.messageId);
           }, 5000);
-          
+
           return of(null);
         }),
         takeUntil(this.destroy$)

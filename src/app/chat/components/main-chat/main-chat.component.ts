@@ -743,7 +743,8 @@ export class MainChatComponent implements OnInit, OnDestroy {
       isSystemMessage: isSystemMessage,
       messageType: message.messageType,
       groupId: message.groupId || this.currentConversation?.groupId || '',
-      currentUserId: this.user?.id || ''
+      currentUserId: this.user?.id || '',
+      groupMemberCount: this.currentConversation?.memberCount || 0
     };
   }
 
@@ -828,7 +829,10 @@ export class MainChatComponent implements OnInit, OnDestroy {
       content: pollData.question,
       contentType: 'poll',
       createdAt: new Date().toISOString(),
-      isOwn: true
+      isOwn: true,
+      groupId: this.currentConversation.groupId,
+      currentUserId: this.user.id,
+      groupMemberCount: this.currentConversation.memberCount || 0
     };
 
     this.currentConversation.messages.push(optimisticMessage);
@@ -851,7 +855,7 @@ export class MainChatComponent implements OnInit, OnDestroy {
     }
 
     // Send poll via REST API
-    this.messageFactoryService.sendPollMessage(this.currentConversation.groupId, pollData).subscribe({
+    this.messageFactoryService.sendPollMessage(this.currentConversation.groupId, pollData, this.user?.id).subscribe({
       next: (sentMessage) => {
         // Replace optimistic message with real one
         if (sentMessage && this.currentConversation) {
