@@ -9,6 +9,7 @@ import { PollVoteUpdateEvent } from '../../../core/realtime/services/chat-realti
 import { PollError } from '../../services/poll/poll-error-handler';
 import { PollOptionComponent, PollOptionData } from './poll-option/poll-option.component';
 import { PollFooterComponent } from './poll-footer/poll-footer.component';
+import { PollVotesViewerComponent } from './poll-votes-viewer/poll-votes-viewer.component';
 
 /**
  * Smart container component for poll messages
@@ -42,7 +43,7 @@ import { PollFooterComponent } from './poll-footer/poll-footer.component';
 @Component({
   selector: 'app-poll-message',
   standalone: true,
-  imports: [CommonModule, PollOptionComponent, PollFooterComponent],
+  imports: [CommonModule, PollOptionComponent, PollFooterComponent, PollVotesViewerComponent],
   templateUrl: './poll-message.component.html',
   styleUrl: './poll-message.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -84,6 +85,11 @@ export class PollMessageComponent implements OnInit, OnDestroy {
     isUpdating: false,
     error: null
   };
+
+  /**
+   * Whether the votes viewer off-canvas is open
+   */
+  showVotesViewer: boolean = false;
 
   /**
    * Cleanup subject
@@ -266,6 +272,20 @@ export class PollMessageComponent implements OnInit, OnDestroy {
         takeUntil(this.destroy$)
       )
       .subscribe();
+  }
+
+  /**
+   * Handles view votes button click
+   */
+  onViewVotes(): void {
+    this.showVotesViewer = true;
+  }
+
+  /**
+   * Handles votes viewer close
+   */
+  onCloseVotesViewer(): void {
+    this.showVotesViewer = false;
   }
 
   /**

@@ -1,0 +1,90 @@
+<div class="offcanvas-backdrop" *ngIf="isOpen" (click)="onBackdropClick($event)"></div>
+
+<div class="offcanvas offcanvas-end" [class.show]="isOpen">
+  <div class="offcanvas-header">
+    <h5 class="offcanvas-title">
+      <i class="bi bi-graph-up-arrow votes-header-icon"></i>
+      Poll Results
+    </h5>
+    <!-- <button type="button" class="btn-close" aria-label="Close" (click)="onClose()"></button> -->
+  </div>
+
+  <div class="offcanvas-body" *ngIf="pollResults">
+    <!-- Poll Question -->
+    <div class="poll-title-section">
+      <h6 class="poll-title">{{ pollResults.question }}</h6>
+      <span class="poll-type-badge">
+        <i [class]="pollResults.allowMultipleAnswers ? 'bi bi-check2-all' : 'bi bi-check-circle'"></i>
+        {{ pollResults.allowMultipleAnswers ? 'Multiple Choice' : 'Single Choice' }}
+      </span>
+    </div>
+
+    <!-- Options with voter details -->
+    <div class="options-list">
+      <div class="option-item" *ngFor="let option of pollResults.options; let i = index; trackBy: trackByOptionId">
+        <!-- Option header with vote count -->
+        <div class="option-header">
+          <!-- Row container for icon, text, and percentage -->
+          <div class="option-header-content">
+            <div class="option-icon-section">
+              <ng-container *ngFor="let digit of (i + 1).toString().split('')">
+                <i [class]="'bi bi-' + digit + '-circle-fill option-icon'"></i>
+              </ng-container>
+            </div>
+            <div class="option-text-section">
+              <span class="option-text">{{ option.text }}</span>
+              <span class="vote-badge">{{ option.votes }} {{ option.votes === 1 || option.votes === 0 ? 'vote' : 'votes'
+                }}</span>
+            </div>
+            <span class="option-percentage">{{ option.percentage }}%</span>
+          </div>
+
+          <!-- Progress bar below header content -->
+          <div class="progress-container">
+            <div class="progress-bar-wrapper">
+              <div class="progress-bar" [style.width.%]="option.percentage"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Voters for this option -->
+        <div class="voters-section" *ngIf="option.voterDetails && option.voterDetails.length > 0">
+          <div class="voter-item" *ngFor="let voter of option.voterDetails; trackBy: trackByVoterId">
+            <!-- Avatar -->
+            <div class="voter-avatar">
+              <span class="avatar-initials">{{ getInitials(voter.fullName) }}</span>
+            </div>
+
+            <!-- Voter info -->
+            <div class="voter-info">
+              <div class="voter-name">{{ voter.fullName || 'Unknown User' }}</div>
+              <div class="voter-email" *ngIf="voter.email">{{ voter.email }}</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- No voters message -->
+        <div class="no-voters" *ngIf="!option.voterDetails || option.voterDetails.length === 0">
+          <span>No voters for this option</span>
+        </div>
+
+        <!-- Divider between options -->
+        <div class="option-divider" *ngIf="option !== pollResults.options![pollResults.options!.length - 1]">
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Empty state -->
+  <div class="offcanvas-body empty-state" *ngIf="!pollResults">
+    <div class="empty-message">
+      <i class="bi bi-inbox"></i>
+      <span>No poll data available</span>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <div class="offcanvas-footer">
+    <button type="button" class="btn btn-secondary" aria-label="Close" (click)="onClose()">Close</button>
+  </div>
+</div>
