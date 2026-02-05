@@ -3,12 +3,14 @@
   position: relative;
   display: flex;
   align-items: center;
-  padding: 0.5rem 1rem;
+  padding: 0.5rem 1rem 0.5rem var(--typing-indicator-offset, 1rem);
   background: var(--taskflow-color-background);
   color: var(--taskflow-color-text-tertiary);
   font-size: var(--taskflow-font-font-size-normal);
   animation: fadeIn 0.2s ease-in;
-  transition: background 0.2s ease, color 0.2s ease;
+  transition:
+    background 0.2s ease,
+    color 0.2s ease;
 
   .typing-dots {
     display: flex;
