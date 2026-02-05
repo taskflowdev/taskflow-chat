@@ -19,9 +19,14 @@
       </span>
     </div>
 
+    <div class="poll-info-line">
+      <span>Options are sorted by vote count, so the ones with the most votes appear first. Some options may be
+        tied.</span>
+    </div>
+
     <!-- Options with voter details -->
     <div class="options-list">
-      <div class="option-item" *ngFor="let option of pollResults.options; let i = index; trackBy: trackByOptionId">
+      <div class="option-item" *ngFor="let option of sortedOptions; let i = index; trackBy: trackByOptionId">
         <!-- Option header with vote count -->
         <div class="option-header">
           <!-- Row container for icon, text, and percentage -->
@@ -69,7 +74,7 @@
         </div>
 
         <!-- Divider between options -->
-        <div class="option-divider" *ngIf="option !== pollResults.options![pollResults.options!.length - 1]">
+        <div class="option-divider" *ngIf="option !== sortedOptions[sortedOptions.length - 1]">
         </div>
       </div>
     </div>
