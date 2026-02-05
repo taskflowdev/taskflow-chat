@@ -95,3 +95,4 @@ export type { VerifySecurityCodeDto } from './models/verify-security-code-dto';
 export type { VideoContent } from './models/video-content';
 export type { VisibilityCondition } from './models/visibility-condition';
 export type { VotePollDto } from './models/vote-poll-dto';
+export type { VoterInfoDto } from './models/voter-info-dto';
