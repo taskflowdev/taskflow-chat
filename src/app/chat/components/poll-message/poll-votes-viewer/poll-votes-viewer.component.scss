@@ -114,7 +114,7 @@
 
 // Poll title section
 .poll-title-section {
-  margin-bottom: 1rem;
+  margin-bottom: 0.4rem;
   padding-bottom: 0.6rem;
   border-bottom: 2px solid var(--taskflow-color-border);
 }
@@ -137,6 +137,21 @@
 
   i {
     font-size: var(--taskflow-font-icon-size-sm);
+  }
+}
+
+// Poll info line
+.poll-info-line {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+  background: transparent;
+
+  span {
+    font-size: var(--taskflow-font-font-size-normal);
+    color: var(--taskflow-color-text-secondary);
+    line-height: 1.4;
   }
 }
 

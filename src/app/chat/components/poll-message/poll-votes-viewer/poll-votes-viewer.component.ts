@@ -44,6 +44,16 @@ export class PollVotesViewerComponent {
   @Output() close = new EventEmitter<void>();
 
   /**
+   * Options sorted by votes (desc)
+   */
+  get sortedOptions(): NonNullable<PollResultsDto['options']> {
+    const options = this.pollResults?.options;
+    if (!options) return [];
+
+    return [...options].sort((a, b) => (b.votes ?? 0) - (a.votes ?? 0));
+  }
+
+  /**
    * Get initials from full name
    */
   getInitials(fullName?: string | null): string {
