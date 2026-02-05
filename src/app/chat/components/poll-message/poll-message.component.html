@@ -44,6 +44,10 @@
   <app-poll-footer [totalVotes]="pollState.pollResults.totalVotes ?? 0"
     [totalVoters]="pollState.pollResults.totalVoters ?? 0" [groupMemberCount]="groupMemberCount"
     [votingProgressPercentage]="votingProgressPercentage"
-    [allowMultipleAnswers]="pollState.pollResults.allowMultipleAnswers ?? false">
+    [allowMultipleAnswers]="pollState.pollResults.allowMultipleAnswers ?? false" (viewVotes)="onViewVotes()">
   </app-poll-footer>
 </div>
+
+<!-- Poll Votes Viewer Off-Canvas -->
+<app-poll-votes-viewer [pollResults]="pollState.pollResults" [isOpen]="showVotesViewer" (close)="onCloseVotesViewer()">
+</app-poll-votes-viewer>

@@ -1,4 +1,4 @@
-import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
+import { Component, Input, Output, EventEmitter, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 /**
@@ -7,9 +7,10 @@ import { CommonModule } from '@angular/common';
  * @remarks
  * Pure presentation component (Dumb component):
  * - Zero business logic
- * - Only @Input for data
+ * - Only @Input for data and @Output for events
  * - OnPush change detection
  * - Displays total votes and voters
+ * - Provides button to view detailed voter information
  * - Reusable for any poll context
  *
  * Usage:
@@ -17,7 +18,8 @@ import { CommonModule } from '@angular/common';
  * <app-poll-footer
  *   [totalVotes]="42"
  *   [totalVoters]="35"
- *   [allowMultipleAnswers]="true">
+ *   [allowMultipleAnswers]="true"
+ *   (viewVotes)="showVotesViewer = true">
  * </app-poll-footer>
  * ```
  */
@@ -54,4 +56,16 @@ export class PollFooterComponent {
    * Whether the poll allows multiple answers
    */
   @Input() allowMultipleAnswers: boolean = false;
+
+  /**
+   * Event emitted when view votes button is clicked
+   */
+  @Output() viewVotes = new EventEmitter<void>();
+
+  /**
+   * Handle view votes button click
+   */
+  onViewVotes(): void {
+    this.viewVotes.emit();
+  }
 }

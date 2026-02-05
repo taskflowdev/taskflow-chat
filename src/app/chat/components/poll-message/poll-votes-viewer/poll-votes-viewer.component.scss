@@ -1,0 +1,426 @@
+// Off-canvas styling
+.offcanvas-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 1039;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+
+  &.show {
+    opacity: 1;
+  }
+}
+
+.offcanvas {
+  position: fixed;
+  bottom: 0;
+  right: 0;
+  top: 0;
+  z-index: 1040;
+  width: 450px;
+  max-width: 90vw;
+  background: var(--taskflow-color-background);
+  border-left: 1px solid var(--taskflow-color-border);
+  display: flex;
+  flex-direction: column;
+  transform: translateX(100%);
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+
+  &.show {
+    transform: translateX(0);
+  }
+
+  @media (max-width: 576px) {
+    width: 100%;
+  }
+}
+
+.offcanvas-header {
+  padding: 1rem;
+  border-bottom: 1px solid var(--taskflow-color-border);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: var(--taskflow-color-surface);
+}
+
+.offcanvas-title {
+  margin: 0;
+  font-size: var(--taskflow-font-font-size-h2);
+  font-weight: 600;
+  color: var(--taskflow-color-text-primary);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.votes-header-icon {
+  color: var(--taskflow-color-primary);
+  font-size: var(--taskflow-font-icon-size-md);
+}
+
+.btn-close {
+  background: none;
+  border: none;
+  font-size: var(--taskflow-font-icon-size-md);
+  color: var(--taskflow-color-text-secondary);
+  cursor: pointer;
+  padding: 0;
+  width: 1.5rem;
+  height: 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: color 0.2s ease;
+
+  &:hover {
+    color: var(--taskflow-color-text-primary);
+  }
+
+  &::after {
+    content: "×";
+    font-size: var(--taskflow-font-icon-size-md);
+    font-weight: 300;
+  }
+}
+
+.offcanvas-body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 1rem;
+
+  // Custom scrollbar
+  &::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: var(--taskflow-color-border);
+    border-radius: 3px;
+
+    &:hover {
+      background: var(--taskflow-color-text-tertiary);
+    }
+  }
+}
+
+// Poll title section
+.poll-title-section {
+  margin-bottom: 1rem;
+  padding-bottom: 0.6rem;
+  border-bottom: 2px solid var(--taskflow-color-border);
+}
+
+.poll-title {
+  margin: 0;
+  font-size: var(--taskflow-font-font-size-h3);
+  font-weight: 600;
+  color: var(--taskflow-color-text-primary);
+  line-height: normal;
+}
+
+.poll-type-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.2rem;
+  font-size: var(--taskflow-font-font-size-normal);
+  color: var(--taskflow-color-text-secondary);
+  margin-top: 0.1rem;
+
+  i {
+    font-size: var(--taskflow-font-icon-size-sm);
+  }
+}
+
+// Options list styling
+.options-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.option-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  padding-bottom: 1rem;
+}
+
+.option-header {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  padding: 0.4rem 0.75rem;
+  background: var(--taskflow-color-surface);
+  border-radius: 8px;
+  border: 1px solid var(--taskflow-color-border);
+}
+
+.option-header-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.option-icon-section {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.25rem;
+  min-width: 32px;
+  height: 32px;
+  padding: 0 0.35rem;
+  border-radius: 16px;
+  background: var(--taskflow-color-primary);
+  flex-shrink: 0;
+
+  .option-icon {
+    color: var(--taskflow-color-text-primary);
+    font-size: var(--taskflow-font-icon-size-lg);
+  }
+}
+
+.option-text-section {
+  display: flex;
+  flex-direction: column;
+  gap: 0rem;
+  flex: 1;
+  min-width: 0;
+}
+
+.option-text {
+  font-size: var(--taskflow-font-font-size-large);
+  font-weight: 600;
+  color: var(--taskflow-color-text-primary);
+  word-break: break-word;
+}
+
+.vote-badge {
+  font-size: var(--taskflow-font-font-size-normal);
+  color: var(--taskflow-color-text-secondary);
+  font-weight: 500;
+}
+
+.option-percentage {
+  font-size: var(--taskflow-font-font-size-large);
+  font-weight: 700;
+  color: var(--taskflow-color-text-secondary);
+  min-width: 45px;
+  text-align: right;
+}
+
+// Voters section
+.voters-section {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  margin-top: 0.75rem;
+}
+
+.voter-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.65rem 0.75rem;
+  border-radius: 6px;
+  background: var(--taskflow-color-surface-subtle);
+  transition: background-color 0.2s ease;
+
+  // &:hover {
+  //   background: var(--taskflow-color-surface-hover);
+  // }
+}
+
+.voter-avatar {
+  min-width: 40px;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: var(--taskflow-color-profile-avatar-bg);
+  border: 2px solid var(--taskflow-color-profile-avatar-border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.avatar-initials {
+  font-size: var(--taskflow-font-font-size-large);
+  font-weight: 600;
+  color: var(--taskflow-color-profile-avatar-text);
+  user-select: none;
+  letter-spacing: 0.3px;
+}
+
+.voter-info {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-width: 0;
+}
+
+.voter-name {
+  font-size: var(--taskflow-font-font-size-large);
+  font-weight: 500;
+  color: var(--taskflow-color-text-primary);
+  word-break: break-word;
+}
+
+.voter-email {
+  font-size: var(--taskflow-font-font-size-normal);
+  color: var(--taskflow-color-text-tertiary);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+// No voters message
+.no-voters {
+  padding: 1rem 0.75rem;
+  text-align: center;
+  color: var(--taskflow-color-text-tertiary);
+  font-size: var(--taskflow-font-font-size-normal);
+  font-style: italic;
+}
+
+// Option divider
+.option-divider {
+  height: 1px;
+  background: var(--taskflow-color-border);
+  margin: 0.5rem 0;
+}
+
+// Progress bar styling
+.progress-container {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  padding: 0;
+}
+
+.progress-bar-wrapper {
+  width: 100%;
+  height: 6px;
+  background-color: var(--taskflow-color-poll-progress-bar-bg, #e1e4e8);
+  border-radius: 8px;
+  overflow: hidden;
+  position: relative;
+}
+
+.progress-bar {
+  height: 100%;
+  background: var(--taskflow-color-primary, #0969da);
+  border-radius: 10px;
+  transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  will-change: width;
+}
+
+// Empty state
+.empty-state {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 300px;
+}
+
+.empty-message {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  color: var(--taskflow-color-text-tertiary);
+  text-align: center;
+
+  i {
+    font-size: var(--taskflow-font-font-size-xl);
+    opacity: 0.5;
+  }
+}
+
+// Footer styling
+.offcanvas-footer {
+  padding: 1rem;
+  border-top: 1px solid var(--taskflow-color-border);
+  background: var(--taskflow-color-surface);
+  display: flex;
+  gap: 0.75rem;
+  flex-shrink: 0;
+
+  .btn {
+    font-size: var(--taskflow-font-font-size-normal);
+    font-weight: 500;
+    padding: 0.4rem 1rem;
+    border-radius: 6px;
+    transition: all 0.2s ease;
+    cursor: pointer;
+
+    &.btn-secondary {
+      background-color: var(--taskflow-color-background);
+      color: var(--taskflow-color-text-primary);
+      border: 1px solid var(--taskflow-color-border);
+
+      &:hover {
+        background-color: var(--taskflow-color-hover-surface);
+        // border-color: var(--taskflow-color-primary);
+      }
+
+      &:active {
+        background-color: var(--taskflow-color-surface-subtle);
+      }
+    }
+
+    &:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+  }
+}
+
+// Responsive adjustments
+@media (max-width: 576px) {
+  .offcanvas {
+    width: 100%;
+  }
+
+  .option-header {
+    flex-direction: column;
+    align-items: flex-start;
+
+    .option-percentage {
+      align-self: flex-start;
+    }
+  }
+
+  .voter-item {
+    padding: 0.6rem;
+  }
+
+  .voter-avatar {
+    width: 36px;
+    height: 36px;
+    min-width: 36px;
+  }
+
+  .avatar-initials {
+    font-size: var(--taskflow-font-font-size-normal);
+  }
+
+  .offcanvas-footer {
+    padding: 0.75rem;
+
+    .btn {
+      padding: 0.5rem 0.75rem;
+      font-size: var(--taskflow-font-font-size-small);
+    }
+  }
+}

@@ -16,11 +16,12 @@
     </div>
   </div>
 
-  <!-- <div class="poll-stats">
-    <span class="poll-footer-text">
-      <i class="bi bi-pie-chart-fill poll-footer-icon"></i>
-      {{ totalVoters }} {{ totalVoters === 1 ? 'member' : 'members' }} voted out of {{ groupMemberCount }} total {{
-      groupMemberCount === 1 ? 'member' : 'members' }}.
-    </span>
-  </div> -->
+  <!-- Action button -->
+  <div class="poll-actions">
+    <button class="view-votes-btn" (click)="onViewVotes()" [disabled]="totalVoters === 0"
+      title="View detailed voter information">
+      <i class="bi bi-people-fill"></i>
+      <span>View Voters</span>
+    </button>
+  </div>
 </div>
