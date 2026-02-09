@@ -85,13 +85,16 @@ export class GroupInfoDialogComponent implements OnInit, OnDestroy {
   isDeleting = false;
   isLeaving = false;
   isUpdatingVisibility = false;
+  isRegeneratingInvite = false;
   processingUserId: string | null = null;
+  hasLoadedMembers = false;
 
   // Confirmation dialogs
   showDeleteConfirmation = false;
   showLeaveConfirmation = false;
   showVisibilityConfirmation = false;
   showRemoveMemberConfirmation = false;
+  showRegenerateInviteConfirmation = false;
   memberToRemove: GroupMemberDto | null = null;
   pendingVisibilityValue: boolean | null = null;
 
@@ -110,11 +113,21 @@ export class GroupInfoDialogComponent implements OnInit, OnDestroy {
   }
 
   private updateTabs(): void {
-    this.tabs = [
+    const tabs: Tab[] = [
       { id: 'general', label: this.i18n.t('dialogs.group-information.navigation.general'), icon: 'bi-info-circle' },
       { id: 'members', label: this.i18n.t('dialogs.group-information.navigation.members'), icon: 'bi-people' },
       { id: 'settings', label: this.i18n.t('dialogs.group-information.navigation.settings'), icon: 'bi-gear' }
     ];
+
+    if (this.isAdmin) {
+      tabs.splice(2, 0, { id: 'invite', label: this.i18n.t('dialogs.group-information.navigation.invite'), icon: 'bi-ticket' });
+    }
+
+    this.tabs = tabs;
+
+    if (!this.tabs.some(tab => tab.id === this.activeTab)) {
+      this.activeTab = 'general';
+    }
   }
 
   ngOnInit(): void {
@@ -123,6 +136,7 @@ export class GroupInfoDialogComponent implements OnInit, OnDestroy {
     });
 
     this.loadGroupDetails();
+    this.loadMembers();
 
     // Subscribe to language changes to update tabs
     this.langSubscription = this.i18n.languageChanged$.subscribe(() => {
@@ -176,6 +190,9 @@ export class GroupInfoDialogComponent implements OnInit, OnDestroy {
    * Load group members from API
    */
   private loadMembers(): void {
+    if (this.isLoadingMembers || this.hasLoadedMembers) {
+      return;
+    }
     this.isLoadingMembers = true;
     this.cdr.markForCheck();
 
@@ -184,6 +201,8 @@ export class GroupInfoDialogComponent implements OnInit, OnDestroy {
         this.isLoadingMembers = false;
         if (response.success && response.data) {
           this.members = response.data;
+          this.hasLoadedMembers = true;
+          this.updateTabs();
           this.cdr.markForCheck();
         } else {
           this.toastService.showError('Failed to load members', 'Error');
@@ -192,11 +211,16 @@ export class GroupInfoDialogComponent implements OnInit, OnDestroy {
       },
       error: (error) => {
         this.isLoadingMembers = false;
+        this.hasLoadedMembers = false;
         const errorMessage = error?.error?.message || error?.message || 'Failed to load members';
         this.toastService.showError(errorMessage, 'Error');
         this.cdr.markForCheck();
       }
     });
+  }
+
+  get inviteCodeValue(): string {
+    return this.group?.inviteCode || '';
   }
 
   /**
@@ -495,6 +519,98 @@ export class GroupInfoDialogComponent implements OnInit, OnDestroy {
 
   closeDialog(): void {
     this.closed.emit();
+  }
+
+  onRegenerateInviteClick(): void {
+    if (!this.isAdmin || this.isRegeneratingInvite) {
+      return;
+    }
+    this.showRegenerateInviteConfirmation = true;
+    this.cdr.markForCheck();
+  }
+
+  cancelRegenerateInvite(): void {
+    this.showRegenerateInviteConfirmation = false;
+    this.cdr.markForCheck();
+  }
+
+  confirmRegenerateInvite(): void {
+    if (this.isRegeneratingInvite || !this.groupId) {
+      return;
+    }
+
+    this.isRegeneratingInvite = true;
+    this.cdr.markForCheck();
+
+    this.groupsService.apiGroupsIdRegenerateInvitePost$Json({ id: this.groupId }).subscribe({
+      next: (response) => {
+        this.isRegeneratingInvite = false;
+        this.showRegenerateInviteConfirmation = false;
+
+        if (response.success && response.data) {
+          this.group = {
+            ...this.group,
+            inviteCode: response.data.inviteCode,
+            inviteLink: response.data.inviteLink
+          };
+          this.updated.emit(this.group!);
+          this.toastService.showSuccess('Invite code regenerated.', 'Invite Updated');
+          this.cdr.markForCheck();
+        } else {
+          this.toastService.showError(response.message || 'Failed to regenerate invite code', 'Error');
+          this.cdr.markForCheck();
+        }
+      },
+      error: (error) => {
+        this.isRegeneratingInvite = false;
+        this.showRegenerateInviteConfirmation = false;
+        const errorMessage = error?.error?.message || error?.message || 'Failed to regenerate invite code';
+        this.toastService.showError(errorMessage, 'Error');
+        this.cdr.markForCheck();
+      }
+    });
+  }
+
+  copyInviteCode(): void {
+    this.copyToClipboard(
+      this.inviteCodeValue,
+      'Invite code copied to clipboard.',
+      'Failed to copy invite code.'
+    );
+  }
+
+  private copyToClipboard(value: string, successMessage: string, errorMessage: string): void {
+    if (!value) {
+      return;
+    }
+
+    const handleSuccess = () => this.toastService.showSuccess(successMessage, 'Copied');
+    const handleFailure = () => this.toastService.showError(errorMessage, 'Copy Failed');
+
+    if (navigator.clipboard && window.isSecureContext) {
+      navigator.clipboard.writeText(value).then(handleSuccess).catch(handleFailure);
+      return;
+    }
+
+    try {
+      const tempInput = document.createElement('textarea');
+      tempInput.value = value;
+      tempInput.setAttribute('readonly', 'true');
+      tempInput.style.position = 'absolute';
+      tempInput.style.left = '-9999px';
+      document.body.appendChild(tempInput);
+      tempInput.select();
+      const succeeded = document.execCommand('copy');
+      document.body.removeChild(tempInput);
+
+      if (succeeded) {
+        handleSuccess();
+      } else {
+        handleFailure();
+      }
+    } catch {
+      handleFailure();
+    }
   }
 
   /**
