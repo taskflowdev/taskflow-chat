@@ -116,12 +116,9 @@ export class GroupInfoDialogComponent implements OnInit, OnDestroy {
     const tabs: Tab[] = [
       { id: 'general', label: this.i18n.t('dialogs.group-information.navigation.general'), icon: 'bi-info-circle' },
       { id: 'members', label: this.i18n.t('dialogs.group-information.navigation.members'), icon: 'bi-people' },
+      { id: 'invite', label: this.i18n.t('dialogs.group-information.navigation.invite'), icon: 'bi-ticket-detailed' },
       { id: 'settings', label: this.i18n.t('dialogs.group-information.navigation.settings'), icon: 'bi-gear' }
     ];
-
-    if (this.isAdmin) {
-      tabs.splice(2, 0, { id: 'invite', label: this.i18n.t('dialogs.group-information.navigation.invite'), icon: 'bi-ticket' });
-    }
 
     this.tabs = tabs;
 

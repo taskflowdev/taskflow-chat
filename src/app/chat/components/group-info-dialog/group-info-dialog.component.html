@@ -146,6 +146,12 @@
                 </p>
               </div>
             </div>
+
+            <div class="non-admin-message" *ngIf="!isAdmin">
+              <p class="message-text">
+                {{ 'dialogs.group-information.tabs.invite.non-admin-message' | translate }}
+              </p>
+            </div>
           </div>
 
           <!-- Settings Tab -->

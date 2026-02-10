@@ -381,6 +381,28 @@
   }
 }
 
+// Non-admin message section
+.non-admin-message {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  justify-content: flex-start;
+  gap: 0.4rem;
+  border: 1px solid var(--taskflow-color-group-info-dialog-border);
+  border-radius: 10px;
+  padding: 0.4rem 0.8rem;
+  background: transparent;
+  line-height: 1;
+
+  .message-text {
+    margin: 0;
+    color: var(--taskflow-color-text-secondary);
+    transition: color 0.2s ease;
+    font-size: var(--taskflow-font-font-size-normal);
+    line-height: 1.5;
+  }
+}
+
 // Info Section
 // .info-section-card {
 //   display: flex;
