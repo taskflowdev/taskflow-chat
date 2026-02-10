@@ -24,6 +24,11 @@
     (groupJoined)="onGroupJoined()">
   </app-group-search-dialog>
 
+  <!-- Join by Invite Dialog -->
+  <app-join-by-invite-dialog *ngIf="showJoinByInviteDialog" (groupSelected)="onGroupFromSearchSelected($event)"
+    (groupJoined)="onGroupJoined()">
+  </app-join-by-invite-dialog>
+
   <!-- Group Info Dialog -->
   <app-group-info-dialog *ngIf="showGroupInfoDialog && selectedChatId && user" [groupId]="selectedChatId"
     [currentUserId]="user.id" (closed)="router.navigate([], { fragment: undefined, queryParamsHandling: 'preserve' })"

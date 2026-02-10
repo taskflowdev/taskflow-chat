@@ -47,6 +47,10 @@
     "infoSubtle": "#0d419d",
     "infoFg": "#ffffff",
 
+    "indicatorColor": "#22c55e",
+    "indicatorColorEmphasis": "#16a34a",
+    "indicatorBg": "rgba(34, 197, 94, 0.1)",
+
     "navbarBg": "#000000",
     "navbarText": "#ffffff",
     "navbarBorder": "#30363d",
@@ -144,6 +148,20 @@
     "createGroupDialogAvatarPlaceholder": "#ffffff",
     "createGroupDialogBadgeBg": "transparent",
     "createGroupDialogBadgeBorder": "#444444",
+
+    "joinByInviteDialogBg": "#000000",
+    "joinByInviteDialogBorder": "#30363d",
+    "joinByInviteDialogOverlay": "rgba(0, 0, 0, 0.35)",
+    "joinByInviteDialogShadow": "rgba(0, 0, 0, 0.6)",
+    "joinByInviteDialogCloseHoverBg": "#333333",
+    "joinByInviteDialogHelperText": "#8b949e",
+    "joinByInviteDialogMutedText": "#8b949e",
+    "joinByInviteCodeBoxBg": "#0d1117",
+    "joinByInviteCodeBoxActiveBg": "#161b22",
+    "joinByInviteCodeBoxBorder": "#30363d",
+    "joinByInviteCodeBoxBorderFocus": "#58a6ff",
+    "joinByInviteCodeBoxText": "#e6edf3",
+    "joinByInviteCodeBoxShadow": "rgba(0, 0, 0, 0.4)",
 
     "groupInfoDialogBg": "#000000",
     "groupInfoDialogBorder": "#444444",

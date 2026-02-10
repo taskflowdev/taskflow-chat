@@ -11,6 +11,19 @@
         {{ 'chats.sidebar.buttons.search' | translate }} <span class="shortcut-key-tooltip">Ctrl + K</span>
       </ng-template>
 
+      <!-- Join by Invite Button -->
+      <div class="join-group-btn-wrapper">
+        <button class="btn join-group-btn" [appCommonTooltip]="joinByInviteTooltip"
+          [tooltipPosition]="TooltipPosition.BOTTOM" (click)="onJoinByInvite()">
+          <i class="bi bi-ticket-detailed"></i>
+        </button>
+        <app-feature-indicator position="top-right" [size]="12" animation="pulse"
+          [animationDuration]="2"></app-feature-indicator>
+      </div>
+      <ng-template #joinByInviteTooltip>
+        {{ 'chats.sidebar.buttons.join-by-invite' | translate }}
+      </ng-template>
+
       <!-- New Chat Button -->
       <button class="btn new-chat-btn" [appCommonTooltip]="btnCreateGroupTooltip"
         [tooltipPosition]="TooltipPosition.BOTTOM" (click)="onCreateGroup()">

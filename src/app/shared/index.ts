@@ -10,6 +10,7 @@ export * from './components/toast-container.component';
 export * from './components/skeleton-loader/skeleton-loader.component';
 export * from './components/loading-screen/loading-screen.component';
 export * from './components/sync-indicator';
+export * from './components/feature-indicator';
 
 // Directives
 export * from './directives/keyboard-shortcut.directive';

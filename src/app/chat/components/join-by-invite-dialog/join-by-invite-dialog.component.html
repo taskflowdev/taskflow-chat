@@ -1,0 +1,50 @@
+<div class="dialog-overlay" (click)="onBackdropClick($event)" (keydown)="onEscapePress($event)" tabindex="0">
+  <div class="dialog-container">
+    <div class="dialog-header">
+      <div class="header-content">
+        <div class="header-icon">
+          <i class="bi bi-ticket-detailed"></i>
+        </div>
+        <div class="header-text">
+          <h2 class="dialog-title">{{ 'dialogs.join-by-invite.title' | translate }}</h2>
+          <p class="dialog-subtitle">{{ 'dialogs.join-by-invite.subtitle' | translate }}</p>
+        </div>
+      </div>
+      <button type="button" class="close-btn" (click)="closeDialog()" aria-label="Close dialog">
+        <i class="bi bi-x-lg"></i>
+      </button>
+    </div>
+
+    <div class="dialog-body">
+      <form class="join-form" [formGroup]="joinForm" (ngSubmit)="onSubmit()">
+        <div class="code-label">
+          {{ 'dialogs.join-by-invite.controls.invite-code.label' | translate }}
+        </div>
+        <div class="code-inputs" [class.has-error]="hasInteracted && !isCodeComplete && !isLoading">
+          <input *ngFor="let control of codeControls.controls; let i = index" #codeInput class="code-input" type="text"
+            inputmode="text" autocomplete="off" maxlength="1"
+            [attr.aria-label]="('dialogs.join-by-invite.controls.invite-code.label' | translate) + ' ' + (i + 1)"
+            [class.is-filled]="!!control.value" [class.is-focused]="focusedIndex === i"
+            [formControl]="asFormControl(control)" (input)="onInput(i, $event)" (keydown)="onKeyDown(i, $event)"
+            (paste)="onPaste(i, $event)" (focus)="onFocus(i)" (blur)="onBlur()" />
+        </div>
+        <p class="code-helper">
+          <i class="bi bi-braces-asterisk"></i>
+          {{ 'dialogs.join-by-invite.controls.invite-code.helper' | translate }}
+        </p>
+
+        <div class="actions">
+          <app-common-button type="submit" variant="primary" [fullWidth]="true" [loading]="isLoading"
+            [disabled]="!isCodeComplete || isLoading">
+            {{ isLoading ? ('dialogs.join-by-invite.actions.join-button.loading-label' | translate) :
+            ('dialogs.join-by-invite.actions.join-button.label' | translate) }}
+          </app-common-button>
+          <app-common-button type="button" variant="secondary" [fullWidth]="true" [disabled]="isLoading"
+            (clicked)="closeDialog()">
+            {{ 'dialogs.join-by-invite.actions.cancel-button.label' | translate }}
+          </app-common-button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
