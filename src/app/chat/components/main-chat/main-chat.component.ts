@@ -11,6 +11,7 @@ import type { GroupWithMessages } from '../../services';
 import { MessageDto } from '../../../api/models/message-dto';
 import { CreateGroupDialogComponent } from '../create-group-dialog/create-group-dialog.component';
 import { GroupSearchDialogComponent } from '../group-search-dialog/group-search-dialog.component';
+import { JoinByInviteDialogComponent } from '../join-by-invite-dialog/join-by-invite-dialog.component';
 import { KeyboardShortcutsDialogComponent } from '../keyboard-shortcuts-dialog/keyboard-shortcuts-dialog.component';
 import { GroupInfoDialogComponent } from '../group-info-dialog/group-info-dialog.component';
 import { ShortcutHandlerService } from '../../../shared/services/shortcut-handler.service';
@@ -29,6 +30,7 @@ import { AppConfigService } from '../../../core/services/app-config.service';
     ChatConversationComponent,
     CreateGroupDialogComponent,
     GroupSearchDialogComponent,
+    JoinByInviteDialogComponent,
     KeyboardShortcutsDialogComponent,
     GroupInfoDialogComponent
   ],
@@ -51,6 +53,7 @@ export class MainChatComponent implements OnInit, OnDestroy {
   // Dialog state
   showCreateGroupDialog: boolean = false;
   showSearchGroupDialog: boolean = false;
+  showJoinByInviteDialog: boolean = false;
   showKeyboardShortcutsDialog: boolean = false;
   showGroupInfoDialog: boolean = false;
 
@@ -105,6 +108,7 @@ export class MainChatComponent implements OnInit, OnDestroy {
       this.route.fragment.subscribe(fragment => {
         this.showCreateGroupDialog = fragment === 'new-group';
         this.showSearchGroupDialog = fragment === 'search-groups';
+        this.showJoinByInviteDialog = fragment === 'join-by-invite';
         this.showKeyboardShortcutsDialog = fragment === 'keyboard-shortcuts';
         this.showGroupInfoDialog = fragment === 'group-info';
 
@@ -303,7 +307,7 @@ export class MainChatComponent implements OnInit, OnDestroy {
       return;
     }
 
-    if (this.showCreateGroupDialog || this.showKeyboardShortcutsDialog || this.showGroupInfoDialog) {
+    if (this.showCreateGroupDialog || this.showJoinByInviteDialog || this.showKeyboardShortcutsDialog || this.showGroupInfoDialog) {
       // In other dialogs - general dialog context
       this.keyboardShortcutService.setContext(ShortcutContext.DIALOG_OPEN);
       return;
@@ -422,7 +426,7 @@ export class MainChatComponent implements OnInit, OnDestroy {
    * Close all open dialogs
    */
   private closeAllDialogs(): void {
-    if (this.showCreateGroupDialog || this.showSearchGroupDialog || this.showGroupInfoDialog) {
+    if (this.showCreateGroupDialog || this.showSearchGroupDialog || this.showJoinByInviteDialog || this.showGroupInfoDialog) {
       this.router.navigate([], { fragment: undefined, queryParamsHandling: 'preserve' });
     }
     if (this.showKeyboardShortcutsDialog) {

@@ -1,0 +1,49 @@
+// Feature Indicator Component Styles
+.feature-indicator {
+  position: absolute;
+  border: 2px solid var(--indicator-border-color);
+  border-radius: 50%;
+  background: var(--indicator-color);
+  display: inline-block;
+
+  // Animation variants
+  &.animation-pulse {
+    animation: feature-indicator-pulse var(--indicator-animation-duration)
+      infinite;
+  }
+
+  &.animation-blink {
+    animation: feature-indicator-blink var(--indicator-animation-duration)
+      infinite;
+  }
+
+  &.animation-none {
+    animation: none;
+  }
+}
+
+// Pulse animation - expands a glow around the dot
+@keyframes feature-indicator-pulse {
+  0% {
+    box-shadow: 0 0 0 0 var(--indicator-color);
+  }
+  50% {
+    box-shadow: 0 0 0 4px var(--indicator-pulse-color);
+  }
+  100% {
+    box-shadow: 0 0 0 0 var(--indicator-pulse-color);
+  }
+}
+
+// Blink animation - opacity fade
+@keyframes feature-indicator-blink {
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+  100% {
+    opacity: 1;
+  }
+}

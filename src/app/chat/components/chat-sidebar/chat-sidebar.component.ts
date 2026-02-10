@@ -4,11 +4,12 @@ import { Router } from '@angular/router';
 import { ChatItemComponent, ChatItemData } from '../chat-item/chat-item.component';
 import { SkeletonLoaderComponent } from '../../../shared/components/skeleton-loader/skeleton-loader.component';
 import { CommonTooltipDirective, TooltipPosition } from '../../../shared/components/common-tooltip';
+import { FeatureIndicatorComponent } from '../../../shared/components/feature-indicator';
 import { TranslatePipe } from '../../../core/i18n';
 
 @Component({
   selector: 'app-chat-sidebar',
-  imports: [CommonModule, ChatItemComponent, SkeletonLoaderComponent, CommonTooltipDirective, TranslatePipe],
+  imports: [CommonModule, ChatItemComponent, SkeletonLoaderComponent, CommonTooltipDirective, FeatureIndicatorComponent, TranslatePipe],
   templateUrl: './chat-sidebar.component.html',
   styleUrl: './chat-sidebar.component.scss'
 })
@@ -21,10 +22,10 @@ export class ChatSidebarComponent {
   // Export enum for template use
   TooltipPosition = TooltipPosition;
 
-  constructor(private router: Router) {}
+  constructor(private router: Router) { }
 
   // Generate skeleton items with progressive fade opacity
-  get skeletonItems(): Array<{index: number, opacity: number}> {
+  get skeletonItems(): Array<{ index: number, opacity: number }> {
     const items = [];
     for (let i = 0; i < 12; i++) { // Show 12 skeleton items instead of 5
       const opacity = Math.max(0.2, 1 - (i * 0.08)); // Progressive fade from 1.0 to 0.2
@@ -45,7 +46,7 @@ export class ChatSidebarComponent {
     return chat.groupId;
   }
 
-  trackBySkeletonIndex(index: number, item: {index: number, opacity: number}): number {
+  trackBySkeletonIndex(index: number, item: { index: number, opacity: number }): number {
     return item.index;
   }
 
@@ -57,5 +58,10 @@ export class ChatSidebarComponent {
   onSearchGroups(): void {
     // Navigate with fragment to trigger search dialog
     this.router.navigate([], { fragment: 'search-groups' });
+  }
+
+  onJoinByInvite(): void {
+    // Navigate with fragment to trigger join-by-invite dialog
+    this.router.navigate([], { fragment: 'join-by-invite' });
   }
 }

@@ -11,7 +11,9 @@
   display: flex;
   flex-direction: column;
   z-index: 900;
-  transition: background-color 0.2s ease, border-color 0.2s ease;
+  transition:
+    background-color 0.2s ease,
+    border-color 0.2s ease;
 }
 
 .sidebar-header {
@@ -37,6 +39,7 @@
   }
 
   .search-btn,
+  .join-group-btn,
   .new-chat-btn {
     background: transparent;
     border: 1px solid var(--taskflow-color-chat-sidebar-border);
@@ -57,6 +60,12 @@
     i {
       font-size: var(--taskflow-font-icon-size-md);
     }
+  }
+
+  // Wrapper for join-group-btn to position the indicator
+  .join-group-btn-wrapper {
+    position: relative;
+    display: inline-block;
   }
 }
 
@@ -134,11 +143,8 @@
       font-size: var(--taskflow-font-font-size-normal);
     }
 
-    .search-btn {
-      width: 32px;
-      height: 32px;
-    }
-
+    .search-btn,
+    .join-group-btn,
     .new-chat-btn {
       width: 32px;
       height: 32px;
