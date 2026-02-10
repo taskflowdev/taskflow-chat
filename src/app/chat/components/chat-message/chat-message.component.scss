@@ -386,6 +386,139 @@
   }
 }
 
+// Reply button styles - positioned outside the bubble
+.message-wrapper {
+  position: relative;
+
+  .reply-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: transparent;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10;
+
+    i {
+      font-size: var(--taskflow-font-icon-size-xl);
+      color: var(--taskflow-color-text-secondary);
+      transition: all 0.2s ease;
+    }
+
+    &:hover i {
+      color: var(--taskflow-color-text-primary);
+    }
+
+    &:active {
+      transform: translateY(-50%) scale(0.95);
+    }
+  }
+
+  &:hover .reply-btn {
+    opacity: 1;
+    visibility: visible;
+  }
+
+  // Show reply button on active/focus for touch devices
+  &:active .reply-btn,
+  &:focus-within .reply-btn {
+    opacity: 1;
+    visibility: visible;
+  }
+
+  // Position reply button on the right for messages from others
+  &:not(.own-message) .reply-btn {
+    right: -38px;
+  }
+
+  // Position reply button on the left for own messages
+  &.own-message .reply-btn {
+    left: -38px;
+
+    i {
+      transform: scaleX(-1); // Flip the reply icon for own messages
+    }
+  }
+}
+
+.message-bubble {
+  position: relative;
+}
+
+// Quoted message preview in message bubble
+.quoted-message {
+  background: var(--taskflow-color-background-tertiary);
+  border-left: 3px solid var(--taskflow-color-accent);
+  border-radius: 6px;
+  padding: 0.5rem;
+  margin-bottom: 0.5rem;
+  transition: background 0.2s ease;
+
+  .quoted-content {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    min-width: 0;
+
+    .quoted-header {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+
+      .quoted-icon {
+        font-size: 0.85rem;
+        color: var(--taskflow-color-accent);
+        flex-shrink: 0;
+        transition: color 0.2s ease;
+      }
+
+      .quoted-sender {
+        font-size: var(--taskflow-font-size-small);
+        font-weight: 600;
+        color: var(--taskflow-color-accent);
+        transition: color 0.2s ease;
+      }
+    }
+
+    .quoted-text {
+      font-size: var(--taskflow-font-size-small);
+      color: var(--taskflow-color-text-secondary);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      padding-left: 1.25rem; // Indent to align with sender text
+      transition: color 0.2s ease;
+    }
+  }
+}
+
+// Own message quoted message styles
+.own-message .quoted-message {
+  background: rgba(255, 255, 255, 0.1);
+
+  .quoted-content {
+    .quoted-header {
+      .quoted-icon,
+      .quoted-sender {
+        color: var(--taskflow-color-chat-bubble-own-message-text);
+        opacity: 0.9;
+      }
+    }
+  }
+
+  .quoted-text {
+    color: var(--taskflow-color-chat-bubble-own-message-text);
+    opacity: 0.7;
+  }
+}
+
 @media (max-width: 480px) {
   .message-wrapper {
     padding: 0 0.5rem;
@@ -411,6 +544,19 @@
       .message-content {
         font-size: 0.8rem;
       }
+    }
+
+    // Adjust reply button for mobile
+    .reply-btn i {
+      font-size: var(--taskflow-font-icon-size-lg);
+    }
+
+    &:not(.own-message) .reply-btn {
+      right: -32px;
+    }
+
+    &.own-message .reply-btn {
+      left: -32px;
     }
   }
 }

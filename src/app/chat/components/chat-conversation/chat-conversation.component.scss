@@ -89,7 +89,7 @@
 .messages-container {
   flex: 1;
   overflow-y: auto;
-  padding: 1rem 0;
+  padding: 1rem 2.5rem; // Horizontal padding for reply icons
   position: relative;
   scroll-behavior: smooth;
 }
@@ -166,6 +166,93 @@
     align-items: flex-end;
     gap: 0.75rem;
 
+    .input-with-reply {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+    }
+
+    // Reply preview styles - Teams-like, stuck to textbox
+    .reply-preview {
+      background: var(--taskflow-color-input-bg);
+      border: 3px solid var(--taskflow-color-input-border);
+      border-bottom: none;
+      border-radius: 10px 10px 0 0;
+      padding: 0.6rem 1rem;
+      transition: all 0.2s ease;
+
+      .reply-preview-content {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 0.75rem;
+
+        .reply-preview-left {
+          display: flex;
+          align-items: center;
+          gap: 0.65rem;
+          flex: 1;
+          min-width: 0;
+
+          > i {
+            font-size: var(--taskflow-font-icon-size-xl);
+            color: var(--taskflow-color-text-primary);
+            flex-shrink: 0;
+            transition: color 0.2s ease;
+          }
+
+          .reply-preview-info {
+            flex: 1;
+            min-width: 0;
+
+            .reply-preview-header {
+              font-size: var(--taskflow-font-font-size-large);
+              font-weight: 600;
+              color: var(--taskflow-color-text-primary);
+              transition: color 0.2s ease;
+            }
+
+            .reply-preview-text {
+              font-size: var(--taskflow-font-font-size-normal);
+              color: var(--taskflow-color-text-secondary);
+              white-space: nowrap;
+              overflow: hidden;
+              text-overflow: ellipsis;
+              transition: color 0.2s ease;
+            }
+          }
+        }
+
+        .reply-preview-close {
+          background: transparent;
+          border: none;
+          color: var(--taskflow-color-text-tertiary);
+          padding: 0.25rem;
+          cursor: pointer;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          border-radius: 4px;
+          transition: all 0.2s ease;
+          flex-shrink: 0;
+
+          i {
+            font-size: var(--taskflow-font-icon-size-md);
+          }
+
+          &:hover {
+            background: var(--taskflow-color-background-hover);
+            color: var(--taskflow-color-text-primary);
+          }
+
+          &:active {
+            transform: scale(0.95);
+          }
+        }
+      }
+    }
+
     .message-input {
       flex: 1;
       background: var(--taskflow-color-input-bg);
@@ -179,22 +266,28 @@
       max-height: 120px;
       transition: all 0.25s ease;
       font-family: inherit;
-      box-shadow:
-        0 2px 4px rgba(0, 0, 0, 0.8),
-        0 0 8px rgba(255, 255, 255, 0.05);
+      // box-shadow:
+      //   0 2px 4px rgba(0, 0, 0, 0.8),
+      //   0 0 8px rgba(255, 255, 255, 0.05);
 
       &:focus {
         background: var(--taskflow-color-input-bg);
         border-color: var(--taskflow-color-input-border-focus);
-        box-shadow:
-          0 4px 12px rgba(0, 0, 0, 0.9),
-          0 0 12px rgba(255, 255, 255, 0.1);
+        // box-shadow:
+        //   0 4px 12px rgba(0, 0, 0, 0.9),
+        //   0 0 12px rgba(255, 255, 255, 0.1);
         outline: none;
       }
 
       &::placeholder {
         color: var(--taskflow-color-text-disabled);
       }
+    }
+
+    // When reply preview is active, adjust border radius
+    .input-with-reply:has(.reply-preview) .message-input {
+      border-radius: 0 0 10px 10px;
+      // border-top: none;
     }
 
     .attachment-btn {
@@ -343,7 +436,7 @@
   }
 
   .messages-container {
-    padding: 0.75rem 0;
+    padding: 0.75rem 2rem; // Horizontal padding for mobile reply icons
   }
 
   .message-input-container {

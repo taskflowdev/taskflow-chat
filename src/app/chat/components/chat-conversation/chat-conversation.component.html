@@ -56,7 +56,8 @@
         </div>
 
         <!-- Messages for this date -->
-        <app-chat-message *ngFor="let message of group.messages; trackBy: trackByMessageId" [message]="message">
+        <app-chat-message *ngFor="let message of group.messages; trackBy: trackByMessageId" [message]="message"
+          (replyToMessage)="onReplyToMessage($event)">
         </app-chat-message>
       </ng-container>
     </div>
@@ -82,10 +83,38 @@
         (mouseleave)="pollBtnHovered = false" [appCommonTooltip]="'Create poll'" [disabled]="loading">
         <i class="bi" [ngClass]="pollBtnHovered ? 'bi-bar-chart-fill' : 'bi-bar-chart'"></i>
       </button>
-      <textarea [(ngModel)]="newMessage" (keydown)="onKeyDown($event)"
-        [placeholder]="'chats.conversation-window.conversations.composer.placeholder' | translate" class="message-input"
-        rows="1" [disabled]="loading">
-      </textarea>
+
+      <div class="input-with-reply">
+        <!-- Reply Preview -->
+        <div class="reply-preview" *ngIf="replyingToMessage">
+          <div class="reply-preview-content">
+            <div class="reply-preview-left">
+              <!-- Show appropriate icon based on content type -->
+              <i class="bi" [ngClass]="{
+                'bi-reply': !replyingToMessage.contentType || replyingToMessage.contentType === 'text',
+                'bi-image': replyingToMessage.contentType === 'image',
+                'bi-play-circle': replyingToMessage.contentType === 'video',
+                'bi-bar-chart': replyingToMessage.contentType === 'poll',
+                'bi-paperclip': replyingToMessage.contentType === 'file'
+              }"></i>
+              <div class="reply-preview-info">
+                <div class="reply-preview-header">{{ replyingToMessage.isOwn ? 'You' : (replyingToMessage.senderName ||
+                  'Unknown User') }}</div>
+                <div class="reply-preview-text">{{ getReplyPreviewText(replyingToMessage) }}</div>
+              </div>
+            </div>
+            <button class="reply-preview-close" (click)="cancelReply()">
+              <i class="bi bi-x-lg"></i>
+            </button>
+          </div>
+        </div>
+
+        <textarea [(ngModel)]="newMessage" (keydown)="onKeyDown($event)"
+          [placeholder]="'chats.conversation-window.conversations.composer.placeholder' | translate"
+          class="message-input" rows="1" [disabled]="loading">
+        </textarea>
+      </div>
+
       <button class="btn send-btn" (click)="onSendMessage()" [disabled]="!newMessage.trim() || loading"
         [appCommonTooltip]="btnSendTooltip">
         <i class="bi" [ngClass]="newMessage.trim() && !loading ? 'bi-send-check' : 'bi-send'"></i>

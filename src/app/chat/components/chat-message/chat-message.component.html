@@ -22,6 +22,29 @@
         getTimeDisplay(message.createdAt) }}</span>
     </div>
 
+    <!-- Reply button -->
+    <button class="reply-btn" (click)="onReplyClick()" appCommonTooltip="Reply to this message"
+      *ngIf="!message.isSystemMessage">
+      <i class="bi bi-reply"></i>
+    </button>
+
+    <!-- Quoted Message Preview -->
+    <div class="quoted-message" *ngIf="message.quotedMessage">
+      <div class="quoted-content">
+        <div class="quoted-header">
+          <i class="bi quoted-icon" [ngClass]="{
+            'bi-image': message.quotedMessage.contentType === 'image',
+            'bi-play-circle': message.quotedMessage.contentType === 'video',
+            'bi-bar-chart-fill': message.quotedMessage.contentType === 'poll',
+            'bi-paperclip': message.quotedMessage.contentType === 'file',
+            'bi-chat-left-text': !message.quotedMessage.contentType || message.quotedMessage.contentType === 'text'
+          }"></i>
+          <div class="quoted-sender">{{ message.quotedMessage.senderName || 'Unknown User' }}</div>
+        </div>
+        <div class="quoted-text">{{ getQuotedContentPreview(message.quotedMessage) }}</div>
+      </div>
+    </div>
+
     <div class="message-content">
       <!-- Text content -->
       <ng-container *ngIf="!message.contentType || message.contentType === 'text'">

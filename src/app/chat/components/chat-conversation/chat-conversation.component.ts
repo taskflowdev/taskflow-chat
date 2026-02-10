@@ -3,7 +3,7 @@ import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs';
-import { ChatMessageComponent, ChatMessageData } from '../chat-message/chat-message.component';
+import { ChatMessageComponent, ChatMessageData, QuotedMessageData } from '../chat-message/chat-message.component';
 import { SkeletonLoaderComponent } from '../../../shared/components/skeleton-loader/skeleton-loader.component';
 import { GroupInfoDialogComponent } from '../group-info-dialog/group-info-dialog.component';
 import { CommonDropdownComponent, DropdownItem } from '../../../shared/components/common-dropdown/common-dropdown.component';
@@ -15,6 +15,11 @@ import { PollComposerComponent, PollData } from '../poll-composer/poll-composer.
 import { AutoScrollService } from '../../services/auto-scroll.service';
 import { TranslatePipe, I18nService } from '../../../core/i18n';
 import { TypingIndicatorSettingsService } from '../../../core/services/typing-indicator-settings.service';
+
+export interface SendMessageWithReply {
+  content: string;
+  replyToMessageId?: string;
+}
 
 export interface ConversationData {
   groupId: string;
@@ -36,7 +41,7 @@ export class ChatConversationComponent implements AfterViewChecked, OnInit, OnDe
   @Input() loading: boolean = false;
   @Input() showBackButton: boolean = false; // For mobile back navigation
   @Input() typingUsers: string[] = []; // Users currently typing
-  @Output() sendMessage = new EventEmitter<string>();
+  @Output() sendMessage = new EventEmitter<SendMessageWithReply>();
   @Output() sendPoll = new EventEmitter<PollData>();
   @Output() backToChats = new EventEmitter<void>(); // Mobile back navigation
   @Output() groupUpdated = new EventEmitter<void>(); // Group info updated
@@ -46,6 +51,7 @@ export class ChatConversationComponent implements AfterViewChecked, OnInit, OnDe
   @ViewChild('messagesContainer') messagesContainer!: ElementRef;
 
   newMessage = '';
+  replyingToMessage: ChatMessageData | null = null; // Track message being replied to
   showPollComposer = false;
   pollBtnHovered = false;
   private shouldScrollToBottom = false;
@@ -232,8 +238,13 @@ export class ChatConversationComponent implements AfterViewChecked, OnInit, OnDe
 
   onSendMessage(): void {
     if (this.newMessage.trim() && this.conversation) {
-      this.sendMessage.emit(this.newMessage.trim());
+      const messageData: SendMessageWithReply = {
+        content: this.newMessage.trim(),
+        replyToMessageId: this.replyingToMessage?.messageId
+      };
+      this.sendMessage.emit(messageData);
       this.newMessage = '';
+      this.replyingToMessage = null; // Clear reply state
       this.shouldScrollToBottom = true;
     }
   }
@@ -430,5 +441,52 @@ export class ChatConversationComponent implements AfterViewChecked, OnInit, OnDe
    */
   onBackClick(): void {
     this.backToChats.emit();
+  }
+
+  /**
+   * Handle reply to message action
+   */
+  onReplyToMessage(message: ChatMessageData): void {
+    this.replyingToMessage = message;
+    // Focus the message input
+    setTimeout(() => {
+      const textarea = document.querySelector('.message-input') as HTMLTextAreaElement;
+      if (textarea) {
+        textarea.focus();
+      }
+    }, 0);
+  }
+
+  /**
+   * Cancel the current reply
+   */
+  cancelReply(): void {
+    this.replyingToMessage = null;
+  }
+
+  /**
+   * Get preview text for quoted message in reply preview
+   */
+  getReplyPreviewText(message: ChatMessageData): string {
+    if (message.contentType === 'image') {
+      return 'Photo';
+    } else if (message.contentType === 'video') {
+      return 'Video';
+    } else if (message.contentType === 'poll') {
+      const maxLength = 50;
+      const question = message.content || 'Poll';
+      if (question.length > maxLength) {
+        return question.substring(0, maxLength) + '...';
+      }
+      return question;
+    } else if (message.contentType === 'file') {
+      return 'File';
+    }
+    // For text, truncate if too long
+    const maxLength = 50;
+    if (message.content.length > maxLength) {
+      return message.content.substring(0, maxLength) + '...';
+    }
+    return message.content;
   }
 }
