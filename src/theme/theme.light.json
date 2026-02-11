@@ -290,13 +290,13 @@
     "chatQuotedOwnMessageSenderText": "#000000",
     "chatQuotedOwnMessageContentText": "rgba(0, 0, 0, 0.75)",
 
-    "chatQuotedOthersMessageBg": "#ffffff",
+    "chatQuotedOthersMessageBg": "#0000001f",
     "chatQuotedOthersMessageBorder": "#0969da",
     "chatQuotedOthersMessageIconColor": "#000000",
     "chatQuotedOthersMessageSenderText": "#0969da",
     "chatQuotedOthersMessageContentText": "#57606a",
 
-    "chatMessageHighlightBg": "#fff8c5",
+    "chatMessageHighlightBg": "#9e6a0340",
 
     "chatSystemMessageBg": "#0000000f",
     "chatSystemMessageText": "#57606a",

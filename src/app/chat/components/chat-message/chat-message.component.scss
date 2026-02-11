@@ -620,17 +620,21 @@
 // Message highlight animation (when scrolling to quoted message)
 .message-wrapper.highlighted {
   .message-bubble {
-    animation: messageHighlight 2s ease-out;
+    animation: messageHighlight 2.5s ease-out;
   }
 }
 
 @keyframes messageHighlight {
   0% {
-    background-color: var(--taskflow-color-chat-message-highlight-bg);
-    box-shadow: 0 0 0 4px var(--taskflow-color-chat-message-highlight-bg);
+    // background-color: var(--taskflow-color-chat-message-highlight-bg);
+    box-shadow: 0 0 0 8px var(--taskflow-color-chat-message-highlight-bg);
+  }
+  50% {
+    // background-color: var(--taskflow-color-chat-message-highlight-bg);
+    box-shadow: 0 0 0 6px var(--taskflow-color-chat-message-highlight-bg);
   }
   100% {
-    background-color: inherit;
+    // background-color: inherit;
     box-shadow: none;
   }
 }

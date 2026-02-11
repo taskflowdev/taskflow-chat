@@ -473,7 +473,7 @@ export class ChatConversationComponent implements AfterViewChecked, OnInit, OnDe
     }
 
     // Find the message element using data attribute
-    const messageElement = document.querySelector(`[data-message-id="${messageId}"]`) as HTMLElement;
+    const messageElement = document.querySelector(`[data-message-id="${messageId}"] .message-wrapper`) as HTMLElement;
 
     if (!messageElement) {
       return;
@@ -488,10 +488,10 @@ export class ChatConversationComponent implements AfterViewChecked, OnInit, OnDe
     // Add highlight class
     messageElement.classList.add('highlighted');
 
-    // Remove highlight class after animation completes
+    // Remove highlight class after animation completes (2.5s matches animation duration)
     setTimeout(() => {
       messageElement.classList.remove('highlighted');
-    }, 2000);
+    }, 2500);
   }
 
   /**
