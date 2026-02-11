@@ -12,13 +12,13 @@ export interface MessageMetadata {
    * Users who have received delivery confirmation along with timestamp
    */
   deliveredTo?: {
-[key: string]: string;
+[key: string]: string | null;
 };
 
   /**
    * Number of times this message has been forwarded
    */
-  forwardCount?: number;
+  forwardCount?: number | null;
 
   /**
    * ID of the original message if this is a forwarded/reply message
@@ -29,13 +29,18 @@ export interface MessageMetadata {
    * Reactions to the message (userId -> emoji)
    */
   reactions?: {
-[key: string]: string;
+[key: string]: string | null;
 };
 
   /**
    * Users who have read the message along with timestamp
    */
   readBy?: {
-[key: string]: string;
+[key: string]: string | null;
 };
+
+  /**
+   * ID of the message this message is replying to
+   */
+  replyToMessageId?: string | null;
 }

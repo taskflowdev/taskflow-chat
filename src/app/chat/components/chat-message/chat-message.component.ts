@@ -1,9 +1,16 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { CommonTooltipDirective } from "../../../shared/components/common-tooltip";
 import { DateTimeFormatService } from '../../../core/services/datetime-format.service';
 import { PollMessageComponent } from '../poll-message/poll-message.component';
 import { PollResultsDto } from '../../../api/models';
+
+export interface QuotedMessageData {
+  messageId: string;
+  senderName?: string;
+  content: string;
+  contentType?: 'text' | 'image' | 'video' | 'poll' | 'file';
+}
 
 export interface ChatMessageData {
   messageId: string;
@@ -21,6 +28,7 @@ export interface ChatMessageData {
   groupId?: string; // Group ID for poll messages
   currentUserId?: string; // Current user ID for poll voting
   groupMemberCount?: number; // Group member count for poll participation display
+  quotedMessage?: QuotedMessageData; // The message being replied to
 }
 
 @Component({
@@ -31,8 +39,26 @@ export interface ChatMessageData {
 })
 export class ChatMessageComponent {
   @Input() message!: ChatMessageData;
+  @Output() replyToMessage = new EventEmitter<ChatMessageData>();
+  @Output() quotedMessageClick = new EventEmitter<string>(); // Emits the quoted message ID
 
   constructor(private dateTimeFormatService: DateTimeFormatService) { }
+
+  /**
+   * Handle reply button click
+   */
+  onReplyClick(): void {
+    this.replyToMessage.emit(this.message);
+  }
+
+  /**
+   * Handle quoted message click - scroll to original message
+   */
+  onQuotedMessageClick(): void {
+    if (this.message.quotedMessage && this.isQuotedMessageAvailable(this.message.quotedMessage)) {
+      this.quotedMessageClick.emit(this.message.quotedMessage.messageId);
+    }
+  }
 
   /**
    * Get the initials from a user's name for avatar display
@@ -86,5 +112,43 @@ export class ChatMessageComponent {
   getDateTimeTooltip(timeString?: string): string {
     if (!timeString) return '';
     return this.dateTimeFormatService.formatDateTimeTooltip(timeString);
+  }
+
+  /**
+   * Get preview text for quoted message content
+   */
+  getQuotedContentPreview(quotedMessage: QuotedMessageData): string {
+    if (!quotedMessage || !quotedMessage.content) {
+      return 'Message not found';
+    }
+
+    if (quotedMessage.contentType === 'image') {
+      return '📷 Photo';
+    } else if (quotedMessage.contentType === 'video') {
+      return '🎥 Video';
+    } else if (quotedMessage.contentType === 'poll') {
+      // Show poll question without emoji (icon is shown in HTML)
+      const maxLength = 60;
+      const question = quotedMessage.content || 'Poll';
+      if (question.length > maxLength) {
+        return question.substring(0, maxLength) + '...';
+      }
+      return question;
+    } else if (quotedMessage.contentType === 'file') {
+      return '📎 ' + quotedMessage.content;
+    }
+    // For text, truncate if too long
+    const maxLength = 60;
+    if (quotedMessage.content.length > maxLength) {
+      return quotedMessage.content.substring(0, maxLength) + '...';
+    }
+    return quotedMessage.content;
+  }
+
+  /**
+   * Checks if the quoted message is available and valid
+   */
+  isQuotedMessageAvailable(quotedMessage?: QuotedMessageData): boolean {
+    return !!(quotedMessage && quotedMessage.content);
   }
 }

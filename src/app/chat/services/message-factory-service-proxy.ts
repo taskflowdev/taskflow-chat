@@ -106,7 +106,8 @@ export class MessageFactoryServiceProxy {
       groupId,
       'text',
       textContent,
-      'userMessage'
+      'userMessage',
+      metadata
     );
   }
 
@@ -139,7 +140,8 @@ export class MessageFactoryServiceProxy {
       groupId,
       'image',
       imageContent,
-      'userMessage'
+      'userMessage',
+      metadata
     );
   }
 
@@ -173,7 +175,8 @@ export class MessageFactoryServiceProxy {
       groupId,
       'video',
       videoContent,
-      'userMessage'
+      'userMessage',
+      metadata
     );
   }
 
@@ -217,7 +220,8 @@ export class MessageFactoryServiceProxy {
       groupId,
       'poll',
       pollContent,
-      'userMessage'
+      'userMessage',
+      metadata
     );
   }
 
@@ -250,7 +254,8 @@ export class MessageFactoryServiceProxy {
       groupId,
       'text', // Fallback to text type
       fileContent,
-      'userMessage'
+      'userMessage',
+      metadata
     );
   }
 
@@ -279,7 +284,8 @@ export class MessageFactoryServiceProxy {
       groupId,
       'text',
       textContent,
-      messageType
+      messageType,
+      metadata
     );
   }
 

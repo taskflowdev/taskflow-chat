@@ -3,12 +3,13 @@ import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { Router, ActivatedRoute } from '@angular/router';
 import { AuthService, AuthUser } from '../../../auth/services/auth.service';
 import { ChatSidebarComponent } from '../chat-sidebar/chat-sidebar.component';
-import { ChatConversationComponent, ConversationData } from '../chat-conversation/chat-conversation.component';
+import { ChatConversationComponent, ConversationData, SendMessageWithReply } from '../chat-conversation/chat-conversation.component';
 import { ChatItemData } from '../chat-item/chat-item.component';
-import { ChatMessageData } from '../chat-message/chat-message.component';
+import { ChatMessageData, QuotedMessageData } from '../chat-message/chat-message.component';
 import { GroupsServiceProxy, MessageFactoryServiceProxy } from '../../services';
 import type { GroupWithMessages } from '../../services';
 import { MessageDto } from '../../../api/models/message-dto';
+import { MessageMetadata } from '../../../api/models/message-metadata';
 import { CreateGroupDialogComponent } from '../create-group-dialog/create-group-dialog.component';
 import { GroupSearchDialogComponent } from '../group-search-dialog/group-search-dialog.component';
 import { JoinByInviteDialogComponent } from '../join-by-invite-dialog/join-by-invite-dialog.component';
@@ -329,6 +330,20 @@ export class MainChatComponent implements OnInit, OnDestroy {
 
     // Priority 4: Global context (fallback)
     this.keyboardShortcutService.setContext(ShortcutContext.GLOBAL);
+  }
+
+  /**
+   * Builds message metadata with explicit nulls for optional fields.
+   */
+  private buildMessageMetadata(replyToMessageId?: string): MessageMetadata {
+    return ({
+      deliveredTo: null,
+      forwardCount: 0,
+      originalMessageId: null,
+      reactions: null,
+      readBy: null,
+      replyToMessageId: replyToMessageId ?? null
+    } as unknown) as MessageMetadata;
   }
 
   /**
@@ -732,6 +747,22 @@ export class MainChatComponent implements OnInit, OnDestroy {
   private mapMessageToChatMessage(message: MessageDto): ChatMessageData {
     const isSystemMessage = message.sourceType === 'system';
 
+    // Get quoted message if exists
+    let quotedMessage: QuotedMessageData | undefined = undefined;
+    if (message.metadata?.replyToMessageId && this.currentConversation) {
+      const originalMsg = this.currentConversation.messages.find(
+        m => m.messageId === message.metadata?.replyToMessageId
+      );
+      if (originalMsg) {
+        quotedMessage = {
+          messageId: originalMsg.messageId,
+          senderName: originalMsg.senderName,
+          content: originalMsg.content,
+          contentType: originalMsg.contentType
+        };
+      }
+    }
+
     return {
       messageId: message.messageId || '',
       senderId: message.senderId || '',
@@ -748,7 +779,8 @@ export class MainChatComponent implements OnInit, OnDestroy {
       messageType: message.messageType,
       groupId: message.groupId || this.currentConversation?.groupId || '',
       currentUserId: this.user?.id || '',
-      groupMemberCount: this.currentConversation?.memberCount || 0
+      groupMemberCount: this.currentConversation?.memberCount || 0,
+      quotedMessage: quotedMessage
     };
   }
 
@@ -757,7 +789,10 @@ export class MainChatComponent implements OnInit, OnDestroy {
    * Uses SignalR for real-time message delivery.
    * Falls back to REST API if SignalR is not connected.
    */
-  async onSendMessage(messageContent: string): Promise<void> {
+  async onSendMessage(messageData: SendMessageWithReply): Promise<void> {
+    const messageContent = messageData.content;
+    const replyToMessageId = messageData.replyToMessageId;
+
     if (!this.currentConversation || !this.user || !messageContent.trim()) return;
 
     // Validate message content
@@ -767,6 +802,22 @@ export class MainChatComponent implements OnInit, OnDestroy {
       return;
     }
 
+    // Find quoted message for optimistic UI update
+    let quotedMessage: QuotedMessageData | undefined = undefined;
+    if (replyToMessageId) {
+      const originalMsg = this.currentConversation.messages.find(m => m.messageId === replyToMessageId);
+      if (originalMsg) {
+        quotedMessage = {
+          messageId: originalMsg.messageId,
+          senderName: originalMsg.senderName,
+          content: originalMsg.content,
+          contentType: originalMsg.contentType
+        };
+      }
+    }
+
+    const metadata = this.buildMessageMetadata(replyToMessageId);
+
     // Optimistically add message to UI
     const optimisticMessage: ChatMessageData = {
       messageId: 'temp-' + Date.now().toString(),
@@ -774,7 +825,8 @@ export class MainChatComponent implements OnInit, OnDestroy {
       senderName: 'You',
       content: messageContent,
       createdAt: new Date().toISOString(),
-      isOwn: true
+      isOwn: true,
+      quotedMessage: quotedMessage
     };
 
     this.currentConversation.messages.push(optimisticMessage);
@@ -801,7 +853,7 @@ export class MainChatComponent implements OnInit, OnDestroy {
     if (this.chatRealtimeService.isConnected) {
       try {
         // Use message factory to create properly formatted SendMessageDto
-        const messageDto = this.messageFactoryService.createTextMessageDto(messageContent);
+        const messageDto = this.messageFactoryService.createTextMessageDto(messageContent, metadata);
 
         await this.chatRealtimeService.sendMessage(this.currentConversation.groupId, messageDto);
         console.log('[MainChat] Message sent via SignalR');
@@ -810,11 +862,11 @@ export class MainChatComponent implements OnInit, OnDestroy {
         // in handleRealtimeMessage() by matching sender and timestamp
       } catch (error) {
         console.error('[MainChat] Failed to send via SignalR, falling back to REST:', error);
-        this.sendMessageViaREST(messageContent, optimisticMessage);
+        this.sendMessageViaREST(messageContent, optimisticMessage, metadata);
       }
     } else {
       // SignalR not connected, use REST API
-      this.sendMessageViaREST(messageContent, optimisticMessage);
+      this.sendMessageViaREST(messageContent, optimisticMessage, metadata);
     }
   }
 
@@ -896,8 +948,8 @@ export class MainChatComponent implements OnInit, OnDestroy {
   /**
    * Sends message via REST API (fallback)
    */
-  private sendMessageViaREST(messageContent: string, optimisticMessage: ChatMessageData): void {
-    this.messageFactoryService.sendTextMessage(this.currentConversation!.groupId, messageContent).subscribe({
+  private sendMessageViaREST(messageContent: string, optimisticMessage: ChatMessageData, metadata: MessageMetadata): void {
+    this.messageFactoryService.sendTextMessage(this.currentConversation!.groupId, messageContent, metadata).subscribe({
       next: (sentMessage) => {
         // Replace optimistic message with real one if API returns it
         if (sentMessage && this.currentConversation) {
