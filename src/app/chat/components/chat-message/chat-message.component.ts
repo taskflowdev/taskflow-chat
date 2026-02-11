@@ -108,10 +108,14 @@ export class ChatMessageComponent {
    * Get preview text for quoted message content
    */
   getQuotedContentPreview(quotedMessage: QuotedMessageData): string {
+    if (!quotedMessage || !quotedMessage.content) {
+      return 'Message not found';
+    }
+
     if (quotedMessage.contentType === 'image') {
-      return 'Photo';
+      return '📷 Photo';
     } else if (quotedMessage.contentType === 'video') {
-      return 'Video';
+      return '🎥 Video';
     } else if (quotedMessage.contentType === 'poll') {
       // Show poll question without emoji (icon is shown in HTML)
       const maxLength = 60;
@@ -121,7 +125,7 @@ export class ChatMessageComponent {
       }
       return question;
     } else if (quotedMessage.contentType === 'file') {
-      return 'File';
+      return '📎 ' + quotedMessage.content;
     }
     // For text, truncate if too long
     const maxLength = 60;
@@ -129,5 +133,12 @@ export class ChatMessageComponent {
       return quotedMessage.content.substring(0, maxLength) + '...';
     }
     return quotedMessage.content;
+  }
+
+  /**
+   * Checks if the quoted message is available and valid
+   */
+  isQuotedMessageAvailable(quotedMessage?: QuotedMessageData): boolean {
+    return !!(quotedMessage && quotedMessage.content);
   }
 }

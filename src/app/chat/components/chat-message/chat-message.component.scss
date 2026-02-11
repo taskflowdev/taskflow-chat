@@ -484,6 +484,9 @@
         font-weight: 600;
         color: var(--taskflow-color-accent);
         transition: color 0.2s ease;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
       }
     }
 
@@ -495,6 +498,26 @@
       text-overflow: ellipsis;
       padding-left: 1.25rem; // Indent to align with sender text
       transition: color 0.2s ease;
+    }
+  }
+
+  // When original message is not available/found
+  &.message-unavailable {
+    opacity: 0.6;
+    border-left-color: var(--taskflow-color-text-tertiary);
+
+    .quoted-content {
+      .quoted-header {
+        .quoted-icon,
+        .quoted-sender {
+          color: var(--taskflow-color-text-tertiary);
+        }
+      }
+
+      .quoted-text {
+        color: var(--taskflow-color-text-tertiary);
+        font-style: italic;
+      }
     }
   }
 }
@@ -516,6 +539,28 @@
   .quoted-text {
     color: var(--taskflow-color-chat-bubble-own-message-text);
     opacity: 0.7;
+  }
+
+  // When original message is not available/found
+  &.message-unavailable {
+    background: rgba(100, 100, 100, 0.15);
+    opacity: 1;
+    border-left-color: var(--taskflow-color-text-tertiary);
+
+    .quoted-content {
+      .quoted-header {
+        .quoted-icon,
+        .quoted-sender {
+          color: var(--taskflow-color-text-tertiary);
+          opacity: 0.7;
+        }
+      }
+
+      .quoted-text {
+        color: var(--taskflow-color-text-tertiary);
+        opacity: 0.6;
+      }
+    }
   }
 }
 

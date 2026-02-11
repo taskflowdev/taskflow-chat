@@ -29,7 +29,8 @@
     </button>
 
     <!-- Quoted Message Preview -->
-    <div class="quoted-message" *ngIf="message.quotedMessage">
+    <div class="quoted-message" *ngIf="message.quotedMessage"
+      [class.message-unavailable]="!isQuotedMessageAvailable(message.quotedMessage)">
       <div class="quoted-content">
         <div class="quoted-header">
           <i class="bi quoted-icon" [ngClass]="{
@@ -39,7 +40,8 @@
             'bi-paperclip': message.quotedMessage.contentType === 'file',
             'bi-chat-left-text': !message.quotedMessage.contentType || message.quotedMessage.contentType === 'text'
           }"></i>
-          <div class="quoted-sender">{{ message.quotedMessage.senderName || 'Unknown User' }}</div>
+          <div class="quoted-sender" [title]="message.quotedMessage.senderName || 'Unknown User'">{{
+            message.quotedMessage.senderName || 'Unknown User' }}</div>
         </div>
         <div class="quoted-text">{{ getQuotedContentPreview(message.quotedMessage) }}</div>
       </div>

@@ -4,6 +4,7 @@ import { GroupsService } from '../../api/services/groups.service';
 import { MessagesService } from '../../api/services/messages.service';
 import { GroupDto } from '../../api/models/group-dto';
 import { MessageDto } from '../../api/models/message-dto';
+import { MessageMetadata } from '../../api/models/message-metadata';
 import { SendMessageDto } from '../../api/models/send-message-dto';
 import { TextContent } from '../../api/models/text-content';
 
@@ -31,12 +32,12 @@ export class GroupsServiceProxy {
   constructor(
     private groupsService: GroupsService,
     private messagesService: MessagesService
-  ) {}
+  ) { }
 
   /**
    * Retrieves all groups for the current user with last message information.
    * Combines group data with recent message information for chat list display.
-   * 
+   *
    * @returns Observable<GroupWithMessages[]> Array of groups with last message details
    */
   getUserGroups(): Observable<GroupWithMessages[]> {
@@ -54,7 +55,7 @@ export class GroupsServiceProxy {
 
   /**
    * Retrieves detailed information for a specific group.
-   * 
+   *
    * @param groupId - The ID of the group to retrieve
    * @returns Observable<GroupDto | null> Group details or null if not found
    */
@@ -71,7 +72,7 @@ export class GroupsServiceProxy {
 
   /**
    * Retrieves messages for a specific group with pagination support.
-   * 
+   *
    * @param groupId - The ID of the group
    * @param before - Optional cursor for pagination (messages before this point)
    * @param limit - Maximum number of messages to retrieve (default: 50)
@@ -94,7 +95,7 @@ export class GroupsServiceProxy {
 
   /**
    * Sends a text message to a specific group.
-   * 
+   *
    * @param groupId - The ID of the target group
    * @param content - The text content of the message
    * @returns Observable<MessageDto | null> The sent message or null if failed
@@ -127,7 +128,7 @@ export class GroupsServiceProxy {
   /**
    * Sends a message with specified content type to a group.
    * Supports all message content types: text, image, video, poll.
-   * 
+   *
    * @param groupId - The ID of the target group
    * @param contentType - Type of message content
    * @param content - The message content object
@@ -138,13 +139,14 @@ export class GroupsServiceProxy {
     groupId: string,
     contentType: 'text' | 'image' | 'video' | 'poll',
     content: any,
-    messageType: 'userMessage' | 'userJoined' | 'userLeft' | 'groupCreated' | 'groupUpdated' | 'groupDeleted' | 'memberRoleChanged' | 'inviteCodeRegenerated' = 'userMessage'
+    messageType: 'userMessage' | 'userJoined' | 'userLeft' | 'groupCreated' | 'groupUpdated' | 'groupDeleted' | 'memberRoleChanged' | 'inviteCodeRegenerated' = 'userMessage',
+    metadata?: MessageMetadata
   ): Observable<MessageDto | null> {
     const messageDto: SendMessageDto = {
       messageType,
       contentType,
       content,
-      metadata: null
+      metadata: metadata ?? null
     };
 
     return this.messagesService.apiGroupsGroupIdMessagesPost$Json({
@@ -162,7 +164,7 @@ export class GroupsServiceProxy {
 
   /**
    * Creates a new group with the specified name.
-   * 
+   *
    * @param name - Name of the new group
    * @param isPublic - Whether the group should be publicly visible (default: false)
    * @returns Observable<GroupDto | null> Created group or null if failed
@@ -183,7 +185,7 @@ export class GroupsServiceProxy {
   /**
    * Maps a GroupDto to GroupWithMessages format.
    * Private helper method to transform API response data.
-   * 
+   *
    * @param group - The group data from API
    * @returns GroupWithMessages Extended group information
    */
