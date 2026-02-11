@@ -77,6 +77,11 @@ export class SettingsSearchResultsComponent implements OnInit, OnDestroy {
    * Handle clicking a search result
    */
   onResultClick(result: SettingsSearchResult): void {
+    // Save the current search query to recent searches
+    const currentQuery = this.settingsSearchService.getCurrentQuery();
+    if (currentQuery && currentQuery.trim().length > 0) {
+      this.settingsSearchService.performSearch(currentQuery);
+    }
     this.navigateToSetting(result);
   }
 
