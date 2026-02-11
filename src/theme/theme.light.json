@@ -284,6 +284,20 @@
     "chatBubbleOthersMessageTailBg": "#f6f8fa",
     "chatBubbleOthersMessageTimestamp": "#57606a",
 
+    "chatQuotedOwnMessageBg": "#ffffff",
+    "chatQuotedOwnMessageBorder": "#0969da",
+    "chatQuotedOwnMessageIconColor": "#000000",
+    "chatQuotedOwnMessageSenderText": "#000000",
+    "chatQuotedOwnMessageContentText": "rgba(0, 0, 0, 0.75)",
+
+    "chatQuotedOthersMessageBg": "#ffffff",
+    "chatQuotedOthersMessageBorder": "#0969da",
+    "chatQuotedOthersMessageIconColor": "#000000",
+    "chatQuotedOthersMessageSenderText": "#0969da",
+    "chatQuotedOthersMessageContentText": "#57606a",
+
+    "chatMessageHighlightBg": "#fff8c5",
+
     "chatSystemMessageBg": "#0000000f",
     "chatSystemMessageText": "#57606a",
     "chatSystemMessageBorder": "transparent",

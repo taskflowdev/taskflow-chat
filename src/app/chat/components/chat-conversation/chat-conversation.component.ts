@@ -465,6 +465,36 @@ export class ChatConversationComponent implements AfterViewChecked, OnInit, OnDe
   }
 
   /**
+   * Handle quoted message click - scroll to and highlight the original message
+   */
+  onQuotedMessageClick(messageId: string): void {
+    if (!isPlatformBrowser(this.platformId)) {
+      return;
+    }
+
+    // Find the message element using data attribute
+    const messageElement = document.querySelector(`[data-message-id="${messageId}"]`) as HTMLElement;
+
+    if (!messageElement) {
+      return;
+    }
+
+    // Scroll to the message with smooth behavior
+    messageElement.scrollIntoView({
+      behavior: 'smooth',
+      block: 'center'
+    });
+
+    // Add highlight class
+    messageElement.classList.add('highlighted');
+
+    // Remove highlight class after animation completes
+    setTimeout(() => {
+      messageElement.classList.remove('highlighted');
+    }, 2000);
+  }
+
+  /**
    * Get preview text for quoted message in reply preview
    */
   getReplyPreviewText(message: ChatMessageData): string {

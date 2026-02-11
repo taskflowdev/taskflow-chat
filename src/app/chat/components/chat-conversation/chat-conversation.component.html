@@ -57,7 +57,8 @@
 
         <!-- Messages for this date -->
         <app-chat-message *ngFor="let message of group.messages; trackBy: trackByMessageId" [message]="message"
-          (replyToMessage)="onReplyToMessage($event)">
+          [attr.data-message-id]="message.messageId" (replyToMessage)="onReplyToMessage($event)"
+          (quotedMessageClick)="onQuotedMessageClick($event)">
         </app-chat-message>
       </ng-container>
     </div>

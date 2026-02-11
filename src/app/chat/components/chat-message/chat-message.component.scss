@@ -453,51 +453,60 @@
 }
 
 // Quoted message preview in message bubble
+// Quoted message preview in message bubble
 .quoted-message {
-  background: var(--taskflow-color-background-tertiary);
-  border-left: 3px solid var(--taskflow-color-accent);
-  border-radius: 6px;
-  padding: 0.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  background: var(--taskflow-color-chat-quoted-others-message-bg);
+  border-left: 5px solid var(--taskflow-color-chat-quoted-others-message-border);
+  border-top-right-radius: 8px;
+  border-bottom-right-radius: 8px;
+  padding: 0.55rem 0.65rem;
   margin-bottom: 0.5rem;
-  transition: background 0.2s ease;
+  min-width: 260px;
+  cursor: pointer;
+
+  .quoted-icon {
+    font-size: var(--taskflow-font-icon-size-xl);
+    color: var(--taskflow-color-chat-quoted-others-message-icon-color);
+    flex-shrink: 0;
+    transition: color 0.2s ease;
+  }
 
   .quoted-content {
     display: flex;
     flex-direction: column;
-    gap: 0.25rem;
+    gap: 0rem;
     min-width: 0;
+    flex: 1;
 
-    .quoted-header {
-      display: flex;
-      align-items: center;
-      gap: 0.4rem;
-
-      .quoted-icon {
-        font-size: 0.85rem;
-        color: var(--taskflow-color-accent);
-        flex-shrink: 0;
-        transition: color 0.2s ease;
-      }
-
-      .quoted-sender {
-        font-size: var(--taskflow-font-size-small);
-        font-weight: 600;
-        color: var(--taskflow-color-accent);
-        transition: color 0.2s ease;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-      }
+    .quoted-sender {
+      font-size: var(--taskflow-font-font-size-large);
+      font-weight: 600;
+      color: var(--taskflow-color-text-primary);
+      transition: color 0.2s ease;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      line-height: 1.2;
     }
 
     .quoted-text {
-      font-size: var(--taskflow-font-size-small);
+      font-size: var(--taskflow-font-font-size-normal);
       color: var(--taskflow-color-text-secondary);
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
-      padding-left: 1.25rem; // Indent to align with sender text
       transition: color 0.2s ease;
+      line-height: 1.3;
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
+
+      .quoted-type-icon {
+        font-size: var(--taskflow-font-icon-size-sm);
+      }
     }
   }
 
@@ -505,61 +514,63 @@
   &.message-unavailable {
     opacity: 0.6;
     border-left-color: var(--taskflow-color-text-tertiary);
+    cursor: not-allowed;
 
-    .quoted-content {
-      .quoted-header {
-        .quoted-icon,
-        .quoted-sender {
-          color: var(--taskflow-color-text-tertiary);
-        }
-      }
+    &:hover {
+      transform: none;
+      opacity: 0.6;
+    }
 
-      .quoted-text {
-        color: var(--taskflow-color-text-tertiary);
-        font-style: italic;
-      }
+    .quoted-icon,
+    .quoted-sender {
+      color: var(--taskflow-color-text-tertiary);
+    }
+
+    .quoted-text {
+      color: var(--taskflow-color-text-tertiary);
+      font-style: italic;
     }
   }
 }
 
 // Own message quoted message styles
 .own-message .quoted-message {
-  background: rgba(255, 255, 255, 0.1);
+  background: var(--taskflow-color-chat-quoted-own-message-bg);
+  border-left-color: var(--taskflow-color-chat-quoted-own-message-border);
 
-  .quoted-content {
-    .quoted-header {
-      .quoted-icon,
-      .quoted-sender {
-        color: var(--taskflow-color-chat-bubble-own-message-text);
-        opacity: 0.9;
-      }
-    }
+  .quoted-icon {
+    color: var(--taskflow-color-chat-quoted-own-message-icon-color);
   }
 
-  .quoted-text {
-    color: var(--taskflow-color-chat-bubble-own-message-text);
-    opacity: 0.7;
+  .quoted-content {
+    .quoted-sender {
+      color: var(--taskflow-color-text-primary);
+    }
+
+    .quoted-text {
+      color: var(--taskflow-color-text-secondary);
+    }
   }
 
   // When original message is not available/found
   &.message-unavailable {
     background: rgba(100, 100, 100, 0.15);
-    opacity: 1;
+    opacity: 0.7;
     border-left-color: var(--taskflow-color-text-tertiary);
 
-    .quoted-content {
-      .quoted-header {
-        .quoted-icon,
-        .quoted-sender {
-          color: var(--taskflow-color-text-tertiary);
-          opacity: 0.7;
-        }
-      }
+    &:hover {
+      opacity: 0.7;
+    }
 
-      .quoted-text {
-        color: var(--taskflow-color-text-tertiary);
-        opacity: 0.6;
-      }
+    .quoted-icon,
+    .quoted-sender {
+      color: var(--taskflow-color-text-tertiary);
+      opacity: 0.8;
+    }
+
+    .quoted-text {
+      color: var(--taskflow-color-text-tertiary);
+      opacity: 0.7;
     }
   }
 }
@@ -603,5 +614,23 @@
     &.own-message .reply-btn {
       left: -32px;
     }
+  }
+}
+
+// Message highlight animation (when scrolling to quoted message)
+.message-wrapper.highlighted {
+  .message-bubble {
+    animation: messageHighlight 2s ease-out;
+  }
+}
+
+@keyframes messageHighlight {
+  0% {
+    background-color: var(--taskflow-color-chat-message-highlight-bg);
+    box-shadow: 0 0 0 4px var(--taskflow-color-chat-message-highlight-bg);
+  }
+  100% {
+    background-color: inherit;
+    box-shadow: none;
   }
 }

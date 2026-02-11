@@ -40,6 +40,7 @@ export interface ChatMessageData {
 export class ChatMessageComponent {
   @Input() message!: ChatMessageData;
   @Output() replyToMessage = new EventEmitter<ChatMessageData>();
+  @Output() quotedMessageClick = new EventEmitter<string>(); // Emits the quoted message ID
 
   constructor(private dateTimeFormatService: DateTimeFormatService) { }
 
@@ -48,6 +49,15 @@ export class ChatMessageComponent {
    */
   onReplyClick(): void {
     this.replyToMessage.emit(this.message);
+  }
+
+  /**
+   * Handle quoted message click - scroll to original message
+   */
+  onQuotedMessageClick(): void {
+    if (this.message.quotedMessage && this.isQuotedMessageAvailable(this.message.quotedMessage)) {
+      this.quotedMessageClick.emit(this.message.quotedMessage.messageId);
+    }
   }
 
   /**
