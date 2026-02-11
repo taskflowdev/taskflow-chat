@@ -90,18 +90,26 @@
         <div class="reply-preview" *ngIf="replyingToMessage">
           <div class="reply-preview-content">
             <div class="reply-preview-left">
+
+              <div class="reply-label">
+                <i class="bi bi-reply"></i> Reply to
+              </div>
+
               <!-- Show appropriate icon based on content type -->
-              <i class="bi" [ngClass]="{
-                'bi-reply': !replyingToMessage.contentType || replyingToMessage.contentType === 'text',
-                'bi-image': replyingToMessage.contentType === 'image',
-                'bi-play-circle': replyingToMessage.contentType === 'video',
-                'bi-bar-chart': replyingToMessage.contentType === 'poll',
-                'bi-paperclip': replyingToMessage.contentType === 'file'
-              }"></i>
-              <div class="reply-preview-info">
-                <div class="reply-preview-header">{{ replyingToMessage.isOwn ? 'You' : (replyingToMessage.senderName ||
-                  'Unknown User') }}</div>
-                <div class="reply-preview-text">{{ getReplyPreviewText(replyingToMessage) }}</div>
+              <div class="reply-preview-content">
+                <i class="bi" [ngClass]="{
+                                'bi-quote': !replyingToMessage.contentType || replyingToMessage.contentType === 'text',
+                                'bi-image': replyingToMessage.contentType === 'image',
+                                'bi-play-circle': replyingToMessage.contentType === 'video',
+                                'bi-bar-chart': replyingToMessage.contentType === 'poll',
+                                'bi-paperclip': replyingToMessage.contentType === 'file'
+                              }"></i>
+                <div class="reply-preview-info">
+                  <div class="reply-preview-header">{{ replyingToMessage.isOwn ? 'You' : (replyingToMessage.senderName
+                    ||
+                    'Unknown User') }}</div>
+                  <div class="reply-preview-text">{{ getReplyPreviewText(replyingToMessage) }}</div>
+                </div>
               </div>
             </div>
             <button class="reply-preview-close" (click)="cancelReply()">

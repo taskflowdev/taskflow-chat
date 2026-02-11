@@ -503,7 +503,7 @@ export class ChatConversationComponent implements AfterViewChecked, OnInit, OnDe
     } else if (message.contentType === 'video') {
       return 'Video';
     } else if (message.contentType === 'poll') {
-      const maxLength = 50;
+      const maxLength = 80;
       const question = message.content || 'Poll';
       if (question.length > maxLength) {
         return question.substring(0, maxLength) + '...';
@@ -513,7 +513,7 @@ export class ChatConversationComponent implements AfterViewChecked, OnInit, OnDe
       return 'File';
     }
     // For text, truncate if too long
-    const maxLength = 50;
+    const maxLength = 80;
     if (message.content.length > maxLength) {
       return message.content.substring(0, maxLength) + '...';
     }

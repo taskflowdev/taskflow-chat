@@ -190,16 +190,47 @@
 
         .reply-preview-left {
           display: flex;
+          flex-direction: row;
           align-items: center;
-          gap: 0.65rem;
+          gap: 0.6rem;
           flex: 1;
           min-width: 0;
 
-          > i {
-            font-size: var(--taskflow-font-icon-size-xl);
-            color: var(--taskflow-color-text-primary);
-            flex-shrink: 0;
-            transition: color 0.2s ease;
+          .reply-label {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            align-self: stretch;
+            gap: 0.1rem;
+            font-size: var(--taskflow-font-font-size-normal);
+            font-weight: 500;
+            color: var(--taskflow-color-text-secondary);
+            border-right: 3px solid var(--taskflow-color-border);
+            padding-right: 0.6rem;
+
+            > i {
+              font-size: var(--taskflow-font-icon-size-lg);
+              color: var(--taskflow-color-text-secondary);
+              line-height: 0;
+            }
+          }
+
+          .reply-preview-content {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            gap: 0.65rem;
+            border-radius: 8px;
+            padding: 0.4rem 0.75rem;
+            background: var(--taskflow-color-surface-hover);
+
+            > i {
+              font-size: var(--taskflow-font-icon-size-xl);
+              color: var(--taskflow-color-text-primary);
+              flex-shrink: 0;
+              transition: color 0.2s ease;
+            }
           }
 
           .reply-preview-info {
