@@ -29,15 +29,16 @@ import { ThemeService } from '../../../core/services/theme.service';
            aria-label="Select emoji reaction"
            [attr.aria-modal]="true">
         <emoji-mart
-          [set]="'native'"
-          [theme]="currentTheme"
+          [set]="'apple'"
+          [isNative]="true"
+          [darkMode]="isDarkMode"
           [showPreview]="false"
           [perLine]="perLine"
           [emojiSize]="emojiSize"
           [i18n]="i18nConfig"
           [recent]="recentEmojis"
           (emojiClick)="onEmojiSelect($event)"
-          title="Pick your emoji reaction">
+          [title]="'Pick your emoji reaction'">
         </emoji-mart>
       </div>
     </div>
@@ -51,7 +52,7 @@ export class ReactionPickerComponent implements OnInit, OnDestroy {
   @Output() emojiSelected = new EventEmitter<string>();
   @Output() closed = new EventEmitter<void>();
 
-  currentTheme: 'light' | 'dark' = 'light';
+  isDarkMode = false;
   perLine = 8;
   emojiSize = 24;
 
@@ -78,7 +79,7 @@ export class ReactionPickerComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     // Subscribe to theme changes
     this.themeSubscription = this.themeService.currentTheme$.subscribe(theme => {
-      this.currentTheme = theme as 'light' | 'dark';
+      this.isDarkMode = theme === 'dark';
     });
 
     // Adjust picker size for mobile
