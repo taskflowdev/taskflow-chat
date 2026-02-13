@@ -205,14 +205,23 @@ export class RichEditorFormattingService {
       const listElement = this.findParentByTag(blockElement, listTag);
       if (listElement && listElement.parentNode) {
         const p = document.createElement('p');
-        p.innerHTML = blockElement.innerHTML;
+        // Transfer children instead of innerHTML to preserve DOM structure
+        while (blockElement.firstChild) {
+          p.appendChild(blockElement.firstChild);
+        }
         listElement.parentNode.replaceChild(p, listElement);
       }
     } else {
       // Add list formatting
       const list = document.createElement(listType);
       const li = document.createElement('li');
-      li.innerHTML = blockElement.innerHTML || '<br>';
+      // Transfer children instead of innerHTML to preserve DOM structure
+      while (blockElement.firstChild) {
+        li.appendChild(blockElement.firstChild);
+      }
+      if (li.childNodes.length === 0) {
+        li.appendChild(document.createElement('br'));
+      }
       list.appendChild(li);
       
       if (blockElement.parentNode) {
@@ -230,14 +239,23 @@ export class RichEditorFormattingService {
       const blockquote = this.findParentByTag(blockElement, 'BLOCKQUOTE');
       if (blockquote && blockquote.parentNode) {
         const p = document.createElement('p');
-        p.innerHTML = blockElement.innerHTML;
+        // Transfer children instead of innerHTML to preserve DOM structure
+        while (blockElement.firstChild) {
+          p.appendChild(blockElement.firstChild);
+        }
         blockquote.parentNode.replaceChild(p, blockquote);
       }
     } else {
       // Add blockquote
       const blockquote = document.createElement('blockquote');
       const p = document.createElement('p');
-      p.innerHTML = blockElement.innerHTML || '<br>';
+      // Transfer children instead of innerHTML to preserve DOM structure
+      while (blockElement.firstChild) {
+        p.appendChild(blockElement.firstChild);
+      }
+      if (p.childNodes.length === 0) {
+        p.appendChild(document.createElement('br'));
+      }
       blockquote.appendChild(p);
       
       if (blockElement.parentNode) {
@@ -256,14 +274,24 @@ export class RichEditorFormattingService {
       if (pre && pre.parentNode) {
         const p = document.createElement('p');
         const code = pre.querySelector('code');
-        p.innerHTML = code ? code.innerHTML : pre.innerHTML;
+        const sourceElement = code || pre;
+        // Transfer children instead of innerHTML to preserve DOM structure
+        while (sourceElement.firstChild) {
+          p.appendChild(sourceElement.firstChild);
+        }
         pre.parentNode.replaceChild(p, pre);
       }
     } else {
       // Add code block
       const pre = document.createElement('pre');
       const code = document.createElement('code');
-      code.innerHTML = blockElement.innerHTML || '<br>';
+      // Transfer children instead of innerHTML to preserve DOM structure
+      while (blockElement.firstChild) {
+        code.appendChild(blockElement.firstChild);
+      }
+      if (code.childNodes.length === 0) {
+        code.appendChild(document.createElement('br'));
+      }
       pre.appendChild(code);
       
       if (blockElement.parentNode) {
@@ -381,8 +409,7 @@ export class RichEditorFormattingService {
   private normalizeWhitespace(element: HTMLElement): void {
     const walker = document.createTreeWalker(
       element,
-      NodeFilter.SHOW_TEXT,
-      null
+      NodeFilter.SHOW_TEXT
     );
 
     const textNodes: Text[] = [];

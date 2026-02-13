@@ -9,9 +9,11 @@ import {
   OnDestroy,
   ChangeDetectionStrategy,
   ChangeDetectorRef,
-  AfterViewInit
+  AfterViewInit,
+  SecurityContext
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { DomSanitizer } from '@angular/platform-browser';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import {
   RichEditorFormattingService,
@@ -62,7 +64,8 @@ export class RichEditorComponent implements ControlValueAccessor, AfterViewInit,
 
   constructor(
     private formattingService: RichEditorFormattingService,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private sanitizer: DomSanitizer
   ) {}
 
   ngAfterViewInit(): void {
@@ -73,7 +76,7 @@ export class RichEditorComponent implements ControlValueAccessor, AfterViewInit,
   }
 
   ngOnDestroy(): void {
-    // Cleanup if needed
+    // No cleanup required - component is stateless
   }
 
   /**
@@ -81,7 +84,11 @@ export class RichEditorComponent implements ControlValueAccessor, AfterViewInit,
    */
   writeValue(value: string): void {
     if (this.editorContent) {
-      this.editorContent.nativeElement.innerHTML = value || '';
+      // Sanitize HTML before setting to prevent XSS
+      const sanitized = value ? this.formattingService.sanitizeHTML(value) : '';
+      const safeSanitized = this.sanitizer.sanitize(SecurityContext.HTML, sanitized) || '';
+      this.editorContent.nativeElement.innerHTML = safeSanitized;
+      this.updatePlaceholderVisibility();
       this.cdr.markForCheck();
     }
   }

@@ -53,6 +53,7 @@ export class ChatConversationComponent implements AfterViewChecked, OnInit, OnDe
   @ViewChild('richEditor') richEditor!: RichEditorComponent;
 
   newMessage = '';
+  richEditorHasContent = false; // Track rich editor content state
   replyingToMessage: ChatMessageData | null = null; // Track message being replied to
   showPollComposer = false;
   pollBtnHovered = false;
@@ -89,7 +90,7 @@ export class ChatConversationComponent implements AfterViewChecked, OnInit, OnDe
    */
   get hasMessageContent(): boolean {
     if (this.richEditor) {
-      return this.richEditor.getText().trim().length > 0;
+      return this.richEditorHasContent;
     }
     return this.newMessage.trim().length > 0;
   }
@@ -249,14 +250,18 @@ export class ChatConversationComponent implements AfterViewChecked, OnInit, OnDe
   }
 
   onSendMessage(): void {
-    const content = this.richEditor ? this.richEditor.getHTML() : this.newMessage;
-    if (content.trim() && this.conversation) {
+    // Get content - use text for validation, HTML for sending
+    const htmlContent = this.richEditor ? this.richEditor.getHTML() : this.newMessage;
+    const textContent = this.richEditor ? this.richEditor.getText() : this.newMessage;
+    
+    if (textContent.trim() && this.conversation) {
       const messageData: SendMessageWithReply = {
-        content: content.trim(),
+        content: htmlContent.trim(),
         replyToMessageId: this.replyingToMessage?.messageId
       };
       this.sendMessage.emit(messageData);
       this.newMessage = '';
+      this.richEditorHasContent = false;
       if (this.richEditor) {
         this.richEditor.clear();
       }
@@ -309,6 +314,9 @@ export class ChatConversationComponent implements AfterViewChecked, OnInit, OnDe
    * Handle input change from rich editor
    */
   onRichEditorInput(): void {
+    if (this.richEditor) {
+      this.richEditorHasContent = this.richEditor.getText().trim().length > 0;
+    }
     this.handleTypingIndicator();
   }
 
