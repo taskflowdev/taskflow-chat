@@ -28,6 +28,12 @@
       <i class="bi bi-reply"></i>
     </button>
 
+    <!-- Reaction button -->
+    <button class="reaction-btn" (click)="onReactionClick($event)" appCommonTooltip="React to this message"
+      *ngIf="!message.isSystemMessage">
+      <i class="bi bi-emoji-smile"></i>
+    </button>
+
     <!-- Quoted Message Preview -->
     <div class="quoted-message" *ngIf="message.quotedMessage"
       [class.message-unavailable]="!isQuotedMessageAvailable(message.quotedMessage)" (click)="onQuotedMessageClick()">
@@ -91,5 +97,21 @@
         </div>
       </ng-container>
     </div>
+
+    <!-- Message Reactions Display -->
+    <app-message-reaction
+      [messageId]="message.messageId"
+      [currentUserId]="message.currentUserId ?? ''"
+      [isOwnMessage]="message.isOwn"
+      (reactionToggled)="onReactionToggled($event)">
+    </app-message-reaction>
   </div>
 </div>
+
+<!-- Reaction Picker Overlay -->
+<app-reaction-picker
+  *ngIf="showReactionPicker"
+  [position]="pickerPosition"
+  (emojiSelected)="onEmojiSelected($event)"
+  (closed)="closeReactionPicker()">
+</app-reaction-picker>
