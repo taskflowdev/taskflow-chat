@@ -15,6 +15,7 @@ import { PollComposerComponent, PollData } from '../poll-composer/poll-composer.
 import { AutoScrollService } from '../../services/auto-scroll.service';
 import { TranslatePipe, I18nService } from '../../../core/i18n';
 import { TypingIndicatorSettingsService } from '../../../core/services/typing-indicator-settings.service';
+import { RichEditorComponent } from '../../../shared/components/rich-editor';
 
 export interface SendMessageWithReply {
   content: string;
@@ -30,7 +31,7 @@ export interface ConversationData {
 
 @Component({
   selector: 'app-chat-conversation',
-  imports: [CommonModule, FormsModule, ChatMessageComponent, SkeletonLoaderComponent, GroupInfoDialogComponent, CommonDropdownComponent, CommonTooltipDirective, ScrollToBottomButtonComponent, TypingIndicatorComponent, PresenceAvatarsComponent, PollComposerComponent, TranslatePipe],
+  imports: [CommonModule, FormsModule, ChatMessageComponent, SkeletonLoaderComponent, GroupInfoDialogComponent, CommonDropdownComponent, CommonTooltipDirective, ScrollToBottomButtonComponent, TypingIndicatorComponent, PresenceAvatarsComponent, PollComposerComponent, TranslatePipe, RichEditorComponent],
   providers: [AutoScrollService],
   templateUrl: './chat-conversation.component.html',
   styleUrls: ['./chat-conversation.component.scss']
@@ -49,6 +50,7 @@ export class ChatConversationComponent implements AfterViewChecked, OnInit, OnDe
   @Output() userTyping = new EventEmitter<boolean>(); // User typing indicator
 
   @ViewChild('messagesContainer') messagesContainer!: ElementRef;
+  @ViewChild('richEditor') richEditor!: RichEditorComponent;
 
   newMessage = '';
   replyingToMessage: ChatMessageData | null = null; // Track message being replied to
@@ -80,6 +82,16 @@ export class ChatConversationComponent implements AfterViewChecked, OnInit, OnDe
       items.push({ index: i });
     }
     return items;
+  }
+
+  /**
+   * Check if message input has content
+   */
+  get hasMessageContent(): boolean {
+    if (this.richEditor) {
+      return this.richEditor.getText().trim().length > 0;
+    }
+    return this.newMessage.trim().length > 0;
   }
 
   constructor(
@@ -237,13 +249,17 @@ export class ChatConversationComponent implements AfterViewChecked, OnInit, OnDe
   }
 
   onSendMessage(): void {
-    if (this.newMessage.trim() && this.conversation) {
+    const content = this.richEditor ? this.richEditor.getHTML() : this.newMessage;
+    if (content.trim() && this.conversation) {
       const messageData: SendMessageWithReply = {
-        content: this.newMessage.trim(),
+        content: content.trim(),
         replyToMessageId: this.replyingToMessage?.messageId
       };
       this.sendMessage.emit(messageData);
       this.newMessage = '';
+      if (this.richEditor) {
+        this.richEditor.clear();
+      }
       this.replyingToMessage = null; // Clear reply state
       this.shouldScrollToBottom = true;
     }
@@ -280,6 +296,20 @@ export class ChatConversationComponent implements AfterViewChecked, OnInit, OnDe
       // Send typing indicator
       this.handleTypingIndicator();
     }
+  }
+
+  /**
+   * Handle enter key from rich editor
+   */
+  onRichEditorEnter(): void {
+    this.onSendMessage();
+  }
+
+  /**
+   * Handle input change from rich editor
+   */
+  onRichEditorInput(): void {
+    this.handleTypingIndicator();
   }
 
   /**
@@ -450,9 +480,13 @@ export class ChatConversationComponent implements AfterViewChecked, OnInit, OnDe
     this.replyingToMessage = message;
     // Focus the message input
     setTimeout(() => {
-      const textarea = document.querySelector('.message-input') as HTMLTextAreaElement;
-      if (textarea) {
-        textarea.focus();
+      if (this.richEditor) {
+        this.richEditor.focus();
+      } else {
+        const textarea = document.querySelector('.message-input') as HTMLTextAreaElement;
+        if (textarea) {
+          textarea.focus();
+        }
       }
     }, 0);
   }

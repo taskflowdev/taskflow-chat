@@ -315,8 +315,14 @@
       }
     }
 
-    // When reply preview is active, adjust border radius
-    .input-with-reply:has(.reply-preview) .message-input {
+    // Rich editor integration
+    app-rich-editor {
+      flex: 1;
+    }
+
+    // When reply preview is active, adjust border radius for both textarea and rich editor
+    .input-with-reply:has(.reply-preview) .message-input,
+    .input-with-reply:has(.reply-preview) app-rich-editor ::ng-deep .editor-content {
       border-radius: 0 0 10px 10px;
       // border-top: none;
     }
