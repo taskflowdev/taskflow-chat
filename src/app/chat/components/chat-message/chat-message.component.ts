@@ -45,6 +45,10 @@ export interface ChatMessageData {
   styleUrl: './chat-message.component.scss'
 })
 export class ChatMessageComponent implements OnInit, OnDestroy {
+  // Picker positioning constants
+  private static readonly PICKER_OFFSET_PX = 10;
+  private static readonly PICKER_HORIZONTAL_OFFSET_PX = 40;
+
   @Input() message!: ChatMessageData;
   @Output() replyToMessage = new EventEmitter<ChatMessageData>();
   @Output() quotedMessageClick = new EventEmitter<string>(); // Emits the quoted message ID
@@ -99,17 +103,17 @@ export class ChatMessageComponent implements OnInit, OnDestroy {
     // For other messages (left-aligned), position picker to the right
     if (this.message.isOwn) {
       this.pickerPosition = {
-        right: `${window.innerWidth - rect.right + 40}px`,
+        right: `${window.innerWidth - rect.right + ChatMessageComponent.PICKER_HORIZONTAL_OFFSET_PX}px`,
         ...(isLowerHalf 
-          ? { bottom: `${window.innerHeight - rect.top + 10}px` }
-          : { top: `${rect.bottom + 10}px` })
+          ? { bottom: `${window.innerHeight - rect.top + ChatMessageComponent.PICKER_OFFSET_PX}px` }
+          : { top: `${rect.bottom + ChatMessageComponent.PICKER_OFFSET_PX}px` })
       };
     } else {
       this.pickerPosition = {
-        left: `${rect.left - 40}px`,
+        left: `${rect.left - ChatMessageComponent.PICKER_HORIZONTAL_OFFSET_PX}px`,
         ...(isLowerHalf 
-          ? { bottom: `${window.innerHeight - rect.top + 10}px` }
-          : { top: `${rect.bottom + 10}px` })
+          ? { bottom: `${window.innerHeight - rect.top + ChatMessageComponent.PICKER_OFFSET_PX}px` }
+          : { top: `${rect.bottom + ChatMessageComponent.PICKER_OFFSET_PX}px` })
       };
     }
     

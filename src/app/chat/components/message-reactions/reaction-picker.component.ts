@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { PickerComponent } from '@ctrl/ngx-emoji-mart';
 import { EmojiEvent } from './reaction.models';
 import { ThemeService } from '../../../core/services/theme.service';
+import { Subscription } from 'rxjs';
 
 /**
  * Reaction Picker Component
@@ -47,6 +48,11 @@ import { ThemeService } from '../../../core/services/theme.service';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ReactionPickerComponent implements OnInit, OnDestroy {
+  // Responsive breakpoints
+  private static readonly MOBILE_BREAKPOINT = 480;
+  private static readonly TABLET_BREAKPOINT = 768;
+  private static readonly FOCUS_DELAY_MS = 100;
+
   @Input() position: { top?: string; bottom?: string; left?: string; right?: string } = {};
   @Input() recentEmojis: string[] = [];
   @Output() emojiSelected = new EventEmitter<string>();
@@ -72,7 +78,7 @@ export class ReactionPickerComponent implements OnInit, OnDestroy {
     }
   };
 
-  private themeSubscription: any;
+  private themeSubscription: Subscription | null = null;
 
   constructor(private themeService: ThemeService) {}
 
@@ -83,10 +89,10 @@ export class ReactionPickerComponent implements OnInit, OnDestroy {
     });
 
     // Adjust picker size for mobile
-    if (window.innerWidth <= 480) {
+    if (window.innerWidth <= ReactionPickerComponent.MOBILE_BREAKPOINT) {
       this.perLine = 6;
       this.emojiSize = 20;
-    } else if (window.innerWidth <= 768) {
+    } else if (window.innerWidth <= ReactionPickerComponent.TABLET_BREAKPOINT) {
       this.perLine = 7;
       this.emojiSize = 22;
     }
@@ -97,7 +103,7 @@ export class ReactionPickerComponent implements OnInit, OnDestroy {
       if (container) {
         container.focus();
       }
-    }, 100);
+    }, ReactionPickerComponent.FOCUS_DELAY_MS);
   }
 
   ngOnDestroy(): void {
@@ -135,10 +141,10 @@ export class ReactionPickerComponent implements OnInit, OnDestroy {
    */
   @HostListener('window:resize')
   onResize(): void {
-    if (window.innerWidth <= 480) {
+    if (window.innerWidth <= ReactionPickerComponent.MOBILE_BREAKPOINT) {
       this.perLine = 6;
       this.emojiSize = 20;
-    } else if (window.innerWidth <= 768) {
+    } else if (window.innerWidth <= ReactionPickerComponent.TABLET_BREAKPOINT) {
       this.perLine = 7;
       this.emojiSize = 22;
     } else {

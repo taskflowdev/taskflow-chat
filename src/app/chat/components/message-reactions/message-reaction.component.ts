@@ -31,8 +31,8 @@ import { CommonTooltipDirective } from '../../../shared/components/common-toolti
            role="button"
            [attr.aria-label]="getReactionAriaLabel(reaction)"
            tabindex="0"
-           (keydown.enter)="onReactionClick(reaction)"
-           (keydown.space)="onReactionClick($event, reaction)">
+           (keydown.enter)="onReactionKeydown($event, reaction)"
+           (keydown.space)="onReactionKeydown($event, reaction)">
         <span class="emoji">{{ reaction.emoji }}</span>
         <span class="count" *ngIf="reaction.count > 1">{{ reaction.count }}</span>
       </div>
@@ -79,15 +79,18 @@ export class MessageReactionComponent implements OnInit, OnDestroy {
   /**
    * Handle reaction click (toggle)
    */
-  onReactionClick(event: any, reaction?: GroupedReaction): void {
-    // Prevent event propagation if it's a keyboard event
-    if (event instanceof KeyboardEvent) {
-      event.preventDefault();
-    }
-    
-    if (reaction) {
-      this.reactionToggled.emit(reaction);
-    }
+  onReactionClick(reaction: GroupedReaction): void {
+    this.reactionToggled.emit(reaction);
+  }
+
+  /**
+   * Handle reaction keyboard interaction
+   */
+  onReactionKeydown(event: Event, reaction: GroupedReaction): void {
+    // Angular's keydown event binding provides Event type, cast to KeyboardEvent
+    const keyboardEvent = event as KeyboardEvent;
+    keyboardEvent.preventDefault();
+    this.reactionToggled.emit(reaction);
   }
 
   /**

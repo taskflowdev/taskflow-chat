@@ -18,6 +18,9 @@ import { GroupedReaction, MessageReactions } from './reaction.models';
   providedIn: 'root'
 })
 export class ReactionService {
+  // Cache configuration
+  private static readonly MAX_CACHE_SIZE = 500; // Maximum number of messages to cache
+  
   // Store for optimistic updates
   private reactionsCache = new Map<string, BehaviorSubject<MessageReactions>>();
 
@@ -256,8 +259,19 @@ export class ReactionService {
 
   /**
    * Update the cache for a message
+   * Implements LRU-style cache eviction to prevent memory leaks
    */
   private updateCache(messageId: string, reactions: MessageReactions): void {
+    // Check if cache is at max size and this is a new entry
+    if (!this.reactionsCache.has(messageId) && 
+        this.reactionsCache.size >= ReactionService.MAX_CACHE_SIZE) {
+      // Remove oldest entry (first entry in Map)
+      const firstKey = this.reactionsCache.keys().next().value;
+      if (firstKey) {
+        this.reactionsCache.delete(firstKey);
+      }
+    }
+
     if (!this.reactionsCache.has(messageId)) {
       this.reactionsCache.set(messageId, new BehaviorSubject(reactions));
     } else {

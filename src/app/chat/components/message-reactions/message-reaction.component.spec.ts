@@ -68,7 +68,23 @@ describe('MessageReactionComponent', () => {
       hasCurrentUser: true
     };
 
-    component.onReactionClick({}, mockReaction);
+    component.onReactionClick(mockReaction);
+    
+    expect(component.reactionToggled.emit).toHaveBeenCalledWith(mockReaction);
+  });
+
+  it('should emit reactionToggled on keyboard interaction', () => {
+    spyOn(component.reactionToggled, 'emit');
+    
+    const mockReaction = {
+      emoji: '👍',
+      count: 1,
+      userIds: [mockUserId],
+      hasCurrentUser: true
+    };
+
+    const mockEvent = new KeyboardEvent('keydown', { key: 'Enter' });
+    component.onReactionKeydown(mockEvent, mockReaction);
     
     expect(component.reactionToggled.emit).toHaveBeenCalledWith(mockReaction);
   });
