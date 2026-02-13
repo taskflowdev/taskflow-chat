@@ -71,6 +71,7 @@
     transition:
       background 0.2s ease,
       border-color 0.2s ease;
+    margin-bottom: 12px; // Extra space for reactions
 
     .message-header {
       display: flex;
@@ -390,7 +391,8 @@
 .message-wrapper {
   position: relative;
 
-  .reply-btn {
+  .reply-btn,
+  .reaction-btn {
     position: absolute;
     top: 50%;
     transform: translateY(-50%);
@@ -421,29 +423,44 @@
     }
   }
 
-  &:hover .reply-btn {
+  &:hover .reply-btn,
+  &:hover .reaction-btn {
     opacity: 1;
     visibility: visible;
   }
 
-  // Show reply button on active/focus for touch devices
+  // Show buttons on active/focus for touch devices
   &:active .reply-btn,
-  &:focus-within .reply-btn {
+  &:active .reaction-btn,
+  &:focus-within .reply-btn,
+  &:focus-within .reaction-btn {
     opacity: 1;
     visibility: visible;
   }
 
-  // Position reply button on the right for messages from others
-  &:not(.own-message) .reply-btn {
-    right: -38px;
+  // Position buttons on the right for messages from others
+  &:not(.own-message) {
+    .reply-btn {
+      right: -38px;
+    }
+
+    .reaction-btn {
+      right: -76px;
+    }
   }
 
-  // Position reply button on the left for own messages
-  &.own-message .reply-btn {
-    left: -38px;
+  // Position buttons on the left for own messages
+  &.own-message {
+    .reply-btn {
+      left: -38px;
 
-    i {
-      transform: scaleX(-1); // Flip the reply icon for own messages
+      i {
+        transform: scaleX(-1); // Flip the reply icon for own messages
+      }
+    }
+
+    .reaction-btn {
+      left: -76px;
     }
   }
 }
@@ -602,17 +619,32 @@
       }
     }
 
-    // Adjust reply button for mobile
-    .reply-btn i {
-      font-size: var(--taskflow-font-icon-size-lg);
+    // Adjust reply and reaction buttons for mobile
+    .reply-btn,
+    .reaction-btn {
+      i {
+        font-size: var(--taskflow-font-icon-size-lg);
+      }
     }
 
-    &:not(.own-message) .reply-btn {
-      right: -32px;
+    &:not(.own-message) {
+      .reply-btn {
+        right: -32px;
+      }
+
+      .reaction-btn {
+        right: -64px;
+      }
     }
 
-    &.own-message .reply-btn {
-      left: -32px;
+    &.own-message {
+      .reply-btn {
+        left: -32px;
+      }
+
+      .reaction-btn {
+        left: -64px;
+      }
     }
   }
 }
