@@ -4,20 +4,23 @@
 
     <div *ngFor="let member of visibleMembers" class="avatar-item" (mouseenter)="onAvatarHover($event, member)"
       (mouseleave)="onAvatarLeave()">
-      <div class="avatar-circle">
-        <span class="avatar-initials">{{ getInitials(getUserFullName(member)) }}</span>
-        <span class="online-indicator"
-          *ngIf="member.isOnline === true && (member.statusVisibilityEnabled === true || member.statusVisibilityEnabled === undefined)"></span>
-        <span class="offline-indicator"
-          *ngIf="member.isOnline === false && (member.statusVisibilityEnabled === true || member.statusVisibilityEnabled === undefined)"></span>
-      </div>
+      <app-avatar
+        size="md"
+        tone="profile"
+        [name]="getUserFullName(member)"
+        [presence]="getAvatarPresence(member)"
+        [ariaLabel]="'Avatar for ' + getUserFullName(member)">
+      </app-avatar>
     </div>
 
     <!-- +N indicator for remaining users -->
     <div *ngIf="remainingCount > 0" class="avatar-item avatar-more">
-      <div class="avatar-circle">
-        <span class="avatar-initials">+{{ remainingCount }}</span>
-      </div>
+      <app-avatar
+        size="md"
+        tone="subtle"
+        [textOverride]="'+' + remainingCount"
+        ariaLabel="Additional members">
+      </app-avatar>
     </div>
   </div>
 
@@ -28,11 +31,13 @@
 
     <div class="profile-card-header">
       <div class="profile-card-avatar">
-        <span class="profile-initials">{{ getInitials(getUserFullName(hoveredUser)) }}</span>
-        <span class="profile-online-dot"
-          *ngIf="hoveredUser.isOnline === true && (hoveredUser.statusVisibilityEnabled === true || hoveredUser.statusVisibilityEnabled === undefined)"></span>
-        <span class="profile-offline-dot"
-          *ngIf="hoveredUser.isOnline === false && (hoveredUser.statusVisibilityEnabled === true || hoveredUser.statusVisibilityEnabled === undefined)"></span>
+        <app-avatar
+          size="lg"
+          tone="profile"
+          [name]="getUserFullName(hoveredUser)"
+          [presence]="getAvatarPresence(hoveredUser)"
+          [ariaLabel]="'Avatar for ' + getUserFullName(hoveredUser)">
+        </app-avatar>
       </div>
 
       <div class="profile-card-info">

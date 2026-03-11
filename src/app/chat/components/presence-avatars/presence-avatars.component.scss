@@ -34,63 +34,13 @@
   }
 }
 
-.avatar-circle {
-  position: relative;
-  width: 44px;
-  height: 44px;
-  border-radius: 50%;
-  background: var(--taskflow-color-profile-avatar-bg);
-  border: 2px solid var(--taskflow-color-profile-avatar-border);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
-}
-
-.avatar-initials {
-  font-size: var(--taskflow-font-font-size-large);
-  font-weight: 600;
-  color: var(--taskflow-color-profile-avatar-text);
-  user-select: none;
-  letter-spacing: 0.3px;
-}
-
-.online-indicator {
-  position: absolute;
-  bottom: -2px;
-  right: -2px;
-  width: 14px;
-  height: 14px;
-  border-radius: 50%;
-  background: var(--taskflow-color-success);
-  border: 1px solid var(--taskflow-color-background);
-}
-
-.offline-indicator {
-  position: absolute;
-  bottom: -2px;
-  right: -2px;
-  width: 14px;
-  height: 14px;
-  border-radius: 50%;
-  background: var(--taskflow-color-dropdown-bg);
-  border: 2px solid var(--taskflow-color-text-tertiary);
-  box-sizing: border-box;
+.avatar-item app-avatar {
+  display: block;
 }
 
 .avatar-more {
-  .avatar-circle {
-    background: var(--taskflow-color-surface-subtle);
-    border-color: var(--taskflow-color-border);
-  }
-
-  .avatar-initials {
-    color: var(--taskflow-color-text-secondary);
-    font-size: 10px;
-  }
-
-  &:hover .avatar-circle {
-    background: var(--taskflow-color-surface-hover);
+  &:hover {
+    opacity: 0.9;
   }
 }
 
@@ -121,47 +71,8 @@
 }
 
 .profile-card-avatar {
-  position: relative;
-  width: 54px;
-  height: 54px;
-  border-radius: 50%;
-  background: var(--taskflow-color-profile-avatar-bg);
-  border: 2px solid var(--taskflow-color-profile-avatar-border);
   display: flex;
-  align-items: center;
-  justify-content: center;
   flex-shrink: 0;
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
-}
-
-.profile-initials {
-  font-size: var(--taskflow-font-font-size-h3);
-  font-weight: 600;
-  color: var(--taskflow-color-profile-avatar-text);
-  user-select: none;
-}
-
-.profile-online-dot {
-  position: absolute;
-  bottom: 0;
-  right: 0;
-  width: 16px;
-  height: 16px;
-  border-radius: 50%;
-  background: var(--taskflow-color-success);
-  border: 2px solid var(--taskflow-color-tooltip-bg);
-}
-
-.profile-offline-dot {
-  position: absolute;
-  bottom: 0;
-  right: 0;
-  width: 16px;
-  height: 16px;
-  border-radius: 50%;
-  background: var(--taskflow-color-dropdown-bg);
-  border: 2px solid var(--taskflow-color-text-tertiary, rgba(0, 0, 0, 0.3));
-  box-sizing: border-box;
 }
 
 .profile-card-separator {
@@ -303,18 +214,9 @@
 
 // Responsive Design
 @media (max-width: 768px) {
-  .avatar-circle {
-    width: 24px;
-    height: 24px;
-  }
-
-  .avatar-initials {
-    font-size: 10px;
-  }
-
-  .online-indicator {
-    width: 8px;
-    height: 8px;
+  .avatar-item app-avatar {
+    transform: scale(0.55);
+    transform-origin: center;
   }
 
   .profile-hover-card {

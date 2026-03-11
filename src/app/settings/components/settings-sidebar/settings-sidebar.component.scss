@@ -106,21 +106,10 @@
 
 .profile-avatar-small {
   flex-shrink: 0;
-}
 
-.avatar-circle-small {
-  width: 45px;
-  height: 45px;
-  border-radius: 50%;
-  background: var(--taskflow-color-profile-sidebar-avatar-bg);
-  color: var(--taskflow-color-profile-sidebar-avatar-text);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: var(--taskflow-font-font-size-large);
-  font-weight: 600;
-  letter-spacing: 0.5px;
-  border: 2px solid var(--taskflow-color-profile-sidebar-avatar-border);
+  app-avatar {
+    display: block;
+  }
 }
 
 .profile-info {

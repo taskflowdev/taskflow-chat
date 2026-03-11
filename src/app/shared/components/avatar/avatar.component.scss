@@ -1,0 +1,108 @@
+.tf-avatar {
+  position: relative;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  user-select: none;
+  box-sizing: border-box;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+
+  &--sm {
+    width: 40px;
+    height: 40px;
+
+    .tf-avatar__text {
+      font-size: var(--taskflow-font-font-size-normal);
+    }
+
+    .tf-avatar__indicator {
+      width: 12px;
+      height: 12px;
+      right: -2px;
+      bottom: -2px;
+    }
+  }
+
+  &--md {
+    width: 44px;
+    height: 44px;
+
+    .tf-avatar__text {
+      font-size: var(--taskflow-font-font-size-large);
+    }
+
+    .tf-avatar__indicator {
+      width: 14px;
+      height: 14px;
+      right: -2px;
+      bottom: -2px;
+    }
+  }
+
+  &--lg {
+    width: 54px;
+    height: 54px;
+
+    .tf-avatar__text {
+      font-size: var(--taskflow-font-font-size-h3);
+    }
+
+    .tf-avatar__indicator {
+      width: 16px;
+      height: 16px;
+      right: 0;
+      bottom: 0;
+    }
+  }
+
+  &--tone-profile {
+    background: var(--taskflow-color-profile-avatar-bg);
+    border: 2px solid var(--taskflow-color-profile-avatar-border);
+
+    .tf-avatar__text {
+      color: var(--taskflow-color-profile-avatar-text);
+    }
+  }
+
+  &--tone-sidebar {
+    background: var(--taskflow-color-profile-sidebar-avatar-bg);
+    border: 2px solid var(--taskflow-color-profile-sidebar-avatar-border);
+
+    .tf-avatar__text {
+      color: var(--taskflow-color-profile-sidebar-avatar-text);
+    }
+  }
+
+  &--tone-subtle {
+    background: var(--taskflow-color-surface-subtle);
+    border: 2px solid var(--taskflow-color-border);
+
+    .tf-avatar__text {
+      color: var(--taskflow-color-text-primary);
+      font-size: var(--taskflow-font-font-size-small);
+    }
+  }
+}
+
+.tf-avatar__text {
+  font-weight: 600;
+  letter-spacing: 0.3px;
+  line-height: 1;
+}
+
+.tf-avatar__indicator {
+  position: absolute;
+  border-radius: 50%;
+  box-sizing: border-box;
+}
+
+.tf-avatar__indicator--online {
+  background: var(--taskflow-color-success);
+  border: 1px solid var(--taskflow-color-background);
+}
+
+.tf-avatar__indicator--offline {
+  background: var(--taskflow-color-dropdown-bg);
+  border: 2px solid var(--taskflow-color-text-tertiary);
+}

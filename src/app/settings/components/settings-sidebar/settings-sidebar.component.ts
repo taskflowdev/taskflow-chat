@@ -8,13 +8,13 @@ import { map, filter, takeUntil } from 'rxjs/operators';
 import { CatalogResponse } from '../../../api/models/catalog-response';
 import { CategoryWithKeys } from '../../../api/models/category-with-keys';
 import { TranslatePipe, I18nService } from '../../../core/i18n';
-import { getUserInitials } from '../../../shared/utils/user.utils';
 import { CommonTooltipDirective } from "../../../shared/components/common-tooltip";
+import { AvatarComponent } from '../../../shared/components/avatar/avatar.component';
 
 @Component({
   selector: 'app-settings-sidebar',
   standalone: true,
-  imports: [CommonModule, RouterModule, TranslatePipe, CommonTooltipDirective],
+  imports: [CommonModule, RouterModule, TranslatePipe, CommonTooltipDirective, AvatarComponent],
   templateUrl: './settings-sidebar.component.html',
   styleUrls: ['./settings-sidebar.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -86,13 +86,6 @@ export class SettingsSidebarComponent implements OnInit, OnDestroy {
       return 'bi-' + category.iconSelected;
     }
     return 'bi-' + (category.icon || 'box');
-  }
-
-  /**
-   * Get user initials for avatar display
-   */
-  getUserInitials(user: AuthUser): string {
-    return getUserInitials(user);
   }
 
   /**
