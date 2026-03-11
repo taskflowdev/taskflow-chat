@@ -7,11 +7,13 @@ import { AuthService } from '../../../auth/services/auth.service';
 import { interval, Subscription, Observable, Subject } from 'rxjs';
 import { switchMap, catchError, takeUntil } from 'rxjs/operators';
 import { of } from 'rxjs';
+import { AvatarComponent } from '../../../shared/components/avatar/avatar.component';
+import { DateTimeFormatService } from '../../../core/services/datetime-format.service';
 
 @Component({
   selector: 'app-presence-avatars',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, AvatarComponent],
   templateUrl: './presence-avatars.component.html',
   styleUrls: ['./presence-avatars.component.scss']
 })
@@ -37,7 +39,8 @@ export class PresenceAvatarsComponent implements OnInit, OnDestroy {
   constructor(
     private groupsService: GroupsService,
     private authService: AuthService,
-    private elementRef: ElementRef
+    private elementRef: ElementRef,
+    private dateTimeFormat: DateTimeFormatService
   ) { }
 
   ngOnInit(): void {
@@ -132,16 +135,20 @@ export class PresenceAvatarsComponent implements OnInit, OnDestroy {
       );
   }
 
-  /**
-   * Get the initials from a user's name
-   */
-  getInitials(name: string): string {
-    if (!name) return '??';
-    const parts = name.trim().split(/\s+/);
-    if (parts.length === 1) {
-      return parts[0].substring(0, 2).toUpperCase();
+  getAvatarPresence(member: PresenceDto): 'online' | 'offline' | null {
+    if (member.statusVisibilityEnabled === false) {
+      return null;
     }
-    return (parts[0].charAt(0) + parts[parts.length - 1].charAt(0)).toUpperCase();
+
+    if (member.isOnline === true) {
+      return 'online';
+    }
+
+    if (member.isOnline === false) {
+      return 'offline';
+    }
+
+    return null;
   }
 
   /**
@@ -354,16 +361,22 @@ export class PresenceAvatarsComponent implements OnInit, OnDestroy {
     const diffHours = Math.floor(diffMs / 3600000);
     const diffDays = Math.floor(diffMs / 86400000);
 
+    const timeStr = this.dateTimeFormat.formatTime(member.lastSeen);
+
     if (diffMinutes < 1) {
       return 'Last seen just now';
     } else if (diffMinutes < 60) {
       return `Last seen ${diffMinutes} minute${diffMinutes > 1 ? 's' : ''} ago`;
     } else if (diffHours < 24) {
-      return `Last seen ${diffHours} hour${diffHours > 1 ? 's' : ''} ago`;
+      return `Last seen today at ${timeStr}`;
+    } else if (diffDays === 1) {
+      return `Last seen yesterday at ${timeStr}`;
     } else if (diffDays < 7) {
-      return `Last seen ${diffDays} day${diffDays > 1 ? 's' : ''} ago`;
+      const dayName = lastSeenDate.toLocaleDateString([], { weekday: 'long' });
+      return `Last seen on ${dayName} at ${timeStr}`;
     } else {
-      return `Last seen on ${lastSeenDate.toLocaleDateString()}`;
+      const dateStr = lastSeenDate.toLocaleDateString([], { month: 'long', day: 'numeric', year: 'numeric' });
+      return `Last seen on ${dateStr}`;
     }
   }
 

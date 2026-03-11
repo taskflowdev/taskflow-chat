@@ -1,0 +1,20 @@
+<div
+  class="tf-avatar"
+  [ngClass]="[
+    'tf-avatar--' + size,
+    'tf-avatar--tone-' + tone
+  ]"
+  [attr.aria-label]="computedAriaLabel"
+  role="img">
+  <span class="tf-avatar__text">{{ displayText }}</span>
+
+  <span
+    *ngIf="presence === 'online'"
+    class="tf-avatar__indicator tf-avatar__indicator--online"
+    aria-hidden="true"></span>
+
+  <span
+    *ngIf="presence === 'offline'"
+    class="tf-avatar__indicator tf-avatar__indicator--offline"
+    aria-hidden="true"></span>
+</div>

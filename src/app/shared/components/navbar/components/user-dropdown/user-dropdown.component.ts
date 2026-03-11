@@ -1,7 +1,9 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { RouterModule } from '@angular/router';
 import { AuthUser } from '../../../../../auth/services/auth.service';
 import { CommonTooltipDirective } from "../../../common-tooltip/common-tooltip.component";
+import { AvatarComponent } from '../../../avatar/avatar.component';
 
 export interface DropdownItem {
   label: string;
@@ -20,7 +22,7 @@ export interface DropdownItem {
 @Component({
   selector: 'app-user-dropdown',
   standalone: true,
-  imports: [CommonModule, CommonTooltipDirective],
+  imports: [CommonModule, RouterModule, CommonTooltipDirective, AvatarComponent],
   template: `
     <div class="user-section" *ngIf="user">
       <div class="dropdown">
@@ -29,7 +31,17 @@ export interface DropdownItem {
           type="button"
           data-bs-toggle="dropdown"
           aria-expanded="false">
-          <span class="user-name">{{ user.fullName }}</span>
+          <app-avatar
+            size="sm"
+            tone="profile"
+            presence="online"
+            [name]="getDisplayName(user)"
+            [ariaLabel]="'Avatar for ' + getDisplayName(user)">
+          </app-avatar>
+          <div class="user-info">
+            <span class="user-name">{{ getDisplayName(user) }}</span>
+            <span class="user-email">{{ user.email }}</span>
+          </div>
           <i class="bi bi-chevron-down dropdown-icon"></i>
         </button>
 
@@ -40,7 +52,7 @@ export interface DropdownItem {
               <a
                 *ngIf="item.href"
                 class="dropdown-item d-flex align-items-center justify-content-between"
-                [href]="item.href"
+                [routerLink]="item.href"
                 [appCommonTooltip]="item.label">
                 <div class="d-flex align-items-center">
                   <i class="bi me-2" [ngClass]="item.icon"></i>
@@ -84,6 +96,10 @@ export class UserDropdownComponent {
    */
   onItemClick(item: DropdownItem): void {
     this.itemClick.emit(item);
+  }
+
+  getDisplayName(user: AuthUser): string {
+    return user.fullName || user.userName || 'Unknown User';
   }
 
   /**

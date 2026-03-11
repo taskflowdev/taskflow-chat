@@ -2,12 +2,12 @@
 .user-section {
   .dropdown {
     .user-dropdown-btn {
-      background: transparent;
+      background: var(--taskflow-color-surface-hover);
       color: var(--taskflow-color-text-primary);
       font-weight: 500;
       font-size: var(--taskflow-font-font-size-normal);
-      padding: 0.5rem 1rem;
-      border-radius: 6px;
+      padding: 0.2rem 0.4rem;
+      border-radius: 8px;
       transition: all 0.3s ease;
       display: flex;
       align-items: center;
@@ -15,11 +15,38 @@
       z-index: 2;
       cursor: pointer;
 
+      app-avatar {
+        flex-shrink: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .user-info {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        gap: 0rem;
+        min-width: 0;
+        align-items: flex-start;
+      }
+
       .user-name {
-        max-width: 120px;
+        max-width: 100%;
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
+        font-weight: bold;
+        font-size: var(--taskflow-font-font-size-normal);
+      }
+
+      .user-email {
+        max-width: 100%;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        font-size: var(--taskflow-font-font-size-small);
+        color: var(--taskflow-color-text-secondary);
       }
 
       .dropdown-icon {
@@ -28,8 +55,6 @@
       }
 
       &:hover {
-        background: var(--taskflow-color-user-dropdown-item-hover);
-        transition: background 0.2s ease;
         color: var(--taskflow-color-text-primary);
       }
 
@@ -120,8 +145,21 @@
         padding: 0.4rem 0.75rem;
         font-size: var(--taskflow-font-font-size-small);
 
+        app-avatar {
+          transform: scale(0.9);
+          transform-origin: center;
+        }
+
+        .user-info {
+          gap: 0.1rem;
+        }
+
         .user-name {
-          max-width: 100px;
+          font-size: var(--taskflow-font-font-size-normal);
+        }
+
+        .user-email {
+          font-size: var(--taskflow-font-font-size-x-small);
         }
 
         .dropdown-icon {
@@ -151,9 +189,23 @@
     .dropdown {
       .user-dropdown-btn {
         padding: 0.3rem 0.5rem;
+        gap: 0.4rem;
+
+        app-avatar {
+          transform: scale(0.85);
+        }
+
+        .user-info {
+          gap: 0.08rem;
+          display: none;
+        }
 
         .user-name {
-          max-width: 80px;
+          display: none;
+        }
+
+        .user-email {
+          display: none;
         }
       }
 

@@ -62,7 +62,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
       {
         label: this.i18n.t('navbar.account-manager.item-profile'),
         icon: 'bi-person',
-        href: '#'
+        href: '/settings/profile'
       },
       {
         label: this.i18n.t('navbar.account-manager.item-keyboard-shortcuts.title'),
