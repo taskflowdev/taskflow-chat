@@ -1,9 +1,15 @@
-import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { Component, Input, Output, EventEmitter, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { CommonTooltipDirective } from "../../../shared/components/common-tooltip";
 import { DateTimeFormatService } from '../../../core/services/datetime-format.service';
 import { PollMessageComponent } from '../poll-message/poll-message.component';
-import { PollResultsDto } from '../../../api/models';
+import { PollResultsDto, MessageMetadata } from '../../../api/models';
+import { MessageReactionComponent } from '../message-reactions/message-reaction.component';
+import { ReactionPickerComponent } from '../message-reactions/reaction-picker.component';
+import { ReactionService } from '../message-reactions/reaction.service';
+import { GroupedReaction, PickerPosition } from '../message-reactions/reaction.models';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 
 export interface QuotedMessageData {
   messageId: string;
@@ -29,26 +35,161 @@ export interface ChatMessageData {
   currentUserId?: string; // Current user ID for poll voting
   groupMemberCount?: number; // Group member count for poll participation display
   quotedMessage?: QuotedMessageData; // The message being replied to
+  metadata?: MessageMetadata; // Message metadata including reactions
 }
 
 @Component({
   selector: 'app-chat-message',
-  imports: [CommonModule, CommonTooltipDirective, PollMessageComponent],
+  imports: [CommonModule, CommonTooltipDirective, PollMessageComponent, MessageReactionComponent, ReactionPickerComponent],
   templateUrl: './chat-message.component.html',
   styleUrl: './chat-message.component.scss'
 })
-export class ChatMessageComponent {
+export class ChatMessageComponent implements OnInit, OnDestroy {
+  // Picker positioning constants
+  private static readonly PICKER_OFFSET_PX = 10;
+  private static readonly PICKER_HORIZONTAL_OFFSET_PX = 40;
+
   @Input() message!: ChatMessageData;
   @Output() replyToMessage = new EventEmitter<ChatMessageData>();
   @Output() quotedMessageClick = new EventEmitter<string>(); // Emits the quoted message ID
 
-  constructor(private dateTimeFormatService: DateTimeFormatService) { }
+  // Reaction state
+  showReactionPicker = false;
+  pickerPosition: PickerPosition = {};
+  private destroy$ = new Subject<void>();
+
+  constructor(
+    private dateTimeFormatService: DateTimeFormatService,
+    private reactionService: ReactionService
+  ) { }
+
+  ngOnInit(): void {
+    // Initialize reactions from message metadata
+    if (this.message.metadata?.reactions && this.message.currentUserId) {
+      this.reactionService.initializeReactions(
+        this.message.messageId,
+        this.message.metadata.reactions,
+        this.message.currentUserId
+      );
+    }
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
 
   /**
    * Handle reply button click
    */
   onReplyClick(): void {
     this.replyToMessage.emit(this.message);
+  }
+
+  /**
+   * Handle reaction button click - open picker
+   */
+  onReactionClick(event: MouseEvent): void {
+    event.stopPropagation();
+    
+    // Calculate picker position based on message position
+    const target = event.target as HTMLElement;
+    const rect = target.getBoundingClientRect();
+    
+    // Determine if message is in lower half of screen
+    const isLowerHalf = rect.top > window.innerHeight / 2;
+    
+    // For own messages (right-aligned), position picker to the left
+    // For other messages (left-aligned), position picker to the right
+    if (this.message.isOwn) {
+      this.pickerPosition = {
+        right: `${window.innerWidth - rect.right + ChatMessageComponent.PICKER_HORIZONTAL_OFFSET_PX}px`,
+        ...(isLowerHalf 
+          ? { bottom: `${window.innerHeight - rect.top + ChatMessageComponent.PICKER_OFFSET_PX}px` }
+          : { top: `${rect.bottom + ChatMessageComponent.PICKER_OFFSET_PX}px` })
+      };
+    } else {
+      this.pickerPosition = {
+        left: `${rect.left - ChatMessageComponent.PICKER_HORIZONTAL_OFFSET_PX}px`,
+        ...(isLowerHalf 
+          ? { bottom: `${window.innerHeight - rect.top + ChatMessageComponent.PICKER_OFFSET_PX}px` }
+          : { top: `${rect.bottom + ChatMessageComponent.PICKER_OFFSET_PX}px` })
+      };
+    }
+    
+    this.showReactionPicker = true;
+  }
+
+  /**
+   * Handle emoji selection from picker
+   */
+  onEmojiSelected(emoji: string): void {
+    if (!this.message.currentUserId) {
+      console.warn('Cannot add reaction: currentUserId is missing');
+      return;
+    }
+
+    this.reactionService
+      .addReaction(this.message.messageId, emoji, this.message.currentUserId)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: () => {
+          // Success - optimistic update already handled by service
+        },
+        error: (error) => {
+          console.error('Failed to add reaction:', error);
+          // Optimistic update rollback already handled by service
+        }
+      });
+    
+    this.closeReactionPicker();
+  }
+
+  /**
+   * Handle reaction toggle (click on existing reaction)
+   */
+  onReactionToggled(reaction: GroupedReaction): void {
+    if (!this.message.currentUserId) {
+      console.warn('Cannot toggle reaction: currentUserId is missing');
+      return;
+    }
+
+    if (reaction.hasCurrentUser) {
+      // Remove reaction
+      this.reactionService
+        .removeReaction(this.message.messageId, this.message.currentUserId)
+        .pipe(takeUntil(this.destroy$))
+        .subscribe({
+          next: () => {
+            // Success - optimistic update already handled by service
+          },
+          error: (error) => {
+            console.error('Failed to remove reaction:', error);
+            // Optimistic update rollback already handled by service
+          }
+        });
+    } else {
+      // Add this reaction
+      this.reactionService
+        .addReaction(this.message.messageId, reaction.emoji, this.message.currentUserId)
+        .pipe(takeUntil(this.destroy$))
+        .subscribe({
+          next: () => {
+            // Success - optimistic update already handled by service
+          },
+          error: (error) => {
+            console.error('Failed to add reaction:', error);
+            // Optimistic update rollback already handled by service
+          }
+        });
+    }
+  }
+
+  /**
+   * Close the reaction picker
+   */
+  closeReactionPicker(): void {
+    this.showReactionPicker = false;
   }
 
   /**
