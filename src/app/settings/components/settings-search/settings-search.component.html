@@ -2,7 +2,8 @@
   <div class="search-input-wrapper">
     <i class="bi bi-search search-icon"></i>
     <input #searchInput type="text" class="search-input" placeholder="Search settings..." [(ngModel)]="searchQuery"
-      (input)="onSearchInput($event)" aria-label="Search settings" aria-describedby="search-result-count" />
+      (input)="onSearchInput($event)" (focus)="onSearchFocus()" (blur)="onSearchBlur()" 
+      (keypress)="onSearchKeyPress($event)" aria-label="Search settings" aria-describedby="search-result-count" />
     <div class="search-actions">
       <span class="shortcut-key" aria-hidden="true">/</span>
       <button *ngIf="isSearchActive" class="clear-button" (click)="clearSearch()" aria-label="Clear search"
@@ -11,6 +12,36 @@
       </button>
     </div>
   </div>
+
+  <!-- Recent Searches Dropdown -->
+  <div class="recent-searches-dropdown" *ngIf="showRecentSearches && recentSearches.length > 0">
+    <div class="recent-searches-header">
+      <span class="recent-searches-title">
+        <i class="bi bi-clock-history"></i>
+        Recent Searches
+      </span>
+      <button class="clear-all-button" (click)="clearAllRecentSearches($event)" type="button" 
+        aria-label="Clear all recent searches">
+        Clear All
+      </button>
+    </div>
+    <div class="recent-searches-list">
+      <div *ngFor="let search of recentSearches" class="recent-search-item" 
+        (click)="useRecentSearch(search.query)"
+        (keydown)="onRecentSearchKeydown($event, search.query)"
+        role="button"
+        tabindex="0"
+        [attr.aria-label]="'Search for ' + search.query">
+        <i class="bi bi-search recent-search-icon"></i>
+        <span class="recent-search-query">{{ search.query }}</span>
+        <button class="remove-recent-button" (click)="clearRecentSearch($event, search.query)" type="button"
+          aria-label="Remove from recent searches">
+          <i class="bi bi-x"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+
   <div id="search-result-count" class="search-result-count" aria-live="polite" aria-atomic="true"
     *ngIf="isSearchActive">
     {{ resultCount }} {{ resultCount === 1 ? 'result' : 'results' }}
