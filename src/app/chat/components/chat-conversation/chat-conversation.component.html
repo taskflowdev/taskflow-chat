@@ -118,15 +118,19 @@
           </div>
         </div>
 
-        <textarea [(ngModel)]="newMessage" (keydown)="onKeyDown($event)"
+        <app-rich-editor
+          #richEditor
+          [(ngModel)]="newMessage"
           [placeholder]="'chats.conversation-window.conversations.composer.placeholder' | translate"
-          class="message-input" rows="1" [disabled]="loading">
-        </textarea>
+          [disabled]="loading"
+          (enterPressed)="onRichEditorEnter()"
+          (ngModelChange)="onRichEditorInput()"
+        ></app-rich-editor>
       </div>
 
-      <button class="btn send-btn" (click)="onSendMessage()" [disabled]="!newMessage.trim() || loading"
+      <button class="btn send-btn" (click)="onSendMessage()" [disabled]="!hasMessageContent || loading"
         [appCommonTooltip]="btnSendTooltip">
-        <i class="bi" [ngClass]="newMessage.trim() && !loading ? 'bi-send-check' : 'bi-send'"></i>
+        <i class="bi" [ngClass]="hasMessageContent && !loading ? 'bi-send-check' : 'bi-send'"></i>
       </button>
       <ng-template #btnSendTooltip>
         {{ 'chats.conversation-window.conversations.composer.send-button.tooltip.label' | translate }} <span

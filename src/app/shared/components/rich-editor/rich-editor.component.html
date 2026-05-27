@@ -1,0 +1,33 @@
+<div class="rich-editor-container">
+  <!-- Formatting Toolbar -->
+  <div class="formatting-toolbar" [class.visible]="showToolbar" (mousedown)="$event.preventDefault()">
+    <button
+      *ngFor="let btn of toolbarButtons"
+      type="button"
+      class="toolbar-btn"
+      [class.active]="isFormatActive(btn.format)"
+      [class.has-divider]="btn.divider"
+      [title]="btn.title"
+      (click)="applyFormat(btn.format)"
+    >
+      <i class="bi" [ngClass]="btn.icon"></i>
+    </button>
+  </div>
+
+  <!-- Contenteditable Editor -->
+  <div
+    #editorContent
+    class="editor-content empty"
+    contenteditable="true"
+    role="textbox"
+    [attr.aria-label]="placeholder"
+    [attr.aria-multiline]="true"
+    [attr.aria-disabled]="disabled"
+    [attr.data-placeholder]="placeholder"
+    (input)="onInput()"
+    (keydown)="onKeyDown($event)"
+    (paste)="onPaste($event)"
+    (focus)="onFocus()"
+    (blur)="onBlur()"
+  ></div>
+</div>
