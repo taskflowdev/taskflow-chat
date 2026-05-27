@@ -8,7 +8,7 @@ import { UserSettingsService } from '../../../core/services/user-settings.servic
 @Component({
   selector: 'app-main-layout',
   standalone: true,
-  imports: [CommonModule, RouterOutlet, NavbarComponent],
+  imports: [CommonModule, RouterOutlet, NavbarComponent, FooterComponent],
   template: `
     <div class="app-layout">
       <!-- Global Navigation Bar -->
@@ -20,7 +20,7 @@ import { UserSettingsService } from '../../../core/services/user-settings.servic
       </main>
 
       <!-- Global Footer -->
-      <!-- <app-footer></app-footer> -->
+      <app-footer></app-footer>
     </div>
   `,
   styleUrls: ['./main-layout.component.scss']

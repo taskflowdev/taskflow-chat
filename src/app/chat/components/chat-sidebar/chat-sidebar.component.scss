@@ -3,7 +3,7 @@
   background: var(--taskflow-color-chat-sidebar-bg);
   border-right: 1px solid var(--taskflow-color-chat-sidebar-border);
   height: 100%;
-  // height: calc(100vh - 60px); // Subtract header height to fit viewport
+  height: calc(100vh - 60px - var(--taskflow-footer-height, 3rem));
   width: 400px;
   position: fixed;
   top: 60px; // Below the header
@@ -133,7 +133,7 @@
     position: relative;
     top: 0;
     transform: none;
-    height: calc(100vh - 60px); /* Full height minus header */
+    height: calc(100vh - 60px - var(--taskflow-footer-height, 3rem));
   }
 
   .sidebar-header {
@@ -171,7 +171,7 @@
     position: relative;
     top: 0;
     transform: none;
-    height: calc(100vh - 60px); /* Full height minus header */
+    height: calc(100vh - 60px - var(--taskflow-footer-height, 3rem));
   }
 
   .sidebar-header {
