@@ -1,7 +1,7 @@
 // Main chat component styles - orchestrates the entire chat UI within main layout
 .main-chat-container {
   height: 100%;
-  height: calc(100vh - 60px);
+  height: calc(100vh - 60px - var(--taskflow-footer-height, 5rem));
   overflow: hidden;
   background: var(--taskflow-color-background, #000000) !important;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
@@ -38,6 +38,8 @@
 // Responsive behavior
 @media (max-width: 768px) {
   .main-chat-container.mobile-view {
+    height: calc(100vh - 56px - var(--taskflow-footer-height, 5rem));
+
     .chat-content-area {
       display: flex;
       width: 100%;

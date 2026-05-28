@@ -52,11 +52,23 @@
   }
 
   .logo-text {
-    font-size: var(--taskflow-font-font-size-large);
-    font-weight: 600;
-    color: var(--taskflow-color-navbar-text);
-    letter-spacing: 0.5px;
+    font-family: "Rubik Mono One", cursive;
+    font-size: var(--taskflow-font-font-size-h2);
+    font-weight: 400;
+    display: inline-flex;
+    align-items: baseline;
+    letter-spacing: 0.02em;
+    line-height: 1;
     transition: color 0.2s ease;
+    gap: 0.2rem;
+  }
+
+  .logo-text-task {
+    color: var(--taskflow-color-success, #22c55e);
+  }
+
+  .logo-text-flow {
+    color: var(--taskflow-color-navbar-text);
   }
 }
 
@@ -86,7 +98,7 @@
     }
 
     .logo-text {
-      display: none; // Hide logo text on mobile
+      font-size: 1.1rem;
     }
   }
 }
@@ -101,6 +113,10 @@
   .logo-section {
     .logo-icon {
       font-size: var(--taskflow-font-icon-size-lg);
+    }
+
+    .logo-text {
+      font-size: 1rem;
     }
   }
 }
